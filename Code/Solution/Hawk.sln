@@ -6,27 +6,19 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hawk", "..\Hawk\Hawk.vcxproj", "{3296EC47-FDBA-4F2E-8320-CDFC04A1D1DB}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "..\Game\Game.vcxproj", "{7CBCC509-B84B-4CF9-B29D-395D14E1AA01}"
-	ProjectSection(ProjectDependencies) = postProject
-		{3296EC47-FDBA-4F2E-8320-CDFC04A1D1DB} = {3296EC47-FDBA-4F2E-8320-CDFC04A1D1DB}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		DllDev|x64 = DllDev|x64
-		StaticDev|x64 = StaticDev|x64
 		StaticRelease|x64 = StaticRelease|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{3296EC47-FDBA-4F2E-8320-CDFC04A1D1DB}.DllDev|x64.ActiveCfg = DllDev|x64
 		{3296EC47-FDBA-4F2E-8320-CDFC04A1D1DB}.DllDev|x64.Build.0 = DllDev|x64
-		{3296EC47-FDBA-4F2E-8320-CDFC04A1D1DB}.StaticDev|x64.ActiveCfg = StaticDev|x64
-		{3296EC47-FDBA-4F2E-8320-CDFC04A1D1DB}.StaticDev|x64.Build.0 = StaticDev|x64
 		{3296EC47-FDBA-4F2E-8320-CDFC04A1D1DB}.StaticRelease|x64.ActiveCfg = StaticRelease|x64
 		{3296EC47-FDBA-4F2E-8320-CDFC04A1D1DB}.StaticRelease|x64.Build.0 = StaticRelease|x64
 		{7CBCC509-B84B-4CF9-B29D-395D14E1AA01}.DllDev|x64.ActiveCfg = DllDev|x64
 		{7CBCC509-B84B-4CF9-B29D-395D14E1AA01}.DllDev|x64.Build.0 = DllDev|x64
-		{7CBCC509-B84B-4CF9-B29D-395D14E1AA01}.StaticDev|x64.ActiveCfg = StaticDev|x64
-		{7CBCC509-B84B-4CF9-B29D-395D14E1AA01}.StaticDev|x64.Build.0 = StaticDev|x64
 		{7CBCC509-B84B-4CF9-B29D-395D14E1AA01}.StaticRelease|x64.ActiveCfg = StaticRelease|x64
 		{7CBCC509-B84B-4CF9-B29D-395D14E1AA01}.StaticRelease|x64.Build.0 = StaticRelease|x64
 	EndGlobalSection

@@ -5,10 +5,6 @@
       <Configuration>DllDev</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="StaticDev|x64">
-      <Configuration>StaticDev</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="StaticRelease|x64">
       <Configuration>StaticRelease</Configuration>
       <Platform>x64</Platform>
@@ -22,27 +18,26 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='StaticRelease|x64'">
     <PlatformToolset>v140</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='StaticDev|x64'">
-    <PlatformToolset>v140</PlatformToolset>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DllDev|x64'">
     <PlatformToolset>v140</PlatformToolset>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='DllDev|x64'">
     <Import Project="..\Solution\Properties\CommonProperties.props" />
+    <Import Project="..\Solution\Properties\HawkProperties.props" />
     <Import Project="..\Solution\Properties\DevProperties.props" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='StaticDev|x64'">
-    <Import Project="..\Solution\Properties\CommonProperties.props" />
-    <Import Project="..\Solution\Properties\DevProperties.props" />
+    <Import Project="..\Solution\Properties\DllProperties.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='StaticRelease|x64'">
     <Import Project="..\Solution\Properties\CommonProperties.props" />
+    <Import Project="..\Solution\Properties\HawkProperties.props" />
     <Import Project="..\Solution\Properties\ReleaseProperties.props" />
+    <Import Project="..\Solution\Properties\LibProperties.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -50,12 +45,14 @@
   <PropertyGroup />
   <ItemGroup>
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="Macros.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DllDev|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='StaticRelease|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -8,5 +8,8 @@
 *.tlog
 *.lastbuildstate
 *.log
-*.och
+*.pch
 *.obj
+*.sdf
+*.ipch
+*.sou

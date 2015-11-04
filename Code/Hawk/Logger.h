@@ -1,9 +1,10 @@
 #pragma once
+#include "Macros.h"
 #include <string>
 
 namespace Hawk {
 namespace Logger
 {
-	void Log(const std::string& p_Msg);
+	HAWK_DLL_EXPORT void Log(const std::string& p_Msg);
 }
 }

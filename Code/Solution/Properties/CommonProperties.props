@@ -5,7 +5,10 @@
     <RootDir>$(SolutionDir)..\..\</RootDir>
     <CodeDir>$(RootDir)Code\</CodeDir>
   </PropertyGroup>
-  <PropertyGroup />
+  <PropertyGroup>
+    <OutDir>$(RootDir)\$(Platform)\</OutDir>
+    <IntDir>$(CodeDir)\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>

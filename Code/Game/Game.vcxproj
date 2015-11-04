@@ -5,10 +5,6 @@
       <Configuration>DllDev</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="StaticDev|x64">
-      <Configuration>StaticDev</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="StaticRelease|x64">
       <Configuration>StaticRelease</Configuration>
       <Platform>x64</Platform>
@@ -23,9 +19,6 @@
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='StaticRelease|x64'">
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='StaticDev|x64'">
-    <PlatformToolset>v140</PlatformToolset>
-  </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DllDev|x64'">
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
@@ -35,19 +28,17 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='StaticRelease|x64'">
     <Import Project="..\Solution\Properties\CommonProperties.props" />
     <Import Project="..\Solution\Properties\ReleaseProperties.props" />
+    <Import Project="..\Solution\Properties\ExeProperties.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='DllDev|x64'">
     <Import Project="..\Solution\Properties\CommonProperties.props" />
     <Import Project="..\Solution\Properties\DevProperties.props" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='StaticDev|x64'">
-    <Import Project="..\Solution\Properties\CommonProperties.props" />
-    <Import Project="..\Solution\Properties\DevProperties.props" />
+    <Import Project="..\Solution\Properties\ExeProperties.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DllDev|x64'" />
   <ItemGroup>
     <ClInclude Include="pch.h" />
   </ItemGroup>
@@ -55,7 +46,13 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DllDev|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='StaticRelease|x64'">Create</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hawk\Hawk.vcxproj">
+      <Project>{3296ec47-fdba-4f2e-8320-cdfc04a1d1db}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
