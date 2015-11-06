@@ -10,3 +10,7 @@ Project configurations...
 	-built .exp file contains exported classes/methods
 	-old way of linking .lib to using (.exe) project was to first specity project dependencies (build order) then add .lib as 'Additional Dependency' (also .dll:s generate .lib file to link against!)
 	-new way (since vs++ 2010): Add to 'References' under project
+
+2015-11-06
+----------------
+Implemented LogSystem, singleton Core class and Time
