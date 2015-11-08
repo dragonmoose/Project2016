@@ -12,5 +12,7 @@
 *.obj
 *.sdf
 *.ipch
-*.sou
+*.suo
 *.opensdf
+*.idb
+*.filters
