@@ -3,7 +3,7 @@
 
 namespace Hawk {
 
-class Core
+class Core final
 {
 private:
 	Core();

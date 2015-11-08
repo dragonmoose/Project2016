@@ -5,15 +5,16 @@
 namespace Hawk {
 namespace LogSystem
 {
-	enum class Level
+	enum class Type
 	{
 		Info,
 		Warning,
-		Error
+		Error,
+		Exception
 	};
 
 	bool Initialize();
 
-	HAWK_DLL_EXPORT void Write(const std::string& p_Msg, Level p_Level);
+	HAWK_DLL_EXPORT void Write(const std::string& p_Msg, Type p_Level);
 }
 }

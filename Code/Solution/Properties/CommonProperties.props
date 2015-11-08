@@ -4,6 +4,7 @@
   <PropertyGroup Label="UserMacros">
     <RootDir>$(SolutionDir)..\..\</RootDir>
     <CodeDir>$(RootDir)Code\</CodeDir>
+    <ThirdPartyDir>$(CodeDir)ThirdParty\</ThirdPartyDir>
   </PropertyGroup>
   <PropertyGroup>
     <OutDir>$(RootDir)\$(Platform)\</OutDir>
@@ -26,6 +27,9 @@
     </BuildMacro>
     <BuildMacro Include="CodeDir">
       <Value>$(CodeDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="ThirdPartyDir">
+      <Value>$(ThirdPartyDir)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>

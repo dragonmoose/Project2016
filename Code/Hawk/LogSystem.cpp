@@ -11,7 +11,7 @@ namespace Hawk {
 
 namespace LogSystem
 {
-	WORD GetConsoleTextAttr(LogSystem::Level p_Level);
+	WORD GetConsoleTextAttr(LogSystem::Type p_Level);
 }
 
 bool LogSystem::Initialize()
@@ -33,32 +33,42 @@ bool LogSystem::Initialize()
 			setvbuf(l_hFile, nullptr, _IONBF, 128);
 			*stdin = *l_hFile;
 		}
+		SetConsoleTitle("Hawk Engine console");
 		return true;
 	}
 	return false;
 }
 
-void LogSystem::Write(const std::string& p_Msg, Level p_Level)
+void LogSystem::Write(const std::string& p_Msg, Type p_Type)
 {
-	std::stringstream l_Stream;
-	l_Stream << Time::Now().ToString() << " " << p_Msg;
-	std::string l_Msg(l_Stream.str());
-
 	HANDLE l_hStd = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(l_hStd, GetConsoleTextAttr(p_Level));
-	WriteConsole(l_hStd, l_Msg.c_str(), l_Msg.length(), LPDWORD(), nullptr);
+
+	SetConsoleTextAttribute(l_hStd, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	std::string l_TimeStr = Time().ToString() + " ";
+	WriteConsole(l_hStd, l_TimeStr.c_str(), l_TimeStr.length(), LPDWORD(), nullptr);
+
+	SetConsoleTextAttribute(l_hStd, GetConsoleTextAttr(p_Type));
+	WriteConsole(l_hStd, p_Msg.c_str(), p_Msg.length(), LPDWORD(), nullptr);
+
+	std::stringstream l_Stream;
+	l_Stream << " [" << __FILE__ << ":" << __LINE__ << "]\r\n";
+	std::string l_LineInfoStr = l_Stream.str();
+
+	WriteConsole(l_hStd, l_LineInfoStr.c_str(), l_LineInfoStr.length(), LPDWORD(), nullptr);
 }
 
-WORD LogSystem::GetConsoleTextAttr(Level p_Level)
+WORD LogSystem::GetConsoleTextAttr(Type p_Type)
 {
-	switch (p_Level)
+	switch (p_Type)
 	{
-		case Level::Info:
+		case Type::Info:
 			return FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
-		case Level::Warning:
+		case Type::Warning:
 			return FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN;
-		case Level::Error:
+		case Type::Error:
 			return FOREGROUND_INTENSITY | FOREGROUND_RED;
+		case Type::Exception:
+			return FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | BACKGROUND_INTENSITY | BACKGROUND_RED;
 		default:
 			return 0;
 	}

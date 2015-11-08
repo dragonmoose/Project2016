@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Core.h"
+#include "Time.h"
 #include <iostream>
 
 namespace Hawk {
@@ -13,6 +14,8 @@ Core::Core()
 		PostQuitMessage(-1);
 	}
 	LOG_INFO("Hawk core initialized...");
+	Time l_Time;
+	l_Time.SetToNow();
 #endif
 }
 

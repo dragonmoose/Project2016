@@ -8,8 +8,11 @@
     <ClCompile Include="LogSystem.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Duration.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
     <ClCompile Include="Time.cpp">
-      <Filter>Core</Filter>
+      <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -23,13 +26,22 @@
     <ClInclude Include="LogSystem.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Duration.h">
+      <Filter>Util</Filter>
+    </ClInclude>
     <ClInclude Include="Time.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Exception.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
       <UniqueIdentifier>{f55bc3a6-1071-4119-8ba7-85350ef4c6c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{508386be-99b4-4f1f-84d1-a55bbc32819d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

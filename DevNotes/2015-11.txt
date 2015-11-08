@@ -14,3 +14,17 @@ Project configurations...
 2015-11-06
 ----------------
 Implemented LogSystem, singleton Core class and Time
+
+2015-11-07
+Investigated unit test frameworks. Tried the integrated cppunittestframework and GTest/GMock. Settled for cppunittestframework in the end since the reason
+to use GTest was that there seemed to be some small issues with
+using GMock with other test tools than GTest.
+
+There proved to be much extra dependencies / work to be able to use GTest,
+so will start with cppunittestframework
+
+To be able to use GTest with Test Explorer, this VS extension is needed:
+https://github.com/markusl/GoogleTestRunner
+
+Also, to get it to work properly, F# runtime is needed:
+http://stackoverflow.com/questions/18460503/visual-studio-2013-preview-google-test-runner-could-not-load-file-or-assembly-f
