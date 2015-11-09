@@ -7,6 +7,12 @@ namespace Hawk {
 
 class Duration;
 
+enum class TimeFormat
+{
+	DateAndTime,
+	Time,
+};
+
 class HAWK_DLL_EXPORT Time
 {
 public:
@@ -15,7 +21,7 @@ public:
 	~Time();
 
 	void SetToNow();
-	std::string ToString() const;
+	std::string ToString(TimeFormat p_Format = TimeFormat::Time) const;
 
 	Time& operator+=(const Duration& p_rhs);
 	Time& operator-=(const Duration& p_rhs);

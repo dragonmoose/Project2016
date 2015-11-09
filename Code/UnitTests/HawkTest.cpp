@@ -14,7 +14,8 @@ namespace HawkUnitTests
 		TEST_METHOD(ToString)
 		{
 			Time l_Time;
-			Assert::AreEqual(19, (int)l_Time.ToString().length());
+			Assert::AreEqual(8, (int)l_Time.ToString().length());
+			Assert::AreEqual(19, (int)l_Time.ToString(TimeFormat::DateAndTime).length());
 		}
 
 		TEST_METHOD(Operators)
@@ -34,5 +35,24 @@ namespace HawkUnitTests
 			Assert::IsTrue(l_Time2 < l_Time1);
 		}
 
+	};
+
+	TEST_CLASS(CoreTest)
+	{
+		public:
+
+			TEST_METHOD(ExceptionTest)
+			{
+				bool l_bCaught = false;
+				try
+				{
+					THROW_IF(true, "Should always throw");
+				}
+				catch (Exception&)
+				{
+					l_bCaught = true;
+				}
+				Assert::IsTrue(l_bCaught);
+			}
 	};
 }

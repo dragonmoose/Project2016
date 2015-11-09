@@ -1,11 +1,16 @@
 #include "pch.h"
 #include "Hawk/Core.h"
+#include "Hawk/Exception.h"
+#include <thread>
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	Hawk::Core::Get();
-	LOG_WARNING("warn test blabla");
-	LOG_ERROR("errrerererere r ere n test blabla");
-	LOG_INFO("errrerererere r ere n test blabla");
-	while (1);
+	LOG_INFO("Game startup");
+	while (1)
+	{
+		using namespace std::literals;
+		std::this_thread::sleep_for(2s);
+		LOG_WARNING("Test log");
+	}
 }

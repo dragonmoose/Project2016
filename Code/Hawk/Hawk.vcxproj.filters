@@ -5,14 +5,17 @@
     <ClCompile Include="Core.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="LogSystem.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="Duration.cpp">
       <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="Time.cpp">
       <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Exception.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="LogSystem.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -23,9 +26,6 @@
     <ClInclude Include="Core.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="LogSystem.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Duration.h">
       <Filter>Util</Filter>
     </ClInclude>
@@ -33,6 +33,9 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="Exception.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="LogSystem.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>

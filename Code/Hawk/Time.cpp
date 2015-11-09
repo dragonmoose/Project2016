@@ -38,11 +38,11 @@ Time& Time::operator-=(const Duration& p_rhs)
 	return *this;
 }
 
-std::string Time::ToString() const
+std::string Time::ToString(TimeFormat p_Format) const
 {
 	std::stringstream l_Stream;
 	std::time_t l_Time = std::chrono::system_clock::to_time_t(m_TimePoint);
-	l_Stream << std::put_time(std::localtime(&l_Time), "%Y-%m-%d %X");
+	l_Stream << std::put_time(std::localtime(&l_Time), (p_Format == TimeFormat::DateAndTime ? "%Y-%m-%d %X" : "%X"));
 	return l_Stream.str();
 }
 

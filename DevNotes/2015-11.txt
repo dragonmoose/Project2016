@@ -1,9 +1,9 @@
 2015-11-04
-----------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Project started.
 
 2015-11-05
-----------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Project configurations...
 * Great reference for dll-setup (declspec etc): http://manski.net/2011/11/creating-a-dll-project/
 	-dllimport needed when exporting templated classes (can otherwise be omitted).
@@ -12,10 +12,11 @@ Project configurations...
 	-new way (since vs++ 2010): Add to 'References' under project
 
 2015-11-06
-----------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Implemented LogSystem, singleton Core class and Time
 
 2015-11-07
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Investigated unit test frameworks. Tried the integrated cppunittestframework and GTest/GMock. Settled for cppunittestframework in the end since the reason
 to use GTest was that there seemed to be some small issues with
 using GMock with other test tools than GTest.
@@ -28,3 +29,9 @@ https://github.com/markusl/GoogleTestRunner
 
 Also, to get it to work properly, F# runtime is needed:
 http://stackoverflow.com/questions/18460503/visual-studio-2013-preview-google-test-runner-could-not-load-file-or-assembly-f
+
+2015-11-08
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Tweaked LogSystem and Exception. Implemented log + exception macros.
+Disabled two compiler warnings related to dll export.
+Scoped mutex lock for logger. Added thread id to log.

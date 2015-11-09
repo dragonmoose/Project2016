@@ -6,12 +6,15 @@
 #include <consoleapi.h>
 #include <io.h>
 #include <fcntl.h>
+#include <mutex>
+#include <thread>
 
 namespace Hawk {
 
 namespace LogSystem
 {
-	WORD GetConsoleTextAttr(LogSystem::Type p_Level);
+	WORD GetConsoleTextAttr(Level p_Level);
+	std::mutex m_Mutex;
 }
 
 bool LogSystem::Initialize()
@@ -39,35 +42,34 @@ bool LogSystem::Initialize()
 	return false;
 }
 
-void LogSystem::Write(const std::string& p_Msg, Type p_Type)
+void LogSystem::Write(const std::string& p_Msg, Level p_Level)
 {
+	std::lock_guard<std::mutex> l_Lock(m_Mutex);
+
 	HANDLE l_hStd = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	SetConsoleTextAttribute(l_hStd, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-	std::string l_TimeStr = Time().ToString() + " ";
-	WriteConsole(l_hStd, l_TimeStr.c_str(), l_TimeStr.length(), LPDWORD(), nullptr);
-
-	SetConsoleTextAttribute(l_hStd, GetConsoleTextAttr(p_Type));
-	WriteConsole(l_hStd, p_Msg.c_str(), p_Msg.length(), LPDWORD(), nullptr);
 
 	std::stringstream l_Stream;
-	l_Stream << " [" << __FILE__ << ":" << __LINE__ << "]\r\n";
-	std::string l_LineInfoStr = l_Stream.str();
+	l_Stream << Time().ToString() << " (Thread: " << std::this_thread::get_id() << ") ";
+	std::string l_InitStr = l_Stream.str();
+	WriteConsole(l_hStd, l_InitStr.c_str(), l_InitStr.length(), LPDWORD(), nullptr);
 
-	WriteConsole(l_hStd, l_LineInfoStr.c_str(), l_LineInfoStr.length(), LPDWORD(), nullptr);
+	SetConsoleTextAttribute(l_hStd, GetConsoleTextAttr(p_Level));
+	WriteConsole(l_hStd, p_Msg.c_str(), p_Msg.length(), LPDWORD(), nullptr);
 }
 
-WORD LogSystem::GetConsoleTextAttr(Type p_Type)
+WORD LogSystem::GetConsoleTextAttr(Level p_Level)
 {
-	switch (p_Type)
+	switch (p_Level)
 	{
-		case Type::Info:
-			return FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
-		case Type::Warning:
+		case Level::Info:
+			return FOREGROUND_GREEN;
+		case Level::Warning:
 			return FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN;
-		case Type::Error:
+		case Level::Error:
 			return FOREGROUND_INTENSITY | FOREGROUND_RED;
-		case Type::Exception:
+		case Level::Exception:
 			return FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | BACKGROUND_INTENSITY | BACKGROUND_RED;
 		default:
 			return 0;
