@@ -16,3 +16,5 @@
 *.opensdf
 *.idb
 *.cache
+*.codeanalysis
+*.codeanalysisast
