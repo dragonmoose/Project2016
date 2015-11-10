@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "Hawk/Core.h"
 #include "Hawk/Time.h"
 #include "Hawk/Duration.h"
 
@@ -53,6 +54,13 @@ namespace HawkUnitTests
 					l_bCaught = true;
 				}
 				Assert::IsTrue(l_bCaught);
+			}
+
+			TEST_METHOD(RegisterThreadSystem)
+			{
+				Core& l_Core = Core::Get();
+				l_Core.RegisterThread("TestThread");
+				Assert::ExpectException<Exception>([&l_Core]() { l_Core.RegisterThread("TestThread"); });
 			}
 	};
 }

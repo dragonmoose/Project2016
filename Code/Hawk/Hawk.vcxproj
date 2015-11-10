@@ -42,7 +42,9 @@
   <ImportGroup Label="Shared">
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="Core.h" />
     <ClInclude Include="Duration.h" />
@@ -50,6 +52,8 @@
     <ClInclude Include="LogSystem.h" />
     <ClInclude Include="Macros.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="SystemBase.h" />
+    <ClInclude Include="SystemThread.h" />
     <ClInclude Include="Time.h" />
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +65,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="SystemBase.cpp" />
+    <ClCompile Include="SystemThread.cpp" />
     <ClCompile Include="Time.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

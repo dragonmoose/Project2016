@@ -5,8 +5,9 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	Hawk::Core::Get();
+	Hawk::Core& l_Core = Hawk::Core::Get();
 	LOG_INFO("Game startup");
+
 	while (1)
 	{
 		using namespace std::literals;

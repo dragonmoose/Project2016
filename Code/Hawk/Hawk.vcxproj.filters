@@ -17,6 +17,12 @@
     <ClCompile Include="LogSystem.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="SystemBase.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemThread.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -36,6 +42,12 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="LogSystem.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemBase.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemThread.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>

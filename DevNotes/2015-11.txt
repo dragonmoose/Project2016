@@ -35,3 +35,9 @@ http://stackoverflow.com/questions/18460503/visual-studio-2013-preview-google-te
 Tweaked LogSystem and Exception. Implemented log + exception macros.
 Disabled two compiler warnings related to dll export.
 Scoped mutex lock for logger. Added thread id to log.
+
+2015-11-09
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Added cppcheck: http://cppcheck.sourceforge.net/
+Couldn't get cpp check VS integration plugin to work correctly, so followed this: http://www.codeproject.com/Tips/472065/Poor-Man-s-Visual-Studio-Cppcheck-Integration
+And then downloaded the Visual Commander VS extension and followed this: http://stackoverflow.com/questions/18985946/running-external-command-on-file-save-in-visual-studio

@@ -48,6 +48,13 @@
 #endif
 
 #include "Exception.h"
-#define THROW(msg)								throw Hawk::Exception(msg, __FILE__, __LINE__);
-#define THROW_IF(p, msg)						if ((p)) throw Hawk::Exception(msg, __FILE__, __LINE__);
-#define THROW_IF_NOT(p, msg)					if (!(p)) throw Hawk::Exception(msg, __FILE__, __LINE__);
+#define THROW(msg)													\
+{																	\
+	std::stringstream l_Stream;										\
+	l_Stream << msg;												\
+	throw Hawk::Exception(l_Stream.str(), __FILE__, __LINE__);		\
+}
+#define THROW_IF(p, msg)						if ((p)) THROW(msg);
+#define THROW_IF_NOT(p, msg)					if (!(p)) THROW(msg);
+
+#define ASSERT(expr)							assert(expr);
