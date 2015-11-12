@@ -41,3 +41,10 @@ Scoped mutex lock for logger. Added thread id to log.
 Added cppcheck: http://cppcheck.sourceforge.net/
 Couldn't get cpp check VS integration plugin to work correctly, so followed this: http://www.codeproject.com/Tips/472065/Poor-Man-s-Visual-Studio-Cppcheck-Integration
 And then downloaded the Visual Commander VS extension and followed this: http://stackoverflow.com/questions/18985946/running-external-command-on-file-save-in-visual-studio
+
+2015-11-11
+Rearranged Hawk defines etc. Abandoned idea of putting much common includes in pch since many .h files should be includes in
+other projects (i.e. Game) and the engine will then have incomplete types (Duration.h for example did not include string, but Duration.cpp
+compiled in Hawk due to string being part of pch). So should not rely on this.
+-Added boost (program_options for ini file parsing for a start)
+-Added Config namespace. Parsing ini files.

@@ -1,6 +1,8 @@
 #pragma once
+#include "DllExport.h"
 #include <stdexcept>
-#include "Macros.h"
+#include <string>
+#include <sstream>
 
 namespace Hawk {
 
@@ -14,3 +16,12 @@ private:
 };
 
 }
+
+#define THROW(msg)													\
+{																	\
+	std::stringstream l_Stream;										\
+	l_Stream << msg;												\
+	throw Hawk::Exception(l_Stream.str(), __FILE__, __LINE__);		\
+}
+#define THROW_IF(p, msg)						if ((p)) THROW(msg);
+#define THROW_IF_NOT(p, msg)					if (!(p)) THROW(msg);

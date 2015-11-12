@@ -1,7 +1,9 @@
 #include "pch.h"
+#include "Hawk/Config.h"
 #include "Hawk/Core.h"
 #include "Hawk/Time.h"
 #include "Hawk/Duration.h"
+#include "Hawk/Exception.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace Hawk;
@@ -58,9 +60,21 @@ namespace HawkUnitTests
 
 			TEST_METHOD(RegisterThreadSystem)
 			{
-				Core& l_Core = Core::Get();
+				Core& l_Core = Core::Instance();
 				l_Core.RegisterThread("TestThread");
 				Assert::ExpectException<Exception>([&l_Core]() { l_Core.RegisterThread("TestThread"); });
 			}
+	};
+
+	TEST_CLASS(ConfigTest)
+	{
+	public:
+
+		TEST_METHOD(TestDefault)
+		{
+			Config::Initialize();
+			Assert::AreEqual(123.456f, Config::Get<float>("non.existing", 123.456f));
+			Assert::AreNotEqual(123.456f, Config::Get<float>("non.existing", 123.4567f));
+		}
 	};
 }

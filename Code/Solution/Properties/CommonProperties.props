@@ -5,10 +5,13 @@
     <RootDir>$(SolutionDir)..\..\</RootDir>
     <CodeDir>$(RootDir)Code\</CodeDir>
     <ThirdPartyDir>$(CodeDir)ThirdParty\</ThirdPartyDir>
+    <BoostDir>$(ThirdPartyDir)boost_1_59_0\</BoostDir>
+    <BinDir>$(RootDir)x64\</BinDir>
   </PropertyGroup>
   <PropertyGroup>
     <OutDir>$(RootDir)\$(Platform)\</OutDir>
     <IntDir>$(CodeDir)\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <LibraryPath>$(BoostDir)stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -18,8 +21,11 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(CodeDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CodeDir);$(BoostDir)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <BuildMacro Include="RootDir">
@@ -30,6 +36,12 @@
     </BuildMacro>
     <BuildMacro Include="ThirdPartyDir">
       <Value>$(ThirdPartyDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BoostDir">
+      <Value>$(BoostDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BinDir">
+      <Value>$(BinDir)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>

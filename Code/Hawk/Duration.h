@@ -1,6 +1,6 @@
 #pragma once
-#include "Macros.h"
 #include <chrono>
+#include <ratio>
 
 namespace Hawk {
 

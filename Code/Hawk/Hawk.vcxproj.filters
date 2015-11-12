@@ -14,21 +14,21 @@
     <ClCompile Include="Exception.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="LogSystem.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="SystemBase.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="SystemThread.cpp">
+    <ClCompile Include="Logger.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemManagerThread.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Config.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Macros.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Core.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -41,13 +41,19 @@
     <ClInclude Include="Exception.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="LogSystem.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="SystemBase.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="SystemThread.h">
+    <ClInclude Include="Logger.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemManagerThread.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="DllExport.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Config.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>

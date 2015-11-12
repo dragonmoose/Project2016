@@ -2,7 +2,6 @@
 #include "Time.h"
 #include "Duration.h"
 #include <iomanip>
-#include <sstream>
 
 namespace Hawk {
 

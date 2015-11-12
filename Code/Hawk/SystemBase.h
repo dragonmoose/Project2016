@@ -1,5 +1,6 @@
 #pragma once
-#include "Macros.h"
+
+#include "DllExport.h"
 #include <string>
 
 namespace Hawk

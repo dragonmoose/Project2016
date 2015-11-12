@@ -1,17 +1,16 @@
 #pragma once
-#include "Macros.h"
-#include "SystemThread.h"
+#include "SystemManagerThread.h"
+#include "DllExport.h"
 #include <memory>
 #include <unordered_map>
+#include <string>
 
 namespace Hawk {
-
-class SystemBase;
 
 class Core final
 {
 public:
-	HAWK_DLL_EXPORT static Core& Get();
+	HAWK_DLL_EXPORT static Core& Instance();
 
 	HAWK_DLL_EXPORT void RegisterThread(const std::string& p_Name);
 	HAWK_DLL_EXPORT void AddSystem(std::unique_ptr<SystemBase> p_System, const std::string& p_Thread);
@@ -21,8 +20,8 @@ public:
 private:
 	Core();
 
-	typedef std::unordered_map<std::string, std::unique_ptr<SystemThread>> SystemThreads;
-	SystemThreads m_SystemThreads;
+	typedef std::unordered_map<std::string, std::unique_ptr<SystemManagerThread>> SystemManagerThreads;
+	SystemManagerThreads m_SystemManagerThreads;
 };
 
 }
