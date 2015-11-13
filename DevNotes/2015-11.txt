@@ -48,3 +48,8 @@ other projects (i.e. Game) and the engine will then have incomplete types (Durat
 compiled in Hawk due to string being part of pch). So should not rely on this.
 -Added boost (program_options for ini file parsing for a start)
 -Added Config namespace. Parsing ini files.
+
+2015-11-12
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Configured boost build (build only filesystem)
+More project settings...

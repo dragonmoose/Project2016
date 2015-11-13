@@ -10,7 +10,7 @@ Core::Core()
 {
 	try
 	{
-#ifdef HAWK_DEV
+#ifdef HAWK_DEBUG
 		boost::filesystem::current_path(boost::filesystem::current_path().parent_path());
 		THROW_IF_NOT(Logger::Initialize(), "Failed to initialize LogSystem");
 		LOG_INFO("Working directory set to: " << boost::filesystem::current_path());

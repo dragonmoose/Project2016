@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#ifdef HAWK_DEV
+#ifdef HAWK_DEBUG
 
 #include "Logger.h"
 #include "Time.h"

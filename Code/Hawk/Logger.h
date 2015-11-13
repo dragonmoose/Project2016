@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef HAWK_DEV
+#ifdef HAWK_DEBUG
 #include "DllExport.h"
 #include <string>
 #include <sstream>

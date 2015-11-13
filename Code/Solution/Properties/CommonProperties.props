@@ -6,12 +6,11 @@
     <CodeDir>$(RootDir)Code\</CodeDir>
     <ThirdPartyDir>$(CodeDir)ThirdParty\</ThirdPartyDir>
     <BoostDir>$(ThirdPartyDir)boost_1_59_0\</BoostDir>
-    <BinDir>$(RootDir)x64\</BinDir>
   </PropertyGroup>
   <PropertyGroup>
     <OutDir>$(RootDir)\$(Platform)\</OutDir>
     <IntDir>$(CodeDir)\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <LibraryPath>$(BoostDir)stage\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ThirdPartyDir)$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -39,9 +38,6 @@
     </BuildMacro>
     <BuildMacro Include="BoostDir">
       <Value>$(BoostDir)</Value>
-    </BuildMacro>
-    <BuildMacro Include="BinDir">
-      <Value>$(BinDir)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>
