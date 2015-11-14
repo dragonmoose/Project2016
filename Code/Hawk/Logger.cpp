@@ -4,16 +4,20 @@
 
 #include "Logger.h"
 #include "Time.h"
+#include "boost/algorithm/string.hpp"
 #include <consoleapi.h>
 #include <io.h>
 #include <fcntl.h>
 #include <mutex>
+#include <cctype>
 
 namespace Hawk {
 
 namespace Logger
 {
 	WORD GetConsoleTextAttr(Level p_Level);
+	bool ShouldLog(const std::string& p_Msg);
+
 	std::mutex m_Mutex;
 	bool m_bInitialized = false;
 }
@@ -49,6 +53,8 @@ bool Logger::Initialize()
 
 void Logger::Write(const std::string& p_Msg, Level p_Level)
 {
+	if (!ShouldLog(p_Msg)) return;
+
 	std::lock_guard<std::mutex> l_Lock(m_Mutex);
 	if (p_Level != Level::Debug || (Config::Get("Log.debug", false)))
 	{
@@ -83,6 +89,22 @@ WORD Logger::GetConsoleTextAttr(Level p_Level)
 		default:
 			return 0;
 	}
+}
+
+bool Logger::ShouldLog(const std::string& p_Msg)
+{
+	bool l_bShouldLog = true;
+	std::string l_Filter = Config::Get<std::string>("Log.filter", "");
+
+	if (!l_Filter.empty())
+	{
+		boost::algorithm::to_lower(l_Filter);
+		std::string l_Msg(p_Msg);
+		boost::algorithm::to_lower(l_Msg);
+
+		l_bShouldLog = boost::algorithm::contains(l_Msg, l_Filter);
+	}
+	return l_bShouldLog;
 }
 
 }

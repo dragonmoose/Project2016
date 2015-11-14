@@ -2,7 +2,6 @@
 
 #ifdef HAWK_DEBUG
 #include "DllExport.h"
-#include <string>
 #include <sstream>
 
 namespace Hawk {

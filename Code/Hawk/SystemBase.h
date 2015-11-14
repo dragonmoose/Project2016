@@ -1,7 +1,5 @@
 #pragma once
-
 #include "DllExport.h"
-#include <string>
 
 namespace Hawk
 {

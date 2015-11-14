@@ -1,8 +1,6 @@
 #pragma once
-
 #include "DllExport.h"
 #include <boost/property_tree/ptree.hpp>
-#include <string>
 
 namespace Hawk {
 
@@ -16,6 +14,8 @@ namespace Config
 	{
 		return GetProperties().get<T>(p_Name, p_Default);
 	}
+
+	void Update();
 }
 
 }

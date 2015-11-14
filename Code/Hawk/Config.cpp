@@ -10,6 +10,7 @@ namespace Config
 	bool Read();
 	const std::string c_Filename = "config.ini";
 	boost::property_tree::ptree m_Properties;
+	std::time_t m_LastWriteTime = 0;
 }
 
 void Config::Initialize()
@@ -28,16 +29,25 @@ bool Config::Read()
 	{
 		if (boost::filesystem::exists(c_Filename))
 		{
-			boost::property_tree::ini_parser::read_ini(c_Filename, m_Properties);
-			return true;
+			std::time_t l_WriteTime = boost::filesystem::last_write_time(c_Filename);
+			if (l_WriteTime > m_LastWriteTime)
+			{
+				m_LastWriteTime = l_WriteTime;
+				boost::property_tree::ini_parser::read_ini(c_Filename, m_Properties);
+				return true;
+			}
 		}
-		LOG_INFO("No config file found in path: " << boost::filesystem::current_path());
 	}
 	catch (boost::property_tree::ini_parser_error& e)
 	{
 		LOG_ERROR("Failed to parse config. Exception: " << e.what());
 	}
 	return false;
+}
+
+void Config::Update()
+{
+	Read();
 }
 
 }

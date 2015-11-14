@@ -21,11 +21,10 @@ Duration::Duration(int p_iValue, Precision p_Precision)
 			m_InternalDuration = std::chrono::seconds(p_iValue);
 			break;
 		case Precision::Millisecond:
-			m_InternalDuration = std::chrono::minutes(p_iValue);
+			m_InternalDuration = std::chrono::milliseconds(p_iValue);
 			break;
 		default:
-			//THROW("Invalid precision type");
-			break;
+			THROW("Invalid precision type");
 	}
 }
 

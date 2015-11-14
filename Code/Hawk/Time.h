@@ -1,6 +1,5 @@
 #pragma once
 #include <chrono>
-#include <string>
 
 namespace Hawk {
 
@@ -37,4 +36,5 @@ private:
 	typedef std::chrono::time_point<std::chrono::system_clock> TimePoint_t;
 	TimePoint_t m_TimePoint;
 };
+
 }
