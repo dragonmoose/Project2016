@@ -57,7 +57,7 @@ void Logger::Write(const std::string& p_Msg, Level p_Level)
 	if (!ShouldLog(p_Msg)) return;
 
 	std::lock_guard<std::mutex> l_Lock(n_Mutex);
-	if (p_Level != Level::Debug || (Config::Get("Log.debug", false)))
+	if (p_Level != Level::Debug || (Config::Instance().Get("Log.debug", false)))
 	{
 		HANDLE l_hStd = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -95,7 +95,7 @@ WORD Logger::GetConsoleTextAttr(Level p_Level)
 bool Logger::ShouldLog(const std::string& p_Msg)
 {
 	bool l_bShouldLog = true;
-	std::string l_Filter = Config::Get<std::string>("Log.filter", "");
+	std::string l_Filter = Config::Instance().Get<std::string>("Log.filter", "");
 
 	if (!l_Filter.empty())
 	{

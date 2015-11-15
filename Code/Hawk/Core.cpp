@@ -7,7 +7,13 @@
 
 namespace Hawk {
 
-Core::Core()
+namespace Core
+{
+	typedef std::unordered_map<std::string, std::unique_ptr<SystemManagerThread>> SystemManagerThreads;
+	SystemManagerThreads m_SystemManagerThreads;
+}
+
+HAWK_DLL_EXPORT bool Core::Initialize()
 {
 	try
 	{
@@ -15,20 +21,15 @@ Core::Core()
 		boost::filesystem::current_path(boost::filesystem::current_path().parent_path());
 		THROW_IF_NOT(Logger::Initialize(), "Failed to initialize LogSystem");
 		LOG_INFO("Working directory set to: " << boost::filesystem::current_path());
-		Config::Initialize();
 #endif
 	}
 	catch (Exception& e)
 	{
-		std::cout << "Could not start Core: " << e.what() << std::endl;
+		std::cout << "Failed to initialize Core. Exception: " << e.what() << std::endl;
+		return false;
 	}
-	LOG_INFO("Hawk core initialized...")
-}
-
-Core& Core::Instance()
-{
-	static Core l_Instance;
-	return l_Instance;
+	LOG_INFO("Hawk core initialized...");
+	return true;
 }
 
 void Core::RegisterThread(const std::string& p_Name)
@@ -47,7 +48,7 @@ void Core::Run()
 {
 	while (true)
 	{
-		Config::Update();
+		Config::Instance().Update();
 		LOG_DEBUG("running...");
 	}
 }

@@ -53,9 +53,9 @@ namespace HawkUnitTests
 
 			TEST_METHOD(RegisterThreadSystem)
 			{
-				Core& l_Core = Core::Instance();
-				l_Core.RegisterThread("TestThread");
-				Assert::ExpectException<Exception>([&l_Core]() { l_Core.RegisterThread("TestThread"); });
+				Core::Initialize();
+				Core::RegisterThread("TestThread");
+				Assert::ExpectException<Exception>([]() { Core::RegisterThread("TestThread"); });
 			}
 	};
 
@@ -65,9 +65,8 @@ namespace HawkUnitTests
 
 		TEST_METHOD(TestDefault)
 		{
-			Config::Initialize();
-			Assert::AreEqual(123.456f, Config::Get<float>("non.existing", 123.456f));
-			Assert::AreNotEqual(123.456f, Config::Get<float>("non.existing", 123.4567f));
+			Assert::AreEqual(123.456f, Config::Instance().Get<float>("non.existing", 123.456f));
+			Assert::AreNotEqual(123.456f, Config::Instance().Get<float>("non.existing", 123.4567f));
 		}
 	};
 }
