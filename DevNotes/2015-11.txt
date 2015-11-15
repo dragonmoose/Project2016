@@ -60,3 +60,8 @@ Switched from chrono system_clock to steady_clock (run test code with system_clo
 When setting to an earlier time, the program came to a halt (due to std::this_thread::sleep_for())
 Implemented Time & Duration
 Config now reloaded in 1 second intervals if file write time changed
+
+2015-11-15
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Thread safe Config + made Config singleton (due to mutex otherwise having to be declared in header file due to
+templated Get() having to reside in the header file as well)
