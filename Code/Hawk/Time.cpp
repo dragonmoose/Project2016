@@ -5,9 +5,13 @@
 
 namespace Hawk {
 
+namespace
+{
+	Time n_ZeroTimeRef = Time::Now();
+}
+
 Time::Time()
 {
-	SetToNow();
 }
 
 Time::Time(const Duration& p_Duration)
@@ -16,13 +20,21 @@ Time::Time(const Duration& p_Duration)
 	*this += p_Duration;
 }
 
-Time::~Time()
-{
-}
-
 void Time::SetToNow()
 {
-	m_TimePoint = std::chrono::system_clock::now();
+	m_TimePoint = std::chrono::steady_clock::now();
+}
+
+Time Time::Now()
+{
+	Time l_Time;
+	l_Time.SetToNow();
+	return l_Time;
+}
+
+std::string Time::ToString() const
+{
+	return (*this - n_ZeroTimeRef).ToString();
 }
 
 Time& Time::operator+=(const Duration& p_rhs)
@@ -37,18 +49,11 @@ Time& Time::operator-=(const Duration& p_rhs)
 	return *this;
 }
 
-std::string Time::ToString(TimeFormat p_Format) const
+Duration Time::operator-(const Time& p_rhs) const
 {
-	std::stringstream l_Stream;
-	std::time_t l_Time = std::chrono::system_clock::to_time_t(m_TimePoint);
-	l_Stream << std::put_time(std::localtime(&l_Time), (p_Format == TimeFormat::DateAndTime ? "%Y-%m-%d %X" : "%X"));
-	return l_Stream.str();
-}
-
-Time& Time::operator=(const Time& p_rhs)
-{
-	m_TimePoint = p_rhs.m_TimePoint;
-	return *this;
+	Duration l_Duration;
+	l_Duration.m_InternalDuration = m_TimePoint - p_rhs.m_TimePoint;
+	return l_Duration;
 }
 
 bool Time::operator==(const Time& p_rhs) const
@@ -80,4 +85,10 @@ bool Time::operator>=(const Time& p_rhs) const
 	return m_TimePoint >= p_rhs.m_TimePoint;
 }
 
+}
+
+std::ostream& operator<<(std::ostream& os, const Hawk::Time& p_Time)
+{
+	os << p_Time.ToString();
+	return os;
 }

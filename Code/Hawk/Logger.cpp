@@ -4,6 +4,7 @@
 
 #include "Logger.h"
 #include "Time.h"
+#include "Duration.h"
 #include "boost/algorithm/string.hpp"
 #include <consoleapi.h>
 #include <io.h>
@@ -18,13 +19,13 @@ namespace Logger
 	WORD GetConsoleTextAttr(Level p_Level);
 	bool ShouldLog(const std::string& p_Msg);
 
-	std::mutex m_Mutex;
-	bool m_bInitialized = false;
+	std::mutex n_Mutex;
+	bool n_bInitialized = false;
 }
 
 bool Logger::Initialize()
 {
-	if (m_bInitialized) return true;
+	if (n_bInitialized) return true;
 
 	// Follows: https://justcheckingonall.wordpress.com/2008/08/29/console-window-win32-app/
 	if (AllocConsole())
@@ -44,8 +45,8 @@ bool Logger::Initialize()
 			*stdin = *l_hFile;
 		}
 		SetConsoleTitle("Hawk Engine console");
-		LOG_INFO("Logger initialized")
-		m_bInitialized = true;
+		LOG_INFO("Logger initialized");
+		n_bInitialized = true;
 		return true;
 	}
 	return false;
@@ -55,15 +56,15 @@ void Logger::Write(const std::string& p_Msg, Level p_Level)
 {
 	if (!ShouldLog(p_Msg)) return;
 
-	std::lock_guard<std::mutex> l_Lock(m_Mutex);
+	std::lock_guard<std::mutex> l_Lock(n_Mutex);
 	if (p_Level != Level::Debug || (Config::Get("Log.debug", false)))
 	{
 		HANDLE l_hStd = GetStdHandle(STD_OUTPUT_HANDLE);
 
 		SetConsoleTextAttribute(l_hStd, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 
-		std::stringstream l_Stream;
-		l_Stream << Time().ToString() << " (Thread: " << std::this_thread::get_id() << ") ";
+		std::ostringstream l_Stream;
+		l_Stream << Time::Now() << " (Thread: " << std::this_thread::get_id() << ") ";
 		std::string l_InitStr = l_Stream.str();
 		WriteConsole(l_hStd, l_InitStr.c_str(), l_InitStr.length(), LPDWORD(), nullptr);
 

@@ -18,7 +18,7 @@ private:
 
 #define THROW(msg)													\
 {																	\
-	std::stringstream l_Stream;										\
+	std::ostringstream l_Stream;										\
 	l_Stream << msg;												\
 	throw Hawk::Exception(l_Stream.str(), __FILE__, __LINE__);		\
 }

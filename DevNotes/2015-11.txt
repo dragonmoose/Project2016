@@ -53,3 +53,10 @@ compiled in Hawk due to string being part of pch). So should not rely on this.
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Configured boost build (build only filesystem)
 More project settings...
+
+2015-11-14
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Switched from chrono system_clock to steady_clock (run test code with system_clock and changed time.
+When setting to an earlier time, the program came to a halt (due to std::this_thread::sleep_for())
+Implemented Time & Duration
+Config now reloaded in 1 second intervals if file write time changed

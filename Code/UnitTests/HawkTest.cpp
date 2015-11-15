@@ -8,34 +8,27 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace Hawk;
 
+std::wstring ToWString(const std::string& p_Source)
+{
+	std::wstring l_Dest(p_Source.length(), L' ');
+	std::copy(p_Source.begin(), p_Source.end(), l_Dest.begin());
+	return l_Dest;
+}
+
+template<> static std::wstring Microsoft::VisualStudio::CppUnitTestFramework::ToString<Duration>(const Duration& t)
+{
+	return ToWString(t.ToString());
+}
+
 namespace HawkUnitTests
 {
 	TEST_CLASS(TimeTest)
 	{
 	public:
 
-		TEST_METHOD(ToString)
+		TEST_METHOD(Precision)
 		{
-			Time l_Time;
-			Assert::AreEqual(8, (int)l_Time.ToString().length());
-			Assert::AreEqual(19, (int)l_Time.ToString(TimeFormat::DateAndTime).length());
-		}
-
-		TEST_METHOD(Operators)
-		{
-			Time l_Time1;
-			Time l_Time2(l_Time1);
-			Duration l_Duration(1, Duration::Precision::Second);
-
-			l_Time2 += l_Duration;
-			Assert::AreNotEqual(l_Time1.ToString(), l_Time2.ToString());
-			Assert::IsTrue(l_Time2 > l_Time1);
-
-			l_Time2 -= l_Duration;
-			Assert::IsTrue(l_Time2 == l_Time1);
-
-			l_Time2 -= l_Duration;
-			Assert::IsTrue(l_Time2 < l_Time1);
+			Assert::AreEqual(Duration(2000, Duration::Precision::Millisecond), Duration(2, Duration::Precision::Second));
 		}
 
 	};

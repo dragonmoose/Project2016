@@ -24,13 +24,13 @@ namespace Logger
 
 #define LOG_WITH_SOURCE_INFO(msg, level)															\
 {																									\
-	std::stringstream l_Stream;																		\
+	std::ostringstream l_Stream;																		\
 	l_Stream << msg << " [" << __FILE__ << ":" << std::to_string(__LINE__) << "]\r\n";				\
 	Hawk::Logger::Write(l_Stream.str(), Hawk::Logger::Level::level);							\
 }
 #define LOG_EXCEPTION_WITH_SOURCE_INFO(e)															\
 {																									\
-	std::stringstream l_Stream;																		\
+	std::ostringstream l_Stream;																		\
 	l_Stream << e.what() << " [" << e.GetSourceInfo() << " -> " << __FILE__ << ":";					\
 	l_Stream << std::to_string(__LINE__) << "]\r\n";												\
 	Hawk::Logger::Write(l_Stream.str(), Hawk::Logger::Level::Exception);						\

@@ -4,7 +4,6 @@
 #include "Time.h"
 #include <boost/filesystem.hpp>
 #include <iostream>
-#include <thread>		// tmp
 
 namespace Hawk {
 
@@ -46,14 +45,10 @@ void Core::AddSystem(std::unique_ptr<SystemBase> p_System, const std::string& p_
 
 void Core::Run()
 {
-	//std::chrono::steady_clock::time_point l_FrameStart = std::chrono::steady_clock::now();
 	while (true)
 	{
-		//std::chrono::steady_clock::duration<std::chrono::microseconds> l_FrameDelta = duration_cast<std::chrono::microseconds
 		Config::Update();
-		using namespace std::literals;
-		std::this_thread::sleep_for(2s);
-		LOG_DEBUG("Frame");
+		LOG_DEBUG("running...");
 	}
 }
 	
