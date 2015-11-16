@@ -45,7 +45,6 @@ bool Logger::Initialize()
 			*stdin = *l_hFile;
 		}
 		SetConsoleTitle("Hawk Engine console");
-		LOG_INFO("Logger initialized");
 		n_bInitialized = true;
 		return true;
 	}
@@ -94,7 +93,7 @@ WORD Logger::GetConsoleTextAttr(Level p_Level)
 
 bool Logger::ShouldLog(const std::string& p_Msg)
 {
-	bool l_bShouldLog = true;
+	if (!Config::Instance().Get<bool>("Log.enabled", true)) return false;
 	std::string l_Filter = Config::Instance().Get<std::string>("Log.filter", "");
 
 	if (!l_Filter.empty())
@@ -103,9 +102,9 @@ bool Logger::ShouldLog(const std::string& p_Msg)
 		std::string l_Msg(p_Msg);
 		boost::algorithm::to_lower(l_Msg);
 
-		l_bShouldLog = boost::algorithm::contains(l_Msg, l_Filter);
+		return boost::algorithm::contains(l_Msg, l_Filter);
 	}
-	return l_bShouldLog;
+	return true;
 }
 
 }

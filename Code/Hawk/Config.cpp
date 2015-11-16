@@ -21,7 +21,6 @@ Config& Config::Instance()
 Config::Config()
 : m_LastWriteTime(0)
 {
-	Load();
 }
 
 void Config::Load()
@@ -45,7 +44,7 @@ void Config::Load()
 	}
 	catch (boost::property_tree::ini_parser_error& e)
 	{
-		THROW("Failed to load config file. ParseError: " << e.what());
+		LOG_STD_EXCEPTION(e);
 	}
 }
 

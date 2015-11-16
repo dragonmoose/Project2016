@@ -14,17 +14,17 @@
     <ClCompile Include="Exception.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="SystemBase.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="Logger.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="SystemManagerThread.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Config.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemBase.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemManager.cpp">
+      <Filter>System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -41,13 +41,7 @@
     <ClInclude Include="Exception.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="SystemBase.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Logger.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="SystemManagerThread.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="DllExport.h">
@@ -56,6 +50,12 @@
     <ClInclude Include="Config.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="SystemBase.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -63,6 +63,9 @@
     </Filter>
     <Filter Include="Util">
       <UniqueIdentifier>{508386be-99b4-4f1f-84d1-a55bbc32819d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{d0d76ea6-0ff9-4bf2-9816-1a73b07c8588}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

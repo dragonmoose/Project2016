@@ -18,13 +18,12 @@ public:
 		std::lock_guard<std::mutex> l_Lock(m_Mutex);
 		return m_Properties.get<T>(p_Name, p_Default);
 	}
+	void Load();
 
 private:
 	Config();
 	Config(const Config&) = delete;
 	Config& operator=(const Config&) = delete;
-
-	void Load();
 
 	boost::property_tree::ptree m_Properties;
 	std::time_t m_LastWriteTime;
