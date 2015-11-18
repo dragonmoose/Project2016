@@ -65,3 +65,8 @@ Config now reloaded in 1 second intervals if file write time changed
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Thread safe Config + made Config singleton (due to mutex otherwise having to be declared in header file due to
 templated Get() having to reside in the header file as well)
+
+2015-11-17
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-SystemManagers now launches thread and systems are updated
+-Thread logging
