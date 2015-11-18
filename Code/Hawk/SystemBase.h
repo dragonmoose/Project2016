@@ -12,6 +12,8 @@ namespace Hawk
 		SystemBase();
 		virtual ~SystemBase();
 
+		void InternalInitialize();
+		virtual void Initialize();
 		virtual void RegisterEvents();
 		virtual void UnregisterEvents();
 		virtual std::string GetName() const = 0;

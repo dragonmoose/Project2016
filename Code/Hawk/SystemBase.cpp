@@ -6,22 +6,28 @@ namespace Hawk {
 
 SystemBase::SystemBase()
 {
-
 }
 
 SystemBase::~SystemBase()
 {
+}
 
+void SystemBase::InternalInitialize()
+{
+	LOG_INFO("Initializing system: " << GetName());
+	Initialize();
+}
+
+void SystemBase::Initialize()
+{
 }
 
 void SystemBase::RegisterEvents()
 {
-
 }
 
 void SystemBase::UnregisterEvents()
 {
-
 }
 
 void SystemBase::InternalUpdate(const Duration& p_Duration)

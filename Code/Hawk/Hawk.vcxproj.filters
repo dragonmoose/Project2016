@@ -26,6 +26,9 @@
     <ClCompile Include="SystemManager.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="ConsoleCmdSystem.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -54,6 +57,9 @@
       <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="SystemManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleCmdSystem.h">
       <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>

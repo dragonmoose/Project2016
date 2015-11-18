@@ -8,5 +8,7 @@ class TestSystem2 : public Hawk::SystemBase
 {
 public:
 	std::string GetName() const override { return "TestSystem2"; }
-	virtual void Update(const Hawk::Duration& p_Duration) {}
+	virtual void Update(const Hawk::Duration& p_Duration) {
+		LOG_DEBUG(GetName() << " update: " << p_Duration);
+	}
 };

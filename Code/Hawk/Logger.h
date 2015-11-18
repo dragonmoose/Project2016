@@ -3,6 +3,7 @@
 #ifdef HAWK_DEBUG
 #include "DllExport.h"
 #include <sstream>
+#include <thread>
 
 namespace Hawk {
 namespace Logger
@@ -17,6 +18,7 @@ namespace Logger
 	};
 
 	bool Initialize();
+	void RegisterThreadName(const std::string& p_Name, std::thread::id p_ID);
 
 	HAWK_DLL_EXPORT void Write(const std::string& p_Msg, Level p_Level);
 }

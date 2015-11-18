@@ -1,7 +1,5 @@
 #include "pch.h"
 #include "Core.h"
-#include "SystemManager.h"
-#include "SystemBase.h"
 #include "Time.h"
 #include "Duration.h"
 #include <boost/filesystem.hpp>
@@ -9,65 +7,64 @@
 
 namespace Hawk {
 
-namespace Core
+Core::Core(bool p_bConsole)
 {
-	typedef std::unordered_map<std::string, std::unique_ptr<SystemManager>> ThreadedSystems_t;
-	ThreadedSystems_t n_ThreadedSystems;
-	SystemManager n_MainSystems;
-}
-
-HAWK_DLL_EXPORT bool Core::Initialize()
-{
-	try
-	{
 #ifdef HAWK_DEBUG
-		boost::filesystem::current_path(boost::filesystem::current_path().parent_path());
-		THROW_IF_NOT(Logger::Initialize(), "Failed to initialize LogSystem");
-		Config::Instance().Load();
-		LOG_INFO("Working directory set to: " << boost::filesystem::current_path());
-#endif
-	}
-	catch (Exception& e)
+	boost::filesystem::current_path(boost::filesystem::current_path().parent_path());
+	if (p_bConsole)
 	{
-		std::cout << "Failed to initialize Core. Exception: " << e.what() << std::endl;
-		return false;
+		THROW_IF_NOT(Logger::Initialize(), "Failed to initialize LogSystem");
 	}
-	RegisterThread("Main");
+	Config::Instance().Load();
+	LOG_INFO("Working directory set to: " << boost::filesystem::current_path());
+#endif
 	LOG_INFO("Hawk core initialized...");
-	return true;
 }
 
 void Core::RegisterThread(const std::string& p_Name)
 {
-	bool l_bInserted = n_ThreadedSystems.insert(ThreadedSystems_t::value_type(p_Name, std::make_unique<SystemManager>())).second;
+	bool l_bInserted = m_SystemManagers.insert(SystemManagers_t::value_type(p_Name, std::make_unique<SystemManager>(p_Name))).second;
 	THROW_IF_NOT(l_bInserted, "Thread with name " << p_Name << " already registered");
-
-	//m_SystemThreads[p_Name] = std::make_unique<SystemThread>();
 }
 
 void Core::AddSystem(std::unique_ptr<SystemBase> p_System, const std::string& p_Thread)
 {
-	if (p_Thread.empty())
-	{
-		n_MainSystems.AddSystem(std::move(p_System));
-	}
+	THROW_IF(p_Thread.empty(), "Empty thread name");
+	auto l_Itr = m_SystemManagers.find(p_Thread);
+	THROW_IF(l_Itr == m_SystemManagers.end(), "Thread with name " << p_Thread << " not registered");
+	l_Itr->second->AddSystem(std::move(p_System));
 }
 
 void Core::Run()
 {
-	n_MainSystems.Prepare();
+	InitializeSystems();
+	StartSystems();
 
-	Time l_OldTime;
-	while (true)
+	while (Config::Instance().Get<bool>("Core.run", true))
 	{
-		Time l_CurrTime;
-		l_CurrTime.SetToNow();
-		Duration l_Delta(l_CurrTime - l_OldTime);
-		l_OldTime = l_CurrTime;
-
 		Config::Instance().Update();
-		n_MainSystems.Update(l_Delta);
+	}
+
+	LOG_INFO("************* Core exit *************");
+	using namespace std::literals;
+	std::this_thread::sleep_for(10s);
+}
+
+void Core::InitializeSystems()
+{
+	for (auto& l_Manager : m_SystemManagers)
+	{
+		l_Manager.second->Initialize();
 	}
 }
+
+void Core::StartSystems()
+{
+	for (auto& l_Manager : m_SystemManagers)
+	{
+		l_Manager.second->Start();
+	}
+}
+
 	
 }

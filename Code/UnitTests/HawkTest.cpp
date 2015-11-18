@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Hawk/Config.h"
 #include "Hawk/Core.h"
+#include "Hawk/Logger.h"
 #include "Hawk/Time.h"
 #include "Hawk/Duration.h"
 #include "Hawk/Exception.h"
@@ -53,9 +54,10 @@ namespace HawkUnitTests
 
 			TEST_METHOD(RegisterThreadSystem)
 			{
-				Core::Initialize();
-				Core::RegisterThread("TestThread");
-				Assert::ExpectException<Exception>([]() { Core::RegisterThread("TestThread"); });
+				Core l_Core(false);
+				LOG_INFO("testing info");
+				l_Core.RegisterThread("TestThread");
+				Assert::ExpectException<Exception>([&l_Core]() { l_Core.RegisterThread("TestThread"); });
 			}
 	};
 

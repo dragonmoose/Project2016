@@ -1,25 +1,30 @@
 #pragma once
 #include <memory>
+#include <thread>
 #include <vector>
 
-namespace Hawk
+namespace Hawk {
+
+class SystemBase;
+
+class SystemManager
 {
-	class SystemBase;
+public:
+	SystemManager(const std::string& p_ThreadName);
+	void AddSystem(std::unique_ptr<SystemBase> p_System);
+	void Initialize();
+	void Start();
 
-	class SystemManager
-	{
-	public:
-		SystemManager();
+	SystemManager(const SystemManager&) = delete;
+	SystemManager& operator=(const SystemManager&) = delete;
 
-		void AddSystem(std::unique_ptr<SystemBase> p_System);
-		void Prepare();
-		void Update(const Duration& p_Duration);
+private:
+	void Run();
+	void Update(const Duration& p_Duration);
 
-		SystemManager(const SystemManager&) = delete;
-		SystemManager& operator=(const SystemManager&) = delete;
-
-	private:
-		typedef std::vector<std::unique_ptr<SystemBase>> Systems_t;
-		Systems_t m_Systems;
-	};
+	typedef std::vector<std::unique_ptr<SystemBase>> Systems_t;
+	Systems_t m_Systems;
+	std::thread m_Thread;
+	const std::string m_ThreadName;
+};
 }
