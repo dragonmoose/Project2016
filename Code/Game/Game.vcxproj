@@ -80,6 +80,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="TestEvent.h" />
     <ClInclude Include="TestSystem.h" />
     <ClInclude Include="TestSystem2.h" />
   </ItemGroup>

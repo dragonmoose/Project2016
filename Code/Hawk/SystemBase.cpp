@@ -12,8 +12,9 @@ SystemBase::~SystemBase()
 {
 }
 
-void SystemBase::InternalInitialize()
+void SystemBase::InternalInitialize(std::unique_ptr<EventManager>&& p_EventManager)
 {
+	m_EventManager = std::move(p_EventManager);
 	LOG_INFO("Initializing system: " << GetName());
 	Initialize();
 }

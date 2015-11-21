@@ -12,6 +12,9 @@
     <ClInclude Include="TestSystem2.h">
       <Filter>Test</Filter>
     </ClInclude>
+    <ClInclude Include="TestEvent.h">
+      <Filter>Test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Test">

@@ -1,6 +1,8 @@
 #pragma once
 #include "DllExport.h"
+#include "EventManager.h"
 #include <string>
+#include <memory>
 
 namespace Hawk
 {
@@ -12,7 +14,7 @@ namespace Hawk
 		SystemBase();
 		virtual ~SystemBase();
 
-		void InternalInitialize();
+		void InternalInitialize(std::unique_ptr<EventManager>&& p_EventManager);
 		virtual void Initialize();
 		virtual void RegisterEvents();
 		virtual void UnregisterEvents();
@@ -23,5 +25,8 @@ namespace Hawk
 
 		SystemBase(const SystemBase&) = delete;
 		SystemBase& operator=(const SystemBase&) = delete;
+
+	protected:
+		std::unique_ptr<EventManager> m_EventManager;
 	};
 }

@@ -55,6 +55,7 @@ namespace Logger
 #define LOG_WARNING(msg)
 #define LOG_ERROR(msg)
 #define LOG_EXCEPTION(e)
+#define LOG_STD_EXCEPTION(e)
 
 #define LOG_INFO_IF(p, msg)		
 #define LOG_WARNING_IF(p, msg)	

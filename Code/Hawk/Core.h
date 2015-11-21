@@ -7,6 +7,8 @@
 
 namespace Hawk {
 
+class EventRouter;
+
 class HAWK_DLL_EXPORT Core final
 {
 public:
@@ -21,9 +23,11 @@ public:
 private:
 	void InitializeSystems();
 	void StartSystems();
+	void DispatchEvents();
 
 	typedef std::unordered_map<std::string, std::unique_ptr<SystemManager>> SystemManagers_t;
 	SystemManagers_t m_SystemManagers;
+	std::shared_ptr<EventRouter> m_EventRouter;
 };
 
 }

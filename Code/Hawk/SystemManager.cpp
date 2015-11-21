@@ -3,6 +3,7 @@
 #include "SystemBase.h"
 #include "Time.h"
 #include "Duration.h"
+#include "EventManager.h"
 
 namespace Hawk {
 
@@ -16,18 +17,20 @@ void SystemManager::AddSystem(std::unique_ptr<SystemBase> p_System)
 	m_Systems.push_back(std::move(p_System));
 }
 
-void SystemManager::Initialize()
+void SystemManager::Initialize(std::shared_ptr<EventRouter> p_EventRouter)
 {
 	for (auto& l_System : m_Systems)
 	{
-		l_System->InternalInitialize();
+		l_System->InternalInitialize(std::make_unique<EventManager>(p_EventRouter));
 	}
 }
 
 void SystemManager::Start()
 {
 	m_Thread = std::thread(&SystemManager::Run, this);
+#ifdef HAWK_DEBUG
 	Logger::RegisterThreadName(m_ThreadName, m_Thread.get_id());
+#endif
 	m_Thread.detach();
 }
 

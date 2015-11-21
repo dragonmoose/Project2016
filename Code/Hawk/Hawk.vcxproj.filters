@@ -29,6 +29,12 @@
     <ClCompile Include="ConsoleCmdSystem.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="EventManager.cpp">
+      <Filter>Events</Filter>
+    </ClCompile>
+    <ClCompile Include="EventRouter.cpp">
+      <Filter>Events</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -62,6 +68,15 @@
     <ClInclude Include="ConsoleCmdSystem.h">
       <Filter>System</Filter>
     </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="IEvent.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="EventRouter.h">
+      <Filter>Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -72,6 +87,9 @@
     </Filter>
     <Filter Include="System">
       <UniqueIdentifier>{d0d76ea6-0ff9-4bf2-9816-1a73b07c8588}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{ddf4f2fb-997d-4c4f-8091-af6540c80219}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

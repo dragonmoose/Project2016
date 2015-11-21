@@ -82,7 +82,10 @@
     <ClInclude Include="Core.h" />
     <ClInclude Include="DllExport.h" />
     <ClInclude Include="Duration.h" />
+    <ClInclude Include="EventManager.h" />
+    <ClInclude Include="EventRouter.h" />
     <ClInclude Include="Exception.h" />
+    <ClInclude Include="IEvent.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="SystemBase.h" />
@@ -94,6 +97,8 @@
     <ClCompile Include="ConsoleCmdSystem.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Duration.cpp" />
+    <ClCompile Include="EventManager.cpp" />
+    <ClCompile Include="EventRouter.cpp" />
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="pch.cpp">
