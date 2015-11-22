@@ -55,9 +55,45 @@ std::string Duration::ToString() const
 	return l_Stream.str();
 }
 
+void Duration::SetToZero()
+{
+	m_InternalDuration = Duration_t::zero();
+}
+
 bool Duration::operator==(const Duration& p_rhs) const
 {
 	return m_InternalDuration == p_rhs.m_InternalDuration;
+}
+
+bool Duration::operator!=(const Duration& p_rhs) const
+{
+	return m_InternalDuration != p_rhs.m_InternalDuration;
+}
+
+bool Duration::operator<(const Duration& p_rhs) const
+{
+	return m_InternalDuration < p_rhs.m_InternalDuration;
+}
+
+bool Duration::operator<=(const Duration& p_rhs) const
+{
+	return m_InternalDuration <= p_rhs.m_InternalDuration;
+}
+
+bool Duration::operator>(const Duration& p_rhs) const
+{
+	return m_InternalDuration > p_rhs.m_InternalDuration;
+}
+
+bool Duration::operator>=(const Duration& p_rhs) const
+{
+	return m_InternalDuration >= p_rhs.m_InternalDuration;
+}
+
+Duration& Duration::operator+=(const Duration& p_rhs)
+{
+	m_InternalDuration += p_rhs.m_InternalDuration;
+	return *this;
 }
 
 }

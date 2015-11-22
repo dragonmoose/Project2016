@@ -17,11 +17,11 @@ void SystemManager::AddSystem(std::unique_ptr<SystemBase> p_System)
 	m_Systems.push_back(std::move(p_System));
 }
 
-void SystemManager::Initialize(std::shared_ptr<EventRouter> p_EventRouter)
+void SystemManager::Initialize()
 {
 	for (auto& l_System : m_Systems)
 	{
-		l_System->InternalInitialize(std::make_unique<EventManager>(p_EventRouter));
+		l_System->InternalInitialize(std::make_unique<EventManager>());
 	}
 }
 
@@ -47,6 +47,7 @@ void SystemManager::Run()
 	LOG_INFO("Running " << m_Systems.size() << " systems on thread: " << m_ThreadName);
 
 	Time l_OldTime;
+	l_OldTime.SetToNow();
 	while (Config::Instance().Get<bool>("Core.run", true))
 	{
 		Time l_CurrTime;

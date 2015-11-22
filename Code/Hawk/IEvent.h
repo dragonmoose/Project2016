@@ -1,5 +1,9 @@
 #pragma once
 
 namespace Hawk {
-struct IEvent {};
+
+struct IEvent
+{
+};
+
 }

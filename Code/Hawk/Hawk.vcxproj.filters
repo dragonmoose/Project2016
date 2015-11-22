@@ -77,6 +77,15 @@
     <ClInclude Include="EventRouter.h">
       <Filter>Events</Filter>
     </ClInclude>
+    <ClInclude Include="EventCollector.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="QueuedEvent.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="EventHandler.h">
+      <Filter>Events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">

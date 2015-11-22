@@ -12,7 +12,7 @@ public:
 	HAWK_DLL_EXPORT static Config& Instance();
 	void Update();
 
-	template<typename T>
+	template<class T>
 	T Get(const std::string& p_Name, const T& p_Default) const
 	{
 		std::lock_guard<std::mutex> l_Lock(m_Mutex);

@@ -3,21 +3,27 @@
 
 namespace Hawk {
 
-void EventRouter::Register(const IEvent& p_Event, Func_t p_Func)
+namespace EventRouter
 {
-	m_FuncTable[std::type_index(typeid(p_Event))].push_back(p_Func);
+	typedef std::unordered_map<std::type_index, std::vector<EventCollector*>> FuncTable_t;
+	FuncTable_t m_FuncTable;
 }
 
-void EventRouter::Dispatch(const IEvent& p_Event)
+void EventRouter::Register(const std::type_index& p_EventTypeIndex, EventCollector* p_Func)
 {
-	auto l_Itr = m_FuncTable.find(std::type_index(typeid(p_Event)));
+	LOG_INFO("hash: " << p_EventTypeIndex.hash_code() << " name: " << p_EventTypeIndex.name());
+	m_FuncTable[p_EventTypeIndex].push_back(p_Func);
+}
+
+bool EventRouter::TryGetCollectors(const std::type_index& p_TypeIndex, std::vector<EventCollector*>& p_EventManagers)
+{
+	FuncTable_t::iterator l_Itr = m_FuncTable.find(p_TypeIndex);
 	if (l_Itr != m_FuncTable.end())
 	{
-		for (auto& l_PushFunc : l_Itr->second)
-		{
-			l_PushFunc(p_Event);
-		}
+		p_EventManagers = l_Itr->second;
+		return true;
 	}
+	return false;
 }
 
 }

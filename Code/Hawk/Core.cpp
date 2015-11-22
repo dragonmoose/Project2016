@@ -2,7 +2,6 @@
 #include "Core.h"
 #include "Time.h"
 #include "Duration.h"
-#include "EventRouter.h"
 #include <boost/filesystem.hpp>
 #include <iostream>
 #include <thread>
@@ -11,7 +10,6 @@
 namespace Hawk {
 
 Core::Core(bool p_bConsole)
-: m_EventRouter(std::make_shared<EventRouter>())
 {
 #ifdef HAWK_DEBUG
 	boost::filesystem::current_path(boost::filesystem::current_path().parent_path());
@@ -47,19 +45,18 @@ void Core::Run()
 	while (Config::Instance().Get<bool>("Core.run", true))
 	{
 		Config::Instance().Update();
-		DispatchEvents();
 	}
 
 	LOG_INFO("************* Core exit *************");
 	using namespace std::literals;
-	std::this_thread::sleep_for(10s);
+	std::this_thread::sleep_for(2s);
 }
 
 void Core::InitializeSystems()
 {
 	for (auto& l_Manager : m_SystemManagers)
 	{
-		l_Manager.second->Initialize(m_EventRouter);
+		l_Manager.second->Initialize();
 	}
 }
 
@@ -70,14 +67,5 @@ void Core::StartSystems()
 		l_Manager.second->Start();
 	}
 }
-
-void Core::DispatchEvents()
-{
-	for (auto& l_Manager : m_SystemManagers)
-	{
-		l_Manager.second->Start();
-	}
-}
-
 	
 }

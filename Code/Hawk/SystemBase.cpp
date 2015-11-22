@@ -17,23 +17,20 @@ void SystemBase::InternalInitialize(std::unique_ptr<EventManager>&& p_EventManag
 	m_EventManager = std::move(p_EventManager);
 	LOG_INFO("Initializing system: " << GetName());
 	Initialize();
+	RegisterEvents(*m_EventManager);
 }
 
 void SystemBase::Initialize()
 {
 }
 
-void SystemBase::RegisterEvents()
-{
-}
-
-void SystemBase::UnregisterEvents()
+void SystemBase::RegisterEvents(EventManager& p_EventManager)
 {
 }
 
 void SystemBase::InternalUpdate(const Duration& p_Duration)
 {
-	LOG_DEBUG("Updating system: " << GetName() << " DeltaTime: " << p_Duration);
+	m_EventManager->HandleQueued();
 	Update(p_Duration);
 }
 

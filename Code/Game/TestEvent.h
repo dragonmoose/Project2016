@@ -1,7 +1,9 @@
 #pragma once
 
-struct TestEvent
+#include "Hawk/IEvent.h"
+
+struct TestEvent : public Hawk::IEvent
 {
-	TestEvent(int p_iValue) : m_iValue(p_iValue) {}
 	int m_iValue;
+	std::string m_Str;
 };

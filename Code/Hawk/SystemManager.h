@@ -6,14 +6,13 @@
 namespace Hawk {
 
 class SystemBase;
-class EventRouter;
 
 class SystemManager final
 {
 public:
 	SystemManager(const std::string& p_ThreadName);
 	void AddSystem(std::unique_ptr<SystemBase> p_System);
-	void Initialize(std::shared_ptr<EventRouter> p_EventRouter);
+	void Initialize();
 	void Start();
 
 	SystemManager(const SystemManager&) = delete;

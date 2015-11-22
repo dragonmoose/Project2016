@@ -16,8 +16,7 @@ namespace Hawk
 
 		void InternalInitialize(std::unique_ptr<EventManager>&& p_EventManager);
 		virtual void Initialize();
-		virtual void RegisterEvents();
-		virtual void UnregisterEvents();
+		virtual void RegisterEvents(EventManager& p_EventManager);
 		virtual std::string GetName() const = 0;
 
 		void InternalUpdate(const Duration& p_Duration);
@@ -27,6 +26,13 @@ namespace Hawk
 		SystemBase& operator=(const SystemBase&) = delete;
 
 	protected:
+		template<class T>
+		void SendEvent(const T& p_Event)
+		{
+			m_EventManager->Send<T>(p_Event);
+		}
+
+	private:
 		std::unique_ptr<EventManager> m_EventManager;
 	};
 }

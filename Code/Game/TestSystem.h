@@ -2,6 +2,7 @@
 #include "Hawk/SystemBase.h"
 #include "Hawk/Logger.h"
 #include "Hawk/Duration.h"
+#include "Hawk/EventManager.h"
 #include "TestEvent.h"
 #include <string>
 
@@ -9,14 +10,14 @@ class TestSystem : public Hawk::SystemBase
 {
 public:
 	std::string GetName() const override { return "TestSystem";  }
-	virtual void Update(const Hawk::Duration& p_Duration) { LOG_DEBUG("TestSystem update called"); }
+	virtual void Update(const Hawk::Duration& p_Duration) { /*LOG_DEBUG("TestSystem update called");*/ }
 
-	void EventCallback(const TestEvent& p_Event)
+	void RegisterEvents(Hawk::EventManager& p_EventManager) override
 	{
-		LOG_INFO("TestEvent received. Value=" << p_Event.m_iValue);
-	}
-
-	void RegisterEvents() override
-	{
+		p_EventManager.Register<TestEvent>([](const TestEvent& p_Event)
+		{
+			LOG_DEBUG("Event received. Str=" << p_Event.m_Str << " Value=" << p_Event.m_iValue);
+		}
+		);
 	}
 };

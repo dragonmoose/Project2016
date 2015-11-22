@@ -82,12 +82,15 @@
     <ClInclude Include="Core.h" />
     <ClInclude Include="DllExport.h" />
     <ClInclude Include="Duration.h" />
+    <ClInclude Include="EventCollector.h" />
+    <ClInclude Include="EventHandler.h" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="EventRouter.h" />
     <ClInclude Include="Exception.h" />
     <ClInclude Include="IEvent.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="QueuedEvent.h" />
     <ClInclude Include="SystemBase.h" />
     <ClInclude Include="SystemManager.h" />
     <ClInclude Include="Time.h" />

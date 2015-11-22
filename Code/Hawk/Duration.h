@@ -21,8 +21,16 @@ public:
 	Duration();
 	Duration(int p_iValue, Precision p_Precision);
 	std::string ToString() const;
+	void SetToZero();
 
 	bool operator==(const Duration& p_rhs) const;
+	bool operator!=(const Duration& p_rhs) const;
+	bool operator<(const Duration& p_rhs) const;
+	bool operator<=(const Duration& p_rhs) const;
+	bool operator>(const Duration& p_rhs) const;
+	bool operator>=(const Duration& p_rhs) const;
+
+	Duration& operator+=(const Duration& p_rhs);
 
 	friend class Time;
 
