@@ -57,7 +57,7 @@ bool Logger::Initialize()
 
 void Logger::RegisterThreadName(const std::string& p_Name, std::thread::id p_ID)
 {
-	// Should only be called from main thread
+	std::lock_guard<std::mutex> l_Lock(n_Mutex);
 	THROW_IF_NOT(n_ThreadNames.insert(ThreadNames_t::value_type(p_ID, p_Name)).second, "Failed to insert thread name lookup. Name=" << p_Name << " ID=" << p_ID);
 }
 
@@ -131,6 +131,7 @@ bool Logger::ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo
 
 std::string Logger::GetThreadInfo()
 {
+	std::lock_guard<std::mutex> l_Lock(n_Mutex);
 	std::thread::id l_ID = std::this_thread::get_id();
 	std::ostringstream l_Stream;
 	l_Stream << "[";

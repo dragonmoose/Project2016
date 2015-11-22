@@ -7,7 +7,7 @@ namespace Hawk {
 class QueuedEventBase
 {
 public:
-	QueuedEventBase(const std::type_index& p_TypeIndex) : m_TypeIndex(p_TypeIndex) {}
+	explicit QueuedEventBase(const std::type_index& p_TypeIndex) : m_TypeIndex(p_TypeIndex) {}
 	virtual ~QueuedEventBase() {}
 
 	void InternalCall(EventHandlerBase& p_EventHandler) { Call(p_EventHandler); }
@@ -23,7 +23,7 @@ template<class T>
 class QueuedEvent final : public QueuedEventBase
 {
 public:
-	QueuedEvent(const T& p_Event) : QueuedEventBase(std::type_index(typeid(T))), m_Event(p_Event) {}
+	explicit QueuedEvent(const T& p_Event) : QueuedEventBase(std::type_index(typeid(T))), m_Event(p_Event) {}
 	void Call(EventHandlerBase& p_EventHandler) override
 	{
 		p_EventHandler.InternalCall(m_Event);

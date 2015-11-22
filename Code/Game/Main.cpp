@@ -9,10 +9,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	try
 	{
 		Hawk::Core l_Core;
-		l_Core.RegisterThread("Logic");
-		l_Core.RegisterThread("Logic2");
-		l_Core.AddSystem(std::make_unique<TestSystem>(), "Logic");
-		l_Core.AddSystem(std::make_unique<TestSystem2>(), "Logic2");
+		for (int i = 0; i < 100; i++)
+		{
+			l_Core.RegisterThread("Logic" + std::to_string(i));
+		}
+		l_Core.RegisterThread("Main");
+		
+		for (int i = 0; i < 100; i++)
+		{
+			l_Core.AddSystem(std::make_unique<TestSystem>(), "Logic" + std::to_string(i));
+		}
+		l_Core.AddSystem(std::make_unique<TestSystem2>(), "Main");
 		l_Core.Run();
 	}
 	catch (std::exception& e)

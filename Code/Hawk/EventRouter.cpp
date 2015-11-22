@@ -11,7 +11,6 @@ namespace EventRouter
 
 void EventRouter::Register(const std::type_index& p_EventTypeIndex, EventCollector* p_Func)
 {
-	LOG_INFO("hash: " << p_EventTypeIndex.hash_code() << " name: " << p_EventTypeIndex.name());
 	m_FuncTable[p_EventTypeIndex].push_back(p_Func);
 }
 
