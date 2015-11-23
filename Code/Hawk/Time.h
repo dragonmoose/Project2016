@@ -28,7 +28,7 @@ public:
 	bool operator>=(const Time& p_rhs) const;
 
 private:
-	typedef std::chrono::time_point<std::chrono::steady_clock> TimePoint_t;
+	using TimePoint_t = std::chrono::time_point<std::chrono::steady_clock>;
 	TimePoint_t m_TimePoint;
 };
 }

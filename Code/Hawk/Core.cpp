@@ -10,6 +10,7 @@
 namespace Hawk {
 
 Core::Core(bool p_bConsole)
+: m_EventRouter(std::make_shared<EventRouter>())
 {
 #ifdef HAWK_DEBUG
 	boost::filesystem::current_path(boost::filesystem::current_path().parent_path());
@@ -18,9 +19,9 @@ Core::Core(bool p_bConsole)
 		THROW_IF_NOT(Logger::Initialize(), "Failed to initialize LogSystem");
 	}
 	Config::Instance().Load();
-	LOG_INFO("Working directory set to: " << boost::filesystem::current_path());
+	LOG("Working directory set to: " << boost::filesystem::current_path(), Info);
 #endif
-	LOG_INFO("Hawk core initialized...");
+	LOG("Hawk core initialized...", Info);
 }
 
 void Core::RegisterThread(const std::string& p_Name)
@@ -39,16 +40,15 @@ void Core::Run()
 		Config::Instance().Update();
 	}
 
-	LOG_INFO("************* Core exit *************");
-	using namespace std::literals;
-	std::this_thread::sleep_for(2s);
+	LOG("************* Core exit *************", Info);
+	std::this_thread::sleep_for(std::chrono::seconds(2));
 }
 
 void Core::InitializeSystems()
 {
 	for (auto& l_Manager : m_SystemManagers)
 	{
-		l_Manager.second->Initialize();
+		l_Manager.second->Initialize(m_EventRouter);
 	}
 }
 

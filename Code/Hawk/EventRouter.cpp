@@ -3,12 +3,6 @@
 
 namespace Hawk {
 
-namespace EventRouter
-{
-	typedef std::unordered_map<std::type_index, std::vector<EventCollector*>> FuncTable_t;
-	FuncTable_t m_FuncTable;
-}
-
 void EventRouter::Register(const std::type_index& p_EventTypeIndex, EventCollector* p_Func)
 {
 	m_FuncTable[p_EventTypeIndex].push_back(p_Func);

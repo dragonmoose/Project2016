@@ -44,7 +44,7 @@ void Config::Load()
 	}
 	catch (boost::property_tree::ini_parser_error& e)
 	{
-		LOG_STD_EXCEPTION(e);
+		LOG_STD_EXCEPTION(e, Fatal);
 	}
 }
 

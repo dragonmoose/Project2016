@@ -10,16 +10,20 @@ namespace Hawk {
 
 struct IEvent;
 
-namespace EventRouter
+class HAWK_DLL_EXPORT EventRouter final
 {
-	HAWK_DLL_EXPORT void Register(const std::type_index& p_EventTypeIndex, EventCollector* p_Collectors);
-	HAWK_DLL_EXPORT bool TryGetCollectors(const std::type_index& p_TypeIndex, std::vector<EventCollector*>& p_EventManagers);
+public:
+	EventRouter() {}
+	EventRouter(const EventRouter&) = delete;
+	EventRouter& operator=(const EventRouter&) = delete;
+
+	void Register(const std::type_index& p_EventTypeIndex, EventCollector* p_Collectors);
+	bool TryGetCollectors(const std::type_index& p_TypeIndex, std::vector<EventCollector*>& p_EventManagers);
 
 	template<class T>
 	void Dispatch(const T& p_Event)
 	{
 		const std::type_index& l_TypeIndex = std::type_index(typeid(T));
-		//LOG_INFO("hash: " << p_EventTypeIndex.hash_code() << " name: " << p_EventTypeIndex.name());
 		std::vector<EventCollector*> l_Collectors;
 		if (TryGetCollectors(l_TypeIndex, l_Collectors))
 		{
@@ -29,6 +33,10 @@ namespace EventRouter
 			}
 		}
 	}
-}
+
+private:
+	using FuncTable_t = std::unordered_map<std::type_index, std::vector<EventCollector*>>;
+	FuncTable_t m_FuncTable;
+};
 
 }

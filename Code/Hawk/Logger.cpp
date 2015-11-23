@@ -12,18 +12,20 @@
 #include <fcntl.h>
 #include <mutex>
 #include <cctype>
+#include <chrono>
 
 namespace Hawk {
 
 namespace Logger
 {
-	WORD GetConsoleTextAttr(Level p_Level);
+	WORD GetMsgTextAttr(Level p_Level);
+	WORD GetSysTextAttr(Level p_Level);
 	bool ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo);
 	std::string GetThreadInfo();
 
 	std::mutex n_Mutex;
 	bool n_bInitialized = false;
-	typedef std::unordered_map<std::thread::id, std::string> ThreadNames_t;
+	using ThreadNames_t = std::unordered_map<std::thread::id, std::string>;
 	ThreadNames_t n_ThreadNames;
 }
 
@@ -61,7 +63,7 @@ void Logger::RegisterThreadName(const std::string& p_Name, std::thread::id p_ID)
 	THROW_IF_NOT(n_ThreadNames.insert(ThreadNames_t::value_type(p_ID, p_Name)).second, "Failed to insert thread name lookup. Name=" << p_Name << " ID=" << p_ID);
 }
 
-void Logger::Write(const std::string& p_Msg, Level p_Level)
+void Logger::Write(const std::string& p_Msg, const std::string& p_System, Level p_Level)
 {
 	std::string l_ThreadInfo = GetThreadInfo();
 	if (!ShouldLog(p_Msg, l_ThreadInfo)) return;
@@ -75,31 +77,61 @@ void Logger::Write(const std::string& p_Msg, Level p_Level)
 
 		std::ostringstream l_Stream;
 
-		l_Stream << Time::Now() << " " << l_ThreadInfo << "\t";
+		l_Stream << Time::Now() << " " << l_ThreadInfo << " ";
 		std::string l_InitStr = l_Stream.str();
 		WriteConsole(l_hStd, l_InitStr.c_str(), l_InitStr.length(), LPDWORD(), nullptr);
 
-		SetConsoleTextAttribute(l_hStd, GetConsoleTextAttr(p_Level));
+		SetConsoleTextAttribute(l_hStd, GetSysTextAttr(p_Level));
+		WriteConsole(l_hStd, p_System.c_str(), p_System.length(), LPDWORD(), nullptr);
+
+		SetConsoleTextAttribute(l_hStd, 0);
+		WriteConsole(l_hStd, " ", 1, LPDWORD(), nullptr);
+
+		SetConsoleTextAttribute(l_hStd, GetMsgTextAttr(p_Level));
 		WriteConsole(l_hStd, p_Msg.c_str(), p_Msg.length(), LPDWORD(), nullptr);
+	}
+	if (p_Level == Level::Fatal)
+	{
+		std::this_thread::sleep_for(std::chrono::minutes(1));
+		exit(-1);
 	}
 }
 
-WORD Logger::GetConsoleTextAttr(Level p_Level)
+WORD Logger::GetMsgTextAttr(Level p_Level)
 {
 	switch (p_Level)
 	{
 		case Level::Debug:
-			return FOREGROUND_RED | FOREGROUND_BLUE;
-		case Level::Info:
 			return FOREGROUND_GREEN;
+		case Level::Info:
+			return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
 		case Level::Warning:
 			return FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN;
 		case Level::Error:
 			return FOREGROUND_INTENSITY | FOREGROUND_RED;
-		case Level::Exception:
+		case Level::Fatal:
 			return FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | BACKGROUND_INTENSITY | BACKGROUND_RED;
 		default:
 			return 0;
+	}
+}
+
+WORD Logger::GetSysTextAttr(Level p_Level)
+{
+	switch (p_Level)
+	{
+	case Level::Debug:
+		return BACKGROUND_GREEN;
+	case Level::Info:
+		return BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE;
+	case Level::Warning:
+		return BACKGROUND_RED | BACKGROUND_GREEN;
+	case Level::Error:
+		return FOREGROUND_INTENSITY | BACKGROUND_RED;
+	case Level::Fatal:
+		return FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | BACKGROUND_INTENSITY | BACKGROUND_RED;
+	default:
+		return 0;
 	}
 }
 

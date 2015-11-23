@@ -13,15 +13,15 @@ public:
 	std::string GetName() const override { return "TestSystem2"; }
 	void RegisterEvents(Hawk::EventManager& p_EventManager)
 	{
-		p_EventManager.Register<TestEvent>([](const TestEvent& p_Event)
+		p_EventManager.Register<TestEvent>([this](const TestEvent& p_Event)
 		{
-			LOG_DEBUG("TESTSYSTEM2 receives event submitted by self");
+			LOG_SYS("Receives event submitted by self", Debug);
 		}
 		);
 
-		p_EventManager.Register<TestEvent2>([](const TestEvent2& p_Event)
+		p_EventManager.Register<TestEvent2>([this](const TestEvent2& p_Event)
 		{
-			LOG_INFO("TESTEVENT2. Str=" << p_Event.m_Str << " Value=" << p_Event.m_iValue);
+			LOG_SYS("Str=" << p_Event.m_Str << " Value=" << p_Event.m_iValue, Debug);
 		}
 		);
 	}
@@ -35,7 +35,6 @@ public:
 			l_Event.m_Str = "EventString";
 			l_Event.m_iValue = 666;
 			SendEvent<TestEvent>(l_Event);
-			//LOG_DEBUG("Event submitted");
 		}
 	}
 };

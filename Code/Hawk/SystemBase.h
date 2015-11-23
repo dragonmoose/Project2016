@@ -15,12 +15,12 @@ namespace Hawk
 		virtual ~SystemBase();
 
 		template<class T>
-		static std::shared_ptr<T> CreateInstance() { return std::make_shared<T>(); }
+		static std::unique_ptr<T> CreateInstance() { return std::make_unique<T>(); }
+		virtual std::string GetName() const = 0;
 
 		void InternalInitialize(std::unique_ptr<EventManager>&& p_EventManager);
 		virtual void Initialize();
 		virtual void RegisterEvents(EventManager& p_EventManager);
-		virtual std::string GetName() const = 0;
 
 		void InternalUpdate(const Duration& p_Duration);
 		virtual void Update(const Duration& p_Duration);
@@ -41,5 +41,6 @@ namespace Hawk
 	private:
 		std::unique_ptr<EventManager> m_EventManager;
 		bool m_bPaused;
+		std::string m_Name;
 	};
 }

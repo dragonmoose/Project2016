@@ -19,7 +19,7 @@ template<class T>
 class EventHandler final : public EventHandlerBase
 {
 public:
-	typedef std::function<void(const T&)> Func_t;
+	using Func_t = std::function<void(const T&)>;
 
 	explicit EventHandler(Func_t& p_Func) : m_Func(p_Func) {}
 	void Call(const IEvent& p_Event) override { m_Func(static_cast<const T&>(p_Event)); }

@@ -14,50 +14,53 @@ namespace Logger
 		Info,
 		Warning,
 		Error,
-		Exception
+		Fatal,
 	};
 
 	bool Initialize();
 	void RegisterThreadName(const std::string& p_Name, std::thread::id p_ID);
 
-	HAWK_DLL_EXPORT void Write(const std::string& p_Msg, Level p_Level);
+	HAWK_DLL_EXPORT void Write(const std::string& p_Msg, const std::string& p_System, Level p_Level);
 }
 }
 
-#define LOG_WITH_SOURCE_INFO(msg, level)															\
-{																									\
-	std::ostringstream l_Stream;																		\
-	l_Stream << msg << " [" << __FILE__ << ":" << std::to_string(__LINE__) << "]\r\n";				\
-	Hawk::Logger::Write(l_Stream.str(), Hawk::Logger::Level::level);							\
-}
-#define LOG_EXCEPTION_WITH_SOURCE_INFO(e)															\
-{																									\
-	std::ostringstream l_Stream;																		\
-	l_Stream << e.what() << " [" << e.GetSourceInfo() << " -> " << __FILE__ << ":";					\
-	l_Stream << std::to_string(__LINE__) << "]\r\n";												\
-	Hawk::Logger::Write(l_Stream.str(), Hawk::Logger::Level::Exception);						\
+#define LOG_WITH_SOURCE_INFO(msg, system, level)															\
+{																											\
+	std::ostringstream l_Stream;																			\
+	l_Stream << msg << " [" << __FILE__ << ":" << std::to_string(__LINE__) << "]\r\n";						\
+	Hawk::Logger::Write(l_Stream.str(), system, Hawk::Logger::Level::level);								\
 }
 
-#define LOG_DEBUG(msg)						LOG_WITH_SOURCE_INFO(msg, Debug);
-#define LOG_INFO(msg)						LOG_WITH_SOURCE_INFO(msg, Info);
-#define LOG_WARNING(msg)					LOG_WITH_SOURCE_INFO(msg, Warning);
-#define LOG_ERROR(msg)						LOG_WITH_SOURCE_INFO(msg, Error);
-#define LOG_EXCEPTION(e)					LOG_EXCEPTION_WITH_SOURCE_INFO(e);
-#define LOG_STD_EXCEPTION(e)				LOG_WITH_SOURCE_INFO(e.what(), Exception);
+#define LOG_EXCEPTION_WITH_SOURCE_INFO(e, system, level)													\
+{																											\
+	std::ostringstream l_Stream;																			\
+	l_Stream << "EXCEPTION: " << e.what() << " [" << e.GetSourceInfo() << " -> " << __FILE__ << ":";		\
+	l_Stream << std::to_string(__LINE__) << "]\r\n";														\
+	Hawk::Logger::Write(l_Stream.str(), system, Hawk::Logger::Level::level);								\
+}
 
-#define LOG_INFO_IF(p, msg)					if ((p)) LOG_INFO(msg)
-#define LOG_WARNING_IF(p, msg)				if ((p)) LOG_WARNING(msg)
-#define LOG_ERROR_IF(p, msg)				if ((p)) LOG_ERROR(msg)
+#define LOG(msg, level)						LOG_WITH_SOURCE_INFO(msg, "system", level)
+#define LOG_IF(p, msg, level)				if ((p)) LOG(msg, level)
+
+#define LOG_SYS(msg, level)					LOG_WITH_SOURCE_INFO(msg, this->GetName(), level)
+#define LOG_SYS_IF(p, msg, level)			if ((p)) LOG_SYS(msg, level)
+
+#define LOG_EXCEPTION(e, level)				LOG_EXCEPTION_WITH_SOURCE_INFO(e, "system", level);
+#define LOG_SYS_EXCEPTION(e, level)			LOG_EXCEPTION_WITH_SOURCE_INFO(e, this->GetName(), level);
+
+#define LOG_STD_EXCEPTION(e, level)			LOG_WITH_SOURCE_INFO(e.what(), "system", level);
+#define LOG_SYS_STD_EXCEPTION(e, level)		LOG_WITH_SOURCE_INFO(e.what(), this->GetName(), level);
 
 #else
-#define LOG_DEBUG(msg)
-#define LOG_INFO(msg)
-#define LOG_WARNING(msg)
-#define LOG_ERROR(msg)
-#define LOG_EXCEPTION(e)
-#define LOG_STD_EXCEPTION(e)
+#define LOG(msg, level)		
+#define LOG_IF(p, msg, level)
 
-#define LOG_INFO_IF(p, msg)		
-#define LOG_WARNING_IF(p, msg)	
-#define LOG_ERROR_IF(p, msg)	
+#define LOG_SYS(msg, level)	
+#define LOG_SYS_IF(p, msg, level)
+
+#define LOG_EXCEPTION(e, level)		
+#define LOG_SYS_EXCEPTION(e, level)		
+
+#define LOG_STD_EXCEPTION(e, level)
+#define LOG_SYS_STD_EXCEPTION(e, level)
 #endif

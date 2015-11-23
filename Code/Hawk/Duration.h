@@ -35,7 +35,7 @@ public:
 	friend class Time;
 
 private:
-	typedef std::chrono::steady_clock::duration Duration_t;
+	using Duration_t = std::chrono::steady_clock::duration;
 	Duration_t m_InternalDuration;
 };
 

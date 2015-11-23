@@ -3,6 +3,11 @@
 
 namespace Hawk {
 
+EventManager::EventManager(std::shared_ptr<EventRouter>& p_Router)
+: m_Router(p_Router)
+{
+}
+
 void EventManager::HandleQueued()
 {
 	EventCollector::Queue_t l_QueuedEvents;

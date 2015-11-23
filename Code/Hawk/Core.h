@@ -1,5 +1,7 @@
 #pragma once
 #include "DllExport.h"
+#include "EventRouter.h"
+#include "Exception.h"
 #include "SystemBase.h"
 #include "SystemManager.h"
 #include <memory>
@@ -30,8 +32,9 @@ private:
 	void InitializeSystems();
 	void StartSystems();
 
-	typedef std::unordered_map<std::string, std::unique_ptr<SystemManager>> SystemManagers_t;
+	using SystemManagers_t = std::unordered_map<std::string, std::unique_ptr<SystemManager>>;
 	SystemManagers_t m_SystemManagers;
+	std::shared_ptr<EventRouter> m_EventRouter;
 };
 
 }
