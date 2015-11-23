@@ -5,6 +5,7 @@
 namespace Hawk {
 
 SystemBase::SystemBase()
+: m_bPaused(false)
 {
 }
 
@@ -37,5 +38,15 @@ void SystemBase::InternalUpdate(const Duration& p_Duration)
 void SystemBase::Update(const Duration& p_Duration)
 {
 }
+
+void SystemBase::SetPaused(bool p_bPaused)
+{
+	m_bPaused = p_bPaused;
+}
+bool SystemBase::IsPaused() const
+{
+	return m_bPaused;
+}
+
 
 }

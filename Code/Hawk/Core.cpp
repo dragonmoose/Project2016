@@ -29,14 +29,6 @@ void Core::RegisterThread(const std::string& p_Name)
 	THROW_IF_NOT(l_bInserted, "Thread with name " << p_Name << " already registered");
 }
 
-void Core::AddSystem(std::unique_ptr<SystemBase> p_System, const std::string& p_Thread)
-{
-	THROW_IF(p_Thread.empty(), "Empty thread name");
-	auto l_Itr = m_SystemManagers.find(p_Thread);
-	THROW_IF(l_Itr == m_SystemManagers.end(), "Thread with name " << p_Thread << " not registered");
-	l_Itr->second->AddSystem(std::move(p_System));
-}
-
 void Core::Run()
 {
 	InitializeSystems();

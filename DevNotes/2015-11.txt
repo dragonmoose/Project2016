@@ -70,3 +70,39 @@ templated Get() having to reside in the header file as well)
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -SystemManagers now launches thread and systems are updated
 -Thread logging
+
+2015-11-21
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-Working thread-safe Event management (using mutexes)
+-Tested with boost::lockfree::queue but it will only work with trivially constructed types (i.e. not strings etc)
+-Will test later to runtime select lockfree solution if all events dispatch for a certain thread
+obeys trivially constructed, destructible and assignable
+-Each System now has own eventmanager, and accesses central EventRouter namespace for delegating events
+to other systems/threads. Lock taken for each SendEvent<T> which is suboptimal. Will rework.
+
+2015-11-21
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-New event system architecture ideas:
+	* Each SystemManager (thread) contains unique EventManager instance
+	* EventManager has Register() and Send() methods
+	* Each System can access it's parent SystemManager's EventManager
+	* It should be possible for EventCollector to flag that lockfreedom is possible if all observed events
+	are 'primitive'
+	* SystemManager maintains the following structures:
+		-outtray [map<type_index, EventWrapper>] (local, single owner, no other threads access this)
+		-incoming_queue (protected by mutex or is lockless queue if events allow, accessed by all other threads)
+	* Start of each frame:
+		-SystemManager delegates to EventManager to dispatch all events in incoming_queue (resides in EventCollector)
+			-lock incoming_queue and swap with events_to_handle
+			-handle events
+	* End of each frame
+		-SystemManager delegates to EventManager to distribute events
+		-Iterate EventCollectors that listens to event
+			* lock (or lockfree) and push to each EventCollector queue
+		-Clear outtray
+		
+2015-11-23
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Decided to keep old event structure for now since each system now has unique lock (thus there
+are more mutexes which should probably favor more parallelism). SendEvent also just does one push back.
+With above changes, there would be less mutexes and more data to exchange at each synchronization stage.

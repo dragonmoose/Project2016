@@ -17,9 +17,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		
 		for (int i = 0; i < 100; i++)
 		{
-			l_Core.AddSystem(std::make_unique<TestSystem>(), "Logic" + std::to_string(i));
+			l_Core.AddSystem<TestSystem>("Logic" + std::to_string(i));
 		}
-		l_Core.AddSystem(std::make_unique<TestSystem2>(), "Main");
+		l_Core.AddSystem<TestSystem2>("Main");
 		l_Core.Run();
 	}
 	catch (std::exception& e)

@@ -15,7 +15,15 @@ public:
 	Core& operator=(const Core&) = delete;
 
 	void RegisterThread(const std::string& p_Name);
-	void AddSystem(std::unique_ptr<SystemBase> p_System, const std::string& p_Thread = std::string());
+
+	template<class T>
+	void AddSystem(const std::string& p_Thread = std::string())
+	{
+		THROW_IF(p_Thread.empty(), "Empty thread name");
+		auto l_Itr = m_SystemManagers.find(p_Thread);
+		THROW_IF(l_Itr == m_SystemManagers.end(), "Thread with name " << p_Thread << " not registered");
+		l_Itr->second->AddSystem(SystemBase::CreateInstance<T>());
+	}
 	void Run();
 
 private:
