@@ -15,7 +15,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 		l_Core.RegisterThread("Main");
 		
-		for (int i = 0; i < 100; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			l_Core.AddSystem<TestSystem>("Logic" + std::to_string(i));
 		}

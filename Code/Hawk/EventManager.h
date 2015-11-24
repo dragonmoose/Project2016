@@ -4,6 +4,7 @@
 #include "EventCollector.h"
 #include "EventHandler.h"
 #include "DllExport.h"
+#include "Logger.h"
 #include <unordered_map>
 #include <typeinfo>
 #include <typeindex>

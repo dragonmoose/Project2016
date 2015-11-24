@@ -21,7 +21,7 @@ public:
 
 		p_EventManager.Register<TestEvent2>([this](const TestEvent2& p_Event)
 		{
-			LOG_SYS("Str=" << p_Event.m_Str << " Value=" << p_Event.m_iValue, Debug);
+			LOG_SYS("Value=" << p_Event.m_iValue, Debug);
 		}
 		);
 	}
@@ -32,7 +32,7 @@ public:
 		{
 			m_Duration.SetToZero();
 			TestEvent l_Event;
-			l_Event.m_Str = "EventString";
+			//l_Event.m_Str = "EventString";
 			l_Event.m_iValue = 666;
 			SendEvent<TestEvent>(l_Event);
 		}

@@ -19,10 +19,10 @@ public:
 		{
 			m_Duration.SetToZero();
 			TestEvent2 l_Event;
-			l_Event.m_Str = "fdsfsdfdsfsdfsdf";
+			//l_Event.m_Str = "fdsfsdfdsfsdfsdf";
 			l_Event.m_iValue = 321321;
 			//SendEvent<TestEvent2>(l_Event);
-			LOG_SYS("testing testing the grejs", Fatal);
+			//LOG_SYS("testing testing the grejs", Fatal);
 		}
 	}
 
@@ -30,7 +30,7 @@ public:
 	{
 		p_EventManager.Register<TestEvent>([](const TestEvent& p_Event)
 		{
-			LOG("Event received. Str=" << p_Event.m_Str << " Value=" << p_Event.m_iValue, Debug);
+			LOG("Event received. Value=" << p_Event.m_iValue, Debug);
 		}
 		);
 	}

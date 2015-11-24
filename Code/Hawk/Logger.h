@@ -20,23 +20,27 @@ namespace Logger
 	bool Initialize();
 	void RegisterThreadName(const std::string& p_Name, std::thread::id p_ID);
 
-	HAWK_DLL_EXPORT void Write(const std::string& p_Msg, const std::string& p_System, Level p_Level);
+	HAWK_DLL_EXPORT void Write(const std::string& p_Msg, const std::string& p_System, const std::string& p_FileInfo, Level p_Level);
 }
 }
 
 #define LOG_WITH_SOURCE_INFO(msg, system, level)															\
 {																											\
-	std::ostringstream l_Stream;																			\
-	l_Stream << msg << " [" << __FILE__ << ":" << std::to_string(__LINE__) << "]\r\n";						\
-	Hawk::Logger::Write(l_Stream.str(), system, Hawk::Logger::Level::level);								\
+	std::ostringstream l_StreamMsg;																			\
+	l_StreamMsg << msg;																						\
+	std::ostringstream l_StreamFileInfo;																	\
+	l_StreamFileInfo << "[" << __FILE__ << ":" << std::to_string(__LINE__) << "]\r\n";						\
+	Hawk::Logger::Write(l_StreamMsg.str(), system, l_StreamFileInfo.str(), Hawk::Logger::Level::level);		\
 }
 
 #define LOG_EXCEPTION_WITH_SOURCE_INFO(e, system, level)													\
 {																											\
-	std::ostringstream l_Stream;																			\
-	l_Stream << "EXCEPTION: " << e.what() << " [" << e.GetSourceInfo() << " -> " << __FILE__ << ":";		\
-	l_Stream << std::to_string(__LINE__) << "]\r\n";														\
-	Hawk::Logger::Write(l_Stream.str(), system, Hawk::Logger::Level::level);								\
+	std::ostringstream l_StreamMsg;																			\
+	l_StreamMsg << "EXCEPTION: " << e.what();																\
+	std::ostringstream l_StreamFileInfo;																	\
+	l_StreamFileInfo << "[" << e.GetSourceInfo() << " -> " << __FILE__ << ":";								\
+	l_StreamFileInfo << std::to_string(__LINE__) << "]\r\n";												\
+	Hawk::Logger::Write(l_StreamMsg.str(), system, l_StreamFileInfo.str(), Hawk::Logger::Level::level);		\
 }
 
 #define LOG(msg, level)						LOG_WITH_SOURCE_INFO(msg, "system", level)
