@@ -55,7 +55,7 @@ namespace HawkUnitTests
 			TEST_METHOD(RegisterThreadSystem)
 			{
 				Core l_Core(false);
-				LOG("testing info", Info);
+				LOG("testing info", "test", Info);
 				l_Core.RegisterThread("TestThread");
 				Assert::ExpectException<Exception>([&l_Core]() { l_Core.RegisterThread("TestThread"); });
 			}

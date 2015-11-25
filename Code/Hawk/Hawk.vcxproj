@@ -85,15 +85,19 @@
     <ClInclude Include="EventCollector.h" />
     <ClInclude Include="EventHandler.h" />
     <ClInclude Include="EventManager.h" />
+    <ClInclude Include="EventMonitoringSystem.h" />
     <ClInclude Include="EventRouter.h" />
     <ClInclude Include="Exception.h" />
+    <ClInclude Include="HawkVersion.h" />
     <ClInclude Include="IEvent.h" />
+    <ClInclude Include="InputEvents.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="QueuedEvent.h" />
     <ClInclude Include="SystemBase.h" />
     <ClInclude Include="SystemManager.h" />
     <ClInclude Include="Time.h" />
+    <ClInclude Include="WindowManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Config.cpp" />
@@ -101,6 +105,7 @@
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Duration.cpp" />
     <ClCompile Include="EventManager.cpp" />
+    <ClCompile Include="EventMonitoringSystem.cpp" />
     <ClCompile Include="EventRouter.cpp" />
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="Logger.cpp" />
@@ -113,6 +118,7 @@
     <ClCompile Include="SystemBase.cpp" />
     <ClCompile Include="SystemManager.cpp" />
     <ClCompile Include="Time.cpp" />
+    <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

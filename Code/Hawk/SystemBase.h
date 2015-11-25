@@ -14,6 +14,9 @@ namespace Hawk
 		SystemBase();
 		virtual ~SystemBase();
 
+		SystemBase(const SystemBase&) = delete;
+		SystemBase& operator=(const SystemBase&) = delete;
+
 		template<class T>
 		static std::unique_ptr<T> CreateInstance() { return std::make_unique<T>(); }
 		virtual std::string GetName() const = 0;
@@ -27,9 +30,6 @@ namespace Hawk
 
 		void SetPaused(bool p_bPaused);
 		bool IsPaused() const;
-
-		SystemBase(const SystemBase&) = delete;
-		SystemBase& operator=(const SystemBase&) = delete;
 
 	protected:
 		template<class T>

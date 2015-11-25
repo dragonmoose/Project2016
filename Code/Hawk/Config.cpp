@@ -10,6 +10,7 @@ namespace
 {
 	const std::string c_Filename("config.ini");
 	const Duration c_UpdateDuration(1, Duration::Precision::Second);
+	const char* c_SysName("config");
 }
 
 Config& Config::Instance()
@@ -44,7 +45,7 @@ void Config::Load()
 	}
 	catch (boost::property_tree::ini_parser_error& e)
 	{
-		LOG_STD_EXCEPTION(e, Fatal);
+		LOG_STD_EXCEPTION(e, c_SysName, Fatal);
 	}
 }
 

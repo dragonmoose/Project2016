@@ -1,10 +1,20 @@
 #include "pch.h"
+#include <atomic>
+
+namespace Hawk {
+namespace Logger
+{
+	std::atomic<bool> m_bFatalFlag(false);
+	void SetFatalFlag() { m_bFatalFlag = true; }
+	bool FatalFlagSet() { return m_bFatalFlag; }
+}
+}
 
 #ifdef HAWK_DEBUG
-
 #include "Logger.h"
 #include "Time.h"
 #include "Duration.h"
+#include "HawkVersion.h"
 #include "boost/algorithm/string.hpp"
 #include <unordered_map>
 #include <consoleapi.h>
@@ -15,13 +25,13 @@
 #include <chrono>
 
 namespace Hawk {
-
 namespace Logger
 {
 	WORD GetMsgTextAttr(Level p_Level);
-	bool ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo);
+	bool ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo, const std::string& p_System);
 	std::string GetThreadInfo();
 	void ClearScreen();
+	void SetFont();
 
 	const WORD c_SysInfoTextAttr = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | BACKGROUND_BLUE;
 	const WORD c_FileInfoTextAttr = FOREGROUND_BLUE | FOREGROUND_RED;
@@ -51,10 +61,13 @@ bool Logger::Initialize()
 			FILE* l_hFile = _fdopen(l_hCrt, "r");
 			setvbuf(l_hFile, nullptr, _IONBF, 128);
 			*stdin = *l_hFile;
+			SetConsoleMode(l_hStd, ENABLE_QUICK_EDIT_MODE);
 		}
-		SetConsoleTitle("Hawk Engine console");
+		std::ostringstream l_TitleStream;
+		l_TitleStream << "Hawk Engine Console " << Hawk::Version::c_EngineVersion << " [" << __DATE__ << "]";
+		SetConsoleTitle(l_TitleStream.str().c_str());
+		SetFont();
 		n_bInitialized = true;
-		ClearScreen();
 		return true;
 	}
 	return false;
@@ -69,7 +82,7 @@ void Logger::RegisterThreadName(const std::string& p_Name, std::thread::id p_ID)
 void Logger::Write(const std::string& p_Msg, const std::string& p_System, const std::string& p_FileInfo, Level p_Level)
 {
 	std::string l_ThreadInfo = GetThreadInfo();
-	if (!ShouldLog(p_Msg, l_ThreadInfo)) return;
+	if (!ShouldLog(p_Msg, l_ThreadInfo, p_System)) return;
 
 	std::lock_guard<std::mutex> l_Lock(n_Mutex);
 	if (p_Level != Level::Debug || (Config::Instance().Get("Log.debug", false)))
@@ -95,11 +108,6 @@ void Logger::Write(const std::string& p_Msg, const std::string& p_System, const 
 		SetConsoleTextAttribute(l_hStd, c_FileInfoTextAttr);
 		WriteConsole(l_hStd, p_FileInfo.c_str(), p_FileInfo.length(), LPDWORD(), nullptr);
 	}
-	if (p_Level == Level::Fatal)
-	{
-		std::this_thread::sleep_for(std::chrono::minutes(1));
-		exit(-1);
-	}
 }
 
 WORD Logger::GetMsgTextAttr(Level p_Level)
@@ -121,11 +129,12 @@ WORD Logger::GetMsgTextAttr(Level p_Level)
 	}
 }
 
-bool Logger::ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo)
+bool Logger::ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo, const std::string& p_System)
 {
 	if (!Config::Instance().Get<bool>("Log.enabled", true)) return false;
 	std::string l_Filter = Config::Instance().Get<std::string>("Log.filter", "");
 	std::string l_ThreadFilter = Config::Instance().Get<std::string>("Log.thread", "");
+	std::string l_SystemFilter = Config::Instance().Get<std::string>("Log.system", "");
 
 	bool l_bLog = true;
 	if (!l_Filter.empty())
@@ -133,7 +142,6 @@ bool Logger::ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo
 		boost::algorithm::to_lower(l_Filter);
 		std::string l_Msg(p_Msg);
 		boost::algorithm::to_lower(l_Msg);
-
 		l_bLog = boost::algorithm::contains(l_Msg, l_Filter);
 	}
 	if (l_bLog && !l_ThreadFilter.empty())
@@ -141,8 +149,14 @@ bool Logger::ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo
 		boost::algorithm::to_lower(l_ThreadFilter);
 		std::string l_ThreadInfo(p_ThreadInfo);
 		boost::algorithm::to_lower(l_ThreadInfo);
-
 		l_bLog = boost::algorithm::contains(l_ThreadInfo, l_ThreadFilter);
+	}
+	if (l_bLog && !l_SystemFilter.empty())
+	{
+		boost::algorithm::to_lower(l_SystemFilter);
+		std::string l_System(p_System);
+		boost::algorithm::to_lower(l_System);
+		l_bLog = boost::algorithm::contains(l_System, l_SystemFilter);
 	}
 	return l_bLog;
 }
@@ -185,6 +199,17 @@ void Logger::ClearScreen()
 	SetConsoleCursorPosition(l_hStd, l_StartPos);
 }
 
+void Logger::SetFont()
+{
+	CONSOLE_FONT_INFOEX l_FontInfo;
+	l_FontInfo.cbSize = sizeof(l_FontInfo);
+	l_FontInfo.nFont = 0;
+	l_FontInfo.dwFontSize.X = 0;
+	l_FontInfo.dwFontSize.Y = 13;
+	l_FontInfo.FontFamily = FF_DONTCARE;
+	l_FontInfo.FontWeight = FW_NORMAL;
+	wcscpy_s(l_FontInfo.FaceName, L"Consolas");
+	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &l_FontInfo);
 }
-
+}
 #endif

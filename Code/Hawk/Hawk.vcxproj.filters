@@ -35,6 +35,12 @@
     <ClCompile Include="EventRouter.cpp">
       <Filter>Events</Filter>
     </ClCompile>
+    <ClCompile Include="WindowManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="EventMonitoringSystem.cpp">
+      <Filter>Events</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -86,6 +92,18 @@
     <ClInclude Include="EventHandler.h">
       <Filter>Events</Filter>
     </ClInclude>
+    <ClInclude Include="WindowManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="InputEvents.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="EventMonitoringSystem.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="HawkVersion.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -99,6 +117,9 @@
     </Filter>
     <Filter Include="Events">
       <UniqueIdentifier>{ddf4f2fb-997d-4c4f-8091-af6540c80219}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{fb741e00-3219-4979-9226-7632a9f9971f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

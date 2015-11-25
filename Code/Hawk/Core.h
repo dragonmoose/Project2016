@@ -7,14 +7,19 @@
 #include <memory>
 #include <unordered_map>
 
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
 namespace Hawk {
 
 class HAWK_DLL_EXPORT Core final
 {
 public:
-	Core(bool p_bConsole = true);
+	explicit Core(bool p_bConsole = true);
 	Core(const Core&) = delete;
 	Core& operator=(const Core&) = delete;
+
+	void OpenWindow(HINSTANCE p_hInstance, const std::string& p_Name);
 
 	void RegisterThread(const std::string& p_Name);
 
@@ -31,10 +36,12 @@ public:
 private:
 	void InitializeSystems();
 	void StartSystems();
+	void StopSystems();
 
 	using SystemManagers_t = std::unordered_map<std::string, std::unique_ptr<SystemManager>>;
 	SystemManagers_t m_SystemManagers;
 	std::shared_ptr<EventRouter> m_EventRouter;
+	static std::atomic<bool> m_bFatalSignal;
 };
 
 }

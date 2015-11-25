@@ -28,9 +28,9 @@ public:
 
 	void RegisterEvents(Hawk::EventManager& p_EventManager) override
 	{
-		p_EventManager.Register<TestEvent>([](const TestEvent& p_Event)
+		p_EventManager.Register<TestEvent>([=](const TestEvent& p_Event)
 		{
-			LOG("Event received. Value=" << p_Event.m_iValue, Debug);
+			LOG_SYS("Event received. Value=" << p_Event.m_iValue, Debug);
 		}
 		);
 	}

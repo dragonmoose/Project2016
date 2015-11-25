@@ -7,9 +7,11 @@
 
 namespace Hawk {
 
+namespace { const char* c_SysName("system_manager"); }
 
 SystemManager::SystemManager(const std::string& p_ThreadName)
 : m_ThreadName(p_ThreadName)
+, m_bStopSignal(false)
 {
 }
 void SystemManager::AddSystem(std::unique_ptr<SystemBase> p_System)
@@ -27,11 +29,16 @@ void SystemManager::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
 
 void SystemManager::Start()
 {
-	m_Thread = std::thread(&SystemManager::Run, this);
+	m_Thread = std::thread(&SystemManager::Run_Thread, this);
 #ifdef HAWK_DEBUG
 	Logger::RegisterThreadName(m_ThreadName, m_Thread.get_id());
 #endif
 	m_Thread.detach();
+}
+
+void SystemManager::Stop()
+{
+	m_bStopSignal = true;
 }
 
 void SystemManager::Update(const Duration& p_Duration)
@@ -42,13 +49,13 @@ void SystemManager::Update(const Duration& p_Duration)
 	}
 }
 
-void SystemManager::Run()
+void SystemManager::Run_Thread()
 {
-	LOG("Running " << m_Systems.size() << " systems on thread: " << m_ThreadName, Info);
+	LOG("Running " << m_Systems.size() << " systems on thread: " << m_ThreadName, c_SysName, Info);
 
 	Time l_OldTime;
 	l_OldTime.SetToNow();
-	while (Config::Instance().Get<bool>("Core.run", true))
+	while (Config::Instance().Get<bool>("Core.run", true) && !m_bStopSignal)
 	{
 		Time l_CurrTime;
 		l_CurrTime.SetToNow();
@@ -57,7 +64,7 @@ void SystemManager::Run()
 
 		Update(l_Delta);
 	}
-	LOG("*** Thread exit ***", Info);
+	LOG("*** Thread exit ***", c_SysName, Debug);
 }
 
 }
