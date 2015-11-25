@@ -20,15 +20,6 @@
     <ClCompile Include="Config.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="SystemBase.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
-    <ClCompile Include="SystemManager.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
-    <ClCompile Include="ConsoleCmdSystem.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
     <ClCompile Include="EventManager.cpp">
       <Filter>Events</Filter>
     </ClCompile>
@@ -38,7 +29,16 @@
     <ClCompile Include="WindowManager.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="EventMonitoringSystem.cpp">
+    <ClCompile Include="ModuleManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="Module.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsoleCmdModule.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="EventMonitoringModule.cpp">
       <Filter>Events</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,15 +65,6 @@
     <ClInclude Include="Config.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="SystemBase.h">
-      <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="SystemManager.h">
-      <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="ConsoleCmdSystem.h">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="EventManager.h">
       <Filter>Events</Filter>
     </ClInclude>
@@ -98,11 +89,20 @@
     <ClInclude Include="InputEvents.h">
       <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="EventMonitoringSystem.h">
-      <Filter>Events</Filter>
-    </ClInclude>
     <ClInclude Include="HawkVersion.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Module.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleCmdModule.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="EventMonitoringModule.h">
+      <Filter>Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

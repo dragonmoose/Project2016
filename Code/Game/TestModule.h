@@ -1,5 +1,5 @@
 #pragma once
-#include "Hawk/SystemBase.h"
+#include "Hawk/Module.h"
 #include "Hawk/Logger.h"
 #include "Hawk/Duration.h"
 #include "Hawk/EventManager.h"
@@ -7,11 +7,11 @@
 #include "Hawk/Duration.h"
 #include <string>
 
-class TestSystem : public Hawk::SystemBase
+class TestModule : public Hawk::Module
 {
 public:
 	Hawk::Duration m_Duration;
-	std::string GetName() const override { return "TestSystem";  }
+	std::string GetName() const override { return "TestModule";  }
 	virtual void Update(const Hawk::Duration& p_Duration)
 	{
 		m_Duration += p_Duration;
@@ -22,7 +22,7 @@ public:
 			//l_Event.m_Str = "fdsfsdfdsfsdfsdf";
 			l_Event.m_iValue = 321321;
 			//SendEvent<TestEvent2>(l_Event);
-			//LOG_SYS("testing testing the grejs", Fatal);
+			//LOG_MOD("testing testing the grejs", Fatal);
 		}
 	}
 
@@ -30,7 +30,7 @@ public:
 	{
 		p_EventManager.Register<TestEvent>([=](const TestEvent& p_Event)
 		{
-			LOG_SYS("Event received. Value=" << p_Event.m_iValue, Debug);
+			LOG_MOD("Event received. Value=" << p_Event.m_iValue, Debug);
 		}
 		);
 	}

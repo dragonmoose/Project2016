@@ -1,10 +1,10 @@
 #pragma once
 
-#include "SystemBase.h"
+#include "Module.h"
 
 namespace Hawk {
 
-class HAWK_DLL_EXPORT EventMonitoringSystem : public SystemBase
+class HAWK_DLL_EXPORT EventMonitoringModule : public Module
 {
 public:
 	std::string GetName() const override;

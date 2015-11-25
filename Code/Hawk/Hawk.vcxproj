@@ -78,14 +78,14 @@
   </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="Config.h" />
-    <ClInclude Include="ConsoleCmdSystem.h" />
+    <ClInclude Include="ConsoleCmdModule.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="DllExport.h" />
     <ClInclude Include="Duration.h" />
     <ClInclude Include="EventCollector.h" />
     <ClInclude Include="EventHandler.h" />
     <ClInclude Include="EventManager.h" />
-    <ClInclude Include="EventMonitoringSystem.h" />
+    <ClInclude Include="EventMonitoringModule.h" />
     <ClInclude Include="EventRouter.h" />
     <ClInclude Include="Exception.h" />
     <ClInclude Include="HawkVersion.h" />
@@ -94,18 +94,18 @@
     <ClInclude Include="Logger.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="QueuedEvent.h" />
-    <ClInclude Include="SystemBase.h" />
-    <ClInclude Include="SystemManager.h" />
+    <ClInclude Include="Module.h" />
+    <ClInclude Include="ModuleManager.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="WindowManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Config.cpp" />
-    <ClCompile Include="ConsoleCmdSystem.cpp" />
+    <ClCompile Include="ConsoleCmdModule.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Duration.cpp" />
     <ClCompile Include="EventManager.cpp" />
-    <ClCompile Include="EventMonitoringSystem.cpp" />
+    <ClCompile Include="EventMonitoringModule.cpp" />
     <ClCompile Include="EventRouter.cpp" />
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="Logger.cpp" />
@@ -115,8 +115,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="SystemBase.cpp" />
-    <ClCompile Include="SystemManager.cpp" />
+    <ClCompile Include="Module.cpp" />
+    <ClCompile Include="ModuleManager.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>

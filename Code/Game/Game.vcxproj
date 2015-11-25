@@ -86,8 +86,8 @@
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="TestEvent.h" />
-    <ClInclude Include="TestSystem.h" />
-    <ClInclude Include="TestSystem2.h" />
+    <ClInclude Include="TestModule.h" />
+    <ClInclude Include="TestModule2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />

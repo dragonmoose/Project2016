@@ -8,26 +8,26 @@
 
 namespace Hawk {
 
-class SystemBase;
+class Module;
 
-class SystemManager final
+class ModuleManager final
 {
 public:
-	SystemManager(const std::string& p_ThreadName);
-	HAWK_DLL_EXPORT void AddSystem(std::unique_ptr<SystemBase> p_System);
+	ModuleManager(const std::string& p_ThreadName);
+	HAWK_DLL_EXPORT void Add(std::unique_ptr<Module> p_Module);
 	void Initialize(std::shared_ptr<EventRouter>& p_EventRouter);
 	void Start();
 	void Stop();
 
-	SystemManager(const SystemManager&) = delete;
-	SystemManager& operator=(const SystemManager&) = delete;
+	ModuleManager(const ModuleManager&) = delete;
+	ModuleManager& operator=(const ModuleManager&) = delete;
 
 private:
 	void Run_Thread();
 	void Update(const Duration& p_Duration);
 
-	using Systems_t = std::vector<std::unique_ptr<SystemBase>>;
-	Systems_t m_Systems;
+	using Modules_t = std::vector<std::unique_ptr<Module>>;
+	Modules_t m_Modules;
 	std::thread m_Thread;
 	const std::string m_ThreadName;
 	std::atomic<bool> m_bStopSignal;

@@ -1,27 +1,27 @@
 #pragma once
-#include "Hawk/SystemBase.h"
+#include "Hawk/Module.h"
 #include "Hawk/Logger.h"
 #include "Hawk/Duration.h"
 #include "Hawk/Time.h"
 #include "TestEvent.h"
 #include <string>
 
-class TestSystem2 : public Hawk::SystemBase
+class TestModule2 : public Hawk::Module
 {
 public:
 	Hawk::Duration m_Duration;
-	std::string GetName() const override { return "TestSystem2"; }
+	std::string GetName() const override { return "TestModule2"; }
 	void RegisterEvents(Hawk::EventManager& p_EventManager)
 	{
 		p_EventManager.Register<TestEvent>([this](const TestEvent& p_Event)
 		{
-			LOG_SYS("Receives event submitted by self", Debug);
+			LOG_MOD("Receives event submitted by self", Debug);
 		}
 		);
 
 		p_EventManager.Register<TestEvent2>([this](const TestEvent2& p_Event)
 		{
-			LOG_SYS("Value=" << p_Event.m_iValue, Debug);
+			LOG_MOD("Value=" << p_Event.m_iValue, Debug);
 		}
 		);
 	}

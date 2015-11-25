@@ -8,14 +8,14 @@ namespace Hawk
 {
 	class Duration;
 
-	class HAWK_DLL_EXPORT SystemBase
+	class HAWK_DLL_EXPORT Module
 	{
 	public:
-		SystemBase();
-		virtual ~SystemBase();
+		Module();
+		virtual ~Module();
 
-		SystemBase(const SystemBase&) = delete;
-		SystemBase& operator=(const SystemBase&) = delete;
+		Module(const Module&) = delete;
+		Module& operator=(const Module&) = delete;
 
 		template<class T>
 		static std::unique_ptr<T> CreateInstance() { return std::make_unique<T>(); }

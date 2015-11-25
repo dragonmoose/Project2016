@@ -2,8 +2,8 @@
 #include "DllExport.h"
 #include "EventRouter.h"
 #include "Exception.h"
-#include "SystemBase.h"
-#include "SystemManager.h"
+#include "Module.h"
+#include "ModuleManager.h"
 #include <memory>
 #include <unordered_map>
 
@@ -24,22 +24,22 @@ public:
 	void RegisterThread(const std::string& p_Name);
 
 	template<class T>
-	void AddSystem(const std::string& p_Thread = std::string())
+	void AddModule(const std::string& p_Thread = std::string())
 	{
 		THROW_IF(p_Thread.empty(), "Empty thread name");
-		auto l_Itr = m_SystemManagers.find(p_Thread);
-		THROW_IF(l_Itr == m_SystemManagers.end(), "Thread with name " << p_Thread << " not registered");
-		l_Itr->second->AddSystem(SystemBase::CreateInstance<T>());
+		auto l_Itr = m_ModuleManagers.find(p_Thread);
+		THROW_IF(l_Itr == m_ModuleManagers.end(), "Thread with name " << p_Thread << " not registered");
+		l_Itr->second->Add(Module::CreateInstance<T>());
 	}
 	void Run();
 
 private:
-	void InitializeSystems();
-	void StartSystems();
-	void StopSystems();
+	void InitializeModules();
+	void StartModules();
+	void StopModules();
 
-	using SystemManagers_t = std::unordered_map<std::string, std::unique_ptr<SystemManager>>;
-	SystemManagers_t m_SystemManagers;
+	using ModuleManagers_t = std::unordered_map<std::string, std::unique_ptr<ModuleManager>>;
+	ModuleManagers_t m_ModuleManagers;
 	std::shared_ptr<EventRouter> m_EventRouter;
 	static std::atomic<bool> m_bFatalSignal;
 };

@@ -6,13 +6,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="TestSystem.h">
-      <Filter>Test</Filter>
-    </ClInclude>
-    <ClInclude Include="TestSystem2.h">
-      <Filter>Test</Filter>
-    </ClInclude>
     <ClInclude Include="TestEvent.h">
+      <Filter>Test</Filter>
+    </ClInclude>
+    <ClInclude Include="TestModule.h">
+      <Filter>Test</Filter>
+    </ClInclude>
+    <ClInclude Include="TestModule2.h">
       <Filter>Test</Filter>
     </ClInclude>
   </ItemGroup>

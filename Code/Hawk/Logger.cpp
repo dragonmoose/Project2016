@@ -28,12 +28,12 @@ namespace Hawk {
 namespace Logger
 {
 	WORD GetMsgTextAttr(Level p_Level);
-	bool ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo, const std::string& p_System);
+	bool ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo, const std::string& p_Module);
 	std::string GetThreadInfo();
 	void ClearScreen();
 	void SetFont();
 
-	const WORD c_SysInfoTextAttr = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | BACKGROUND_BLUE;
+	const WORD c_ModuleInfoTextAttr = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | BACKGROUND_BLUE;
 	const WORD c_FileInfoTextAttr = FOREGROUND_BLUE | FOREGROUND_RED;
 	std::mutex n_Mutex;
 	bool n_bInitialized = false;
@@ -79,20 +79,20 @@ void Logger::RegisterThreadName(const std::string& p_Name, std::thread::id p_ID)
 	THROW_IF_NOT(n_ThreadNames.insert(ThreadNames_t::value_type(p_ID, p_Name)).second, "Failed to insert thread name lookup. Name=" << p_Name << " ID=" << p_ID);
 }
 
-void Logger::Write(const std::string& p_Msg, const std::string& p_System, const std::string& p_FileInfo, Level p_Level)
+void Logger::Write(const std::string& p_Msg, const std::string& p_Module, const std::string& p_FileInfo, Level p_Level)
 {
 	std::string l_ThreadInfo = GetThreadInfo();
-	if (!ShouldLog(p_Msg, l_ThreadInfo, p_System)) return;
+	if (!ShouldLog(p_Msg, l_ThreadInfo, p_Module)) return;
 
 	std::lock_guard<std::mutex> l_Lock(n_Mutex);
 	if (p_Level != Level::Debug || (Config::Instance().Get("Log.debug", false)))
 	{
 		HANDLE l_hStd = GetStdHandle(STD_OUTPUT_HANDLE);
 
-		SetConsoleTextAttribute(l_hStd, c_SysInfoTextAttr);
+		SetConsoleTextAttribute(l_hStd, c_ModuleInfoTextAttr);
 
 		std::ostringstream l_Stream;
-		l_Stream << Time::Now() << " [" << l_ThreadInfo << " : " << p_System << "]";
+		l_Stream << Time::Now() << " [" << l_ThreadInfo << " : " << p_Module << "]";
 		std::string l_InitStr = l_Stream.str();
 		WriteConsole(l_hStd, l_InitStr.c_str(), l_InitStr.length(), LPDWORD(), nullptr);
 
@@ -129,12 +129,12 @@ WORD Logger::GetMsgTextAttr(Level p_Level)
 	}
 }
 
-bool Logger::ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo, const std::string& p_System)
+bool Logger::ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo, const std::string& p_Module)
 {
 	if (!Config::Instance().Get<bool>("Log.enabled", true)) return false;
 	std::string l_Filter = Config::Instance().Get<std::string>("Log.filter", "");
 	std::string l_ThreadFilter = Config::Instance().Get<std::string>("Log.thread", "");
-	std::string l_SystemFilter = Config::Instance().Get<std::string>("Log.system", "");
+	std::string l_ModuleFilter = Config::Instance().Get<std::string>("Log.module", "");
 
 	bool l_bLog = true;
 	if (!l_Filter.empty())
@@ -151,12 +151,12 @@ bool Logger::ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo
 		boost::algorithm::to_lower(l_ThreadInfo);
 		l_bLog = boost::algorithm::contains(l_ThreadInfo, l_ThreadFilter);
 	}
-	if (l_bLog && !l_SystemFilter.empty())
+	if (l_bLog && !l_ModuleFilter.empty())
 	{
-		boost::algorithm::to_lower(l_SystemFilter);
-		std::string l_System(p_System);
-		boost::algorithm::to_lower(l_System);
-		l_bLog = boost::algorithm::contains(l_System, l_SystemFilter);
+		boost::algorithm::to_lower(l_ModuleFilter);
+		std::string l_Module(p_Module);
+		boost::algorithm::to_lower(l_Module);
+		l_bLog = boost::algorithm::contains(l_Module, l_ModuleFilter);
 	}
 	return l_bLog;
 }

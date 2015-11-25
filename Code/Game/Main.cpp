@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "Hawk/Core.h"
-#include "Hawk/EventMonitoringSystem.h"
-#include "TestSystem.h"
-#include "TestSystem2.h"
+#include "Hawk/EventMonitoringModule.h"
+#include "TestModule.h"
+#include "TestModule2.h"
 #include <iostream>
 
 int WINAPI WinMain(HINSTANCE p_hInstance, HINSTANCE p_hPrevInstance, LPSTR p_lpCmdLine, int p_nCmdShow)
@@ -16,14 +16,14 @@ int WINAPI WinMain(HINSTANCE p_hInstance, HINSTANCE p_hPrevInstance, LPSTR p_lpC
 			l_Core.RegisterThread("Logic" + std::to_string(i));
 		}
 		l_Core.RegisterThread("EventListener");
-		l_Core.AddSystem<Hawk::EventMonitoringSystem>("EventListener");
+		l_Core.AddModule<Hawk::EventMonitoringModule>("EventListener");
 		l_Core.RegisterThread("Main");
 		
 		for (int i = 0; i < 3; i++)
 		{
-			l_Core.AddSystem<TestSystem>("Logic" + std::to_string(i));
+			l_Core.AddModule<TestModule>("Logic" + std::to_string(i));
 		}
-		l_Core.AddSystem<TestSystem2>("Main");
+		l_Core.AddModule<TestModule2>("Main");
 		l_Core.Run();
 	}
 	catch (std::exception& e)

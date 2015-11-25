@@ -10,7 +10,7 @@
 
 namespace Hawk {
 
-namespace { const char* c_SysName("core"); }
+namespace { const char* c_Name("Core"); }
 
 Core::Core(bool p_bConsole)
 : m_EventRouter(std::make_shared<EventRouter>())
@@ -19,18 +19,18 @@ Core::Core(bool p_bConsole)
 	boost::filesystem::current_path(boost::filesystem::current_path().parent_path());
 	if (p_bConsole)
 	{
-		THROW_IF_NOT(Logger::Initialize(), "Failed to initialize LogSystem");
+		THROW_IF_NOT(Logger::Initialize(), "Failed to initialize Logger");
 	}
 	Config::Instance().Load();
-	LOG("Working directory set to: " << boost::filesystem::current_path(), c_SysName, Info);
+	LOG("Working directory set to: " << boost::filesystem::current_path(), c_Name, Info);
 #endif
 	WindowManager::Initialize(m_EventRouter);
-	LOG("Hawk core initialized...", c_SysName, Info);
+	LOG("Hawk core initialized...", c_Name, Info);
 }
 
 void Core::RegisterThread(const std::string& p_Name)
 {
-	bool l_bInserted = m_SystemManagers.insert(SystemManagers_t::value_type(p_Name, std::make_unique<SystemManager>(p_Name))).second;
+	bool l_bInserted = m_ModuleManagers.insert(ModuleManagers_t::value_type(p_Name, std::make_unique<ModuleManager>(p_Name))).second;
 	THROW_IF_NOT(l_bInserted, "Thread with name " << p_Name << " already registered");
 }
 
@@ -42,53 +42,53 @@ void Core::OpenWindow(HINSTANCE p_hInstance, const std::string& p_Name)
 	}
 	catch (Exception& e)
 	{
-		LOG_EXCEPTION(e, c_SysName, Fatal);
+		LOG_EXCEPTION(e, c_Name, Fatal);
 	}
 }
 
 void Core::Run()
 {
-	InitializeSystems();
-	StartSystems();
+	InitializeModules();
+	StartModules();
 
 	while (Config::Instance().Get<bool>("Core.run", true) && !Logger::FatalFlagSet())
 	{
 		Config::Instance().Update();
 		if (!WindowManager::Update())
 		{
-			LOG("MainWindow signalled WM_QUIT", c_SysName, Info);
+			LOG("MainWindow signalled WM_QUIT", c_Name, Info);
 			break;
 		}
 	}
-	StopSystems();
+	StopModules();
 
-	LOG("************* Core exit *************", c_SysName, Info);
+	LOG("************* Core exit *************", c_Name, Info);
 	if (Logger::FatalFlagSet())
 	{
-		FATAL("Core exit due to critical error (see above)", c_SysName);
+		FATAL("Core exit due to critical error (see above)", c_Name);
 	}
 	std::this_thread::sleep_for(std::chrono::minutes(1));
 }
 
-void Core::InitializeSystems()
+void Core::InitializeModules()
 {
-	for (auto& l_Manager : m_SystemManagers)
+	for (auto& l_Manager : m_ModuleManagers)
 	{
 		l_Manager.second->Initialize(m_EventRouter);
 	}
 }
 
-void Core::StartSystems()
+void Core::StartModules()
 {
-	for (auto& l_Manager : m_SystemManagers)
+	for (auto& l_Manager : m_ModuleManagers)
 	{
 		l_Manager.second->Start();
 	}
 }
 
-void Core::StopSystems()
+void Core::StopModules()
 {
-	for (auto& l_Manager : m_SystemManagers)
+	for (auto& l_Manager : m_ModuleManagers)
 	{
 		l_Manager.second->Stop();
 	}
