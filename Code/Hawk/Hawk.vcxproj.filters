@@ -30,16 +30,19 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="ModuleManager.cpp">
-      <Filter>System</Filter>
+      <Filter>Modules</Filter>
     </ClCompile>
     <ClCompile Include="Module.cpp">
-      <Filter>System</Filter>
+      <Filter>Modules</Filter>
     </ClCompile>
     <ClCompile Include="ConsoleCmdModule.cpp">
-      <Filter>System</Filter>
+      <Filter>Modules</Filter>
     </ClCompile>
     <ClCompile Include="EventMonitoringModule.cpp">
       <Filter>Events</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem.cpp">
+      <Filter>Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -93,16 +96,22 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="ModuleManager.h">
-      <Filter>System</Filter>
+      <Filter>Modules</Filter>
     </ClInclude>
     <ClInclude Include="Module.h">
-      <Filter>System</Filter>
+      <Filter>Modules</Filter>
     </ClInclude>
     <ClInclude Include="ConsoleCmdModule.h">
-      <Filter>System</Filter>
+      <Filter>Modules</Filter>
     </ClInclude>
     <ClInclude Include="EventMonitoringModule.h">
       <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyCodes.h">
+      <Filter>Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -112,14 +121,14 @@
     <Filter Include="Util">
       <UniqueIdentifier>{508386be-99b4-4f1f-84d1-a55bbc32819d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="System">
-      <UniqueIdentifier>{d0d76ea6-0ff9-4bf2-9816-1a73b07c8588}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Events">
       <UniqueIdentifier>{ddf4f2fb-997d-4c4f-8091-af6540c80219}</UniqueIdentifier>
     </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{fb741e00-3219-4979-9226-7632a9f9971f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules">
+      <UniqueIdentifier>{d0d76ea6-0ff9-4bf2-9816-1a73b07c8588}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

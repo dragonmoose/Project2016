@@ -12,8 +12,8 @@ std::string EventMonitoringModule::GetName() const
 
 void EventMonitoringModule::RegisterEvents(EventManager& p_EventManager)
 {
-	p_EventManager.Register<InputEvents::KeyUpEvent>([this](const InputEvents::KeyUpEvent& p_Event) { LOG_MOD("KeyUp: " << p_Event.m_Code, Debug); });
-	p_EventManager.Register<InputEvents::KeyDownEvent>([this](const InputEvents::KeyDownEvent& p_Event) { LOG_MOD("KeyDown: " << p_Event.m_Code, Debug); });
+	p_EventManager.Register<InputEvents::KeyUpEvent>([this](const InputEvents::KeyUpEvent& p_Event) { LOG_MOD("KeyUp: " << p_Event, Debug); });
+	p_EventManager.Register<InputEvents::KeyDownEvent>([this](const InputEvents::KeyDownEvent& p_Event) { LOG_MOD("KeyDown: " << p_Event, Debug); });
 }
 
 }

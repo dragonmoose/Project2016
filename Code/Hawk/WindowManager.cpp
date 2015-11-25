@@ -1,22 +1,20 @@
 #include "pch.h"
 #include "WindowManager.h"
-#include "EventManager.h"
-#include "EventRouter.h"
-#include "InputEvents.h"
+#include "InputSystem.h"
+#include <memory>
 
 namespace Hawk {
 
 namespace WindowManager
 {
 	LRESULT CALLBACK WindowProc(HWND p_hWindow, UINT p_Message, WPARAM p_wParam, LPARAM p_lParam);
-
 	const char* n_WindowName = "HawkWindowClass";
-	std::unique_ptr<EventManager> n_EventManager;
+	std::unique_ptr<InputSystem> n_InputSystem;
 }
 
 void WindowManager::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
 {
-	n_EventManager = std::make_unique<EventManager>(p_EventRouter);
+	n_InputSystem = std::make_unique<InputSystem>(p_EventRouter);
 	LOG("WindowManager initialized", "window", Info);
 }
 
@@ -72,10 +70,10 @@ LRESULT CALLBACK WindowManager::WindowProc(HWND p_hWindow, UINT p_Message, WPARA
 			PostQuitMessage(0);
 			return 0;
 		case WM_KEYDOWN:
-			n_EventManager->Send<InputEvents::KeyDownEvent>(InputEvents::KeyDownEvent(p_wParam));
+			n_InputSystem->OnKeyDown(static_cast<unsigned char>(p_wParam));
 			return 0;
 		case WM_KEYUP:
-			n_EventManager->Send<InputEvents::KeyUpEvent>(InputEvents::KeyUpEvent(p_wParam));
+			n_InputSystem->OnKeyUp(static_cast<unsigned char>(p_wParam));
 			return 0;
 		default:
 			break;

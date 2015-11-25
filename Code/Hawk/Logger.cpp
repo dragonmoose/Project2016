@@ -32,6 +32,8 @@ namespace Logger
 	std::string GetThreadInfo();
 	void ClearScreen();
 	void SetFont();
+	void SetTitle();
+	void SetConsoleProperties(HANDLE p_Handle);
 
 	const WORD c_ModuleInfoTextAttr = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | BACKGROUND_BLUE;
 	const WORD c_FileInfoTextAttr = FOREGROUND_BLUE | FOREGROUND_RED;
@@ -61,11 +63,9 @@ bool Logger::Initialize()
 			FILE* l_hFile = _fdopen(l_hCrt, "r");
 			setvbuf(l_hFile, nullptr, _IONBF, 128);
 			*stdin = *l_hFile;
-			SetConsoleMode(l_hStd, ENABLE_QUICK_EDIT_MODE);
 		}
-		std::ostringstream l_TitleStream;
-		l_TitleStream << "Hawk Engine Console " << Hawk::Version::c_EngineVersion << " [" << __DATE__ << "]";
-		SetConsoleTitle(l_TitleStream.str().c_str());
+		SetConsoleProperties(GetStdHandle(STD_OUTPUT_HANDLE));
+		SetTitle();
 		SetFont();
 		n_bInitialized = true;
 		return true;
@@ -210,6 +210,19 @@ void Logger::SetFont()
 	l_FontInfo.FontWeight = FW_NORMAL;
 	wcscpy_s(l_FontInfo.FaceName, L"Consolas");
 	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &l_FontInfo);
+}
+
+void Logger::SetTitle()
+{
+	std::ostringstream l_TitleStream;
+	l_TitleStream << "Hawk Engine Console " << Hawk::Version::c_EngineVersion << " [" << __DATE__ << "]";
+	SetConsoleTitle(l_TitleStream.str().c_str());
+}
+
+void Logger::SetConsoleProperties(HANDLE p_Handle)
+{
+	SetConsoleMode(p_Handle, ENABLE_QUICK_EDIT_MODE);
+	SetConsoleScreenBufferSize(p_Handle, COORD{ 200, 1000 });
 }
 }
 #endif
