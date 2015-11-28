@@ -111,3 +111,8 @@ With above changes, there would be less mutexes and more data to exchange at eac
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -Some logging tweaks (font)
 -WindowManager added + EventMonitoringSystem
+
+2015-11-25
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Renamed systems -> modules
+InputSystem, key-codes etc. Best way to exclude unsupported key-codes?

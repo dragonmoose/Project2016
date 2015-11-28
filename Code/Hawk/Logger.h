@@ -19,6 +19,7 @@ namespace Logger
 {
 	enum class Level
 	{
+		Trace,
 		Debug,
 		Info,
 		Warning,
