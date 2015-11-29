@@ -9,13 +9,13 @@ namespace InputEvents {
 
 	struct KeyDownEvent : IEvent
 	{
-		explicit KeyDownEvent(KeyCode&& p_Code) noexcept : m_Code(std::move(p_Code)) {}
+		explicit KeyDownEvent(KeyCode p_Code) : m_Code(p_Code) {}
 		KeyCode m_Code;
 	};
 
 	struct KeyUpEvent : IEvent
 	{
-		explicit KeyUpEvent(KeyCode&& p_Code) noexcept : m_Code(std::move(p_Code)) {}
+		explicit KeyUpEvent(KeyCode p_Code) : m_Code(p_Code) {}
 		KeyCode m_Code;
 	};
 }

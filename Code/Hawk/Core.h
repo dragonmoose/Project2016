@@ -1,4 +1,5 @@
 #pragma once
+#include "ConsoleManager.h"
 #include "DllExport.h"
 #include "EventRouter.h"
 #include "Exception.h"
@@ -40,8 +41,10 @@ private:
 
 	using ModuleManagers_t = std::unordered_map<std::string, std::unique_ptr<ModuleManager>>;
 	ModuleManagers_t m_ModuleManagers;
+
 	std::shared_ptr<EventRouter> m_EventRouter;
-	static std::atomic<bool> m_bFatalSignal;
+	static std::atomic_bool m_bFatalSignal;
+	ConsoleManager m_ConsoleManager;
 };
 
 }

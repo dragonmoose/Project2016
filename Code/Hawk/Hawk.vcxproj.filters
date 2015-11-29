@@ -14,9 +14,6 @@
     <ClCompile Include="Exception.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Logger.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="Config.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -35,14 +32,17 @@
     <ClCompile Include="Module.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="ConsoleCmdModule.cpp">
-      <Filter>Modules</Filter>
-    </ClCompile>
     <ClCompile Include="EventMonitoringModule.cpp">
       <Filter>Events</Filter>
     </ClCompile>
     <ClCompile Include="InputSystem.cpp">
       <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsoleManager.cpp">
+      <Filter>Console</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -57,9 +57,6 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="Exception.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Logger.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="DllExport.h">
@@ -101,9 +98,6 @@
     <ClInclude Include="Module.h">
       <Filter>Modules</Filter>
     </ClInclude>
-    <ClInclude Include="ConsoleCmdModule.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
     <ClInclude Include="EventMonitoringModule.h">
       <Filter>Events</Filter>
     </ClInclude>
@@ -112,6 +106,12 @@
     </ClInclude>
     <ClInclude Include="KeyCodes.h">
       <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleManager.h">
+      <Filter>Console</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +129,9 @@
     </Filter>
     <Filter Include="Modules">
       <UniqueIdentifier>{d0d76ea6-0ff9-4bf2-9816-1a73b07c8588}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Console">
+      <UniqueIdentifier>{5a3d1c73-ff04-4f9a-a64f-bbb5b9b15d1b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

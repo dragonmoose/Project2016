@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "Core.h"
-#include "Time.h"
+#include "ConsoleManager.h"
 #include "WindowManager.h"
 #include "Duration.h"
+#include "Time.h"
 #include <boost/filesystem.hpp>
 #include <iostream>
 #include <thread>
@@ -20,6 +21,7 @@ Core::Core(bool p_bConsole)
 	if (p_bConsole)
 	{
 		THROW_IF_NOT(Logger::Initialize(), "Failed to initialize Logger");
+		m_ConsoleManager.Start();
 	}
 	Config::Instance().Load();
 	LOG("Working directory set to: " << boost::filesystem::current_path(), c_Name, Info);
@@ -61,6 +63,7 @@ void Core::Run()
 		}
 	}
 	StopModules();
+	m_ConsoleManager.Stop();
 
 	LOG("************* Core exit *************", c_Name, Info);
 	if (Logger::FatalFlagSet())
@@ -74,7 +77,7 @@ void Core::InitializeModules()
 {
 	for (auto& l_Manager : m_ModuleManagers)
 	{
-		l_Manager.second->Initialize(m_EventRouter);
+		l_Manager.second->Initialize(m_EventRouter, m_ConsoleManager);
 	}
 }
 

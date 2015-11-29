@@ -4,7 +4,7 @@
 namespace Hawk {
 namespace Logger
 {
-	std::atomic<bool> m_bFatalFlag(false);
+	std::atomic_bool m_bFatalFlag(false);
 	void SetFatalFlag() { m_bFatalFlag = true; }
 	bool FatalFlagSet() { return m_bFatalFlag; }
 }
@@ -33,17 +33,25 @@ namespace Logger
 	void ClearScreen();
 	void SetFont();
 	void SetTitle();
-	void SetConsoleProperties(HANDLE p_Handle);
+	void SetConsoleProperties();
 	bool MatchesFilter(const std::string& p_Msg, const std::string& p_Filter);
 	Level StringToLevel(const std::string& p_Level);
 
-
+	const WORD c_cmdTextAttr = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
 	const WORD c_ModuleInfoTextAttr = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | BACKGROUND_BLUE;
 	const WORD c_FileInfoTextAttr = FOREGROUND_BLUE | FOREGROUND_RED;
 	std::mutex n_Mutex;
 	bool n_bInitialized = false;
 	using ThreadNames_t = std::unordered_map<std::thread::id, std::string>;
 	ThreadNames_t n_ThreadNames;
+	HANDLE n_hOut;
+
+	SMALL_RECT n_WindowSize = { 0, 0, 640, 480 };
+	COORD n_BufferSize = { 639, 479 };
+	COORD n_CharBufferSize = { 639, 479 };
+	COORD n_CharPos = { 0, 0 };
+	SMALL_RECT n_ConsoleWriteArea = { 0, 0, 638, 478 };
+	CHAR_INFO n_Buffer[639 * 479];
 }
 
 bool Logger::Initialize()
@@ -54,20 +62,29 @@ bool Logger::Initialize()
 	if (AllocConsole())
 	{
 		{
-			HANDLE l_hStd = GetStdHandle(STD_OUTPUT_HANDLE);
-			int l_hCrt = _open_osfhandle((intptr_t)l_hStd, _O_TEXT);
+			n_hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+			THROW_IF(n_hOut == INVALID_HANDLE_VALUE, "Invalid output handle");
+			int l_hCrt = _open_osfhandle((intptr_t)n_hOut, _O_TEXT);
 			FILE* l_hFile = _fdopen(l_hCrt, "w");
 			setvbuf(l_hFile, nullptr, _IONBF, 1);
 			*stdout = *l_hFile;
 		}
 		{
 			HANDLE l_hStd = GetStdHandle(STD_INPUT_HANDLE);
+			THROW_IF(l_hStd == INVALID_HANDLE_VALUE, "Invalid input handle");
 			int l_hCrt = _open_osfhandle((intptr_t)l_hStd, _O_TEXT);
 			FILE* l_hFile = _fdopen(l_hCrt, "r");
 			setvbuf(l_hFile, nullptr, _IONBF, 128);
 			*stdin = *l_hFile;
 		}
-		SetConsoleProperties(GetStdHandle(STD_OUTPUT_HANDLE));
+
+
+
+		SetConsoleWindowInfo(n_hOut, true, &n_WindowSize);
+		SetConsoleScreenBufferSize(n_hOut, n_BufferSize);
+
+
+		//SetConsoleProperties();
 		SetTitle();
 		SetFont();
 		n_bInitialized = true;
@@ -88,26 +105,32 @@ void Logger::Write(const std::string& p_Msg, const std::string& p_Module, const 
 	if (!ShouldLog(p_Msg, l_ThreadInfo, p_Module, p_Level)) return;
 
 	std::lock_guard<std::mutex> l_Lock(n_Mutex);
-	HANDLE l_hStd = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	SetConsoleTextAttribute(l_hStd, c_ModuleInfoTextAttr);
+	SetConsoleTextAttribute(n_hOut, c_ModuleInfoTextAttr);
 
 	std::ostringstream l_Stream;
 	l_Stream << Time::Now() << " [" << l_ThreadInfo << " : " << p_Module << "]";
 	std::string l_InitStr = l_Stream.str();
-	WriteConsole(l_hStd, l_InitStr.c_str(), l_InitStr.length(), LPDWORD(), nullptr);
+	WriteConsole(n_hOut, l_InitStr.c_str(), l_InitStr.length(), LPDWORD(), nullptr);
 
-	SetConsoleTextAttribute(l_hStd, 0);
-	WriteConsole(l_hStd, " ", 1, LPDWORD(), nullptr);
+	SetConsoleTextAttribute(n_hOut, 0);
+	WriteConsole(n_hOut, " ", 1, LPDWORD(), nullptr);
 
-	SetConsoleTextAttribute(l_hStd, GetMsgTextAttr(p_Level));
-	WriteConsole(l_hStd, p_Msg.c_str(), p_Msg.length(), LPDWORD(), nullptr);
+	SetConsoleTextAttribute(n_hOut, GetMsgTextAttr(p_Level));
+	WriteConsole(n_hOut, p_Msg.c_str(), p_Msg.length(), LPDWORD(), nullptr);
 
-	SetConsoleTextAttribute(l_hStd, 0);
-	WriteConsole(l_hStd, " ", 1, LPDWORD(), nullptr);
+	SetConsoleTextAttribute(n_hOut, 0);
+	WriteConsole(n_hOut, " ", 1, LPDWORD(), nullptr);
 
-	SetConsoleTextAttribute(l_hStd, c_FileInfoTextAttr);
-	WriteConsole(l_hStd, p_FileInfo.c_str(), p_FileInfo.length(), LPDWORD(), nullptr);
+	SetConsoleTextAttribute(n_hOut, c_FileInfoTextAttr);
+	WriteConsole(n_hOut, p_FileInfo.c_str(), p_FileInfo.length(), LPDWORD(), nullptr);
+}
+
+void Logger::WriteCmd(const std::string& p_Cmd)
+{
+	std::lock_guard<std::mutex> l_Lock(n_Mutex);
+	SetConsoleTextAttribute(n_hOut, c_cmdTextAttr);
+	WriteConsole(n_hOut, p_Cmd.c_str(), 1, LPDWORD(), nullptr);
 }
 
 WORD Logger::GetMsgTextAttr(Level p_Level)
@@ -160,21 +183,19 @@ std::string Logger::GetThreadInfo()
 void Logger::ClearScreen()
 {
 	// Based on: https://support.microsoft.com/sv-se/kb/99261
-	HANDLE l_hStd = GetStdHandle(STD_OUTPUT_HANDLE);
-
 	COORD l_StartPos = { 0, 0 };
 	CONSOLE_SCREEN_BUFFER_INFO l_ScreenBufferInfo;
 	DWORD l_dwNumCharsInBuffer;
 	DWORD l_dwCharsWritten;
 
-	GetConsoleScreenBufferInfo(l_hStd, &l_ScreenBufferInfo);
+	GetConsoleScreenBufferInfo(n_hOut, &l_ScreenBufferInfo);
 	l_dwNumCharsInBuffer = l_ScreenBufferInfo.dwSize.X * l_ScreenBufferInfo.dwSize.Y;
 
-	FillConsoleOutputCharacter(l_hStd, (TCHAR) ' ', l_dwNumCharsInBuffer, l_StartPos, &l_dwCharsWritten);
-	GetConsoleScreenBufferInfo(l_hStd, &l_ScreenBufferInfo);
-	FillConsoleOutputAttribute(l_hStd, l_ScreenBufferInfo.wAttributes, l_dwNumCharsInBuffer, l_StartPos, &l_dwCharsWritten);
+	FillConsoleOutputCharacter(n_hOut, (TCHAR) ' ', l_dwNumCharsInBuffer, l_StartPos, &l_dwCharsWritten);
+	GetConsoleScreenBufferInfo(n_hOut, &l_ScreenBufferInfo);
+	FillConsoleOutputAttribute(n_hOut, l_ScreenBufferInfo.wAttributes, l_dwNumCharsInBuffer, l_StartPos, &l_dwCharsWritten);
 
-	SetConsoleCursorPosition(l_hStd, l_StartPos);
+	SetConsoleCursorPosition(n_hOut, l_StartPos);
 }
 
 void Logger::SetFont()
@@ -187,7 +208,7 @@ void Logger::SetFont()
 	l_FontInfo.FontFamily = FF_DONTCARE;
 	l_FontInfo.FontWeight = FW_NORMAL;
 	wcscpy_s(l_FontInfo.FaceName, L"Consolas");
-	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &l_FontInfo);
+	SetCurrentConsoleFontEx(n_hOut, FALSE, &l_FontInfo);
 }
 
 void Logger::SetTitle()
@@ -197,10 +218,15 @@ void Logger::SetTitle()
 	SetConsoleTitle(l_TitleStream.str().c_str());
 }
 
-void Logger::SetConsoleProperties(HANDLE p_Handle)
+void Logger::SetConsoleProperties()
 {
-	SetConsoleMode(p_Handle, ENABLE_QUICK_EDIT_MODE);
-	SetConsoleScreenBufferSize(p_Handle, COORD{ 200, 1000 });
+	SetConsoleMode(n_hOut, ENABLE_QUICK_EDIT_MODE);
+	SetConsoleScreenBufferSize(n_hOut, COORD{ 200, 1000 });
+
+	CONSOLE_CURSOR_INFO l_CursorInfo;
+	l_CursorInfo.dwSize = 100;
+	l_CursorInfo.bVisible = true;
+	SetConsoleCursorInfo(n_hOut, &l_CursorInfo);
 }
 
 bool Logger::MatchesFilter(const std::string& p_Msg, const std::string& p_Filter)

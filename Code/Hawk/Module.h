@@ -7,6 +7,7 @@
 namespace Hawk
 {
 	class Duration;
+	class ConsoleManager;
 
 	class HAWK_DLL_EXPORT Module
 	{
@@ -21,9 +22,10 @@ namespace Hawk
 		static std::unique_ptr<T> CreateInstance() { return std::make_unique<T>(); }
 		virtual std::string GetName() const = 0;
 
-		void InternalInitialize(std::unique_ptr<EventManager>&& p_EventManager);
+		void InternalInitialize(std::unique_ptr<EventManager> p_EventManager, ConsoleManager& p_ConsoleManager);
 		virtual void Initialize();
 		virtual void RegisterEvents(EventManager& p_EventManager);
+		virtual void RegisterConsole(ConsoleManager& p_ConsoleManager);
 
 		void InternalUpdate(const Duration& p_Duration);
 		virtual void Update(const Duration& p_Duration);

@@ -14,16 +14,17 @@ ModuleManager::ModuleManager(const std::string& p_ThreadName)
 , m_bStopSignal(false)
 {
 }
+
 void ModuleManager::Add(std::unique_ptr<Module> p_Module)
 {
 	m_Modules.push_back(std::move(p_Module));
 }
 
-void ModuleManager::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
+void ModuleManager::Initialize(std::shared_ptr<EventRouter>& p_EventRouter, ConsoleManager& p_ConsoleManager)
 {
 	for (auto& l_Module : m_Modules)
 	{
-		l_Module->InternalInitialize(std::make_unique<EventManager>(p_EventRouter));
+		l_Module->InternalInitialize(std::make_unique<EventManager>(p_EventRouter), p_ConsoleManager);
 	}
 }
 
@@ -33,12 +34,12 @@ void ModuleManager::Start()
 #ifdef HAWK_DEBUG
 	Logger::RegisterThreadName(m_ThreadName, m_Thread.get_id());
 #endif
-	m_Thread.detach();
 }
 
 void ModuleManager::Stop()
 {
 	m_bStopSignal = true;
+	m_Thread.join();
 }
 
 void ModuleManager::Update(const Duration& p_Duration)

@@ -9,13 +9,14 @@
 namespace Hawk {
 
 class Module;
+class ConsoleManager;
 
 class ModuleManager final
 {
 public:
 	ModuleManager(const std::string& p_ThreadName);
 	HAWK_DLL_EXPORT void Add(std::unique_ptr<Module> p_Module);
-	void Initialize(std::shared_ptr<EventRouter>& p_EventRouter);
+	void Initialize(std::shared_ptr<EventRouter>& p_EventRouter, ConsoleManager& p_ConsoleManager);
 	void Start();
 	void Stop();
 
@@ -30,6 +31,6 @@ private:
 	Modules_t m_Modules;
 	std::thread m_Thread;
 	const std::string m_ThreadName;
-	std::atomic<bool> m_bStopSignal;
+	std::atomic_bool m_bStopSignal;
 };
 }

@@ -15,13 +15,13 @@ public:
 	{
 		p_EventManager.Register<TestEvent>([this](const TestEvent& p_Event)
 		{
-			LOG_MOD("Receives event submitted by self", Debug);
+			LOGM("Receives event submitted by self", Debug);
 		}
 		);
 
 		p_EventManager.Register<TestEvent2>([this](const TestEvent2& p_Event)
 		{
-			LOG_MOD("Value=" << p_Event.m_iValue, Debug);
+			LOGM("Value=" << p_Event.m_iValue, Debug);
 		}
 		);
 	}

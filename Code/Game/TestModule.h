@@ -22,7 +22,7 @@ public:
 			//l_Event.m_Str = "fdsfsdfdsfsdfsdf";
 			l_Event.m_iValue = 321321;
 			//SendEvent<TestEvent2>(l_Event);
-			//LOG_MOD("testing testing the grejs", Fatal);
+			//LOGM("testing testing the grejs", Fatal);
 		}
 	}
 
@@ -30,7 +30,7 @@ public:
 	{
 		p_EventManager.Register<TestEvent>([=](const TestEvent& p_Event)
 		{
-			LOG_MOD("Event received. Value=" << p_Event.m_iValue, Debug);
+			LOGM("Event received. Value=" << p_Event.m_iValue, Debug);
 		}
 		);
 	}

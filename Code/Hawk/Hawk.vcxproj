@@ -78,7 +78,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="Config.h" />
-    <ClInclude Include="ConsoleCmdModule.h" />
+    <ClInclude Include="ConsoleManager.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="DllExport.h" />
     <ClInclude Include="Duration.h" />
@@ -103,7 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Config.cpp" />
-    <ClCompile Include="ConsoleCmdModule.cpp" />
+    <ClCompile Include="ConsoleManager.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Duration.cpp" />
     <ClCompile Include="EventManager.cpp" />
