@@ -3,19 +3,13 @@
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Core.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Duration.cpp">
-      <Filter>Util</Filter>
-    </ClCompile>
-    <ClCompile Include="Time.cpp">
-      <Filter>Util</Filter>
+      <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="Exception.cpp">
-      <Filter>Core</Filter>
+      <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="Config.cpp">
-      <Filter>Core</Filter>
+      <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="EventManager.cpp">
       <Filter>Events</Filter>
@@ -24,7 +18,7 @@
       <Filter>Events</Filter>
     </ClCompile>
     <ClCompile Include="WindowManager.cpp">
-      <Filter>Core</Filter>
+      <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="ModuleManager.cpp">
       <Filter>Modules</Filter>
@@ -53,26 +47,26 @@
     <ClCompile Include="ConsoleAPI.cpp">
       <Filter>Console</Filter>
     </ClCompile>
+    <ClCompile Include="Duration.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="Core.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Duration.h">
-      <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="Time.h">
-      <Filter>Util</Filter>
+      <Filter>Base</Filter>
     </ClInclude>
     <ClInclude Include="Exception.h">
-      <Filter>Core</Filter>
+      <Filter>Base</Filter>
     </ClInclude>
     <ClInclude Include="DllExport.h">
-      <Filter>Core</Filter>
+      <Filter>Base</Filter>
     </ClInclude>
     <ClInclude Include="Config.h">
-      <Filter>Core</Filter>
+      <Filter>Base</Filter>
     </ClInclude>
     <ClInclude Include="EventManager.h">
       <Filter>Events</Filter>
@@ -93,7 +87,7 @@
       <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="WindowManager.h">
-      <Filter>Core</Filter>
+      <Filter>Base</Filter>
     </ClInclude>
     <ClInclude Include="InputEvents.h">
       <Filter>Input</Filter>
@@ -129,13 +123,16 @@
       <Filter>Console</Filter>
     </ClInclude>
     <ClInclude Include="Version.h">
-      <Filter>Core</Filter>
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Duration.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.h">
+      <Filter>Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Core">
-      <UniqueIdentifier>{f55bc3a6-1071-4119-8ba7-85350ef4c6c2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Util">
       <UniqueIdentifier>{508386be-99b4-4f1f-84d1-a55bbc32819d}</UniqueIdentifier>
     </Filter>
@@ -150,6 +147,12 @@
     </Filter>
     <Filter Include="Console">
       <UniqueIdentifier>{5a3d1c73-ff04-4f9a-a64f-bbb5b9b15d1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{f55bc3a6-1071-4119-8ba7-85350ef4c6c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{3ee65683-a2d5-4c13-927c-ce68b4cdb8e5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
