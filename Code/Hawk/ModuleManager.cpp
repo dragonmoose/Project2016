@@ -20,11 +20,11 @@ void ModuleManager::Add(std::unique_ptr<Module> p_Module)
 	m_Modules.push_back(std::move(p_Module));
 }
 
-void ModuleManager::Initialize(std::shared_ptr<EventRouter>& p_EventRouter, ConsoleManager& p_ConsoleManager)
+void ModuleManager::Initialize(std::shared_ptr<EventRouter>& p_EventRouter, ConsoleCmdManager& p_ConsoleCmdManager)
 {
 	for (auto& l_Module : m_Modules)
 	{
-		l_Module->InternalInitialize(std::make_unique<EventManager>(p_EventRouter), p_ConsoleManager);
+		l_Module->InternalInitialize(std::make_unique<EventManager>(p_EventRouter), p_ConsoleCmdManager);
 	}
 }
 

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Core.h"
-#include "ConsoleManager.h"
+#include "ConsoleAPI.h"
+#include "ConsoleCmdManager.h"
 #include "WindowManager.h"
 #include "Duration.h"
 #include "Time.h"
@@ -20,8 +21,8 @@ Core::Core(bool p_bConsole)
 	boost::filesystem::current_path(boost::filesystem::current_path().parent_path());
 	if (p_bConsole)
 	{
-		THROW_IF_NOT(Logger::Initialize(), "Failed to initialize Logger");
-		m_ConsoleManager.Start();
+		ConsoleAPI::Start();
+		m_ConsoleCmdManager.Start();
 	}
 	Config::Instance().Load();
 	LOG("Working directory set to: " << boost::filesystem::current_path(), c_Name, Info);
@@ -56,6 +57,7 @@ void Core::Run()
 	while (Config::Instance().Get<bool>("Core.run", true) && !Logger::FatalFlagSet())
 	{
 		Config::Instance().Update();
+		m_ConsoleCmdManager.Update();
 		if (!WindowManager::Update())
 		{
 			LOG("MainWindow signalled WM_QUIT", c_Name, Info);
@@ -63,7 +65,7 @@ void Core::Run()
 		}
 	}
 	StopModules();
-	m_ConsoleManager.Stop();
+	m_ConsoleCmdManager.Stop();
 
 	LOG("************* Core exit *************", c_Name, Info);
 	if (Logger::FatalFlagSet())
@@ -71,13 +73,14 @@ void Core::Run()
 		FATAL("Core exit due to critical error (see above)", c_Name);
 	}
 	std::this_thread::sleep_for(std::chrono::minutes(1));
+	ConsoleAPI::Stop();
 }
 
 void Core::InitializeModules()
 {
 	for (auto& l_Manager : m_ModuleManagers)
 	{
-		l_Manager.second->Initialize(m_EventRouter, m_ConsoleManager);
+		l_Manager.second->Initialize(m_EventRouter, m_ConsoleCmdManager);
 	}
 }
 

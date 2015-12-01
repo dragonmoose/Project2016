@@ -9,14 +9,14 @@
 namespace Hawk {
 
 class Module;
-class ConsoleManager;
+class ConsoleCmdManager;
 
 class ModuleManager final
 {
 public:
 	ModuleManager(const std::string& p_ThreadName);
 	HAWK_DLL_EXPORT void Add(std::unique_ptr<Module> p_Module);
-	void Initialize(std::shared_ptr<EventRouter>& p_EventRouter, ConsoleManager& p_ConsoleManager);
+	void Initialize(std::shared_ptr<EventRouter>& p_EventRouter, ConsoleCmdManager& p_ConsoleManager);
 	void Start();
 	void Stop();
 

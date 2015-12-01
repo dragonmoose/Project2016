@@ -78,7 +78,9 @@
   </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="Config.h" />
-    <ClInclude Include="ConsoleManager.h" />
+    <ClInclude Include="ConsoleCmdManager.h" />
+    <ClInclude Include="ConsoleAPI.h" />
+    <ClInclude Include="ConsoleInputHandler.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="DllExport.h" />
     <ClInclude Include="Duration.h" />
@@ -88,7 +90,7 @@
     <ClInclude Include="EventMonitoringModule.h" />
     <ClInclude Include="EventRouter.h" />
     <ClInclude Include="Exception.h" />
-    <ClInclude Include="HawkVersion.h" />
+    <ClInclude Include="Version.h" />
     <ClInclude Include="IEvent.h" />
     <ClInclude Include="InputEvents.h" />
     <ClInclude Include="InputSystem.h" />
@@ -98,12 +100,15 @@
     <ClInclude Include="QueuedEvent.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleManager.h" />
+    <ClInclude Include="StringUtil.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="WindowManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Config.cpp" />
-    <ClCompile Include="ConsoleManager.cpp" />
+    <ClCompile Include="ConsoleCmdManager.cpp" />
+    <ClCompile Include="ConsoleAPI.cpp" />
+    <ClCompile Include="ConsoleInputHandler.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Duration.cpp" />
     <ClCompile Include="EventManager.cpp" />
@@ -120,6 +125,7 @@
     </ClCompile>
     <ClCompile Include="Module.cpp" />
     <ClCompile Include="ModuleManager.cpp" />
+    <ClCompile Include="StringUtil.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>

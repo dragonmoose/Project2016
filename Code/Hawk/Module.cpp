@@ -15,12 +15,12 @@ Module::~Module()
 {
 }
 
-void Module::InternalInitialize(std::unique_ptr<EventManager> p_EventManager, ConsoleManager& p_ConsoleManager)
+void Module::InternalInitialize(std::unique_ptr<EventManager> p_EventManager, ConsoleCmdManager& p_ConsoleCmdManager)
 {
 	LOGM("Initializing module: " << GetName(), Info);
 	m_EventManager = std::move(p_EventManager);
 	Initialize();
-	RegisterConsole(p_ConsoleManager);
+	RegisterConsole(p_ConsoleCmdManager);
 	RegisterEvents(*m_EventManager);
 }
 
@@ -32,7 +32,7 @@ void Module::RegisterEvents(EventManager& p_EventManager)
 {
 }
 
-void Module::RegisterConsole(ConsoleManager& p_ConsoleManager)
+void Module::RegisterConsole(ConsoleCmdManager& p_ConsoleCmdManager)
 {
 
 }

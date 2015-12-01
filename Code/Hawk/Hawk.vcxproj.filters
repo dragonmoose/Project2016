@@ -41,7 +41,16 @@
     <ClCompile Include="Logger.cpp">
       <Filter>Console</Filter>
     </ClCompile>
-    <ClCompile Include="ConsoleManager.cpp">
+    <ClCompile Include="StringUtil.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsoleCmdManager.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsoleInputHandler.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsoleAPI.cpp">
       <Filter>Console</Filter>
     </ClCompile>
   </ItemGroup>
@@ -89,9 +98,6 @@
     <ClInclude Include="InputEvents.h">
       <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="HawkVersion.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="ModuleManager.h">
       <Filter>Modules</Filter>
     </ClInclude>
@@ -110,8 +116,20 @@
     <ClInclude Include="Logger.h">
       <Filter>Console</Filter>
     </ClInclude>
-    <ClInclude Include="ConsoleManager.h">
+    <ClInclude Include="StringUtil.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleCmdManager.h">
       <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleInputHandler.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleAPI.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="Version.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

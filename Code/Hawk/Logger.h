@@ -17,6 +17,7 @@ namespace Logger
 namespace Hawk {
 namespace Logger
 {
+	using WORD = unsigned short;
 	enum class Level
 	{
 		Trace,
@@ -27,10 +28,8 @@ namespace Logger
 		Fatal,
 	};
 
-	bool Initialize();
 	void RegisterThreadName(const std::string& p_Name, std::thread::id p_ID);
-	HAWK_DLL_EXPORT void Write(const std::string& p_Msg, const std::string& p_Module, const std::string& p_FileInfo, Level p_Level);
-	void WriteCmd(const std::string& p_Cmd);
+	HAWK_DLL_EXPORT void Log(const std::string& p_Msg, const std::string& p_Module, const std::string& p_FileInfo, Level p_Level);
 }
 }
 
@@ -39,8 +38,8 @@ namespace Logger
 	std::ostringstream l_StreamMsg;																			\
 	l_StreamMsg << msg;																						\
 	std::ostringstream l_StreamFileInfo;																	\
-	l_StreamFileInfo << "[" << __FILE__ << ":" << std::to_string(__LINE__) << "]\r\n";						\
-	Hawk::Logger::Write(l_StreamMsg.str(), module, l_StreamFileInfo.str(), Hawk::Logger::Level::level);		\
+	l_StreamFileInfo << __FILE__ << ":" << std::to_string(__LINE__);										\
+	Hawk::Logger::Log(l_StreamMsg.str(), module, l_StreamFileInfo.str(), Hawk::Logger::Level::level);		\
 	if (Hawk::Logger::Level::level == Hawk::Logger::Level::Fatal) Hawk::Logger::SetFatalFlag();				\
 }
 
@@ -49,9 +48,8 @@ namespace Logger
 	std::ostringstream l_StreamMsg;																			\
 	l_StreamMsg << "EXCEPTION: " << e.what();																\
 	std::ostringstream l_StreamFileInfo;																	\
-	l_StreamFileInfo << "[" << e.GetSourceInfo() << " -> " << __FILE__ << ":";								\
-	l_StreamFileInfo << std::to_string(__LINE__) << "]\r\n";												\
-	Hawk::Logger::Write(l_StreamMsg.str(), module, l_StreamFileInfo.str(), Hawk::Logger::Level::level);		\
+	l_StreamFileInfo << e.GetSourceInfo() << " -> " << __FILE__ << ":" << std::to_string(__LINE__);			\
+	Hawk::Logger::Log(l_StreamMsg.str(), module, l_StreamFileInfo.str(), Hawk::Logger::Level::level);		\
 	if (Hawk::Logger::Level::level == Hawk::Logger::Level::Fatal) Hawk::Logger::SetFatalFlag();				\
 }
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "ConsoleManager.h"
+#include "ConsoleCmdManager.h"
 #include "DllExport.h"
 #include "EventRouter.h"
 #include "Exception.h"
@@ -7,9 +7,6 @@
 #include "ModuleManager.h"
 #include <memory>
 #include <unordered_map>
-
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
 
 namespace Hawk {
 
@@ -44,7 +41,7 @@ private:
 
 	std::shared_ptr<EventRouter> m_EventRouter;
 	static std::atomic_bool m_bFatalSignal;
-	ConsoleManager m_ConsoleManager;
+	ConsoleCmdManager m_ConsoleCmdManager;
 };
 
 }
