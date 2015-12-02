@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "ConsoleAPI.h"
-#include "Exception.h"
-#include "Version.h"
+#include "Console/ConsoleAPI.h"
+#include "System/Exception.h"
+#include "System/Version.h"
 #include <consoleapi.h>
 #include <mutex>
 

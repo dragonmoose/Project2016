@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Config.h"
-#include "Logger.h"
-#include "Exception.h"
+#include "Console/Logger.h"
+#include "System/Config.h"
+#include "System/Exception.h"
 #include <string>
 #include <sstream>
 

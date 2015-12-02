@@ -1,8 +1,8 @@
 #pragma once
-#include "Hawk/Module.h"
-#include "Hawk/Logger.h"
-#include "Hawk/Duration.h"
-#include "Hawk/Time.h"
+#include "Hawk/Base/Module.h"
+#include "Hawk/Console/Logger.h"
+#include "Hawk/System/Duration.h"
+#include "Hawk/System/Time.h"
 #include "TestEvent.h"
 #include <string>
 

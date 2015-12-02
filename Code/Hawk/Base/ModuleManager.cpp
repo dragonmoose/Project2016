@@ -1,9 +1,9 @@
 #include "pch.h"
-#include "ModuleManager.h"
-#include "Module.h"
+#include "Base/ModuleManager.h"
+#include "Base/Module.h"
 #include "Time.h"
-#include "Duration.h"
-#include "EventManager.h"
+#include "System/Duration.h"
+#include "Events/EventManager.h"
 
 namespace Hawk {
 

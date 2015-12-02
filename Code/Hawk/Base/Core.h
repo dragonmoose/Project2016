@@ -1,10 +1,10 @@
 #pragma once
-#include "ConsoleCmdManager.h"
-#include "DllExport.h"
-#include "EventRouter.h"
-#include "Exception.h"
-#include "Module.h"
-#include "ModuleManager.h"
+#include "Console/ConsoleCmdManager.h"
+#include "System/DllExport.h"
+#include "System/Exception.h"
+#include "Events/EventRouter.h"
+#include "Base/Module.h"
+#include "Base/ModuleManager.h"
 #include <memory>
 #include <unordered_map>
 

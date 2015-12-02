@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "EventManager.h"
+#include "Events/EventManager.h"
 
 namespace Hawk {
 

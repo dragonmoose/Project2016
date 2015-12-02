@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DllExport.h"
+#include "System/DllExport.h"
 
 namespace Hawk {
 namespace Logger

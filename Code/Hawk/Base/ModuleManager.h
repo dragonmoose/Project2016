@@ -1,6 +1,6 @@
 #pragma once
-#include "DllExport.h"
-#include "EventRouter.h"
+#include "System/DllExport.h"
+#include "Events/EventRouter.h"
 #include <memory>
 #include <thread>
 #include <vector>

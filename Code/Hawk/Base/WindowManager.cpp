@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "WindowManager.h"
-#include "InputSystem.h"
+#include "Base/WindowManager.h"
+#include "Input/InputSystem.h"
 #include <memory>
 
 namespace Hawk {

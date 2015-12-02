@@ -1,5 +1,5 @@
 #pragma once
-#include "EventCollector.h"
+#include "Events/EventCollector.h"
 #include <unordered_map>
 #include <typeindex>
 #include <functional>

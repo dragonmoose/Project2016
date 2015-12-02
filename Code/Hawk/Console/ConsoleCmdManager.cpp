@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "ConsoleCmdManager.h"
-#include "ConsoleAPI.h"
+#include "Console/ConsoleCmdManager.h"
+#include "Console/ConsoleAPI.h"
 
 namespace Hawk {
 

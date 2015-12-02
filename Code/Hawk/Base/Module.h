@@ -1,6 +1,6 @@
 #pragma once
-#include "DllExport.h"
-#include "EventManager.h"
+#include "System/DllExport.h"
+#include "Events/EventManager.h"
 #include <string>
 #include <memory>
 

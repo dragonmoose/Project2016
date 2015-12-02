@@ -1,10 +1,10 @@
 #include "pch.h"
-#include "Core.h"
-#include "ConsoleAPI.h"
-#include "ConsoleCmdManager.h"
-#include "WindowManager.h"
-#include "Duration.h"
-#include "Time.h"
+#include "Base/Core.h"
+#include "Base/WindowManager.h"
+#include "Console/ConsoleAPI.h"
+#include "Console/ConsoleCmdManager.h"
+#include "System/Duration.h"
+#include "System/Time.h"
 #include <boost/filesystem.hpp>
 #include <iostream>
 #include <thread>

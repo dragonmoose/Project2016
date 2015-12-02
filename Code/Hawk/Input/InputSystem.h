@@ -1,6 +1,6 @@
 #pragma once
-#include "EventManager.h"
-#include "EventRouter.h"
+#include "Events/EventManager.h"
+#include "Events/EventRouter.h"
 #include <bitset>
 #include <memory>
 

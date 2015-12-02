@@ -1,10 +1,10 @@
 #pragma once
-#include "IEvent.h"
-#include "EventRouter.h"
-#include "EventCollector.h"
-#include "EventHandler.h"
-#include "DllExport.h"
-#include "Logger.h"
+#include "Events/IEvent.h"
+#include "Events/EventRouter.h"
+#include "Events/EventCollector.h"
+#include "Events/EventHandler.h"
+#include "System/DllExport.h"
+#include "Console/Logger.h"
 #include <unordered_map>
 #include <typeinfo>
 #include <typeindex>

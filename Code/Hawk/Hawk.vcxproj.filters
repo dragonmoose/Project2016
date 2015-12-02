@@ -2,134 +2,128 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="Core.cpp">
+    <ClCompile Include="Console\ConsoleAPI.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="Console\ConsoleCmdManager.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="Console\ConsoleInputHandler.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="Console\Logger.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\Core.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="Exception.cpp">
+    <ClCompile Include="Base\WindowManager.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="Config.cpp">
-      <Filter>Base</Filter>
-    </ClCompile>
-    <ClCompile Include="EventManager.cpp">
+    <ClCompile Include="Events\EventManager.cpp">
       <Filter>Events</Filter>
     </ClCompile>
-    <ClCompile Include="EventRouter.cpp">
+    <ClCompile Include="Events\EventRouter.cpp">
       <Filter>Events</Filter>
     </ClCompile>
-    <ClCompile Include="WindowManager.cpp">
-      <Filter>Base</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleManager.cpp">
-      <Filter>Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Module.cpp">
-      <Filter>Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="EventMonitoringModule.cpp">
-      <Filter>Events</Filter>
-    </ClCompile>
-    <ClCompile Include="InputSystem.cpp">
+    <ClCompile Include="Input\InputSystem.cpp">
       <Filter>Input</Filter>
     </ClCompile>
-    <ClCompile Include="Logger.cpp">
-      <Filter>Console</Filter>
-    </ClCompile>
-    <ClCompile Include="StringUtil.cpp">
+    <ClCompile Include="Util\StringUtil.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="ConsoleCmdManager.cpp">
-      <Filter>Console</Filter>
+    <ClCompile Include="System\Config.cpp">
+      <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="ConsoleInputHandler.cpp">
-      <Filter>Console</Filter>
+    <ClCompile Include="System\Exception.cpp">
+      <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="ConsoleAPI.cpp">
-      <Filter>Console</Filter>
+    <ClCompile Include="System\Duration.cpp">
+      <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="Duration.cpp">
-      <Filter>Objects</Filter>
+    <ClCompile Include="System\Time.cpp">
+      <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="Time.cpp">
-      <Filter>Objects</Filter>
+    <ClCompile Include="Base\Module.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\ModuleManager.cpp">
+      <Filter>Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Core.h">
-      <Filter>Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Exception.h">
-      <Filter>Base</Filter>
-    </ClInclude>
-    <ClInclude Include="DllExport.h">
-      <Filter>Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Config.h">
-      <Filter>Base</Filter>
-    </ClInclude>
-    <ClInclude Include="EventManager.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="IEvent.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="EventRouter.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="EventCollector.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="QueuedEvent.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="EventHandler.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowManager.h">
-      <Filter>Base</Filter>
-    </ClInclude>
-    <ClInclude Include="InputEvents.h">
-      <Filter>Input</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleManager.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Module.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="EventMonitoringModule.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="InputSystem.h">
-      <Filter>Input</Filter>
-    </ClInclude>
-    <ClInclude Include="KeyCodes.h">
-      <Filter>Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Logger.h">
+    <ClInclude Include="Console\ConsoleAPI.h">
       <Filter>Console</Filter>
     </ClInclude>
-    <ClInclude Include="StringUtil.h">
+    <ClInclude Include="Console\ConsoleCmdManager.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\ConsoleInputHandler.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\Logger.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Core.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\WindowManager.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\EventCollector.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\EventHandler.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\EventManager.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\EventRouter.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\IEvent.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\QueuedEvent.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputEvents.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputSystem.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\KeyCodes.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\StringUtil.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="ConsoleCmdManager.h">
-      <Filter>Console</Filter>
+    <ClInclude Include="System\Config.h">
+      <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="ConsoleInputHandler.h">
-      <Filter>Console</Filter>
+    <ClInclude Include="System\Exception.h">
+      <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="ConsoleAPI.h">
-      <Filter>Console</Filter>
+    <ClInclude Include="System\Version.h">
+      <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="Version.h">
+    <ClInclude Include="System\DllExport.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Duration.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Time.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Module.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="Duration.h">
-      <Filter>Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Time.h">
-      <Filter>Objects</Filter>
+    <ClInclude Include="Base\ModuleManager.h">
+      <Filter>Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -151,8 +145,8 @@
     <Filter Include="Base">
       <UniqueIdentifier>{f55bc3a6-1071-4119-8ba7-85350ef4c6c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Objects">
-      <UniqueIdentifier>{3ee65683-a2d5-4c13-927c-ce68b4cdb8e5}</UniqueIdentifier>
+    <Filter Include="System">
+      <UniqueIdentifier>{a46c3953-987d-454e-9d71-60a857659919}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -1,10 +1,10 @@
 #include "pch.h"
-#include "Hawk/Config.h"
-#include "Hawk/Core.h"
-#include "Hawk/Logger.h"
-#include "Hawk/Time.h"
-#include "Hawk/Duration.h"
-#include "Hawk/Exception.h"
+#include "Hawk/System/Config.h"
+#include "Hawk/Base/Core.h"
+#include "Hawk/Console/Logger.h"
+#include "Hawk/System/Time.h"
+#include "Hawk/System/Duration.h"
+#include "Hawk/System/Exception.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace Hawk;

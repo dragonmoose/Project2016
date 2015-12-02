@@ -1,6 +1,5 @@
 #include "pch.h"
-#include "Hawk/Core.h"
-#include "Hawk/EventMonitoringModule.h"
+#include "Hawk/Base/Core.h"
 #include "TestModule.h"
 #include "TestModule2.h"
 #include <iostream>
@@ -16,7 +15,6 @@ int WINAPI WinMain(HINSTANCE p_hInstance, HINSTANCE p_hPrevInstance, LPSTR p_lpC
 			l_Core.RegisterThread("Logic" + std::to_string(i));
 		}
 		l_Core.RegisterThread("EventListener");
-		l_Core.AddModule<Hawk::EventMonitoringModule>("EventListener");
 		l_Core.RegisterThread("Main");
 		
 		for (int i = 0; i < 3; i++)

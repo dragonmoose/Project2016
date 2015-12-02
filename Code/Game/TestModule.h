@@ -1,10 +1,10 @@
 #pragma once
-#include "Hawk/Module.h"
-#include "Hawk/Logger.h"
-#include "Hawk/Duration.h"
-#include "Hawk/EventManager.h"
+#include "Hawk/Base/Module.h"
+#include "Hawk/Console/Logger.h"
+#include "Hawk/System/Duration.h"
+#include "Hawk/Events/EventManager.h"
 #include "TestEvent.h"
-#include "Hawk/Duration.h"
+#include "Hawk/System/Duration.h"
 #include <string>
 
 class TestModule : public Hawk::Module

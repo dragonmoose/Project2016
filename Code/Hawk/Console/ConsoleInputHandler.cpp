@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "ConsoleInputHandler.h"
-#include "ConsoleAPI.h"
-#include "Version.h"
+#include "Console/ConsoleInputHandler.h"
+#include "Console/ConsoleAPI.h"
+#include "System/Version.h"
 
 namespace Hawk {
 

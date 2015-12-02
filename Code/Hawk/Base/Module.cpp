@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "Module.h"
-#include "Duration.h"
+#include "Base/Module.h"
+#include "System/Duration.h"
 #include <typeinfo>
 
 namespace Hawk {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hawk/IEvent.h"
+#include "Hawk/Events/IEvent.h"
 
 struct TestEvent : public Hawk::IEvent
 {

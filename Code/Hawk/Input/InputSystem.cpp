@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "InputSystem.h"
-#include "InputEvents.h"
+#include "Input/InputSystem.h"
+#include "Input/InputEvents.h"
 
 namespace Hawk {
 

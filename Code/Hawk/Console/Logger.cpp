@@ -11,11 +11,11 @@ namespace Logger
 }
 
 #ifdef HAWK_DEBUG
-#include "Logger.h"
-#include "ConsoleAPI.h"
-#include "StringUtil.h"
-#include "Time.h"
-#include "Duration.h"
+#include "Console/Logger.h"
+#include "Console/ConsoleAPI.h"
+#include "System/Time.h"
+#include "System/Duration.h"
+#include "Util/StringUtil.h"
 #include <unordered_map>
 #include <mutex>
 
