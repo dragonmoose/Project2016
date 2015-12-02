@@ -4,6 +4,7 @@
 #include "System/Version.h"
 #include <consoleapi.h>
 #include <mutex>
+#include <iostream>
 
 namespace Hawk {
 
@@ -147,6 +148,11 @@ WORD ConsoleAPI::GetColorAttr(Color p_Color, Color p_BgColor)
 void ConsoleAPI::Start()
 {
 	THROW_IF_NOT(AllocConsole(), "Failed to allocate console");
+
+	freopen("CONIN$", "r", stdin);			// Redirect streams to console device
+	freopen("CONOUT$", "w", stdout);
+	freopen("CONOUT$", "w", stderr);
+	std::cout.sync_with_stdio(true);		// c++ and c streams use the same buffer and thus can be mixed freely (and thread-safe)
 
 	n_hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	THROW_IF(n_hOut == INVALID_HANDLE_VALUE, "Invalid output handle");
