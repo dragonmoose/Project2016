@@ -101,6 +101,7 @@
     <ClInclude Include="System\Exception.h" />
     <ClInclude Include="System\Time.h" />
     <ClInclude Include="System\Version.h" />
+    <ClInclude Include="Util\FileUtil.h" />
     <ClInclude Include="Util\StringUtil.h" />
   </ItemGroup>
   <ItemGroup>
@@ -125,6 +126,7 @@
     <ClCompile Include="System\Duration.cpp" />
     <ClCompile Include="System\Exception.cpp" />
     <ClCompile Include="System\Time.cpp" />
+    <ClCompile Include="Util\FileUtil.cpp" />
     <ClCompile Include="Util\StringUtil.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

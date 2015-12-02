@@ -44,13 +44,19 @@ void Logger::Log(const std::string& p_Msg, const std::string& p_Module, const st
 	std::string l_ThreadInfo = GetThreadInfo();
 	if (!ShouldLog(p_Msg, l_ThreadInfo, p_Module, p_Level)) return;
 
+	ConsoleAPI::BeginWrite();
+	ConsoleAPI::Write(Time::Now().ToString().append(" "), ConsoleAPI::Color::White, ConsoleAPI::Color::None);
+
 	std::ostringstream l_Stream;
-	l_Stream << Time::Now() << " " << l_ThreadInfo << " " << p_Module << " " << p_FileInfo << "] " << p_Msg;
+	l_Stream << l_ThreadInfo << " " << p_Module << " [" << p_FileInfo << "]";
+	ConsoleAPI::Write(l_Stream.str(), ConsoleAPI::Color::BrightWhite, ConsoleAPI::Color::Cyan);
+	ConsoleAPI::Write(" ", ConsoleAPI::Color::None, ConsoleAPI::Color::None);
 
 	ConsoleAPI::Color l_Color;
 	ConsoleAPI::Color l_BgColor;
 	GetLevelColors(p_Level, l_Color, l_BgColor);
-	ConsoleAPI::WriteLine(l_Stream.str(), l_Color, l_BgColor);
+	ConsoleAPI::WriteLine(p_Msg, l_Color, l_BgColor);
+	ConsoleAPI::EndWrite();
 }
 
 bool Logger::ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo, const std::string& p_Module, Level p_Level)

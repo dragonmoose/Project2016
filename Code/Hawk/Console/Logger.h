@@ -1,6 +1,7 @@
 #pragma once
 
 #include "System/DllExport.h"
+#include "Util/FileUtil.h"
 
 namespace Hawk {
 namespace Logger
@@ -33,24 +34,25 @@ namespace Logger
 }
 }
 
-#define LOG_WITH_SOURCE_INFO(msg, module, level)															\
-{																											\
-	std::ostringstream l_StreamMsg;																			\
-	l_StreamMsg << msg;																						\
-	std::ostringstream l_StreamFileInfo;																	\
-	l_StreamFileInfo << __FILE__ << ":" << std::to_string(__LINE__);										\
-	Hawk::Logger::Log(l_StreamMsg.str(), module, l_StreamFileInfo.str(), Hawk::Logger::Level::level);		\
-	if (Hawk::Logger::Level::level == Hawk::Logger::Level::Fatal) Hawk::Logger::SetFatalFlag();				\
+#define LOG_WITH_SOURCE_INFO(msg, module, level)																\
+{																												\
+	std::ostringstream l_StreamMsg;																				\
+	l_StreamMsg << msg;																							\
+	std::ostringstream l_StreamFileInfo;																		\
+	l_StreamFileInfo << Hawk::FileUtil::GetFilenameWithoutPath(__FILE__) << ":" << std::to_string(__LINE__);	\
+	Hawk::Logger::Log(l_StreamMsg.str(), module, l_StreamFileInfo.str(), Hawk::Logger::Level::level);			\
+	if (Hawk::Logger::Level::level == Hawk::Logger::Level::Fatal) Hawk::Logger::SetFatalFlag();					\
 }
 
-#define LOG_EXCEPTION_WITH_SOURCE_INFO(e, module, level)													\
-{																											\
-	std::ostringstream l_StreamMsg;																			\
-	l_StreamMsg << "EXCEPTION: " << e.what();																\
-	std::ostringstream l_StreamFileInfo;																	\
-	l_StreamFileInfo << e.GetSourceInfo() << " -> " << __FILE__ << ":" << std::to_string(__LINE__);			\
-	Hawk::Logger::Log(l_StreamMsg.str(), module, l_StreamFileInfo.str(), Hawk::Logger::Level::level);		\
-	if (Hawk::Logger::Level::level == Hawk::Logger::Level::Fatal) Hawk::Logger::SetFatalFlag();				\
+#define LOG_EXCEPTION_WITH_SOURCE_INFO(e, module, level)														\
+{																												\
+	std::ostringstream l_StreamMsg;																				\
+	l_StreamMsg << "EXCEPTION: " << e.what();																	\
+	std::ostringstream l_StreamFileInfo;																		\
+	l_StreamFileInfo << e.GetSourceInfo() << " -> " << Hawk::FileUtil::GetFilenameWithoutPath(__FILE__);		\
+	l_StreamFileInfo << ":" << std::to_string(__LINE__);														\
+	Hawk::Logger::Log(l_StreamMsg.str(), module, l_StreamFileInfo.str(), Hawk::Logger::Level::level);			\
+	if (Hawk::Logger::Level::level == Hawk::Logger::Level::Fatal) Hawk::Logger::SetFatalFlag();					\
 }
 
 #define LOG(msg, module, level)						LOG_WITH_SOURCE_INFO(msg, module, level)

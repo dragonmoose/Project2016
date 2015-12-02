@@ -50,6 +50,9 @@
     <ClCompile Include="Base\ModuleManager.cpp">
       <Filter>Base</Filter>
     </ClCompile>
+    <ClCompile Include="Util\FileUtil.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -125,6 +128,9 @@
     <ClInclude Include="Base\ModuleManager.h">
       <Filter>Base</Filter>
     </ClInclude>
+    <ClInclude Include="Util\FileUtil.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
@@ -135,9 +141,6 @@
     </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{fb741e00-3219-4979-9226-7632a9f9971f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Modules">
-      <UniqueIdentifier>{d0d76ea6-0ff9-4bf2-9816-1a73b07c8588}</UniqueIdentifier>
     </Filter>
     <Filter Include="Console">
       <UniqueIdentifier>{5a3d1c73-ff04-4f9a-a64f-bbb5b9b15d1b}</UniqueIdentifier>

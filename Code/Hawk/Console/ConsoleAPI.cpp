@@ -166,6 +166,16 @@ void ConsoleAPI::Start()
 	SetFont();
 }
 
+void ConsoleAPI::BeginWrite()
+{
+	n_Mutex.lock();
+}
+
+void ConsoleAPI::EndWrite()
+{
+	n_Mutex.unlock();
+}
+
 void ConsoleAPI::WriteLine(const std::string& p_Text, Color p_Color, Color p_BgColor)
 {
 	std::string l_Text(p_Text);
@@ -175,7 +185,6 @@ void ConsoleAPI::WriteLine(const std::string& p_Text, Color p_Color, Color p_BgC
 
 void ConsoleAPI::Write(const std::string& p_Text, Color p_Color, Color p_BgColor)
 {
-	std::lock_guard<std::mutex> l_Lock(n_Mutex);
 	THROW_IF_NOT(::SetConsoleTextAttribute(n_hOut, GetColorAttr(p_Color, p_BgColor)), "Failed to set text attribute");
 	THROW_IF_NOT(::WriteConsole(n_hOut, p_Text.c_str(), p_Text.length(), LPDWORD(), nullptr), "Failed to write to console");
 }
@@ -208,6 +217,8 @@ void ConsoleAPI::ClearScreen()
 	CONSOLE_SCREEN_BUFFER_INFO l_ScreenBufferInfo;
 	DWORD l_dwNumCharsInBuffer;
 	DWORD l_dwCharsWritten;
+
+	std::lock_guard<std::mutex> l_Lock(n_Mutex);
 
 	THROW_IF_NOT(::GetConsoleScreenBufferInfo(n_hOut, &l_ScreenBufferInfo), "Failed to get console screen buffer info");
 	l_dwNumCharsInBuffer = l_ScreenBufferInfo.dwSize.X * l_ScreenBufferInfo.dwSize.Y;

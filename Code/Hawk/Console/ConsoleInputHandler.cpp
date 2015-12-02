@@ -60,7 +60,9 @@ void ConsoleInputHandler::RunInputLoop()
 					}
 					std::stringstream l_CmdLine;
 					l_CmdLine << "Hawk " << Version::c_EngineVersion << ">" << l_CurrCmd;
+					ConsoleAPI::BeginWrite();
 					ConsoleAPI::WriteLine(l_CmdLine.str(), ConsoleAPI::Color::White, ConsoleAPI::Color::None);
+					ConsoleAPI::EndWrite();
 					l_CurrCmd.clear();
 				}
 				else
@@ -71,7 +73,9 @@ void ConsoleInputHandler::RunInputLoop()
 		}
 		std::stringstream l_CmdLine;
 		l_CmdLine << "\rHawk " << Version::c_EngineVersion << ">" << l_CurrCmd << "\r";
+		ConsoleAPI::BeginWrite();
 		ConsoleAPI::Write(l_CmdLine.str(), ConsoleAPI::Color::White, ConsoleAPI::Color::None);
+		ConsoleAPI::EndWrite();
 		std::this_thread::sleep_for(std::chrono::milliseconds(25));
 	}
 }
