@@ -6,6 +6,14 @@
 
 int WINAPI WinMain(HINSTANCE p_hInstance, HINSTANCE p_hPrevInstance, LPSTR p_lpCmdLine, int p_nCmdShow)
 {
+
+
+
+
+
+
+
+
 	try
 	{
 		Hawk::Core l_Core;
