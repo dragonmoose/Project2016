@@ -5,6 +5,7 @@
 #include "Hawk/Events/EventManager.h"
 #include "TestEvent.h"
 #include "Hawk/System/Duration.h"
+#include "Hawk/Console/ConsoleFunctionManager.h"
 #include <string>
 
 class TestModule : public Hawk::Module
@@ -24,6 +25,18 @@ public:
 			//SendEvent<TestEvent2>(l_Event);
 			//LOGM("testing testing the grejs", Fatal);
 		}
+	}
+
+	void TestConsoleFunc(int a, int b)
+	{
+
+	}
+
+	void RegisterConsole(Hawk::ConsoleFunctionManager& p_Manager) override
+	{
+		//p_Manager.Register("test.cmd", std::bind(&TestModule::TestConsoleFunc, this, std::placeholders::_1, std::placeholders::_2));
+		//p_Manager.Register("test.cmd", [](int a, int b) {});
+		//LOGM("reg class.", Interrupt);
 	}
 
 	void RegisterEvents(Hawk::EventManager& p_EventManager) override

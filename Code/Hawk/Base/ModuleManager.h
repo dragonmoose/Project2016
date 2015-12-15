@@ -1,6 +1,7 @@
 #pragma once
 #include "System/DllExport.h"
 #include "Events/EventRouter.h"
+#include "Console/ConsoleFunctionRouter.h"
 #include <memory>
 #include <thread>
 #include <vector>
@@ -9,14 +10,18 @@
 namespace Hawk {
 
 class Module;
-class ConsoleCmdManager;
+class ConsoleFunctionManager;
 
 class ModuleManager final
 {
 public:
 	ModuleManager(const std::string& p_ThreadName);
 	HAWK_DLL_EXPORT void Add(std::unique_ptr<Module> p_Module);
-	void Initialize(std::shared_ptr<EventRouter>& p_EventRouter, ConsoleCmdManager& p_ConsoleManager);
+	void Initialize(std::shared_ptr<EventRouter>& p_EventRouter);
+
+#ifdef HAWK_DEBUG
+	void RegisterConsole(std::shared_ptr<ConsoleFunctionManager>& p_ConsoleFunctionManager;
+#endif
 	void Start();
 	void Stop();
 

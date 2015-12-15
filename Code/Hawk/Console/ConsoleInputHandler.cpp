@@ -29,18 +29,18 @@ void ConsoleInputHandler::Stop()
 	m_Thread.join();
 }
 
-bool ConsoleInputHandler::TryPopQueued(ConsoleInputHandler::Commands_t& p_Commands)
+bool ConsoleInputHandler::TryPopQueued(ConsoleInputHandler::InputLines_t& p_InputLines)
 {
 	std::lock_guard<std::mutex> l_Lock(m_Mutex);
-	m_Commands.swap(p_Commands);
-	return !p_Commands.empty();
+	m_InputLines.swap(p_InputLines);
+	return !p_InputLines.empty();
 }
 
 void ConsoleInputHandler::RunInputLoop()
 {
 	LOG("Console command thread started", c_Name, Info);
 
-	std::string l_CurrCmd;
+	std::string l_CurrLine;
 	while (!m_bStopSignal)
 	{
 		while (ConsoleAPI::HasNextChar())
@@ -56,23 +56,23 @@ void ConsoleInputHandler::RunInputLoop()
 				{
 					{
 						std::lock_guard<std::mutex> l_Lock(m_Mutex);
-						m_Commands.push_back(l_CurrCmd);
+						m_InputLines.push_back(l_CurrLine);
 					}
 					std::stringstream l_CmdLine;
-					l_CmdLine << "Hawk " << Version::c_EngineVersion << ">" << l_CurrCmd;
+					l_CmdLine << "Hawk " << Version::c_EngineVersion << ">" << l_CurrLine;
 					ConsoleAPI::BeginWrite();
 					ConsoleAPI::WriteLine(l_CmdLine.str(), ConsoleAPI::Color::White, ConsoleAPI::Color::None);
 					ConsoleAPI::EndWrite();
-					l_CurrCmd.clear();
+					l_CurrLine.clear();
 				}
 				else
 				{
-					l_CurrCmd += l_cChr;
+					l_CurrLine += l_cChr;
 				}
 			}
 		}
 		std::stringstream l_CmdLine;
-		l_CmdLine << "\rHawk " << Version::c_EngineVersion << ">" << l_CurrCmd << "\r";
+		l_CmdLine << "\rHawk " << Version::c_EngineVersion << ">" << l_CurrLine << "\r";
 		ConsoleAPI::BeginWrite();
 		ConsoleAPI::Write(l_CmdLine.str(), ConsoleAPI::Color::White, ConsoleAPI::Color::None);
 		ConsoleAPI::EndWrite();

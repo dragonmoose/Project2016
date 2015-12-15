@@ -1,3 +1,4 @@
+#ifdef HAWK_DEBUG
 #pragma once
 #include <string>
 #include <vector>
@@ -10,7 +11,7 @@ namespace Hawk {
 class ConsoleInputHandler final
 {
 public:
-	using Commands_t = std::vector<std::string>;
+	using InputLines_t = std::vector<std::string>;
 
 	ConsoleInputHandler();
 	ConsoleInputHandler(const ConsoleInputHandler&) = delete;
@@ -19,14 +20,15 @@ public:
 	void Start();
 	void Stop();
 
-	bool TryPopQueued(Commands_t& p_Commands);
+	bool TryPopQueued(InputLines_t& p_InputLines);
 
 private:
 	void RunInputLoop();
 
-	Commands_t m_Commands;
+	InputLines_t m_InputLines;
 	std::thread m_Thread;
 	std::atomic_bool m_bStopSignal;
 	mutable std::mutex m_Mutex;
 };
 }
+#endif

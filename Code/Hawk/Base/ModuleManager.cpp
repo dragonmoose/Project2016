@@ -20,13 +20,23 @@ void ModuleManager::Add(std::unique_ptr<Module> p_Module)
 	m_Modules.push_back(std::move(p_Module));
 }
 
-void ModuleManager::Initialize(std::shared_ptr<EventRouter>& p_EventRouter, ConsoleCmdManager& p_ConsoleCmdManager)
+void ModuleManager::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
 {
 	for (auto& l_Module : m_Modules)
 	{
-		l_Module->InternalInitialize(std::make_unique<EventManager>(p_EventRouter), p_ConsoleCmdManager);
+		l_Module->InternalInitialize(std::make_unique<EventManager>(p_EventRouter));
 	}
 }
+
+#ifdef HAWK_DEBUG
+void ModuleManager::RegisterConsole(std::shared_ptr<ConsoleFunctionManager>& p_ConsoleFunctionManager)
+{
+	for (auto& l_Module : m_Modules)
+	{
+		l_Module->InternalRegisterConsole(p_ConsoleFunctionManager);
+	}
+}
+#endif
 
 void ModuleManager::Start()
 {

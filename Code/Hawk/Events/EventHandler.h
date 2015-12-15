@@ -8,7 +8,7 @@ struct IEvent;
 class EventHandlerBase
 {
 public:
-	virtual ~EventHandlerBase() {}
+	virtual ~EventHandlerBase() = default;
 	void InternalCall(const IEvent& p_Event) { Call(p_Event); }
 
 private:

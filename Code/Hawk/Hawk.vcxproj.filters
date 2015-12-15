@@ -5,9 +5,6 @@
     <ClCompile Include="Console\ConsoleAPI.cpp">
       <Filter>Console</Filter>
     </ClCompile>
-    <ClCompile Include="Console\ConsoleCmdManager.cpp">
-      <Filter>Console</Filter>
-    </ClCompile>
     <ClCompile Include="Console\ConsoleInputHandler.cpp">
       <Filter>Console</Filter>
     </ClCompile>
@@ -53,13 +50,22 @@
     <ClCompile Include="Util\FileUtil.cpp">
       <Filter>Util</Filter>
     </ClCompile>
+    <ClCompile Include="Console\ConsoleFunctionManager.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="Console\ConsoleFunctionRouter.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="Console\ConsoleCommand.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="Console\ModuleConsoleManager.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="Console\ConsoleAPI.h">
-      <Filter>Console</Filter>
-    </ClInclude>
-    <ClInclude Include="Console\ConsoleCmdManager.h">
       <Filter>Console</Filter>
     </ClInclude>
     <ClInclude Include="Console\ConsoleInputHandler.h">
@@ -130,6 +136,21 @@
     </ClInclude>
     <ClInclude Include="Util\FileUtil.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\ConsoleFunctionManager.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\ConsoleFunction.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\ConsoleFunctionRouter.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\ConsoleCommand.h">
+      <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\ModuleConsoleManager.h">
+      <Filter>Console</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

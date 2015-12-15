@@ -1,5 +1,5 @@
 #pragma once
-#include "Console/ConsoleCmdManager.h"
+#include "Console/ConsoleFunctionManager.h"
 #include "System/DllExport.h"
 #include "System/Exception.h"
 #include "Events/EventRouter.h"
@@ -40,8 +40,8 @@ private:
 	ModuleManagers_t m_ModuleManagers;
 
 	std::shared_ptr<EventRouter> m_EventRouter;
+	std::shared_ptr<ConsoleFunctionManager> m_ConsoleFunctionManager;
 	static std::atomic_bool m_bFatalSignal;
-	ConsoleCmdManager m_ConsoleCmdManager;
 };
 
 }
