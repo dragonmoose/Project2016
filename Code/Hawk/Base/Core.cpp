@@ -68,7 +68,9 @@ void Core::Run()
 		}
 	}
 	StopModules();
+#ifdef HAWK_DEBUG
 	m_ConsoleCommandHandler.Stop();
+#endif
 
 	LOG("************* Core exit *************", c_Name, Info);
 	if (Logger::FatalFlagSet())

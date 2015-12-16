@@ -31,10 +31,12 @@ void ModuleManager::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
 	}
 }
 
+#if HAWK_DEBUG
 void ModuleManager::SetConsoleRouter(std::shared_ptr<ModuleConsoleRouter>& p_ConsoleRouter)
 {
 	m_ConsoleRouter = p_ConsoleRouter;
 }
+#endif
 
 void ModuleManager::Start()
 {

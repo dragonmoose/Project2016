@@ -30,6 +30,7 @@ void Module::Initialize()
 {
 }
 
+#ifdef HAWK_DEBUG
 void Module::_InitializeConsole(std::shared_ptr<ModuleConsoleRouter>& p_ConsoleRouter)
 {
 	m_ConsoleRouter = p_ConsoleRouter;
@@ -39,6 +40,7 @@ void Module::_InitializeConsole(std::shared_ptr<ModuleConsoleRouter>& p_ConsoleR
 void Module::InitializeConsole()
 {
 }
+#endif
 
 void Module::RegisterEvents(EventManager& p_EventManager)
 {

@@ -28,8 +28,10 @@ namespace Hawk
 		void _Initialize(std::unique_ptr<EventManager> p_EventManager);
 		virtual void Initialize();
 
+#ifdef HAWK_DEBUG
 		void _InitializeConsole(std::shared_ptr<ModuleConsoleRouter>& p_ConsoleRouter);
 		virtual void InitializeConsole();
+#endif
 
 		template<class Ret_t, class ObjPtr_t, class... Args_t>
 		void RegisterConsole(const std::string& p_Name, ObjPtr_t* p_ObjPtr, Ret_t(ObjPtr_t::*p_Func)(Args_t...))

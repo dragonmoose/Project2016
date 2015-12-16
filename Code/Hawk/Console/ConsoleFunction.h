@@ -61,5 +61,25 @@ private:
 	using TypeList_t = boost::mpl::vector<std::decay_t<Args_t>...>;
 };
 
+template<class Ret_t, class... Args_t>
+class FreeConsoleFunction final : public ConsoleFunctionBase
+{
+public:
+	FreeConsoleFunction(Ret_t(*p_Func)(Args_t...)) : m_Func(p_Func) {}
+
+	void Call(const std::vector<std::string>& p_Args) override
+	{
+		constexpr size_t c_NumArgs = sizeof...(Args_t);
+		THROW_IF_NOT(p_Args.size() == c_NumArgs, "Invalid number of arguments passed. Required=" << c_NumArgs);
+
+		using Index_Seq_t = std::make_index_sequence<c_NumArgs>;
+		CallFunction<TypeList_t>(m_Func, p_Args, Index_Seq_t());
+	}
+
+private:
+	std::function<Ret_t(Args_t...)> m_Func;
+	using TypeList_t = boost::mpl::vector<std::decay_t<Args_t>...>;
+};
+
 }
 #endif
