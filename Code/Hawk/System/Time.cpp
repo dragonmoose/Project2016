@@ -39,20 +39,20 @@ std::string Time::ToString() const
 
 Time& Time::operator+=(const Duration& p_rhs)
 {
-	m_TimePoint += p_rhs.m_InternalDuration;
+	m_TimePoint += p_rhs.m_Duration;
 	return *this;
 }
 
 Time& Time::operator-=(const Duration& p_rhs)
 {
-	m_TimePoint -= p_rhs.m_InternalDuration;
+	m_TimePoint -= p_rhs.m_Duration;
 	return *this;
 }
 
 Duration Time::operator-(const Time& p_rhs) const
 {
 	Duration l_Duration;
-	l_Duration.m_InternalDuration = m_TimePoint - p_rhs.m_TimePoint;
+	l_Duration.m_Duration = m_TimePoint - p_rhs.m_TimePoint;
 	return l_Duration;
 }
 
