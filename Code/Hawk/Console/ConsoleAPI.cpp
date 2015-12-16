@@ -4,7 +4,6 @@
 #include "System/Version.h"
 #include <consoleapi.h>
 #include <mutex>
-#include <iostream>
 
 namespace Hawk {
 

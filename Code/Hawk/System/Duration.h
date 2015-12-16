@@ -36,7 +36,7 @@ public:
 
 private:
 	using Duration_t = std::chrono::steady_clock::duration;
-	Duration_t m_InternalDuration;
+	Duration_t m_Duration;
 };
 
 }

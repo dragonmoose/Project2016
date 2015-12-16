@@ -1,5 +1,5 @@
-#ifdef HAWK_DEBUG
 #pragma once
+#ifdef HAWK_DEBUG
 #include <string>
 #include <vector>
 #include <mutex>

@@ -24,19 +24,17 @@ void ModuleManager::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
 {
 	for (auto& l_Module : m_Modules)
 	{
-		l_Module->InternalInitialize(std::make_unique<EventManager>(p_EventRouter));
+#if HAWK_DEBUG
+		l_Module->_InitializeConsole(m_ConsoleRouter);
+#endif
+		l_Module->_Initialize(std::make_unique<EventManager>(p_EventRouter));
 	}
 }
 
-#ifdef HAWK_DEBUG
-void ModuleManager::RegisterConsole(std::shared_ptr<ConsoleFunctionManager>& p_ConsoleFunctionManager)
+void ModuleManager::SetConsoleRouter(std::shared_ptr<ModuleConsoleRouter>& p_ConsoleRouter)
 {
-	for (auto& l_Module : m_Modules)
-	{
-		l_Module->InternalRegisterConsole(p_ConsoleFunctionManager);
-	}
+	m_ConsoleRouter = p_ConsoleRouter;
 }
-#endif
 
 void ModuleManager::Start()
 {
@@ -56,7 +54,7 @@ void ModuleManager::Update(const Duration& p_Duration)
 {
 	for (auto& l_Module : m_Modules)
 	{
-		l_Module->InternalUpdate(p_Duration);
+		l_Module->_Update(p_Duration);
 	}
 }
 

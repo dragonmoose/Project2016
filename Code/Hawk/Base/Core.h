@@ -1,5 +1,7 @@
 #pragma once
-#include "Console/ConsoleFunctionManager.h"
+#ifdef HAWK_DEBUG
+#include "Console/ConsoleCommandHandler.h"
+#endif
 #include "System/DllExport.h"
 #include "System/Exception.h"
 #include "Events/EventRouter.h"
@@ -40,8 +42,12 @@ private:
 	ModuleManagers_t m_ModuleManagers;
 
 	std::shared_ptr<EventRouter> m_EventRouter;
-	std::shared_ptr<ConsoleFunctionManager> m_ConsoleFunctionManager;
 	static std::atomic_bool m_bFatalSignal;
+
+#ifdef HAWK_DEBUG
+	ConsoleCommandHandler m_ConsoleCommandHandler;
+#endif
+
 };
 
 }

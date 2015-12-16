@@ -1,4 +1,6 @@
 #include "pch.h"
+
+#ifdef HAWK_DEBUG
 #include "Console/ConsoleCommand.h"
 #include <boost/tokenizer.hpp>
 
@@ -20,3 +22,4 @@ ConsoleCommand::ConsoleCommand(const std::string& p_Input)
 	}
 }
 }
+#endif

@@ -10,7 +10,7 @@ public:
 	explicit QueuedEventBase(const std::type_index& p_TypeIndex) : m_TypeIndex(p_TypeIndex) {}
 	virtual ~QueuedEventBase() {}
 
-	void InternalCall(EventHandlerBase& p_EventHandler) { Call(p_EventHandler); }
+	void _Call(EventHandlerBase& p_EventHandler) { Call(p_EventHandler); }
 	virtual void Call(EventHandlerBase& p_EventHandler) = 0;
 
 	const std::type_index& GetTypeIndex() const { return m_TypeIndex; }
@@ -26,7 +26,7 @@ public:
 	explicit QueuedEvent(const T& p_Event) : QueuedEventBase(std::type_index(typeid(T))), m_Event(p_Event) {}
 	void Call(EventHandlerBase& p_EventHandler) override
 	{
-		p_EventHandler.InternalCall(m_Event);
+		p_EventHandler._Call(m_Event);
 	}
 
 private:

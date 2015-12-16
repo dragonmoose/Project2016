@@ -1,5 +1,4 @@
 #pragma once
-
 #include "System/DllExport.h"
 #include "Util/FileUtil.h"
 

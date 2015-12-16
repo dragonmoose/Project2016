@@ -1,4 +1,5 @@
 #pragma once
+#ifdef HAWK_DEBUG
 #include <string>
 #include <vector>
 
@@ -9,6 +10,7 @@ class ConsoleCommand final
 public:
 	ConsoleCommand(const std::string& p_Input);
 	ConsoleCommand(const ConsoleCommand&) = delete;
+	ConsoleCommand(ConsoleCommand&&) = default;
 	ConsoleCommand& operator=(const ConsoleCommand&) = delete;
 
 	const std::string& GetName() const { return m_Name; }
@@ -19,3 +21,4 @@ private:
 };
 
 }
+#endif

@@ -5,6 +5,7 @@
 #include "System/Exception.h"
 #include <string>
 #include <sstream>
+#include <iostream>
 
 #ifndef WIN32_LEAN_AND_MEAN
 	#define WIN32_LEAN_AND_MEAN

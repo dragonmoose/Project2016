@@ -13,22 +13,22 @@ Duration::Duration(int p_iValue, Precision p_Precision)
 	switch (p_Precision)
 	{
 		case Precision::Hour:
-			m_InternalDuration = std::chrono::hours(p_iValue);
+			m_Duration = std::chrono::hours(p_iValue);
 			break;
 		case Precision::Minute:
-			m_InternalDuration = std::chrono::minutes(p_iValue);
+			m_Duration = std::chrono::minutes(p_iValue);
 			break;
 		case Precision::Second:
-			m_InternalDuration = std::chrono::seconds(p_iValue);
+			m_Duration = std::chrono::seconds(p_iValue);
 			break;
 		case Precision::Millisecond:
-			m_InternalDuration = std::chrono::milliseconds(p_iValue);
+			m_Duration = std::chrono::milliseconds(p_iValue);
 			break;
 		case Precision::MicroSecond:
-			m_InternalDuration = std::chrono::microseconds(p_iValue);
+			m_Duration = std::chrono::microseconds(p_iValue);
 			break;
 		case Precision::NanoSecond:
-			m_InternalDuration = std::chrono::nanoseconds(p_iValue);
+			m_Duration = std::chrono::nanoseconds(p_iValue);
 			break;
 		default:
 			THROW("Invalid precision type given: " << static_cast<int>(p_Precision));
@@ -37,7 +37,7 @@ Duration::Duration(int p_iValue, Precision p_Precision)
 
 std::string Duration::ToString() const
 {
-	Duration_t l_Duration(m_InternalDuration);
+	Duration_t l_Duration(m_Duration);
 
 	auto l_Hours = std::chrono::duration_cast<std::chrono::hours>(l_Duration);
 	l_Duration -= l_Hours;
@@ -57,42 +57,42 @@ std::string Duration::ToString() const
 
 void Duration::SetToZero()
 {
-	m_InternalDuration = Duration_t::zero();
+	m_Duration = Duration_t::zero();
 }
 
 bool Duration::operator==(const Duration& p_rhs) const
 {
-	return m_InternalDuration == p_rhs.m_InternalDuration;
+	return m_Duration == p_rhs.m_Duration;
 }
 
 bool Duration::operator!=(const Duration& p_rhs) const
 {
-	return m_InternalDuration != p_rhs.m_InternalDuration;
+	return m_Duration != p_rhs.m_Duration;
 }
 
 bool Duration::operator<(const Duration& p_rhs) const
 {
-	return m_InternalDuration < p_rhs.m_InternalDuration;
+	return m_Duration < p_rhs.m_Duration;
 }
 
 bool Duration::operator<=(const Duration& p_rhs) const
 {
-	return m_InternalDuration <= p_rhs.m_InternalDuration;
+	return m_Duration <= p_rhs.m_Duration;
 }
 
 bool Duration::operator>(const Duration& p_rhs) const
 {
-	return m_InternalDuration > p_rhs.m_InternalDuration;
+	return m_Duration > p_rhs.m_Duration;
 }
 
 bool Duration::operator>=(const Duration& p_rhs) const
 {
-	return m_InternalDuration >= p_rhs.m_InternalDuration;
+	return m_Duration >= p_rhs.m_Duration;
 }
 
 Duration& Duration::operator+=(const Duration& p_rhs)
 {
-	m_InternalDuration += p_rhs.m_InternalDuration;
+	m_Duration += p_rhs.m_Duration;
 	return *this;
 }
 

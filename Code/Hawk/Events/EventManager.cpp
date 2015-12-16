@@ -17,7 +17,7 @@ void EventManager::HandleQueued()
 		QueuedEventBase& l_Event = *l_QueuedEvents.back();
 		auto l_Itr = m_Events.find(l_Event.GetTypeIndex());
 		THROW_IF(l_Itr == m_Events.end(), "Failed to look up event handler for event: " << l_Event.GetTypeIndex().name());
-		l_Event.InternalCall(*l_Itr->second);
+		l_Event._Call(*l_Itr->second);
 		l_QueuedEvents.pop_back();
 	}
 }

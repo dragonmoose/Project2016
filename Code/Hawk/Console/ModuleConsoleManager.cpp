@@ -1,17 +1,13 @@
 #include "pch.h"
+#ifdef HAWK_DEBUG
 #include "Console/ModuleConsoleManager.h"
 
 namespace Hawk {
 
-ModuleConsoleManager::~ModuleConsoleManager()
-{
-	m_Router->Unregister(shared_from_this());
-}
-
-void ModuleConsoleManager::PushCommand(const ConsoleCommand& p_Command)
+void ModuleConsoleManager::PushCommand(ConsoleCommand&& p_Command)
 {
 	std::lock_guard<std::mutex> l_Lock(m_Mutex);
-	m_CommandQueue.push_back(p_Command);
+	m_CommandQueue.push_back(std::forward<ConsoleCommand>(p_Command));
 }
 
 void ModuleConsoleManager::ExecuteCommands()
@@ -27,7 +23,7 @@ void ModuleConsoleManager::ExecuteCommands()
 		{
 			auto l_Itr = m_Functions.find(l_Command.GetName());
 			THROW_IF(l_Itr == m_Functions.end(), "Failed to look up function");
-			l_Itr->second->Call(l_Command.GetArgs());
+			l_Itr->second->_Call(l_Command.GetArgs());
 		}
 		catch (Exception& e)
 		{
@@ -37,3 +33,4 @@ void ModuleConsoleManager::ExecuteCommands()
 }
 
 }
+#endif

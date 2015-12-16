@@ -9,7 +9,7 @@ class EventHandlerBase
 {
 public:
 	virtual ~EventHandlerBase() = default;
-	void InternalCall(const IEvent& p_Event) { Call(p_Event); }
+	void _Call(const IEvent& p_Event) { Call(p_Event); }
 
 private:
 	virtual void Call(const IEvent&) = 0;

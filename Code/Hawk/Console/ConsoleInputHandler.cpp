@@ -1,4 +1,5 @@
 #include "pch.h"
+#ifdef HAWK_DEBUG
 #include "Console/ConsoleInputHandler.h"
 #include "Console/ConsoleAPI.h"
 #include "System/Version.h"
@@ -55,8 +56,11 @@ void ConsoleInputHandler::RunInputLoop()
 				else if (l_cChr == Key_Return)
 				{
 					{
-						std::lock_guard<std::mutex> l_Lock(m_Mutex);
-						m_InputLines.push_back(l_CurrLine);
+						if (l_CurrLine.find_first_not_of("\t\n ") != std::string::npos)
+						{
+							std::lock_guard<std::mutex> l_Lock(m_Mutex);
+							m_InputLines.push_back(l_CurrLine);
+						}
 					}
 					std::stringstream l_CmdLine;
 					l_CmdLine << "Hawk " << Version::c_EngineVersion << ">" << l_CurrLine;
@@ -80,3 +84,4 @@ void ConsoleInputHandler::RunInputLoop()
 	}
 }
 }
+#endif

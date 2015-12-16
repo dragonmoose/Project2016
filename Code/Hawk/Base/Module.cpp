@@ -8,6 +8,9 @@ namespace Hawk {
 Module::Module()
 : m_bPaused(false)
 , m_Name(typeid(this).name())
+#ifdef HAWK_DEBUG
+, m_ConsoleManager(std::make_shared<ModuleConsoleManager>())
+#endif
 {
 }
 
@@ -15,23 +18,25 @@ Module::~Module()
 {
 }
 
-void Module::InternalInitialize(std::unique_ptr<EventManager> p_EventManager)
+void Module::_Initialize(std::unique_ptr<EventManager> p_EventManager)
 {
 	LOGM("Initializing module: " << GetName(), Info);
 	m_EventManager = std::move(p_EventManager);
 	Initialize();
-
-#ifdef HAWK_DEBUG
-	RegisterConsole(*m_ConsoleManager);
-#endif
 	RegisterEvents(*m_EventManager);
 }
 
-void Module::RegisterConsole(ModuleConsoleManager& p_ConsoleManager)
+void Module::Initialize()
 {
 }
 
-void Module::Initialize()
+void Module::_InitializeConsole(std::shared_ptr<ModuleConsoleRouter>& p_ConsoleRouter)
+{
+	m_ConsoleRouter = p_ConsoleRouter;
+	InitializeConsole();
+}
+
+void Module::InitializeConsole()
 {
 }
 
@@ -39,7 +44,7 @@ void Module::RegisterEvents(EventManager& p_EventManager)
 {
 }
 
-void Module::InternalUpdate(const Duration& p_Duration)
+void Module::_Update(const Duration& p_Duration)
 {
 #ifdef HAWK_DEBUG
 	m_ConsoleManager->ExecuteCommands();
@@ -53,11 +58,6 @@ void Module::InternalUpdate(const Duration& p_Duration)
 
 void Module::Update(const Duration& p_Duration)
 {
-}
-
-void Module::UpdateConsole()
-{
-	m_ConsoleFunctionManager.
 }
 
 void Module::SetPaused(bool p_bPaused)

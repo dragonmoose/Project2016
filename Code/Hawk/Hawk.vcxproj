@@ -83,8 +83,8 @@
     <ClInclude Include="Base\WindowManager.h" />
     <ClInclude Include="Console\ConsoleAPI.h" />
     <ClInclude Include="Console\ConsoleFunction.h" />
-    <ClInclude Include="Console\ConsoleFunctionManager.h" />
-    <ClInclude Include="Console\ConsoleFunctionRouter.h" />
+    <ClInclude Include="Console\ConsoleCommandHandler.h" />
+    <ClInclude Include="Console\ModuleConsoleRouter.h" />
     <ClInclude Include="Console\ConsoleInputHandler.h" />
     <ClInclude Include="Console\Logger.h" />
     <ClInclude Include="Console\ConsoleCommand.h" />
@@ -115,8 +115,8 @@
     <ClCompile Include="Base\WindowManager.cpp" />
     <ClCompile Include="Console\ConsoleAPI.cpp" />
     <ClCompile Include="Console\ConsoleCommand.cpp" />
-    <ClCompile Include="Console\ConsoleFunctionManager.cpp" />
-    <ClCompile Include="Console\ConsoleFunctionRouter.cpp" />
+    <ClCompile Include="Console\ConsoleCommandHandler.cpp" />
+    <ClCompile Include="Console\ModuleConsoleRouter.cpp" />
     <ClCompile Include="Console\ConsoleInputHandler.cpp" />
     <ClCompile Include="Console\Logger.cpp" />
     <ClCompile Include="Console\ModuleConsoleManager.cpp" />

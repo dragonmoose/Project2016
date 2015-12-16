@@ -1,6 +1,6 @@
 #pragma once
+#ifdef HAWK_DEBUG
 #include "System/Exception.h"
-#include "Console/Logger.h"
 #include <string>
 #include <functional>
 #include <vector>
@@ -28,13 +28,14 @@ void CallFunction(Func p_Func, const std::vector<std::string>& p_Args, std::inde
 class ConsoleFunctionBase
 {
 public:
+	ConsoleFunctionBase() = default;
 	virtual ~ConsoleFunctionBase() = default;
 	ConsoleFunctionBase(const ConsoleFunctionBase&) = delete;
 	ConsoleFunctionBase& operator=(const ConsoleFunctionBase&) = delete;
-	void Call(const std::vector<std::string>& p_Args) { CallImpl(p_Args); }
+	void _Call(const std::vector<std::string>& p_Args) { Call(p_Args); }
 
 protected:
-	virtual void CallImpl(const std::vector<std::string>& p_Args) = 0;
+	virtual void Call(const std::vector<std::string>& p_Args) = 0;
 };
 
 template<class Ret_t, class ObjPtr_t, class... Args_t>
@@ -46,7 +47,7 @@ public:
 	{
 	}
 
-	void CallImpl(const std::vector<std::string>& p_Args) override
+	void Call(const std::vector<std::string>& p_Args) override
 	{
 		constexpr size_t c_NumArgs = sizeof...(Args_t);
 		THROW_IF_NOT(p_Args.size() == c_NumArgs, "Invalid number of arguments passed. Required=" << c_NumArgs);
@@ -61,3 +62,4 @@ private:
 };
 
 }
+#endif

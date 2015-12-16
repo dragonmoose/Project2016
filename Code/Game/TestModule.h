@@ -5,7 +5,6 @@
 #include "Hawk/Events/EventManager.h"
 #include "TestEvent.h"
 #include "Hawk/System/Duration.h"
-#include "Hawk/Console/ConsoleFunctionManager.h"
 #include <string>
 
 class TestModule : public Hawk::Module
@@ -27,16 +26,14 @@ public:
 		}
 	}
 
-	void TestConsoleFunc(int a, int b)
+	void TestConsoleCmd(const std::string& p_Text, int a, int b)
 	{
-
+		LOGM("The text=" << p_Text << " sum=" << (a + b), Info);
 	}
 
-	void RegisterConsole(Hawk::ConsoleFunctionManager& p_Manager) override
+	void Initialize()
 	{
-		//p_Manager.Register("test.cmd", std::bind(&TestModule::TestConsoleFunc, this, std::placeholders::_1, std::placeholders::_2));
-		//p_Manager.Register("test.cmd", [](int a, int b) {});
-		//LOGM("reg class.", Interrupt);
+		RegisterConsole("test.cmd", this, &TestModule::TestConsoleCmd);
 	}
 
 	void RegisterEvents(Hawk::EventManager& p_EventManager) override

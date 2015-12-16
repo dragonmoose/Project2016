@@ -2,11 +2,10 @@
 #include "Base/Core.h"
 #include "Base/WindowManager.h"
 #include "Console/ConsoleAPI.h"
-#include "Console/ConsoleFunctionManager.h"
+#include "Console/ConsoleCommandHandler.h"
 #include "System/Duration.h"
 #include "System/Time.h"
 #include <boost/filesystem.hpp>
-#include <iostream>
 #include <thread>
 #include <chrono>
 
@@ -23,7 +22,7 @@ Core::Core(bool p_bConsole)
 	{
 		ConsoleAPI::Start();
 #ifdef HAWK_DEBUG
-		m_ConsoleFunctionManager.Start();
+		m_ConsoleCommandHandler.Start();
 #endif
 	}
 	Config::Instance().Load();
@@ -60,7 +59,7 @@ void Core::Run()
 	{
 		Config::Instance().Update();
 #ifdef HAWK_DEBUG
-		m_ConsoleFunctionManager.Update();
+		m_ConsoleCommandHandler.Update();
 #endif
 		if (!WindowManager::Update())
 		{
@@ -69,7 +68,7 @@ void Core::Run()
 		}
 	}
 	StopModules();
-	m_ConsoleFunctionManager.Stop();
+	m_ConsoleCommandHandler.Stop();
 
 	LOG("************* Core exit *************", c_Name, Info);
 	if (Logger::FatalFlagSet())
@@ -85,7 +84,7 @@ void Core::InitializeModules()
 	for (auto& l_Manager : m_ModuleManagers)
 	{
 #ifdef HAWK_DEBUG
-		l_Manager.second->RegisterConsole(m_ConsoleFunctionManager);
+		l_Manager.second->SetConsoleRouter(m_ConsoleCommandHandler.GetModuleRouter());
 #endif
 		l_Manager.second->Initialize(m_EventRouter);
 	}
