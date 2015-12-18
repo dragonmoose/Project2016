@@ -62,6 +62,12 @@
     <ClCompile Include="Console\ConsoleCommandHandler.cpp">
       <Filter>Console</Filter>
     </ClCompile>
+    <ClCompile Include="System\Dispatcher.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Thread.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -151,6 +157,12 @@
     </ClInclude>
     <ClInclude Include="Console\ConsoleCommandHandler.h">
       <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Dispatcher.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Thread.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

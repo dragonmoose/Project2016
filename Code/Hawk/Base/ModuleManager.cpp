@@ -10,8 +10,7 @@ namespace Hawk {
 namespace { const char* c_Name("ModuleManager"); }
 
 ModuleManager::ModuleManager(const std::string& p_ThreadName)
-: m_ThreadName(p_ThreadName)
-, m_bStopSignal(false)
+: m_Thread(p_ThreadName, std::bind(&ModuleManager::Update, this))
 {
 }
 
@@ -40,42 +39,27 @@ void ModuleManager::SetConsoleRouter(std::shared_ptr<ModuleConsoleRouter>& p_Con
 
 void ModuleManager::Start()
 {
-	m_Thread = std::thread(&ModuleManager::Run_Thread, this);
-#ifdef HAWK_DEBUG
-	Logger::RegisterThreadName(m_ThreadName, m_Thread.get_id());
-#endif
+	LOG("Running " << m_Modules.size() << " modules on thread: " << m_Thread.GetName(), c_Name, Info);
+	m_OldTime.SetToNow();
+	m_Thread.Start();
 }
 
 void ModuleManager::Stop()
 {
-	m_bStopSignal = true;
-	m_Thread.join();
+	m_Thread.Stop();
 }
 
-void ModuleManager::Update(const Duration& p_Duration)
+void ModuleManager::Update()
 {
+	Time l_CurrTime;
+	l_CurrTime.SetToNow();
+	Duration l_Delta(l_CurrTime - m_OldTime);
+	m_OldTime = l_CurrTime;
+
 	for (auto& l_Module : m_Modules)
 	{
-		l_Module->_Update(p_Duration);
+		l_Module->_Update(l_Delta);
 	}
-}
-
-void ModuleManager::Run_Thread()
-{
-	LOG("Running " << m_Modules.size() << " modules on thread: " << m_ThreadName, c_Name, Info);
-
-	Time l_OldTime;
-	l_OldTime.SetToNow();
-	while (Config::Instance().Get<bool>("Core.run", true) && !m_bStopSignal)
-	{
-		Time l_CurrTime;
-		l_CurrTime.SetToNow();
-		Duration l_Delta(l_CurrTime - l_OldTime);
-		l_OldTime = l_CurrTime;
-
-		Update(l_Delta);
-	}
-	LOG("*** Thread exit ***", c_Name, Debug);
 }
 
 }

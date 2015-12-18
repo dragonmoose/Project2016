@@ -100,9 +100,11 @@
     <ClInclude Include="Input\KeyCodes.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="System\Config.h" />
+    <ClInclude Include="System\Dispatcher.h" />
     <ClInclude Include="System\DllExport.h" />
     <ClInclude Include="System\Duration.h" />
     <ClInclude Include="System\Exception.h" />
+    <ClInclude Include="System\Thread.h" />
     <ClInclude Include="System\Time.h" />
     <ClInclude Include="System\Version.h" />
     <ClInclude Include="Util\FileUtil.h" />
@@ -130,8 +132,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="System\Config.cpp" />
+    <ClCompile Include="System\Dispatcher.cpp" />
     <ClCompile Include="System\Duration.cpp" />
     <ClCompile Include="System\Exception.cpp" />
+    <ClCompile Include="System\Thread.cpp" />
     <ClCompile Include="System\Time.cpp" />
     <ClCompile Include="Util\FileUtil.cpp" />
     <ClCompile Include="Util\StringUtil.cpp" />

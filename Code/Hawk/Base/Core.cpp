@@ -55,7 +55,7 @@ void Core::Run()
 	InitializeModules();
 	StartModules();
 
-	while (Config::Instance().Get<bool>("Core.run", true) && !Logger::FatalFlagSet())
+	while (!Logger::FatalFlagSet())
 	{
 		Config::Instance().Update();
 #ifdef HAWK_DEBUG

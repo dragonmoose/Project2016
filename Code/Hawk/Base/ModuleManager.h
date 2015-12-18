@@ -1,13 +1,13 @@
 #pragma once
 #include "System/DllExport.h"
+#include "System/Thread.h"
+#include "System/Time.h"
 #include "Events/EventRouter.h"
 #ifdef HAWK_DEBUG
 #include "Console/ModuleConsoleRouter.h"
 #endif
 #include <memory>
-#include <thread>
 #include <vector>
-#include <atomic>
 
 namespace Hawk {
 
@@ -31,14 +31,12 @@ public:
 	ModuleManager& operator=(const ModuleManager&) = delete;
 
 private:
-	void Run_Thread();
-	void Update(const Duration& p_Duration);
+	void Update();
 
 	using Modules_t = std::vector<std::unique_ptr<Module>>;
 	Modules_t m_Modules;
-	std::thread m_Thread;
-	const std::string m_ThreadName;
-	std::atomic_bool m_bStopSignal;
+	Time m_OldTime;
+	Thread m_Thread;
 
 #ifdef HAWK_DEBUG
 	std::shared_ptr<ModuleConsoleRouter> m_ConsoleRouter;
