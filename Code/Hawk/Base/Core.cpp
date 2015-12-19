@@ -26,6 +26,7 @@ Core::Core(bool p_bConsole)
 		ConsoleAPI::Start();
 		Logger::RegisterThreadName("Thread_Core", std::this_thread::get_id());
 		m_ConsoleCommandManager->Start();
+		RegisterConsole();
 	}
 	Config::Instance().Load();
 	LOG("Working directory set to: " << boost::filesystem::current_path(), c_Name, Info);
@@ -106,6 +107,10 @@ void Core::StopModules()
 	{
 		l_Manager.second->Stop();
 	}
+}
+
+void Core::RegisterConsole()
+{
 }
 	
 }

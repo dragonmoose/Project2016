@@ -39,6 +39,10 @@ private:
 	void StartModules();
 	void StopModules();
 
+#ifdef HAWK_DEBUG
+	void RegisterConsole();
+#endif
+
 	using ModuleManagers_t = std::unordered_map<std::string, std::unique_ptr<ModuleManager>>;
 	ModuleManagers_t m_ModuleManagers;
 
