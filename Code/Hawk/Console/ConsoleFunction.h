@@ -1,8 +1,11 @@
 #pragma once
 #ifdef HAWK_DEBUG
+#include "Console/Logger.h"
+#include "System/Dispatcher.h"
 #include "System/Exception.h"
-#include <string>
 #include <functional>
+#include <memory>
+#include <string>
 #include <vector>
 #include <boost/lexical_cast.hpp>
 #include <boost/mpl/vector.hpp>
@@ -10,75 +13,71 @@
 
 namespace Hawk {
 
-class Module;
+class IConsoleFunction
+{
+public:
+	IConsoleFunction() = default;
+	virtual ~IConsoleFunction() = default;
+	IConsoleFunction(const IConsoleFunction&) = delete;
+	IConsoleFunction& operator=(const IConsoleFunction&) = delete;
+	bool _Call(const std::vector<std::string>& p_Args) { return Call(p_Args); }
 
-template<class TypeList_t, class Func, std::size_t... Index>
-void CallFunction(Func p_Func, const std::vector<std::string>& p_Args, std::index_sequence<Index...>)
+protected:
+	virtual bool Call(const std::vector<std::string>& p_Args) = 0;
+};
+	
+template<class TypeList_t, class Func, class Object_t, std::size_t... Index>
+bool CallFunction(
+	Func p_Func,
+	Object_t* p_Object,
+	const std::vector<std::string>& p_Args,
+	std::index_sequence<Index...>,
+	Dispatcher* p_Dispatcher)
 {
 	try
 	{
-		p_Func(boost::lexical_cast<boost::mpl::at_c<TypeList_t, Index>::type>(p_Args[Index])...);
+		p_Dispatcher->Post(
+			std::bind(p_Func, p_Object, boost::lexical_cast<boost::mpl::at_c<TypeList_t, Index>::type>(p_Args[Index])...)
+		);
 	}
 	catch (boost::bad_lexical_cast&)
 	{
-		THROW("Failed to parse arguments when attempting to invoke console function");
+		LOG("Failed to parse arguments when attempting to dispatch console function", "console", Info);
 	}
+	return false;
 }
 
-class ConsoleFunctionBase
+template<class Object_t, class... Args_t>
+class ConsoleFunction final : public IConsoleFunction
 {
 public:
-	ConsoleFunctionBase() = default;
-	virtual ~ConsoleFunctionBase() = default;
-	ConsoleFunctionBase(const ConsoleFunctionBase&) = delete;
-	ConsoleFunctionBase& operator=(const ConsoleFunctionBase&) = delete;
-	void _Call(const std::vector<std::string>& p_Args) { Call(p_Args); }
-
-protected:
-	virtual void Call(const std::vector<std::string>& p_Args) = 0;
-};
-
-template<class Ret_t, class ObjPtr_t, class... Args_t>
-class ConsoleFunction final : public ConsoleFunctionBase
-{
-public:
-	ConsoleFunction(ObjPtr_t* p_ObjPtr, Ret_t(ObjPtr_t::*p_Func)(Args_t...))
-	: m_Func([p_ObjPtr, p_Func](Args_t... p_Args) { (p_ObjPtr->*p_Func)(p_Args...); })
+	ConsoleFunction(Object_t* p_Object, void(Object_t::*p_Func)(Args_t...), Dispatcher* p_Dispatcher)
+	: m_Object(p_Object)
+	, m_Func(p_Func)
+	, m_Dispatcher(p_Dispatcher)
 	{
 	}
 
-	void Call(const std::vector<std::string>& p_Args) override
+	bool Call(const std::vector<std::string>& p_Args) override
 	{
 		constexpr size_t c_NumArgs = sizeof...(Args_t);
-		THROW_IF_NOT(p_Args.size() == c_NumArgs, "Invalid number of arguments passed. Required=" << c_NumArgs);
-
-		using Index_Seq_t = std::make_index_sequence<c_NumArgs>;
-		CallFunction<TypeList_t>(m_Func, p_Args, Index_Seq_t());
+		if (p_Args.size() == c_NumArgs)
+		{
+			using Index_Seq_t = std::make_index_sequence<c_NumArgs>;
+			return CallFunction<TypeList_t>(m_Func, m_Object, p_Args, Index_Seq_t(), m_Dispatcher);
+		}
+		else
+		{
+			LOG("Wrong number of arguments passed to function: " << p_Args.size() << "/" << c_NumArgs, "console", Info);
+		}
+		return false;
 	}
 
 private:
-	std::function<Ret_t(Args_t...)> m_Func;
+	void(Object_t::*m_Func)(Args_t...);
 	using TypeList_t = boost::mpl::vector<std::decay_t<Args_t>...>;
-};
-
-template<class Ret_t, class... Args_t>
-class FreeConsoleFunction final : public ConsoleFunctionBase
-{
-public:
-	FreeConsoleFunction(Ret_t(*p_Func)(Args_t...)) : m_Func(p_Func) {}
-
-	void Call(const std::vector<std::string>& p_Args) override
-	{
-		constexpr size_t c_NumArgs = sizeof...(Args_t);
-		THROW_IF_NOT(p_Args.size() == c_NumArgs, "Invalid number of arguments passed. Required=" << c_NumArgs);
-
-		using Index_Seq_t = std::make_index_sequence<c_NumArgs>;
-		CallFunction<TypeList_t>(m_Func, p_Args, Index_Seq_t());
-	}
-
-private:
-	std::function<Ret_t(Args_t...)> m_Func;
-	using TypeList_t = boost::mpl::vector<std::decay_t<Args_t>...>;
+	Object_t* m_Object;
+	Dispatcher* m_Dispatcher;
 };
 
 }

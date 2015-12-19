@@ -4,6 +4,7 @@
 #include <thread>
 #include <functional>
 #include <string>
+#include <memory>
 
 namespace Hawk {
 
@@ -19,13 +20,13 @@ public:
 	void Start();
 	void Stop();
 	const std::string& GetName() const;
-	Dispatcher& GetDispatcher();
+	std::shared_ptr<Dispatcher> GetDispatcher() const;
 
 private:
 	void Run();
 
 	std::string m_Name;
-	Dispatcher m_Dispatcher;
+	std::shared_ptr<Dispatcher> m_Dispatcher;
 	std::thread m_Thread;
 	UpdateFunc_t m_UpdateFunc;
 	std::atomic_bool m_bStopSignal;

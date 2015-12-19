@@ -1,11 +1,12 @@
 #pragma once
+#include "System/DllExport.h"
 #include <functional>
 #include <mutex>
 #include <vector>
 
 namespace Hawk {
 
-class Dispatcher final
+class HAWK_DLL_EXPORT Dispatcher final
 {
 public:
 	using Func_t = std::function<void(void)>;
@@ -21,6 +22,6 @@ private:
 	using FuncVec_t = std::vector<Func_t>;
 
 	FuncVec_t m_Functions;
-	std::mutex m_Mutex;
+	mutable std::mutex m_Mutex;
 };
 }

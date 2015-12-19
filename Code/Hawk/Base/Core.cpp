@@ -2,7 +2,6 @@
 #include "Base/Core.h"
 #include "Base/WindowManager.h"
 #include "Console/ConsoleAPI.h"
-#include "Console/ConsoleCommandHandler.h"
 #include "System/Duration.h"
 #include "System/Time.h"
 #include <boost/filesystem.hpp>
@@ -15,15 +14,16 @@ namespace { const char* c_Name("Core"); }
 
 Core::Core(bool p_bConsole)
 : m_EventRouter(std::make_shared<EventRouter>())
+#ifdef HAWK_DEBUG
+, m_ConsoleCommandManager(std::make_shared<ConsoleCommandManager>())
+#endif
 {
 #ifdef HAWK_DEBUG
 	boost::filesystem::current_path(boost::filesystem::current_path().parent_path());
 	if (p_bConsole)
 	{
 		ConsoleAPI::Start();
-#ifdef HAWK_DEBUG
-		m_ConsoleCommandHandler.Start();
-#endif
+		m_ConsoleCommandManager->Start();
 	}
 	Config::Instance().Load();
 	LOG("Working directory set to: " << boost::filesystem::current_path(), c_Name, Info);
@@ -58,9 +58,6 @@ void Core::Run()
 	while (!Logger::FatalFlagSet())
 	{
 		Config::Instance().Update();
-#ifdef HAWK_DEBUG
-		m_ConsoleCommandHandler.Update();
-#endif
 		if (!WindowManager::Update())
 		{
 			LOG("MainWindow signalled WM_QUIT", c_Name, Info);
@@ -69,7 +66,7 @@ void Core::Run()
 	}
 	StopModules();
 #ifdef HAWK_DEBUG
-	m_ConsoleCommandHandler.Stop();
+	m_ConsoleCommandManager->Stop();
 #endif
 
 	LOG("************* Core exit *************", c_Name, Info);
@@ -86,7 +83,7 @@ void Core::InitializeModules()
 	for (auto& l_Manager : m_ModuleManagers)
 	{
 #ifdef HAWK_DEBUG
-		l_Manager.second->SetConsoleRouter(m_ConsoleCommandHandler.GetModuleRouter());
+		l_Manager.second->SetConsoleCommandManager(m_ConsoleCommandManager);
 #endif
 		l_Manager.second->Initialize(m_EventRouter);
 	}

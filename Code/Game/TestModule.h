@@ -31,7 +31,7 @@ public:
 		LOGM("The text=" << p_Text << " sum=" << (a + b), Info);
 	}
 
-	void Initialize()
+	void InitializeConsole()
 	{
 		RegisterConsole("test.cmd", this, &TestModule::TestConsoleCmd);
 	}

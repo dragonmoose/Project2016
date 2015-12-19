@@ -8,9 +8,6 @@ namespace Hawk {
 Module::Module()
 : m_bPaused(false)
 , m_Name(typeid(this).name())
-#ifdef HAWK_DEBUG
-, m_ConsoleManager(std::make_shared<ModuleConsoleManager>())
-#endif
 {
 }
 
@@ -18,9 +15,10 @@ Module::~Module()
 {
 }
 
-void Module::_Initialize(std::unique_ptr<EventManager> p_EventManager)
+void Module::_Initialize(std::unique_ptr<EventManager> p_EventManager, std::shared_ptr<Dispatcher>& p_Dispatcher)
 {
 	LOGM("Initializing module: " << GetName(), Info);
+	m_Dispatcher = p_Dispatcher;
 	m_EventManager = std::move(p_EventManager);
 	Initialize();
 	RegisterEvents(*m_EventManager);
@@ -31,9 +29,9 @@ void Module::Initialize()
 }
 
 #ifdef HAWK_DEBUG
-void Module::_InitializeConsole(std::shared_ptr<ModuleConsoleRouter>& p_ConsoleRouter)
+void Module::_InitializeConsole(std::shared_ptr<ConsoleCommandManager>& p_ConsoleCommandManager)
 {
-	m_ConsoleRouter = p_ConsoleRouter;
+	m_ConsoleCommandManager = p_ConsoleCommandManager;
 	InitializeConsole();
 }
 
@@ -48,9 +46,6 @@ void Module::RegisterEvents(EventManager& p_EventManager)
 
 void Module::_Update(const Duration& p_Duration)
 {
-#ifdef HAWK_DEBUG
-	m_ConsoleManager->ExecuteCommands();
-#endif
 	if (!IsPaused())
 	{
 		m_EventManager->HandleQueued();

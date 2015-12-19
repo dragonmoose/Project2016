@@ -4,7 +4,7 @@
 #include "System/Time.h"
 #include "Events/EventRouter.h"
 #ifdef HAWK_DEBUG
-#include "Console/ModuleConsoleRouter.h"
+#include "Console/ConsoleCommandManager.h"
 #endif
 #include <memory>
 #include <vector>
@@ -21,7 +21,7 @@ public:
 	void Initialize(std::shared_ptr<EventRouter>& p_EventRouter);
 
 #ifdef HAWK_DEBUG
-	void SetConsoleRouter(std::shared_ptr<ModuleConsoleRouter>& p_ConsoleRouter);
+	void SetConsoleCommandManager(std::shared_ptr<ConsoleCommandManager>& p_ConsoleCommandManager);
 #endif
 
 	void Start();
@@ -39,7 +39,7 @@ private:
 	Thread m_Thread;
 
 #ifdef HAWK_DEBUG
-	std::shared_ptr<ModuleConsoleRouter> m_ConsoleRouter;
+	std::shared_ptr<ConsoleCommandManager> m_ConsoleCommandManager;
 #endif
 };
 }

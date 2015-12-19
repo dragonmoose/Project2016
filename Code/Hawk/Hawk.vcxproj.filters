@@ -5,9 +5,6 @@
     <ClCompile Include="Console\ConsoleAPI.cpp">
       <Filter>Console</Filter>
     </ClCompile>
-    <ClCompile Include="Console\ConsoleInputHandler.cpp">
-      <Filter>Console</Filter>
-    </ClCompile>
     <ClCompile Include="Console\Logger.cpp">
       <Filter>Console</Filter>
     </ClCompile>
@@ -53,28 +50,19 @@
     <ClCompile Include="Console\ConsoleCommand.cpp">
       <Filter>Console</Filter>
     </ClCompile>
-    <ClCompile Include="Console\ModuleConsoleManager.cpp">
-      <Filter>Console</Filter>
-    </ClCompile>
-    <ClCompile Include="Console\ModuleConsoleRouter.cpp">
-      <Filter>Console</Filter>
-    </ClCompile>
-    <ClCompile Include="Console\ConsoleCommandHandler.cpp">
-      <Filter>Console</Filter>
-    </ClCompile>
     <ClCompile Include="System\Dispatcher.cpp">
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="System\Thread.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="Console\ConsoleCommandManager.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="Console\ConsoleAPI.h">
-      <Filter>Console</Filter>
-    </ClInclude>
-    <ClInclude Include="Console\ConsoleInputHandler.h">
       <Filter>Console</Filter>
     </ClInclude>
     <ClInclude Include="Console\Logger.h">
@@ -149,20 +137,14 @@
     <ClInclude Include="Console\ConsoleCommand.h">
       <Filter>Console</Filter>
     </ClInclude>
-    <ClInclude Include="Console\ModuleConsoleManager.h">
-      <Filter>Console</Filter>
-    </ClInclude>
-    <ClInclude Include="Console\ModuleConsoleRouter.h">
-      <Filter>Console</Filter>
-    </ClInclude>
-    <ClInclude Include="Console\ConsoleCommandHandler.h">
-      <Filter>Console</Filter>
-    </ClInclude>
     <ClInclude Include="System\Dispatcher.h">
       <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="System\Thread.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\ConsoleCommandManager.h">
+      <Filter>Console</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

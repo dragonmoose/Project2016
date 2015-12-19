@@ -23,17 +23,17 @@ void ModuleManager::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
 {
 	for (auto& l_Module : m_Modules)
 	{
+		l_Module->_Initialize(std::make_unique<EventManager>(p_EventRouter), m_Thread.GetDispatcher());
 #if HAWK_DEBUG
-		l_Module->_InitializeConsole(m_ConsoleRouter);
+		l_Module->_InitializeConsole(m_ConsoleCommandManager);
 #endif
-		l_Module->_Initialize(std::make_unique<EventManager>(p_EventRouter));
 	}
 }
 
 #if HAWK_DEBUG
-void ModuleManager::SetConsoleRouter(std::shared_ptr<ModuleConsoleRouter>& p_ConsoleRouter)
+void ModuleManager::SetConsoleCommandManager(std::shared_ptr<ConsoleCommandManager>& p_ConsoleCommandManager)
 {
-	m_ConsoleRouter = p_ConsoleRouter;
+	m_ConsoleCommandManager = p_ConsoleCommandManager;
 }
 #endif
 

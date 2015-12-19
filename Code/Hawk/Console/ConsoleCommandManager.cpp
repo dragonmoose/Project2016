@@ -1,6 +1,7 @@
 #include "pch.h"
 #ifdef HAWK_DEBUG
-#include "Console/ConsoleInputHandler.h"
+#include "Console/ConsoleCommandManager.h"
+#include "Console/ConsoleCommand.h"
 #include "Console/ConsoleAPI.h"
 #include "System/Version.h"
 
@@ -13,31 +14,24 @@ namespace
 	const char Key_Backspace = 8;
 }
 
-ConsoleInputHandler::ConsoleInputHandler()
+ConsoleCommandManager::ConsoleCommandManager()
 : m_bStopSignal(false)
 {
 
 }
 
-void ConsoleInputHandler::Start()
+void ConsoleCommandManager::Start()
 {
-	m_Thread = std::thread(&ConsoleInputHandler::RunInputLoop, this);
+	m_Thread = std::thread(&ConsoleCommandManager::RunInputLoop, this);
 }
 
-void ConsoleInputHandler::Stop()
+void ConsoleCommandManager::Stop()
 {
 	m_bStopSignal = true;
 	m_Thread.join();
 }
 
-bool ConsoleInputHandler::TryPopQueued(ConsoleInputHandler::InputLines_t& p_InputLines)
-{
-	std::lock_guard<std::mutex> l_Lock(m_Mutex);
-	m_InputLines.swap(p_InputLines);
-	return !p_InputLines.empty();
-}
-
-void ConsoleInputHandler::RunInputLoop()
+void ConsoleCommandManager::RunInputLoop()
 {
 	LOG("Console command thread started", c_Name, Info);
 
@@ -58,8 +52,25 @@ void ConsoleInputHandler::RunInputLoop()
 					{
 						if (l_CurrLine.find_first_not_of("\t\n ") != std::string::npos)
 						{
-							std::lock_guard<std::mutex> l_Lock(m_Mutex);
-							m_InputLines.push_back(l_CurrLine);
+							try
+							{
+								ConsoleCommand l_Command(l_CurrLine);
+
+								std::lock_guard<std::mutex> l_Lock(m_Mutex);
+								auto l_Itr = m_Functions.find(l_Command.GetName());
+								if (l_Itr != m_Functions.end())
+								{
+									l_Itr->second->_Call(l_Command.GetArgs());
+								}
+								else
+								{
+									LOG("Unknown command: " << l_Command.GetName(), "console", Info);
+								}
+							}
+							catch (Exception& e)
+							{
+								LOG_EXCEPTION(e, "console", Fatal);
+							}
 						}
 					}
 					std::stringstream l_CmdLine;

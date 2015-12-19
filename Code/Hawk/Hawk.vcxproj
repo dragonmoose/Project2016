@@ -83,12 +83,9 @@
     <ClInclude Include="Base\WindowManager.h" />
     <ClInclude Include="Console\ConsoleAPI.h" />
     <ClInclude Include="Console\ConsoleFunction.h" />
-    <ClInclude Include="Console\ConsoleCommandHandler.h" />
-    <ClInclude Include="Console\ModuleConsoleRouter.h" />
-    <ClInclude Include="Console\ConsoleInputHandler.h" />
+    <ClInclude Include="Console\ConsoleCommandManager.h" />
     <ClInclude Include="Console\Logger.h" />
     <ClInclude Include="Console\ConsoleCommand.h" />
-    <ClInclude Include="Console\ModuleConsoleManager.h" />
     <ClInclude Include="Events\EventCollector.h" />
     <ClInclude Include="Events\EventHandler.h" />
     <ClInclude Include="Events\EventManager.h" />
@@ -117,11 +114,8 @@
     <ClCompile Include="Base\WindowManager.cpp" />
     <ClCompile Include="Console\ConsoleAPI.cpp" />
     <ClCompile Include="Console\ConsoleCommand.cpp" />
-    <ClCompile Include="Console\ConsoleCommandHandler.cpp" />
-    <ClCompile Include="Console\ModuleConsoleRouter.cpp" />
-    <ClCompile Include="Console\ConsoleInputHandler.cpp" />
+    <ClCompile Include="Console\ConsoleCommandManager.cpp" />
     <ClCompile Include="Console\Logger.cpp" />
-    <ClCompile Include="Console\ModuleConsoleManager.cpp" />
     <ClCompile Include="Events\EventManager.cpp" />
     <ClCompile Include="Events\EventRouter.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />

@@ -1,6 +1,6 @@
 #pragma once
 #ifdef HAWK_DEBUG
-#include "Console/ConsoleCommandHandler.h"
+#include "Console/ConsoleCommandManager.h"
 #endif
 #include "System/DllExport.h"
 #include "System/Exception.h"
@@ -45,7 +45,7 @@ private:
 	static std::atomic_bool m_bFatalSignal;
 
 #ifdef HAWK_DEBUG
-	ConsoleCommandHandler m_ConsoleCommandHandler;
+	std::shared_ptr<ConsoleCommandManager> m_ConsoleCommandManager;
 #endif
 
 };

@@ -6,6 +6,7 @@ namespace Hawk {
 
 Thread::Thread(const std::string& p_Name, UpdateFunc_t p_UpdateFunc)
 : m_Name(p_Name)
+, m_Dispatcher(std::make_shared<Dispatcher>())
 , m_UpdateFunc(p_UpdateFunc)
 , m_bStopSignal(false)
 {
@@ -31,7 +32,7 @@ const std::string& Thread::GetName() const
 	return m_Name;
 }
 
-Dispatcher& Thread::GetDispatcher()
+std::shared_ptr<Dispatcher> Thread::GetDispatcher() const
 {
 	return m_Dispatcher;
 }
@@ -40,7 +41,7 @@ void Thread::Run()
 {
 	while (!m_bStopSignal)
 	{
-		m_Dispatcher.Execute();
+		m_Dispatcher->Execute();
 		m_UpdateFunc();
 	}
 }
