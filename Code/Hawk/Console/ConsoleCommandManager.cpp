@@ -12,12 +12,15 @@ namespace
 	const char* c_Name("Console");
 	const char Key_Return = 13;
 	const char Key_Backspace = 8;
+	
+	void CmdQuit() { ::PostQuitMessage(-1); }
 }
 
-ConsoleCommandManager::ConsoleCommandManager()
-: m_bStopSignal(false)
+ConsoleCommandManager::ConsoleCommandManager(std::shared_ptr<Dispatcher>& p_Dispatcher)
+: m_Dispatcher(p_Dispatcher)
+, m_bStopSignal(false)
 {
-
+	Register("quit", &CmdQuit, m_Dispatcher.get());
 }
 
 void ConsoleCommandManager::Start()

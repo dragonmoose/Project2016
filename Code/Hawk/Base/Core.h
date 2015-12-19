@@ -3,6 +3,7 @@
 #include "Console/ConsoleCommandManager.h"
 #endif
 #include "System/DllExport.h"
+#include "System/Dispatcher.h"
 #include "System/Exception.h"
 #include "Events/EventRouter.h"
 #include "Base/Module.h"
@@ -43,6 +44,7 @@ private:
 
 	std::shared_ptr<EventRouter> m_EventRouter;
 	static std::atomic_bool m_bFatalSignal;
+	std::shared_ptr<Dispatcher> m_Dispatcher;
 
 #ifdef HAWK_DEBUG
 	std::shared_ptr<ConsoleCommandManager> m_ConsoleCommandManager;

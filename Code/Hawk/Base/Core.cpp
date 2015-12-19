@@ -14,8 +14,9 @@ namespace { const char* c_Name("Core"); }
 
 Core::Core(bool p_bConsole)
 : m_EventRouter(std::make_shared<EventRouter>())
+, m_Dispatcher(std::make_shared<Dispatcher>())
 #ifdef HAWK_DEBUG
-, m_ConsoleCommandManager(std::make_shared<ConsoleCommandManager>())
+, m_ConsoleCommandManager(std::make_shared<ConsoleCommandManager>(m_Dispatcher))
 #endif
 {
 #ifdef HAWK_DEBUG
@@ -64,6 +65,7 @@ void Core::Run()
 			LOG("MainWindow signalled WM_QUIT", c_Name, Info);
 			break;
 		}
+		m_Dispatcher->Execute();
 	}
 	StopModules();
 #ifdef HAWK_DEBUG

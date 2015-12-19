@@ -64,11 +64,13 @@ namespace Hawk
 			m_EventManager->Send<T>(p_Event);
 		}
 
+#ifdef HAWK_DEBUG
 		template<class Object_t, class... Args_t>
 		void RegisterConsole(const std::string& p_Name, Object_t* p_Object, void(Object_t::*p_Func)(Args_t...))
 		{
 			m_ConsoleCommandManager->Register(p_Name, p_Object, p_Func, m_Dispatcher.get());
 		}
+#endif
 
 	private:
 		std::unique_ptr<EventManager> m_EventManager;
