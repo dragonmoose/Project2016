@@ -109,8 +109,10 @@ void Core::StopModules()
 	}
 }
 
+#ifdef HAWK_DEBUG
 void Core::RegisterConsole()
 {
 }
+#endif
 	
 }
