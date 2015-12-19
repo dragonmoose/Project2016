@@ -2,7 +2,6 @@
 #ifdef HAWK_DEBUG
 #include "Console/Logger.h"
 #include "System/Dispatcher.h"
-#include "System/Exception.h"
 #include <functional>
 #include <memory>
 #include <string>

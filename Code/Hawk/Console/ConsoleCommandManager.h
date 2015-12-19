@@ -3,6 +3,7 @@
 #include "Console/ConsoleFunction.h"
 #include "Console/Logger.h"
 #include "System/Dispatcher.h"
+#include "System/Exception.h"
 #include <string>
 #include <vector>
 #include <memory>
