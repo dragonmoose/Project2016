@@ -23,6 +23,7 @@ Core::Core(bool p_bConsole)
 	if (p_bConsole)
 	{
 		ConsoleAPI::Start();
+		Logger::RegisterThreadName("Thread_Core", std::this_thread::get_id());
 		m_ConsoleCommandManager->Start();
 	}
 	Config::Instance().Load();
