@@ -41,6 +41,8 @@ void Logger::RegisterThreadName(const std::string& p_Name, std::thread::id p_ID)
 
 void Logger::Log(const std::string& p_Msg, const std::string& p_Module, const std::string& p_FileInfo, Level p_Level)
 {
+	if (!ConsoleAPI::Initialized()) return;
+
 	std::string l_ThreadInfo = GetThreadInfo();
 	if (!ShouldLog(p_Msg, l_ThreadInfo, p_Module, p_Level)) return;
 

@@ -1,18 +1,25 @@
 #include "pch.h"
 #include "Base/Module.h"
 #include "System/Duration.h"
+#include "System/Exception.h"
 #include <typeinfo>
 
 namespace Hawk {
 
 Module::Module()
 : m_bPaused(false)
-, m_Name(typeid(this).name())
 {
 }
 
-Module::~Module()
+void Module::SetName(const std::string& p_Name)
 {
+	THROW_IF(p_Name.empty(), "Name is empty");
+	m_Name = p_Name;
+}
+
+const std::string& Module::GetName() const
+{
+	return m_Name;
 }
 
 void Module::_Initialize(std::unique_ptr<EventManager> p_EventManager, std::shared_ptr<Dispatcher>& p_Dispatcher)

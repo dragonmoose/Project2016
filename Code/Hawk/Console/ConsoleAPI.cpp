@@ -17,6 +17,7 @@ namespace ConsoleAPI
 	HANDLE n_hOut;
 	HANDLE n_hIn;
 	std::mutex n_Mutex;
+	bool n_bInitialized = false;
 }
 
 void ConsoleAPI::SetTitle()
@@ -169,6 +170,7 @@ void ConsoleAPI::Start()
 
 	SetTitle();
 	SetFont();
+	n_bInitialized = true;
 }
 
 void ConsoleAPI::BeginWrite()
@@ -237,6 +239,11 @@ void ConsoleAPI::ClearScreen()
 void ConsoleAPI::Stop()
 {
 	THROW_IF_NOT(::FreeConsole(), "Failed to free console");
+}
+
+bool ConsoleAPI::Initialized()
+{
+	return n_bInitialized;
 }
 
 }

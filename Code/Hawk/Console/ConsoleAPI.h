@@ -31,6 +31,7 @@ namespace ConsoleAPI
 	bool TryGetNextChar(char& p_cChar);
 	void ClearScreen();
 	void Stop();
+	bool Initialized();
 }
 
 }

@@ -4,19 +4,22 @@
 #include "Time.h"
 #include "System/Duration.h"
 #include "Events/EventManager.h"
+#include "Util/StringUtil.h"
 
 namespace Hawk {
 
 namespace { const char* c_Name("ModuleThread"); }
 
-ModuleThread::ModuleThread(const std::string& p_ThreadName)
-: m_Thread(p_ThreadName, std::bind(&ModuleThread::Update, this))
+ModuleThread::ModuleThread(const std::string& p_Name)
+: m_Thread(p_Name, std::bind(&ModuleThread::Update, this))
 {
 }
 
-void ModuleThread::Add(std::unique_ptr<Module> p_Module)
+void ModuleThread::Remove(const std::string& p_Name)
 {
-	m_Modules.push_back(std::move(p_Module));
+	Modules_t::const_iterator l_Itr = FindByName(p_Name);
+	THROW_IF(l_Itr == m_Modules.end(), "Module thread does not contain a module named " << p_Name);
+	m_Modules.erase(l_Itr);
 }
 
 void ModuleThread::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
@@ -28,6 +31,11 @@ void ModuleThread::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
 		l_Module->_InitializeConsole(m_ConsoleCommandManager);
 #endif
 	}
+}
+
+const std::string& ModuleThread::GetName() const
+{
+	return m_Thread.GetName();
 }
 
 #if HAWK_DEBUG
@@ -60,6 +68,14 @@ void ModuleThread::Update()
 	{
 		l_Module->_Update(l_Delta);
 	}
+}
+
+ModuleThread::Modules_t::const_iterator ModuleThread::FindByName(const std::string& p_Name) const
+{
+	return std::find_if(m_Modules.begin(), m_Modules.end(), [p_Name](const std::unique_ptr<Module>& p_Module)
+	{
+		return StringUtil::AreEqual(p_Name, p_Module->GetName());
+	});
 }
 
 }

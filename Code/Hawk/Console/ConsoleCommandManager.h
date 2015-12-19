@@ -2,7 +2,6 @@
 #ifdef HAWK_DEBUG
 #include "Console/ConsoleFunction.h"
 #include "Console/Logger.h"
-#include "System/Dispatcher.h"
 #include "System/Exception.h"
 #include <string>
 #include <vector>
@@ -13,6 +12,8 @@
 #include <unordered_map>
 
 namespace Hawk {
+
+class Dispatcher;
 
 class ConsoleCommandManager final
 {

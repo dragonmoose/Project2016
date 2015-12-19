@@ -22,28 +22,41 @@ public:
 
 	void OpenWindow(HINSTANCE p_hInstance, const std::string& p_Name);
 
-	void RegisterThread(const std::string& p_Name);
+	void CreateModuleThread(const std::string& p_Name);
 
 	template<class T>
-	void AddModule(const std::string& p_Thread = std::string())
+	void AddModule(const std::string& p_Name, const std::string& p_ThreadName)
 	{
-		THROW_IF(p_Thread.empty(), "Empty thread name");
-		auto l_Itr = m_ModuleThreads.find(p_Thread);
-		THROW_IF(l_Itr == m_ModuleThreads.end(), "Thread with name " << p_Thread << " not registered");
-		l_Itr->second->Add(Module::CreateInstance<T>());
+		THROW_IF(p_ThreadName.empty(), "Empty module thread name");
+		ModuleThreads_t::iterator l_Itr = FindByThreadName(p_ThreadName);
+
+		THROW_IF(l_Itr == m_ModuleThreads.end(), "No module thread named " << p_ThreadName << " exists");
+		(**l_Itr).Add<T>(p_Name);
+	}
+
+	void RemoveModule(const std::string& p_Name, const std::string& p_ThreadName)
+	{
+		THROW_IF(p_ThreadName.empty(), "Empty module thread name");
+		ModuleThreads_t::iterator l_Itr = FindByThreadName(p_ThreadName);
+
+		THROW_IF(l_Itr == m_ModuleThreads.end(), "No module thread named " << p_ThreadName << " exists");
+		(**l_Itr).Remove(p_Name);
 	}
 	void Run();
 
 private:
+	using ModuleThreads_t = std::vector<std::unique_ptr<ModuleThread>>;
+
 	void InitializeModules();
 	void StartModules();
 	void StopModules();
+
+	ModuleThreads_t::iterator FindByThreadName(const std::string& p_Name);
 
 #ifdef HAWK_DEBUG
 	void RegisterConsole();
 #endif
 
-	using ModuleThreads_t = std::unordered_map<std::string, std::unique_ptr<ModuleThread>>;
 	ModuleThreads_t m_ModuleThreads;
 
 	std::shared_ptr<EventRouter> m_EventRouter;

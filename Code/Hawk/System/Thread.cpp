@@ -4,6 +4,8 @@
 
 namespace Hawk {
 
+std::string Thread::MainThreadName("Thread_Main");
+
 Thread::Thread(const std::string& p_Name, UpdateFunc_t p_UpdateFunc)
 : m_Name(p_Name)
 , m_Dispatcher(std::make_shared<Dispatcher>())

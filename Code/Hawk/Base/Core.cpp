@@ -4,6 +4,8 @@
 #include "Console/ConsoleAPI.h"
 #include "System/Duration.h"
 #include "System/Time.h"
+#include "System/Thread.h"
+#include "Util/StringUtil.h"
 #include <boost/filesystem.hpp>
 #include <thread>
 #include <chrono>
@@ -24,7 +26,7 @@ Core::Core(bool p_bConsole)
 	if (p_bConsole)
 	{
 		ConsoleAPI::Start();
-		Logger::RegisterThreadName("Thread_Core", std::this_thread::get_id());
+		Logger::RegisterThreadName(Thread::MainThreadName, std::this_thread::get_id());
 		m_ConsoleCommandManager->Start();
 		RegisterConsole();
 	}
@@ -35,10 +37,11 @@ Core::Core(bool p_bConsole)
 	LOG("Hawk core initialized...", c_Name, Info);
 }
 
-void Core::RegisterThread(const std::string& p_Name)
+void Core::CreateModuleThread(const std::string& p_Name)
 {
-	bool l_bInserted = m_ModuleThreads.insert(ModuleThreads_t::value_type(p_Name, std::make_unique<ModuleThread>(p_Name))).second;
-	THROW_IF_NOT(l_bInserted, "Thread with name " << p_Name << " already registered");
+	ModuleThreads_t::iterator l_Itr = FindByThreadName(p_Name);
+	THROW_IF_NOT(l_Itr == m_ModuleThreads.end(), "Module thread with name " << p_Name << " already created");
+	m_ModuleThreads.push_back(std::make_unique<ModuleThread>(p_Name));
 }
 
 void Core::OpenWindow(HINSTANCE p_hInstance, const std::string& p_Name)
@@ -87,9 +90,9 @@ void Core::InitializeModules()
 	for (auto& l_Manager : m_ModuleThreads)
 	{
 #ifdef HAWK_DEBUG
-		l_Manager.second->SetConsoleCommandManager(m_ConsoleCommandManager);
+		l_Manager->SetConsoleCommandManager(m_ConsoleCommandManager);
 #endif
-		l_Manager.second->Initialize(m_EventRouter);
+		l_Manager->Initialize(m_EventRouter);
 	}
 }
 
@@ -97,7 +100,7 @@ void Core::StartModules()
 {
 	for (auto& l_Manager : m_ModuleThreads)
 	{
-		l_Manager.second->Start();
+		l_Manager->Start();
 	}
 }
 
@@ -105,8 +108,16 @@ void Core::StopModules()
 {
 	for (auto& l_Manager : m_ModuleThreads)
 	{
-		l_Manager.second->Stop();
+		l_Manager->Stop();
 	}
+}
+
+Core::ModuleThreads_t::iterator Core::FindByThreadName(const std::string& p_Name)
+{
+	return std::find_if(m_ModuleThreads.begin(), m_ModuleThreads.end(), [p_Name](const std::unique_ptr<ModuleThread>& p_ModuleThread)
+	{
+		return StringUtil::AreEqual(p_ModuleThread->GetName(), p_Name);
+	});
 }
 
 #ifdef HAWK_DEBUG

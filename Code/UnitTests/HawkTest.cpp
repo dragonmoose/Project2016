@@ -52,12 +52,12 @@ namespace HawkUnitTests
 				Assert::IsTrue(l_bCaught);
 			}
 
-			TEST_METHOD(RegisterThreadSystem)
+			TEST_METHOD(Modules)
 			{
 				Core l_Core(false);
 				LOG("testing info", "test", Info);
-				l_Core.RegisterThread("TestThread");
-				Assert::ExpectException<Exception>([&l_Core]() { l_Core.RegisterThread("TestThread"); });
+				l_Core.CreateModuleThread("testthread");
+				Assert::ExpectException<Exception>([&l_Core]() { l_Core.CreateModuleThread("TestThread"); });
 			}
 	};
 

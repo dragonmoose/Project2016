@@ -22,6 +22,8 @@ public:
 	const std::string& GetName() const;
 	std::shared_ptr<Dispatcher> GetDispatcher() const;
 
+	static std::string MainThreadName;
+
 private:
 	void Run();
 
