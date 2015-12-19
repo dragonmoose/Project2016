@@ -7,7 +7,7 @@
 #include "System/Exception.h"
 #include "Events/EventRouter.h"
 #include "Base/Module.h"
-#include "Base/ModuleManager.h"
+#include "Base/ModuleThread.h"
 #include <memory>
 #include <unordered_map>
 
@@ -28,8 +28,8 @@ public:
 	void AddModule(const std::string& p_Thread = std::string())
 	{
 		THROW_IF(p_Thread.empty(), "Empty thread name");
-		auto l_Itr = m_ModuleManagers.find(p_Thread);
-		THROW_IF(l_Itr == m_ModuleManagers.end(), "Thread with name " << p_Thread << " not registered");
+		auto l_Itr = m_ModuleThreads.find(p_Thread);
+		THROW_IF(l_Itr == m_ModuleThreads.end(), "Thread with name " << p_Thread << " not registered");
 		l_Itr->second->Add(Module::CreateInstance<T>());
 	}
 	void Run();
@@ -43,8 +43,8 @@ private:
 	void RegisterConsole();
 #endif
 
-	using ModuleManagers_t = std::unordered_map<std::string, std::unique_ptr<ModuleManager>>;
-	ModuleManagers_t m_ModuleManagers;
+	using ModuleThreads_t = std::unordered_map<std::string, std::unique_ptr<ModuleThread>>;
+	ModuleThreads_t m_ModuleThreads;
 
 	std::shared_ptr<EventRouter> m_EventRouter;
 	static std::atomic_bool m_bFatalSignal;

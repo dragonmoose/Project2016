@@ -13,10 +13,10 @@ namespace Hawk {
 
 class Module;
 
-class ModuleManager final
+class ModuleThread final
 {
 public:
-	ModuleManager(const std::string& p_ThreadName);
+	ModuleThread(const std::string& p_ThreadName);
 	HAWK_DLL_EXPORT void Add(std::unique_ptr<Module> p_Module);
 	void Initialize(std::shared_ptr<EventRouter>& p_EventRouter);
 
@@ -27,8 +27,8 @@ public:
 	void Start();
 	void Stop();
 
-	ModuleManager(const ModuleManager&) = delete;
-	ModuleManager& operator=(const ModuleManager&) = delete;
+	ModuleThread(const ModuleThread&) = delete;
+	ModuleThread& operator=(const ModuleThread&) = delete;
 
 private:
 	void Update();

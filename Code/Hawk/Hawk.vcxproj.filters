@@ -41,9 +41,6 @@
     <ClCompile Include="Base\Module.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="Base\ModuleManager.cpp">
-      <Filter>Base</Filter>
-    </ClCompile>
     <ClCompile Include="Util\FileUtil.cpp">
       <Filter>Util</Filter>
     </ClCompile>
@@ -58,6 +55,9 @@
     </ClCompile>
     <ClCompile Include="Console\ConsoleCommandManager.cpp">
       <Filter>Console</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\ModuleThread.cpp">
+      <Filter>Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -125,9 +125,6 @@
     <ClInclude Include="Base\Module.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="Base\ModuleManager.h">
-      <Filter>Base</Filter>
-    </ClInclude>
     <ClInclude Include="Util\FileUtil.h">
       <Filter>Util</Filter>
     </ClInclude>
@@ -145,6 +142,9 @@
     </ClInclude>
     <ClInclude Include="Console\ConsoleCommandManager.h">
       <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\ModuleThread.h">
+      <Filter>Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

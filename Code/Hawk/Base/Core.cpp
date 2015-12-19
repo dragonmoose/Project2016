@@ -37,7 +37,7 @@ Core::Core(bool p_bConsole)
 
 void Core::RegisterThread(const std::string& p_Name)
 {
-	bool l_bInserted = m_ModuleManagers.insert(ModuleManagers_t::value_type(p_Name, std::make_unique<ModuleManager>(p_Name))).second;
+	bool l_bInserted = m_ModuleThreads.insert(ModuleThreads_t::value_type(p_Name, std::make_unique<ModuleThread>(p_Name))).second;
 	THROW_IF_NOT(l_bInserted, "Thread with name " << p_Name << " already registered");
 }
 
@@ -84,7 +84,7 @@ void Core::Run()
 
 void Core::InitializeModules()
 {
-	for (auto& l_Manager : m_ModuleManagers)
+	for (auto& l_Manager : m_ModuleThreads)
 	{
 #ifdef HAWK_DEBUG
 		l_Manager.second->SetConsoleCommandManager(m_ConsoleCommandManager);
@@ -95,7 +95,7 @@ void Core::InitializeModules()
 
 void Core::StartModules()
 {
-	for (auto& l_Manager : m_ModuleManagers)
+	for (auto& l_Manager : m_ModuleThreads)
 	{
 		l_Manager.second->Start();
 	}
@@ -103,7 +103,7 @@ void Core::StartModules()
 
 void Core::StopModules()
 {
-	for (auto& l_Manager : m_ModuleManagers)
+	for (auto& l_Manager : m_ModuleThreads)
 	{
 		l_Manager.second->Stop();
 	}

@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "Base/ModuleManager.h"
+#include "Base/ModuleThread.h"
 #include "Base/Module.h"
 #include "Time.h"
 #include "System/Duration.h"
@@ -7,19 +7,19 @@
 
 namespace Hawk {
 
-namespace { const char* c_Name("ModuleManager"); }
+namespace { const char* c_Name("ModuleThread"); }
 
-ModuleManager::ModuleManager(const std::string& p_ThreadName)
-: m_Thread(p_ThreadName, std::bind(&ModuleManager::Update, this))
+ModuleThread::ModuleThread(const std::string& p_ThreadName)
+: m_Thread(p_ThreadName, std::bind(&ModuleThread::Update, this))
 {
 }
 
-void ModuleManager::Add(std::unique_ptr<Module> p_Module)
+void ModuleThread::Add(std::unique_ptr<Module> p_Module)
 {
 	m_Modules.push_back(std::move(p_Module));
 }
 
-void ModuleManager::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
+void ModuleThread::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
 {
 	for (auto& l_Module : m_Modules)
 	{
@@ -31,25 +31,25 @@ void ModuleManager::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
 }
 
 #if HAWK_DEBUG
-void ModuleManager::SetConsoleCommandManager(std::shared_ptr<ConsoleCommandManager>& p_ConsoleCommandManager)
+void ModuleThread::SetConsoleCommandManager(std::shared_ptr<ConsoleCommandManager>& p_ConsoleCommandManager)
 {
 	m_ConsoleCommandManager = p_ConsoleCommandManager;
 }
 #endif
 
-void ModuleManager::Start()
+void ModuleThread::Start()
 {
 	LOG("Running " << m_Modules.size() << " modules on thread: " << m_Thread.GetName(), c_Name, Info);
 	m_OldTime.SetToNow();
 	m_Thread.Start();
 }
 
-void ModuleManager::Stop()
+void ModuleThread::Stop()
 {
 	m_Thread.Stop();
 }
 
-void ModuleManager::Update()
+void ModuleThread::Update()
 {
 	Time l_CurrTime;
 	l_CurrTime.SetToNow();
