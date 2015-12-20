@@ -6,12 +6,12 @@
 
 namespace Hawk {
 
-class EventCollector final
+class EventQueue final
 {
 public:
-	EventCollector() {}
-	EventCollector(const EventCollector&) = delete;
-	EventCollector& operator=(const EventCollector&) = delete;
+	EventQueue() {}
+	EventQueue(const EventQueue&) = delete;
+	EventQueue& operator=(const EventQueue&) = delete;
 
 	using Queue_t = std::vector<std::unique_ptr<QueuedEventBase>>;
 
@@ -23,7 +23,7 @@ public:
 		m_Queue.push_back(std::move(l_QueuedEvent));
 	}
 
-	void Extract(Queue_t& p_Queue)
+	void Pop(Queue_t& p_Queue)
 	{
 		std::lock_guard<std::mutex> l_Lock(m_Mutex);
 		m_Queue.swap(p_Queue);

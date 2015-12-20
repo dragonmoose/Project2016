@@ -1,7 +1,7 @@
 #pragma once
 #include "Events/IEvent.h"
 #include "Events/EventRouter.h"
-#include "Events/EventCollector.h"
+#include "Events/EventQueue.h"
 #include "Events/EventHandler.h"
 #include "System/DllExport.h"
 #include "Console/Logger.h"
@@ -27,7 +27,7 @@ public:
 	{
 		const std::type_index& l_TypeIndex = std::type_index(typeid(T));
 		m_Events[l_TypeIndex] = std::make_unique<EventHandler<T>>(p_Func);
-		m_Router->Register(l_TypeIndex, &m_Collector);
+		m_Router->Register(l_TypeIndex, m_EventQueue);
 	}
 
 	void HandleQueued();
@@ -39,9 +39,9 @@ public:
 	}
 	
 private:
-	using EventHandlerMap_t = std::unordered_map<std::type_index, std::unique_ptr<EventHandlerBase>>;
+	using EventHandlerMap_t = std::unordered_map<std::type_index, std::unique_ptr<IEventHandler>>;
 	EventHandlerMap_t m_Events;
-	EventCollector m_Collector;
+	std::shared_ptr<EventQueue> m_EventQueue;
 	std::shared_ptr<EventRouter> m_Router;
 };
 

@@ -123,6 +123,7 @@ Core::ModuleThreads_t::iterator Core::FindByThreadName(const std::string& p_Name
 #ifdef HAWK_DEBUG
 void Core::RegisterConsole()
 {
+	m_ConsoleCommandManager->Register("module.remove", this, &Core::RemoveModule, m_Dispatcher.get());
 }
 #endif
 	

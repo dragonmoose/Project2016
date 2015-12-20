@@ -8,6 +8,7 @@
 #endif
 #include <memory>
 #include <vector>
+#include <mutex>
 
 namespace Hawk {
 
@@ -21,6 +22,7 @@ public:
 	template<class T>
 	void Add(const std::string& p_Name)
 	{
+		std::lock_guard<std::mutex> l_Lock(m_Mutex);
 		Modules_t::const_iterator l_Itr = FindByName(p_Name);
 		THROW_IF_NOT(l_Itr == m_Modules.end(), "Module thread already contains a module named " << p_Name);
 
@@ -53,6 +55,7 @@ private:
 	Modules_t m_Modules;
 	Time m_OldTime;
 	Thread m_Thread;
+	std::mutex m_Mutex;
 
 #ifdef HAWK_DEBUG
 	std::shared_ptr<ConsoleCommandManager> m_ConsoleCommandManager;

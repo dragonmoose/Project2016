@@ -19,7 +19,14 @@ void Dispatcher::Execute()
 
 	for (auto& l_Function : l_Functions)
 	{
-		l_Function();
+		try
+		{
+			l_Function();
+		}
+		catch (Exception& e)
+		{
+			LOG_EXCEPTION(e, "dispatcher", Error);
+		}
 	}
 }
 

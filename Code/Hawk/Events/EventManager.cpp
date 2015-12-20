@@ -5,13 +5,14 @@ namespace Hawk {
 
 EventManager::EventManager(std::shared_ptr<EventRouter>& p_Router)
 : m_Router(p_Router)
+, m_EventQueue(std::make_shared<EventQueue>())
 {
 }
 
 void EventManager::HandleQueued()
 {
-	EventCollector::Queue_t l_QueuedEvents;
-	m_Collector.Extract(l_QueuedEvents);
+	EventQueue::Queue_t l_QueuedEvents;
+	m_EventQueue->Pop(l_QueuedEvents);
 	while (!l_QueuedEvents.empty())
 	{
 		QueuedEventBase& l_Event = *l_QueuedEvents.back();

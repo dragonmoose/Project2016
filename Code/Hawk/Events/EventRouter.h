@@ -1,10 +1,11 @@
 #pragma once
-#include "Events/EventCollector.h"
+#include "Events/EventQueue.h"
 #include <unordered_map>
 #include <typeindex>
 #include <functional>
 #include <typeindex>
 #include <vector>
+#include <memory>
 
 namespace Hawk {
 
@@ -17,26 +18,36 @@ public:
 	EventRouter(const EventRouter&) = delete;
 	EventRouter& operator=(const EventRouter&) = delete;
 
-	void Register(const std::type_index& p_EventTypeIndex, EventCollector* p_Collectors);
-	bool TryGetCollectors(const std::type_index& p_TypeIndex, std::vector<EventCollector*>& p_EventManagers);
+	using EventQueues_t = std::vector<std::weak_ptr<EventQueue>>;
+	using EventQueuesMap_t = std::unordered_map<std::type_index, EventQueues_t>;
+
+	void Register(const std::type_index& p_EventTypeIndex, std::shared_ptr<EventQueue>& p_EventQueue);
 
 	template<class T>
 	void Dispatch(const T& p_Event)
 	{
 		const std::type_index& l_TypeIndex = std::type_index(typeid(T));
-		std::vector<EventCollector*> l_Collectors;
-		if (TryGetCollectors(l_TypeIndex, l_Collectors))
+		EventQueuesMap_t::iterator l_Itr = m_EventQueues.find(l_TypeIndex);
+		if (l_Itr != m_EventQueues.end())
 		{
-			for (EventCollector* l_Collector : l_Collectors)
+			for (auto& l_Itr2 = l_Itr->second.begin(); l_Itr2 != l_Itr->second.end(); )
 			{
-				l_Collector->Push<T>(p_Event);
+				std::shared_ptr<EventQueue> l_EventQueue = l_Itr2->lock();
+				if (l_EventQueue)
+				{
+					l_EventQueue->Push<T>(p_Event);
+					l_Itr2++;
+				}
+				else
+				{
+					l_Itr2 = l_Itr->second.erase(l_Itr2);
+				}
 			}
 		}
 	}
 
 private:
-	using FuncTable_t = std::unordered_map<std::type_index, std::vector<EventCollector*>>;
-	FuncTable_t m_FuncTable;
+	EventQueuesMap_t m_EventQueues;
 };
 
 }

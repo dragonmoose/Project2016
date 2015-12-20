@@ -17,6 +17,7 @@ ModuleThread::ModuleThread(const std::string& p_Name)
 
 void ModuleThread::Remove(const std::string& p_Name)
 {
+	std::lock_guard<std::mutex> l_Lock(m_Mutex);
 	Modules_t::const_iterator l_Itr = FindByName(p_Name);
 	THROW_IF(l_Itr == m_Modules.end(), "Module thread does not contain a module named " << p_Name);
 	m_Modules.erase(l_Itr);
@@ -64,6 +65,7 @@ void ModuleThread::Update()
 	Duration l_Delta(l_CurrTime - m_OldTime);
 	m_OldTime = l_CurrTime;
 
+	std::lock_guard<std::mutex> l_Lock(m_Mutex);
 	for (auto& l_Module : m_Modules)
 	{
 		l_Module->_Update(l_Delta);

@@ -86,7 +86,7 @@
     <ClInclude Include="Console\ConsoleCommandManager.h" />
     <ClInclude Include="Console\Logger.h" />
     <ClInclude Include="Console\ConsoleCommand.h" />
-    <ClInclude Include="Events\EventCollector.h" />
+    <ClInclude Include="Events\EventQueue.h" />
     <ClInclude Include="Events\EventHandler.h" />
     <ClInclude Include="Events\EventManager.h" />
     <ClInclude Include="Events\EventRouter.h" />

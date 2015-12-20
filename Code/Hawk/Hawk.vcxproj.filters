@@ -74,9 +74,6 @@
     <ClInclude Include="Base\WindowManager.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="Events\EventCollector.h">
-      <Filter>Events</Filter>
-    </ClInclude>
     <ClInclude Include="Events\EventHandler.h">
       <Filter>Events</Filter>
     </ClInclude>
@@ -145,6 +142,9 @@
     </ClInclude>
     <ClInclude Include="Base\ModuleThread.h">
       <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\EventQueue.h">
+      <Filter>Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

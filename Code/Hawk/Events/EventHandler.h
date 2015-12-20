@@ -5,10 +5,10 @@ namespace Hawk {
 
 struct IEvent;
 
-class EventHandlerBase
+class IEventHandler
 {
 public:
-	virtual ~EventHandlerBase() = default;
+	virtual ~IEventHandler() = default;
 	void _Call(const IEvent& p_Event) { Call(p_Event); }
 
 private:
@@ -16,7 +16,7 @@ private:
 };
 
 template<class T>
-class EventHandler final : public EventHandlerBase
+class EventHandler final : public IEventHandler
 {
 public:
 	using Func_t = std::function<void(const T&)>;

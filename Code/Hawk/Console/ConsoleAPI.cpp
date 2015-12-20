@@ -203,7 +203,7 @@ bool ConsoleAPI::HasNextChar()
 	return l_dwNumEvents > 0;
 }
 
-bool ConsoleAPI::TryGetNextChar(char& p_cChr)
+bool ConsoleAPI::TryGetNextChar(char& p_cChr, bool& p_bIsModifierKey)
 {
 	INPUT_RECORD l_InputRecord;
 	DWORD l_dwNumEventsRead = 0;
@@ -211,7 +211,16 @@ bool ConsoleAPI::TryGetNextChar(char& p_cChr)
 
 	if (l_InputRecord.EventType == KEY_EVENT && l_InputRecord.Event.KeyEvent.bKeyDown)
 	{
-		p_cChr = l_InputRecord.Event.KeyEvent.uChar.AsciiChar;
+		if (l_InputRecord.Event.KeyEvent.wVirtualKeyCode == VK_SHIFT)
+		{
+			p_cChr = (char)l_InputRecord.Event.KeyEvent.wVirtualKeyCode;
+			p_bIsModifierKey = true;
+		}
+		else
+		{
+			p_cChr = l_InputRecord.Event.KeyEvent.uChar.AsciiChar;
+			p_bIsModifierKey = false;
+		}
 		return true;
 	}
 	return false;
