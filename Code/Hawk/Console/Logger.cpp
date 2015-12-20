@@ -28,15 +28,21 @@ namespace Logger
 	Level StringToLevel(const std::string& p_Level);
 	void GetLevelColors(Level p_Level, ConsoleAPI::Color& p_Color, ConsoleAPI::Color& p_BgColor);
 
-	using ThreadNames_t = std::unordered_map<std::thread::id, std::string>;
-	ThreadNames_t n_ThreadNames;
+	struct ThreadInfo
+	{
+		ThreadInfo(const std::string& p_Name, ThreadID p_ID) : m_Name(p_Name), m_ID(p_ID) {}
+		std::string m_Name;
+		ThreadID m_ID;
+	};
+	using ThreadInfoMap_t = std::unordered_map<std::thread::id, ThreadInfo>;
+	ThreadInfoMap_t m_ThreadInfoMap;
 	std::mutex m_ThreadInfoMutex;
 }
 
-void Logger::RegisterThreadName(const std::string& p_Name, std::thread::id p_ID)
+void Logger::RegisterThread(const std::string& p_Name, std::thread::id p_SysThreadID, ThreadID p_ID)
 {
 	std::lock_guard<std::mutex> l_Lock(m_ThreadInfoMutex);
-	THROW_IF_NOT(n_ThreadNames.insert(ThreadNames_t::value_type(p_ID, p_Name)).second, "Failed to insert thread name lookup. Name=" << p_Name << " ID=" << p_ID);
+	THROW_IF_NOT(m_ThreadInfoMap.insert(ThreadInfoMap_t::value_type(p_SysThreadID, ThreadInfo(p_Name, p_ID))).second, "Failed to insert thread name lookup. Name=" << p_Name << " ID=" << p_ID);
 }
 
 void Logger::Log(const std::string& p_Msg, const std::string& p_Module, const std::string& p_FileInfo, Level p_Level)
@@ -73,20 +79,24 @@ bool Logger::ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo
 
 std::string Logger::GetThreadInfo()
 {
-	std::thread::id l_ID = std::this_thread::get_id();
+	std::thread::id l_SysThreadID = std::this_thread::get_id();
 	std::ostringstream l_Stream;
 
 	std::lock_guard<std::mutex> l_Lock(m_ThreadInfoMutex);
-	auto l_Itr = n_ThreadNames.find(l_ID);
-	if (l_Itr != n_ThreadNames.end())
+	auto l_Itr = m_ThreadInfoMap.find(l_SysThreadID);
+	if (l_Itr != m_ThreadInfoMap.end())
 	{
-		l_Stream << l_Itr->second;
+		l_Stream << l_Itr->second.m_Name;
+		if (l_Itr->second.m_ID != ThreadID_Invalid)
+		{
+			l_Stream << " #" << l_Itr->second.m_ID;
+		}
 	}
 	else
 	{
 		l_Stream << "N/A";
 	}
-	l_Stream << " #" << l_ID;
+	l_Stream << " [#" << l_SysThreadID << "]";
 	return l_Stream.str();
 }
 

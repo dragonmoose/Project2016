@@ -11,6 +11,7 @@ class TestModule : public Hawk::Module
 {
 public:
 	Hawk::Duration m_Duration;
+	std::string GetName() const override { return "TestModule"; }
 	virtual void Update(const Hawk::Duration& p_Duration)
 	{
 		m_Duration += p_Duration;

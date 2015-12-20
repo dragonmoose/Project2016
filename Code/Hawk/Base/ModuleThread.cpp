@@ -15,12 +15,16 @@ ModuleThread::ModuleThread(const std::string& p_Name)
 {
 }
 
-void ModuleThread::Remove(const std::string& p_Name)
+bool ModuleThread::TryRemove(ModuleID p_ID)
 {
 	std::lock_guard<std::mutex> l_Lock(m_Mutex);
-	Modules_t::const_iterator l_Itr = FindByName(p_Name);
-	THROW_IF(l_Itr == m_Modules.end(), "Module thread does not contain a module named " << p_Name);
-	m_Modules.erase(l_Itr);
+	Modules_t::const_iterator l_Itr = FindByID(p_ID);
+	if (l_Itr != m_Modules.end())
+	{
+		m_Modules.erase(l_Itr);
+		return true;
+	}
+	return false;
 }
 
 void ModuleThread::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
@@ -37,6 +41,11 @@ void ModuleThread::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
 const std::string& ModuleThread::GetName() const
 {
 	return m_Thread.GetName();
+}
+
+ThreadID ModuleThread::GetThreadID() const
+{
+	return m_Thread.GetID();
 }
 
 #if HAWK_DEBUG
@@ -72,11 +81,11 @@ void ModuleThread::Update()
 	}
 }
 
-ModuleThread::Modules_t::const_iterator ModuleThread::FindByName(const std::string& p_Name) const
+ModuleThread::Modules_t::const_iterator ModuleThread::FindByID(ModuleID p_ID) const
 {
-	return std::find_if(m_Modules.begin(), m_Modules.end(), [p_Name](const std::unique_ptr<Module>& p_Module)
+	return std::find_if(m_Modules.begin(), m_Modules.end(), [p_ID](const std::unique_ptr<Module>& p_Module)
 	{
-		return StringUtil::AreEqual(p_Name, p_Module->GetName());
+		return p_ID == p_Module->GetID();
 	});
 }
 

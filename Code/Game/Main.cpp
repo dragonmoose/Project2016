@@ -12,10 +12,10 @@ int WINAPI WinMain(HINSTANCE p_hInstance, HINSTANCE p_hPrevInstance, LPSTR p_lpC
 		Hawk::Core l_Core;
 		l_Core.OpenWindow(p_hInstance, "TestApp");
 
-		l_Core.CreateModuleThread("Thread_TestModule");
-		l_Core.CreateModuleThread("Thread_TestModule2");
-		l_Core.AddModule<TestModule>("TestModule", "Thread_TestModule");
-		l_Core.AddModule<TestModule2>("TestModule2", "Thread_TestModule2");
+		Hawk::ThreadID l_Thread1 = l_Core.CreateModuleThread("Thread1");
+		Hawk::ThreadID l_Thread2 = l_Core.CreateModuleThread("Thread2");
+		l_Core.AddModule<TestModule>(l_Thread1);
+		l_Core.AddModule<TestModule2>(l_Thread2);
 
 		l_Core.Run();
 	}

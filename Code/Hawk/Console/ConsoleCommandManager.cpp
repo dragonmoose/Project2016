@@ -38,7 +38,7 @@ void ConsoleCommandManager::Stop()
 void ConsoleCommandManager::RunInputLoop()
 {
 	LOG("Console input thread started", c_Name, Info);
-	Logger::RegisterThreadName("Thread_Console_Input", std::this_thread::get_id());
+	Logger::RegisterThread("Thread_Console_Input", std::this_thread::get_id());
 
 	std::string l_CurrLine;
 	while (!m_bStopSignal)

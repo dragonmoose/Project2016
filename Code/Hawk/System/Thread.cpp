@@ -5,12 +5,14 @@
 namespace Hawk {
 
 std::string Thread::MainThreadName("Thread_Main");
+std::atomic_uint Thread::s_uiNextThreadID = 1;
 
 Thread::Thread(const std::string& p_Name, UpdateFunc_t p_UpdateFunc)
 : m_Name(p_Name)
 , m_Dispatcher(std::make_shared<Dispatcher>())
 , m_UpdateFunc(p_UpdateFunc)
 , m_bStopSignal(false)
+, m_ID(s_uiNextThreadID++)
 {
 }
 
@@ -18,7 +20,7 @@ void Thread::Start()
 {
 	m_Thread = std::thread(&Thread::Run, this);
 #ifdef HAWK_DEBUG
-	Logger::RegisterThreadName(m_Name, m_Thread.get_id());
+	Logger::RegisterThread(m_Name, m_Thread.get_id(), m_ID);
 #endif
 }
 
@@ -32,6 +34,11 @@ void Thread::Stop()
 const std::string& Thread::GetName() const
 {
 	return m_Name;
+}
+
+ThreadID Thread::GetID() const
+{
+	return m_ID;
 }
 
 std::shared_ptr<Dispatcher> Thread::GetDispatcher() const

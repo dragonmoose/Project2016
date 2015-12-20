@@ -6,20 +6,17 @@
 
 namespace Hawk {
 
+std::atomic_uint Module::s_uiNextModuleID = 1;
+
 Module::Module()
 : m_bPaused(false)
+, m_ID(s_uiNextModuleID++)
 {
 }
 
-void Module::SetName(const std::string& p_Name)
+ModuleID Module::GetID() const
 {
-	THROW_IF(p_Name.empty(), "Name is empty");
-	m_Name = p_Name;
-}
-
-const std::string& Module::GetName() const
-{
-	return m_Name;
+	return m_ID;
 }
 
 void Module::_Initialize(std::unique_ptr<EventManager> p_EventManager, std::shared_ptr<Dispatcher>& p_Dispatcher)
@@ -44,6 +41,11 @@ void Module::_InitializeConsole(std::shared_ptr<ConsoleCommandManager>& p_Consol
 
 void Module::InitializeConsole()
 {
+}
+
+std::string Module::GetLogDesc() const
+{
+	return GetName() + " #" + std::to_string(GetID());
 }
 #endif
 

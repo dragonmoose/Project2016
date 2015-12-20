@@ -10,6 +10,7 @@ class TestModule2 : public Hawk::Module
 {
 public:
 	Hawk::Duration m_Duration;
+	std::string GetName() const override { return "TestModule2"; }
 	void RegisterEvents(Hawk::EventManager& p_EventManager)
 	{
 		p_EventManager.Register<TestEvent>([this](const TestEvent& p_Event)

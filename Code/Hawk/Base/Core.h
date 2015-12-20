@@ -6,6 +6,7 @@
 #include "System/Dispatcher.h"
 #include "System/Exception.h"
 #include "Events/EventRouter.h"
+#include "System/Types.h"
 #include "Base/Module.h"
 #include "Base/ModuleThread.h"
 #include <memory>
@@ -22,25 +23,30 @@ public:
 
 	void OpenWindow(HINSTANCE p_hInstance, const std::string& p_Name);
 
-	void CreateModuleThread(const std::string& p_Name);
+	ThreadID CreateModuleThread(const std::string& p_Name);
 
 	template<class T>
-	void AddModule(const std::string& p_Name, const std::string& p_ThreadName)
+	ModuleID AddModule(ThreadID p_ThreadID)
 	{
-		THROW_IF(p_ThreadName.empty(), "Empty module thread name");
-		ModuleThreads_t::iterator l_Itr = FindByThreadName(p_ThreadName);
+		THROW_IF(p_ThreadID == ThreadID_Invalid, "Invalid thread id");
+		ModuleThreads_t::iterator l_Itr = FindByThreadID(p_ThreadID);
 
-		THROW_IF(l_Itr == m_ModuleThreads.end(), "No module thread named " << p_ThreadName << " exists");
-		(**l_Itr).Add<T>(p_Name);
+		THROW_IF(l_Itr == m_ModuleThreads.end(), "No thread with ID " << p_ThreadID << " exists");
+		return (**l_Itr).Add<T>();
 	}
 
-	void RemoveModule(const std::string& p_Name, const std::string& p_ThreadName)
+	void RemoveModule(ModuleID p_ID)
 	{
-		THROW_IF(p_ThreadName.empty(), "Empty module thread name");
-		ModuleThreads_t::iterator l_Itr = FindByThreadName(p_ThreadName);
-
-		THROW_IF(l_Itr == m_ModuleThreads.end(), "No module thread named " << p_ThreadName << " exists");
-		(**l_Itr).Remove(p_Name);
+		THROW_IF(p_ID == ModuleID_Invalid, "Invalid module ID");
+		for (auto& l_ModuleThread : m_ModuleThreads)
+		{
+			if (l_ModuleThread->TryRemove(p_ID))
+			{
+				LOG("Removed module with ID=" << p_ID << " from thread=" << l_ModuleThread->GetThreadID(), "core", Debug);
+				return;
+			}
+		}
+		THROW("Failed to remove module with ID=" << p_ID << " (not found");
 	}
 	void Run();
 
@@ -51,7 +57,7 @@ private:
 	void StartModules();
 	void StopModules();
 
-	ModuleThreads_t::iterator FindByThreadName(const std::string& p_Name);
+	ModuleThreads_t::iterator FindByThreadID(ThreadID p_ThreadID);
 
 #ifdef HAWK_DEBUG
 	void RegisterConsole();

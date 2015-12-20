@@ -2,6 +2,7 @@
 #include "System/DllExport.h"
 #include "System/Thread.h"
 #include "System/Time.h"
+#include "System/Types.h"
 #include "Events/EventRouter.h"
 #ifdef HAWK_DEBUG
 #include "Console/ConsoleCommandManager.h"
@@ -20,21 +21,22 @@ public:
 	ModuleThread(const std::string& p_Name);
 
 	template<class T>
-	void Add(const std::string& p_Name)
+	ModuleID Add()
 	{
-		std::lock_guard<std::mutex> l_Lock(m_Mutex);
-		Modules_t::const_iterator l_Itr = FindByName(p_Name);
-		THROW_IF_NOT(l_Itr == m_Modules.end(), "Module thread already contains a module named " << p_Name);
+		std::unique_ptr<Module> l_Module = std::make_unique<T>();
 
-		std::unique_ptr<T> l_Module = std::make_unique<T>();
-		l_Module->SetName(p_Name);
+		ModuleID l_ModuleID = l_Module->GetID();
+
+		std::lock_guard<std::mutex> l_Lock(m_Mutex);
 		m_Modules.push_back(std::move(l_Module));
+		return l_ModuleID;
 	}
 
-	void Remove(const std::string& p_Name);
+	bool TryRemove(ModuleID p_ID);
 
 	void Initialize(std::shared_ptr<EventRouter>& p_EventRouter);
 	const std::string& GetName() const;
+	ThreadID GetThreadID() const;
 
 #ifdef HAWK_DEBUG
 	void SetConsoleCommandManager(std::shared_ptr<ConsoleCommandManager>& p_ConsoleCommandManager);
@@ -50,7 +52,7 @@ private:
 	using Modules_t = std::vector<std::unique_ptr<Module>>;
 
 	void Update();
-	Modules_t::const_iterator FindByName(const std::string& p_Name) const;
+	Modules_t::const_iterator FindByID(ModuleID p_ID) const;
 
 	Modules_t m_Modules;
 	Time m_OldTime;

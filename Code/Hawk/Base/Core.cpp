@@ -26,7 +26,7 @@ Core::Core(bool p_bConsole)
 	if (p_bConsole)
 	{
 		ConsoleAPI::Start();
-		Logger::RegisterThreadName(Thread::MainThreadName, std::this_thread::get_id());
+		Logger::RegisterThread(Thread::MainThreadName, std::this_thread::get_id());
 		m_ConsoleCommandManager->Start();
 		RegisterConsole();
 	}
@@ -37,11 +37,14 @@ Core::Core(bool p_bConsole)
 	LOG("Hawk core initialized...", c_Name, Info);
 }
 
-void Core::CreateModuleThread(const std::string& p_Name)
+ThreadID Core::CreateModuleThread(const std::string& p_Name)
 {
-	ModuleThreads_t::iterator l_Itr = FindByThreadName(p_Name);
-	THROW_IF_NOT(l_Itr == m_ModuleThreads.end(), "Module thread with name " << p_Name << " already created");
-	m_ModuleThreads.push_back(std::make_unique<ModuleThread>(p_Name));
+	std::unique_ptr<ModuleThread> l_ModuleThread = std::make_unique<ModuleThread>(p_Name);
+	ThreadID l_ThreadID = l_ModuleThread->GetThreadID();
+	m_ModuleThreads.push_back(std::move(l_ModuleThread));
+
+	LOG("Thread created. Name=" << p_Name << " ID=" << l_ThreadID, c_Name, Info);
+	return l_ThreadID;
 }
 
 void Core::OpenWindow(HINSTANCE p_hInstance, const std::string& p_Name)
@@ -112,11 +115,11 @@ void Core::StopModules()
 	}
 }
 
-Core::ModuleThreads_t::iterator Core::FindByThreadName(const std::string& p_Name)
+Core::ModuleThreads_t::iterator Core::FindByThreadID(ThreadID p_ThreadID)
 {
-	return std::find_if(m_ModuleThreads.begin(), m_ModuleThreads.end(), [p_Name](const std::unique_ptr<ModuleThread>& p_ModuleThread)
+	return std::find_if(m_ModuleThreads.begin(), m_ModuleThreads.end(), [p_ThreadID](const std::unique_ptr<ModuleThread>& p_ModuleThread)
 	{
-		return StringUtil::AreEqual(p_ModuleThread->GetName(), p_Name);
+		return p_ThreadID == p_ModuleThread->GetThreadID();
 	});
 }
 

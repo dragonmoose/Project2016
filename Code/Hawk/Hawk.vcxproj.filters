@@ -146,6 +146,9 @@
     <ClInclude Include="Events\EventQueue.h">
       <Filter>Events</Filter>
     </ClInclude>
+    <ClInclude Include="System\Types.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
