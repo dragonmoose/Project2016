@@ -18,16 +18,12 @@ namespace Hawk
 	{
 	public:
 		Module();
-		virtual ~Module() = default;
+		virtual ~Module();
 
 		Module(const Module&) = delete;
 		Module& operator=(const Module&) = delete;
 
 		virtual std::string GetName() const = 0;
-
-		template<class T>
-		static std::unique_ptr<T> CreateInstance() { return std::make_unique<T>(); }
-
 		ModuleID GetID() const;
 
 		void _Initialize(std::unique_ptr<EventManager> p_EventManager, std::shared_ptr<Dispatcher>& p_Dispatcher);
@@ -59,6 +55,7 @@ namespace Hawk
 		{
 #ifdef HAWK_DEBUG
 			m_ConsoleCommandManager->Register(p_Name, p_Object, p_Func, m_Dispatcher.get());
+			m_RegisteredConsoleCommands.push_back(p_Name);
 #endif
 		}
 
@@ -72,6 +69,7 @@ namespace Hawk
 
 #ifdef HAWK_DEBUG
 		std::shared_ptr<ConsoleCommandManager> m_ConsoleCommandManager;
+		std::vector<std::string> m_RegisteredConsoleCommands;
 #endif
 	};
 }

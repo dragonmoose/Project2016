@@ -14,6 +14,16 @@ Module::Module()
 {
 }
 
+Module::~Module()
+{
+#ifdef HAWK_DEBUG
+	for (const std::string& l_Command : m_RegisteredConsoleCommands)
+	{
+		m_ConsoleCommandManager->Unregister(l_Command);
+	}
+#endif
+}
+
 ModuleID Module::GetID() const
 {
 	return m_ID;

@@ -3,6 +3,7 @@
 #include "Console/ConsoleFunction.h"
 #include "Console/Logger.h"
 #include "System/Exception.h"
+#include "Util/StringUtil.h"
 #include <string>
 #include <vector>
 #include <memory>
@@ -35,7 +36,7 @@ public:
 			THROW_IF_NOT(p_Dispatcher, "NULL dispatcher");
 
 			std::lock_guard<std::mutex> l_Lock(m_Mutex);
-			bool l_bInserted = m_Functions.insert(FunctionMap_t::value_type(p_Name, std::make_unique<MemberConsoleFunction<Object_t, Args_t...>>(p_Object, p_Func, p_Dispatcher))).second;
+			bool l_bInserted = m_Functions.insert(FunctionMap_t::value_type(StringUtil::ToLower(p_Name), std::make_unique<MemberConsoleFunction<Object_t, Args_t...>>(p_Object, p_Func, p_Dispatcher))).second;
 			THROW_IF_NOT(l_bInserted, "Failed to register member console function (already registered?): " << p_Name);
 		}
 		catch (Exception& e)
@@ -52,7 +53,7 @@ public:
 			THROW_IF_NOT(p_Dispatcher, "NULL dispatcher");
 
 			std::lock_guard<std::mutex> l_Lock(m_Mutex);
-			bool l_bInserted = m_Functions.insert(FunctionMap_t::value_type(p_Name, std::make_unique<FreeConsoleFunction<Args_t...>>(p_Func, p_Dispatcher))).second;
+			bool l_bInserted = m_Functions.insert(FunctionMap_t::value_type(StringUtil::ToLower(p_Name), std::make_unique<FreeConsoleFunction<Args_t...>>(p_Func, p_Dispatcher))).second;
 			THROW_IF_NOT(l_bInserted, "Failed to register free console function (already registered?): " << p_Name);
 		}
 		catch (Exception& e)
@@ -60,6 +61,8 @@ public:
 			LOG_EXCEPTION(e, "console", Fatal);
 		}
 	}
+
+	void Unregister(const std::string& p_Name);
 
 private:
 	void RunInputLoop();

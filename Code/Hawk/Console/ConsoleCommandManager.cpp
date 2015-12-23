@@ -103,5 +103,19 @@ void ConsoleCommandManager::RunInputLoop()
 		std::this_thread::sleep_for(std::chrono::milliseconds(25));
 	}
 }
+
+void ConsoleCommandManager::Unregister(const std::string& p_Name)
+{
+	std::string l_Name = StringUtil::ToLower(p_Name);
+	auto l_Itr = m_Functions.find(l_Name);
+	if (l_Itr != m_Functions.end())
+	{
+		m_Functions.erase(l_Itr);
+	}
+	else
+	{
+		LOG("Failed to unregister - command not found: " << l_Name, "console", Error);
+	}
+}
 }
 #endif
