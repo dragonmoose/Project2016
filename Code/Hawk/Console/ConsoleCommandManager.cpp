@@ -4,6 +4,7 @@
 #include "Console/ConsoleCommand.h"
 #include "Console/ConsoleAPI.h"
 #include "System/Version.h"
+#include "Util/StringUtil.h"
 
 namespace Hawk {
 
@@ -15,6 +16,7 @@ namespace
 	const char Key_Backspace = 8;
 	
 	void CmdQuit() { ::PostQuitMessage(-1); }
+	void CmdCls() { ConsoleAPI::ClearScreen(); }
 }
 
 ConsoleCommandManager::ConsoleCommandManager(std::shared_ptr<Dispatcher>& p_Dispatcher)
@@ -22,6 +24,7 @@ ConsoleCommandManager::ConsoleCommandManager(std::shared_ptr<Dispatcher>& p_Disp
 , m_bStopSignal(false)
 {
 	Register("quit", &CmdQuit, m_Dispatcher.get());
+	Register("cls", &CmdCls, m_Dispatcher.get());
 }
 
 void ConsoleCommandManager::Start()
@@ -43,64 +46,67 @@ void ConsoleCommandManager::RunInputLoop()
 	std::string l_CurrLine;
 	while (!m_bStopSignal)
 	{
-		while (ConsoleAPI::HasNextChar())
+		try
 		{
-			char l_cChr = 0;
-			bool l_bModifierKey = false;
-			if (ConsoleAPI::TryGetNextChar(l_cChr, l_bModifierKey))
+			while (ConsoleAPI::HasNextChar())
 			{
-				if (!l_bModifierKey)
+				char l_cChr = 0;
+				bool l_bModifierKey = false;
+				if (ConsoleAPI::TryGetNextChar(l_cChr, l_bModifierKey))
 				{
-					if (l_cChr == Key_Backspace)
+					if (!l_bModifierKey)
 					{
-						// backspace
-					}
-					else if (l_cChr == Key_Return)
-					{
+						if (l_cChr == Key_Backspace)
+						{
+							if (l_CurrLine.size() > 0)
+							{
+								l_CurrLine = StringUtil::RemoveBack(l_CurrLine, 1);
+								ConsoleAPI::ClearCurrLine();
+							}
+						}
+						else if (l_cChr == Key_Return)
 						{
 							if (l_CurrLine.find_first_not_of("\t\n ") != std::string::npos)
 							{
-								try
-								{
-									ConsoleCommand l_Command(l_CurrLine);
+								ConsoleCommand l_Command(l_CurrLine);
 
-									std::lock_guard<std::mutex> l_Lock(m_Mutex);
-									auto l_Itr = m_Functions.find(l_Command.GetName());
-									if (l_Itr != m_Functions.end())
-									{
-										l_Itr->second->_Call(l_Command.GetArgs());
-									}
-									else
-									{
-										LOG("Unknown command: " << l_Command.GetName(), "console", Info);
-									}
-								}
-								catch (Exception& e)
+								std::lock_guard<std::mutex> l_Lock(m_Mutex);
+								auto l_Itr = m_Functions.find(l_Command.GetName());
+								if (l_Itr != m_Functions.end())
 								{
-									LOG_EXCEPTION(e, "console", Fatal);
+									l_Itr->second->_Call(l_Command.GetArgs());
+								}
+								else
+								{
+									LOG("Unknown command: " << l_Command.GetName(), "console", Info);
 								}
 							}
+							std::stringstream l_CmdLine;
+							l_CmdLine << "Hawk " << Version::c_EngineVersion << ">" << l_CurrLine;
+							ConsoleAPI::BeginWrite();
+							ConsoleAPI::WriteLine(l_CmdLine.str(), ConsoleAPI::Color::White, ConsoleAPI::Color::None);
+							ConsoleAPI::EndWrite();
+							l_CurrLine.clear();
 						}
-						std::stringstream l_CmdLine;
-						l_CmdLine << "Hawk " << Version::c_EngineVersion << ">" << l_CurrLine;
-						ConsoleAPI::BeginWrite();
-						ConsoleAPI::WriteLine(l_CmdLine.str(), ConsoleAPI::Color::White, ConsoleAPI::Color::None);
-						ConsoleAPI::EndWrite();
-						l_CurrLine.clear();
-					}
-					else
-					{
-						l_CurrLine += l_cChr;
+						else
+						{
+							l_CurrLine += l_cChr;
+						}
 					}
 				}
 			}
+			std::stringstream l_CmdLineStream;
+			l_CmdLineStream << "\rHawk " << Version::c_EngineVersion << ">" << l_CurrLine << "\r";
+			std::string l_Line = l_CmdLineStream.str();
+			ConsoleAPI::BeginWrite();
+			ConsoleAPI::Write(l_Line, ConsoleAPI::Color::White, ConsoleAPI::Color::None);
+			ConsoleAPI::EndWrite();
+			std::this_thread::sleep_for(std::chrono::milliseconds(25));
 		}
-		std::stringstream l_CmdLine;
-		l_CmdLine << "\rHawk " << Version::c_EngineVersion << ">" << l_CurrLine << "\r";
-		ConsoleAPI::BeginWrite();
-		ConsoleAPI::Write(l_CmdLine.str(), ConsoleAPI::Color::White, ConsoleAPI::Color::None);
-		ConsoleAPI::EndWrite();
-		std::this_thread::sleep_for(std::chrono::milliseconds(25));
+		catch (Exception& e)
+		{
+			LOG_EXCEPTION(e, "console", Fatal);
+		}
 	}
 }
 

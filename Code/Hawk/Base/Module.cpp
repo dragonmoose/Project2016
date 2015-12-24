@@ -78,8 +78,10 @@ void Module::Update(const Duration& p_Duration)
 
 void Module::SetPaused(bool p_bPaused)
 {
+	LOGM_IF(p_bPaused != m_bPaused, "Pause state changed. IsPaused=" << p_bPaused, Debug);
 	m_bPaused = p_bPaused;
 }
+
 bool Module::IsPaused() const
 {
 	return m_bPaused;

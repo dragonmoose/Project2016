@@ -245,6 +245,19 @@ void ConsoleAPI::ClearScreen()
 	THROW_IF_NOT(::SetConsoleCursorPosition(n_hOut, l_StartPos), "Failed to set console position");
 }
 
+void ConsoleAPI::ClearCurrLine()
+{
+	CONSOLE_SCREEN_BUFFER_INFO l_ScreenBufferInfo;
+	DWORD l_dwCharsWritten;
+
+	std::lock_guard<std::mutex> l_Lock(n_Mutex);
+	THROW_IF_NOT(::GetConsoleScreenBufferInfo(n_hOut, &l_ScreenBufferInfo), "Failed to get console screen buffer info");
+	COORD l_StartPos = { 0, l_ScreenBufferInfo.dwCursorPosition.Y };
+
+	THROW_IF_NOT(::FillConsoleOutputCharacter(n_hOut, (TCHAR) ' ', l_ScreenBufferInfo.dwSize.X, l_StartPos, &l_dwCharsWritten), "Failed to fill console");
+	THROW_IF_NOT(::SetConsoleCursorPosition(n_hOut, l_StartPos), "Failed to set console position");
+}
+
 void ConsoleAPI::Stop()
 {
 	THROW_IF_NOT(::FreeConsole(), "Failed to free console");

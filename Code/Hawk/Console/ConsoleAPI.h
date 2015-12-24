@@ -30,6 +30,7 @@ namespace ConsoleAPI
 	bool HasNextChar();
 	bool TryGetNextChar(char& p_cChar, bool& p_bIsModifierKey);
 	void ClearScreen();
+	void ClearCurrLine();
 	void Stop();
 	bool Initialized();
 }

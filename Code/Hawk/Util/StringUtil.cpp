@@ -19,4 +19,14 @@ bool StringUtil::Contains(const std::string& p_Str, const std::string& p_SubStr)
 	return boost::algorithm::contains(p_Str, p_SubStr);
 }
 
+std::string StringUtil::RemoveBack(const std::string& p_Str, size_t p_Num)
+{
+	if (p_Num <= p_Str.size())
+	{
+		return p_Str.substr(0, p_Str.size() - p_Num);
+	}
+	LOG("Attempting to remove more characters than size of string. String=" << p_Str << " NumChars=" << p_Num, "util", Error);
+	return p_Str;
+}
+
 }

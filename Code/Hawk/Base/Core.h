@@ -29,25 +29,14 @@ public:
 	ModuleID AddModule(ThreadID p_ThreadID)
 	{
 		THROW_IF(p_ThreadID == ThreadID_Invalid, "Invalid thread id");
-		ModuleThreads_t::iterator l_Itr = FindByThreadID(p_ThreadID);
 
-		THROW_IF(l_Itr == m_ModuleThreads.end(), "No thread with ID " << p_ThreadID << " exists");
-		return (**l_Itr).Add<T>();
+		ModuleThread* l_ModuleThread = nullptr;
+		THROW_IF_NOT(TryGetModuleThread(p_ThreadID, &l_ModuleThread), "No thread with ID " << p_ThreadID << " exists");
+		return l_ModuleThread->Add<T>();
 	}
 
-	void RemoveModule(ModuleID p_ID)
-	{
-		THROW_IF(p_ID == ModuleID_Invalid, "Invalid module ID");
-		for (auto& l_ModuleThread : m_ModuleThreads)
-		{
-			if (l_ModuleThread->TryRemove(p_ID))
-			{
-				LOG("Removed module with ID=" << p_ID << " from thread=" << l_ModuleThread->GetThreadID(), "core", Debug);
-				return;
-			}
-		}
-		THROW("Failed to remove module with ID=" << p_ID << " (not found");
-	}
+	void RemoveModule(ModuleID p_ID);
+	void PauseModule(ModuleID p_ID, bool p_bPaused);
 	void Run();
 
 private:
@@ -57,7 +46,8 @@ private:
 	void StartModules();
 	void StopModules();
 
-	ModuleThreads_t::iterator FindByThreadID(ThreadID p_ThreadID);
+	bool TryGetModuleThread(ThreadID p_ThreadID, ModuleThread** p_ModuleThread) const;
+	bool TryGetModule(ModuleID p_ID, Module** p_Module) const;
 
 #ifdef HAWK_DEBUG
 	void RegisterConsole();

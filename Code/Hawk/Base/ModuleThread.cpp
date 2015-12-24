@@ -27,6 +27,18 @@ bool ModuleThread::TryRemove(ModuleID p_ID)
 	return false;
 }
 
+bool ModuleThread::TryGetModule(ModuleID p_ID, Module** p_Module) const
+{
+	std::lock_guard<std::mutex> l_Lock(m_Mutex);
+	Modules_t::const_iterator l_Itr = FindByID(p_ID);
+	if (l_Itr != m_Modules.end())
+	{
+		*p_Module = l_Itr->get();
+		return true;
+	}
+	return false;
+}
+
 void ModuleThread::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
 {
 	for (auto& l_Module : m_Modules)

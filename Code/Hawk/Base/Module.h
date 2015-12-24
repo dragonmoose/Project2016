@@ -62,7 +62,7 @@ namespace Hawk
 	private:
 		std::unique_ptr<EventManager> m_EventManager;
 		std::shared_ptr<Dispatcher> m_Dispatcher;
-		bool m_bPaused;
+		std::atomic_bool m_bPaused;
 
 		static std::atomic_uint s_uiNextModuleID;
 		ModuleID m_ID;

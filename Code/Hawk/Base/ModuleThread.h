@@ -33,6 +33,7 @@ public:
 	}
 
 	bool TryRemove(ModuleID p_ID);
+	bool TryGetModule(ModuleID p_ID, Module** p_Module) const;
 
 	void Initialize(std::shared_ptr<EventRouter>& p_EventRouter);
 	const std::string& GetName() const;
@@ -57,7 +58,7 @@ private:
 	Modules_t m_Modules;
 	Time m_OldTime;
 	Thread m_Thread;
-	std::mutex m_Mutex;
+	mutable std::mutex m_Mutex;
 
 #ifdef HAWK_DEBUG
 	std::shared_ptr<ConsoleCommandManager> m_ConsoleCommandManager;

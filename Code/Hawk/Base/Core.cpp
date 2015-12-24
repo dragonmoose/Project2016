@@ -59,6 +59,29 @@ void Core::OpenWindow(HINSTANCE p_hInstance, const std::string& p_Name)
 	}
 }
 
+void Core::RemoveModule(ModuleID p_ID)
+{
+	THROW_IF(p_ID == ModuleID_Invalid, "Invalid module ID");
+	for (auto& l_ModuleThread : m_ModuleThreads)
+	{
+		if (l_ModuleThread->TryRemove(p_ID))
+		{
+			LOG("Removed module with ID=" << p_ID << " from thread=" << l_ModuleThread->GetThreadID(), "core", Debug);
+			return;
+		}
+	}
+	THROW("Failed to remove module with ID=" << p_ID << " (not found");
+}
+
+void Core::PauseModule(ModuleID p_ID, bool p_bPaused)
+{
+	Module* l_Module = nullptr;
+	if (TryGetModule(p_ID, &l_Module))
+	{
+		l_Module->SetPaused(p_bPaused);
+	}
+}
+
 void Core::Run()
 {
 	InitializeModules();
@@ -115,18 +138,38 @@ void Core::StopModules()
 	}
 }
 
-Core::ModuleThreads_t::iterator Core::FindByThreadID(ThreadID p_ThreadID)
+bool Core::TryGetModuleThread(ThreadID p_ThreadID, ModuleThread** p_ModuleThread) const
 {
-	return std::find_if(m_ModuleThreads.begin(), m_ModuleThreads.end(), [p_ThreadID](const std::unique_ptr<ModuleThread>& p_ModuleThread)
+	auto l_Itr = std::find_if(m_ModuleThreads.begin(), m_ModuleThreads.end(), [p_ThreadID](const std::unique_ptr<ModuleThread>& p_ModuleThread)
 	{
 		return p_ThreadID == p_ModuleThread->GetThreadID();
 	});
+
+	if (l_Itr != m_ModuleThreads.end())
+	{
+		*p_ModuleThread = l_Itr->get();
+		return true;
+	}
+	return false;
+}
+
+bool Core::TryGetModule(ModuleID p_ID, Module** p_Module) const
+{
+	for (const auto& l_ModuleThread : m_ModuleThreads)
+	{
+		if (l_ModuleThread->TryGetModule(p_ID, p_Module))
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 #ifdef HAWK_DEBUG
 void Core::RegisterConsole()
 {
 	m_ConsoleCommandManager->Register("module.remove", this, &Core::RemoveModule, m_Dispatcher.get());
+	m_ConsoleCommandManager->Register("module.pause", this, &Core::PauseModule, m_Dispatcher.get());
 }
 #endif
 	
