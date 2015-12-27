@@ -51,10 +51,10 @@ namespace Hawk
 		}
 
 		template<class Object_t, class... Args_t>
-		void RegisterConsole(const std::string& p_Name, Object_t* p_Object, void(Object_t::*p_Func)(Args_t...))
+		void RegisterConsole(const std::string& p_Name, Object_t* p_Object, void(Object_t::*p_Func)(Args_t...), const std::string& p_HelpText = std::string())
 		{
 #ifdef HAWK_DEBUG
-			m_ConsoleCommandManager->Register(p_Name, p_Object, p_Func, m_Dispatcher.get());
+			m_ConsoleCommandManager->Register(p_Name, p_Object, p_Func, m_Dispatcher.get(), p_HelpText);
 			m_RegisteredConsoleCommands.push_back(p_Name);
 #endif
 		}

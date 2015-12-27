@@ -5,30 +5,28 @@
 #include "Console/ConsoleAPI.h"
 #include "System/Version.h"
 #include "Util/StringUtil.h"
+#include <algorithm>
+#include <iomanip>
 
 namespace Hawk {
 
-namespace
+namespace 
 {
 	const char* c_Name("Console");
 	const char Key_Shift = 75;
 	const char Key_Return = 13;
 	const char Key_Backspace = 8;
-	
-	void CmdQuit() { ::PostQuitMessage(-1); }
-	void CmdCls() { ConsoleAPI::ClearScreen(); }
 }
 
 ConsoleCommandManager::ConsoleCommandManager(std::shared_ptr<Dispatcher>& p_Dispatcher)
 : m_Dispatcher(p_Dispatcher)
 , m_bStopSignal(false)
 {
-	Register("quit", &CmdQuit, m_Dispatcher.get());
-	Register("cls", &CmdCls, m_Dispatcher.get());
 }
 
 void ConsoleCommandManager::Start()
 {
+	Register();
 	m_Thread = std::thread(&ConsoleCommandManager::RunInputLoop, this);
 }
 
@@ -66,6 +64,12 @@ void ConsoleCommandManager::RunInputLoop()
 						}
 						else if (l_cChr == Key_Return)
 						{
+							std::stringstream l_CmdLine;
+							l_CmdLine << "Hawk " << Version::c_EngineVersion << ">" << l_CurrLine;
+							ConsoleAPI::BeginWrite();
+							ConsoleAPI::WriteLine(l_CmdLine.str(), ConsoleAPI::Color::White, ConsoleAPI::Color::None);
+							ConsoleAPI::EndWrite();
+
 							if (l_CurrLine.find_first_not_of("\t\n ") != std::string::npos)
 							{
 								ConsoleCommand l_Command(l_CurrLine);
@@ -81,11 +85,6 @@ void ConsoleCommandManager::RunInputLoop()
 									LOG("Unknown command: " << l_Command.GetName(), "console", Info);
 								}
 							}
-							std::stringstream l_CmdLine;
-							l_CmdLine << "Hawk " << Version::c_EngineVersion << ">" << l_CurrLine;
-							ConsoleAPI::BeginWrite();
-							ConsoleAPI::WriteLine(l_CmdLine.str(), ConsoleAPI::Color::White, ConsoleAPI::Color::None);
-							ConsoleAPI::EndWrite();
 							l_CurrLine.clear();
 						}
 						else
@@ -123,5 +122,34 @@ void ConsoleCommandManager::Unregister(const std::string& p_Name)
 		LOG("Failed to unregister - command not found: " << l_Name, "console", Error);
 	}
 }
+
+void ConsoleCommandManager::Register()
+{
+	Register("quit", this, &ConsoleCommandManager::CmdQuit, m_Dispatcher.get(), "Quits the application");
+	Register("help", this, &ConsoleCommandManager::CmdListCommands, m_Dispatcher.get(), "Lists available commands. Args: [filter]");
+	Register("cls", &ConsoleAPI::ClearScreen, m_Dispatcher.get(), "Clears the console buffer");
+}
+
+void ConsoleCommandManager::CmdQuit()
+{
+	::PostQuitMessage(-1);
+}
+
+void ConsoleCommandManager::CmdListCommands(const std::string& p_Filter)
+{
+	CONSOLE_WRITE_SCOPE();
+	std::string l_Filter = StringUtil::ToLower(p_Filter);
+	std::cout << "----------------------- Available commands -----------------------\n";
+	
+	for (const auto& l_Cmd : m_Functions)
+	{
+		if (l_Filter.empty() || StringUtil::Contains(l_Cmd.first, l_Filter))
+		{
+			std::cout << std::setw(35) << std::left << l_Cmd.first << l_Cmd.second->GetHelpText() << "\n";
+		}
+	}
+	std::cout << "------------------------------------------------------------------\n";
+}
+
 }
 #endif

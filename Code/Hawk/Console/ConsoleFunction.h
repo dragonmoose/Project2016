@@ -12,84 +12,90 @@
 
 namespace Hawk {
 
+namespace CF {
+
 class IConsoleFunction
 {
 public:
-	IConsoleFunction() = default;
+	IConsoleFunction(const std::string& p_HelpText) : m_HelpText(p_HelpText) {}
 	virtual ~IConsoleFunction() = default;
 	IConsoleFunction(const IConsoleFunction&) = delete;
 	IConsoleFunction& operator=(const IConsoleFunction&) = delete;
-	bool _Call(const std::vector<std::string>& p_Args) { return Call(p_Args); }
+	void _Call(const std::vector<std::string>& p_Args) { Call(p_Args); }
+	const std::string& GetHelpText() const { return m_HelpText; }
 
 protected:
-	virtual bool Call(const std::vector<std::string>& p_Args) = 0;
+	virtual void Call(const std::vector<std::string>& p_Args) = 0;
+
+private:
+	std::string m_HelpText;
 };
+
+template<class R, class T>
+R LexicalCastWithDefault(T p_Value)
+{
+	try
+	{
+		return boost::lexical_cast<R>(p_Value);
+	}
+	catch (...)
+	{
+		return R();
+	}
+}
+
+inline std::vector<std::string> GetFuncArgs(const std::vector<std::string>& p_Args, size_t p_NumArgs)
+{
+	std::vector<std::string> l_Args(p_Args);
+	while (l_Args.size() < p_NumArgs)
+	{
+		l_Args.push_back(std::string());
+	}
+	return l_Args;
+}
 	
 template<class TypeList_t, class Func, class Object_t, std::size_t... Index>
-bool DispatchMemberFunction(
+void DispatchMemberFunction(
 	Func p_Func,
 	Object_t* p_Object,
 	const std::vector<std::string>& p_Args,
 	std::index_sequence<Index...>,
 	Dispatcher* p_Dispatcher)
 {
-	try
-	{
-		p_Dispatcher->Post(
-			std::bind(p_Func, p_Object, boost::lexical_cast<boost::mpl::at_c<TypeList_t, Index>::type>(p_Args[Index])...)
-		);
-	}
-	catch (boost::bad_lexical_cast&)
-	{
-		LOG("Failed to parse arguments when attempting to dispatch member console function", "console", Info);
-	}
-	return false;
+	p_Dispatcher->Post(
+		std::bind(p_Func, p_Object, LexicalCastWithDefault<boost::mpl::at_c<TypeList_t, Index>::type>(p_Args[Index])...)
+	);
 }
 
 template<class TypeList_t, class Func, std::size_t... Index>
-bool DispatchFreeFunction(
+void DispatchFreeFunction(
 	Func p_Func,
 	const std::vector<std::string>& p_Args,
 	std::index_sequence<Index...>,
 	Dispatcher* p_Dispatcher)
 {
-	try
-	{
-		p_Dispatcher->Post(
-			std::bind(p_Func, boost::lexical_cast<boost::mpl::at_c<TypeList_t, Index>::type>(p_Args[Index])...)
-			);
-	}
-	catch (boost::bad_lexical_cast&)
-	{
-		LOG("Failed to parse arguments when attempting to dispatch free console function", "console", Info);
-	}
-	return false;
+	p_Dispatcher->Post(
+		std::bind(p_Func, LexicalCastWithDefault<boost::mpl::at_c<TypeList_t, Index>::type>(p_Args[Index])...)
+	);
 }
 
 template<class Object_t, class... Args_t>
 class MemberConsoleFunction final : public IConsoleFunction
 {
 public:
-	MemberConsoleFunction(Object_t* p_Object, void(Object_t::*p_Func)(Args_t...), Dispatcher* p_Dispatcher)
-	: m_Object(p_Object)
+	MemberConsoleFunction(Object_t* p_Object, void(Object_t::*p_Func)(Args_t...), Dispatcher* p_Dispatcher, const std::string& p_HelpText)
+	: IConsoleFunction(p_HelpText)
+	, m_Object(p_Object)
 	, m_Func(p_Func)
 	, m_Dispatcher(p_Dispatcher)
 	{
 	}
 
-	bool Call(const std::vector<std::string>& p_Args) override
+	void Call(const std::vector<std::string>& p_Args) override
 	{
 		constexpr size_t c_NumArgs = sizeof...(Args_t);
-		if (p_Args.size() == c_NumArgs)
-		{
-			using Index_Seq_t = std::make_index_sequence<c_NumArgs>;
-			return DispatchMemberFunction<TypeList_t>(m_Func, m_Object, p_Args, Index_Seq_t(), m_Dispatcher);
-		}
-		else
-		{
-			LOG("Wrong number of arguments passed to member function: " << p_Args.size() << "/" << c_NumArgs, "console", Info);
-		}
-		return false;
+		using Index_Seq_t = std::make_index_sequence<c_NumArgs>;
+		DispatchMemberFunction<TypeList_t>(m_Func, m_Object, GetFuncArgs(p_Args, c_NumArgs), Index_Seq_t(), m_Dispatcher);
 	}
 
 private:
@@ -103,25 +109,18 @@ template<class... Args_t>
 class FreeConsoleFunction final : public IConsoleFunction
 {
 public:
-	FreeConsoleFunction(void(*p_Func)(Args_t...), Dispatcher* p_Dispatcher)
-	: m_Func(p_Func)
+	FreeConsoleFunction(void(*p_Func)(Args_t...), Dispatcher* p_Dispatcher, const std::string& p_HelpText)
+	: IConsoleFunction(p_HelpText)
+	, m_Func(p_Func)
 	, m_Dispatcher(p_Dispatcher)
 	{
 	}
 
-	bool Call(const std::vector<std::string>& p_Args) override
+	void Call(const std::vector<std::string>& p_Args) override
 	{
 		constexpr size_t c_NumArgs = sizeof...(Args_t);
-		if (p_Args.size() == c_NumArgs)
-		{
-			using Index_Seq_t = std::make_index_sequence<c_NumArgs>;
-			return DispatchFreeFunction<TypeList_t>(m_Func, p_Args, Index_Seq_t(), m_Dispatcher);
-		}
-		else
-		{
-			LOG("Wrong number of arguments passed to free function: " << p_Args.size() << "/" << c_NumArgs, "console", Info);
-		}
-		return false;
+		using Index_Seq_t = std::make_index_sequence<c_NumArgs>;
+		DispatchFreeFunction<TypeList_t>(m_Func, GetFuncArgs(p_Args, c_NumArgs), Index_Seq_t(), m_Dispatcher);
 	}
 
 private:
@@ -130,5 +129,6 @@ private:
 	Dispatcher* m_Dispatcher;
 };
 
+}
 }
 #endif

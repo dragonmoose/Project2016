@@ -73,7 +73,7 @@ void Core::RemoveModule(ModuleID p_ID)
 	THROW("Failed to remove module with ID=" << p_ID << " (not found");
 }
 
-void Core::PauseModule(ModuleID p_ID, bool p_bPaused)
+void Core::SetPaused(ModuleID p_ID, bool p_bPaused)
 {
 	Module* l_Module = nullptr;
 	if (TryGetModule(p_ID, &l_Module))
@@ -168,8 +168,8 @@ bool Core::TryGetModule(ModuleID p_ID, Module** p_Module) const
 #ifdef HAWK_DEBUG
 void Core::RegisterConsole()
 {
-	m_ConsoleCommandManager->Register("module.remove", this, &Core::RemoveModule, m_Dispatcher.get());
-	m_ConsoleCommandManager->Register("module.pause", this, &Core::PauseModule, m_Dispatcher.get());
+	m_ConsoleCommandManager->Register("module.remove", this, &Core::RemoveModule, m_Dispatcher.get(), "Removes the specified module. Args: [moduleID]");
+	m_ConsoleCommandManager->Register("module.setPaused", this, &Core::SetPaused, m_Dispatcher.get(), "Pause/resume module. Args: [mouleID] [0/1]");
 }
 #endif
 	

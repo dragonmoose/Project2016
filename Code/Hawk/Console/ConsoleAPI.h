@@ -33,6 +33,17 @@ namespace ConsoleAPI
 	void ClearCurrLine();
 	void Stop();
 	bool Initialized();
+
+	class WriteScope final
+	{
+	public:
+		WriteScope() { BeginWrite(); }
+		~WriteScope() { EndWrite(); }
+
+		WriteScope(const WriteScope&) = delete;
+		WriteScope& operator=(const WriteScope&) = delete;
+	};
+}
 }
 
-}
+#define CONSOLE_WRITE_SCOPE()			ConsoleAPI::WriteScope _WriteScope_;

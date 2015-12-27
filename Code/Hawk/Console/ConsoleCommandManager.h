@@ -10,7 +10,7 @@
 #include <mutex>
 #include <atomic>
 #include <thread>
-#include <unordered_map>
+#include <map>
 
 namespace Hawk {
 
@@ -29,14 +29,14 @@ public:
 	void Stop();
 
 	template<class Object_t, class... Args_t>
-	void Register(const std::string& p_Name, Object_t* p_Object, void(Object_t::*p_Func)(Args_t...), Dispatcher* p_Dispatcher)
+	void Register(const std::string& p_Name, Object_t* p_Object, void(Object_t::*p_Func)(Args_t...), Dispatcher* p_Dispatcher, const std::string& p_HelpText)
 	{
 		try
 		{
 			THROW_IF_NOT(p_Dispatcher, "NULL dispatcher");
 
 			std::lock_guard<std::mutex> l_Lock(m_Mutex);
-			bool l_bInserted = m_Functions.insert(FunctionMap_t::value_type(StringUtil::ToLower(p_Name), std::make_unique<MemberConsoleFunction<Object_t, Args_t...>>(p_Object, p_Func, p_Dispatcher))).second;
+			bool l_bInserted = m_Functions.insert(FunctionMap_t::value_type(StringUtil::ToLower(p_Name), std::make_unique<CF::MemberConsoleFunction<Object_t, Args_t...>>(p_Object, p_Func, p_Dispatcher, p_HelpText))).second;
 			THROW_IF_NOT(l_bInserted, "Failed to register member console function (already registered?): " << p_Name);
 		}
 		catch (Exception& e)
@@ -46,14 +46,14 @@ public:
 	}
 
 	template<class... Args_t>
-	void Register(const std::string& p_Name, void(*p_Func)(Args_t...), Dispatcher* p_Dispatcher)
+	void Register(const std::string& p_Name, void(*p_Func)(Args_t...), Dispatcher* p_Dispatcher, const std::string& p_HelpText)
 	{
 		try
 		{
 			THROW_IF_NOT(p_Dispatcher, "NULL dispatcher");
 
 			std::lock_guard<std::mutex> l_Lock(m_Mutex);
-			bool l_bInserted = m_Functions.insert(FunctionMap_t::value_type(StringUtil::ToLower(p_Name), std::make_unique<FreeConsoleFunction<Args_t...>>(p_Func, p_Dispatcher))).second;
+			bool l_bInserted = m_Functions.insert(FunctionMap_t::value_type(StringUtil::ToLower(p_Name), std::make_unique<CF::FreeConsoleFunction<Args_t...>>(p_Func, p_Dispatcher, p_HelpText))).second;
 			THROW_IF_NOT(l_bInserted, "Failed to register free console function (already registered?): " << p_Name);
 		}
 		catch (Exception& e)
@@ -67,12 +67,16 @@ public:
 private:
 	void RunInputLoop();
 
+	void Register();
+	void CmdQuit();
+	void CmdListCommands(const std::string& p_Filter = std::string());
+
 	std::thread m_Thread;
 	std::atomic_bool m_bStopSignal;
 	std::shared_ptr<Dispatcher> m_Dispatcher;
 
 	mutable std::mutex m_Mutex;
-	using FunctionMap_t = std::unordered_map<std::string, std::unique_ptr<IConsoleFunction>>;
+	using FunctionMap_t = std::map<std::string, std::unique_ptr<CF::IConsoleFunction>>;
 	FunctionMap_t m_Functions;
 };
 }

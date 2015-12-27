@@ -36,7 +36,7 @@ public:
 	}
 
 	void RemoveModule(ModuleID p_ID);
-	void PauseModule(ModuleID p_ID, bool p_bPaused);
+	void SetPaused(ModuleID p_ID, bool p_bPaused);
 	void Run();
 
 private:
