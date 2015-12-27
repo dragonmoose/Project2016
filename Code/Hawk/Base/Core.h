@@ -51,6 +51,7 @@ private:
 
 #ifdef HAWK_DEBUG
 	void RegisterConsole();
+	void CmdListModules();
 #endif
 
 	ModuleThreads_t m_ModuleThreads;

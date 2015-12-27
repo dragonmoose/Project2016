@@ -41,6 +41,7 @@ public:
 
 #ifdef HAWK_DEBUG
 	void SetConsoleCommandManager(std::shared_ptr<ConsoleCommandManager>& p_ConsoleCommandManager);
+	void DebugPrint();
 #endif
 
 	void Start();

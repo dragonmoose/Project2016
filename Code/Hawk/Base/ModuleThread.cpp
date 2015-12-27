@@ -5,6 +5,7 @@
 #include "System/Duration.h"
 #include "Events/EventManager.h"
 #include "Util/StringUtil.h"
+#include <iomanip>
 
 namespace Hawk {
 
@@ -64,6 +65,17 @@ ThreadID ModuleThread::GetThreadID() const
 void ModuleThread::SetConsoleCommandManager(std::shared_ptr<ConsoleCommandManager>& p_ConsoleCommandManager)
 {
 	m_ConsoleCommandManager = p_ConsoleCommandManager;
+}
+
+void ModuleThread::DebugPrint()
+{
+	std::cout << "[" << GetName() << " #" << GetThreadID() << "]\n";
+	for (const auto& l_Module : m_Modules)
+	{
+		std::cout << "\t" << l_Module->GetLogDesc() << "\n";
+		std::cout << "\t\t" << "Paused: " << l_Module->IsPaused() << "\n";
+	}
+	std::cout << "\n";
 }
 #endif
 

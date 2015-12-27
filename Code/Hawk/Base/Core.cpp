@@ -170,7 +170,18 @@ void Core::RegisterConsole()
 {
 	m_ConsoleCommandManager->Register("module.remove", this, &Core::RemoveModule, m_Dispatcher.get(), "Removes the specified module. Args: [moduleID]");
 	m_ConsoleCommandManager->Register("module.setPaused", this, &Core::SetPaused, m_Dispatcher.get(), "Pause/resume module. Args: [mouleID] [0/1]");
+	m_ConsoleCommandManager->Register("module.list", this, &Core::CmdListModules, m_Dispatcher.get(), "Lists modules");
 }
+
+void Core::CmdListModules()
+{
+	CONSOLE_WRITE_SCOPE();
+	for (const auto& l_ModuleThread : m_ModuleThreads)
+	{
+		l_ModuleThread->DebugPrint();
+	}
+}
+
 #endif
 	
 }
