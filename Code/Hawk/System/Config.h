@@ -1,6 +1,7 @@
 #pragma once
-#include "DllExport.h"
-#include "Time.h"
+#include "Console/Logger.h"
+#include "System/DllExport.h"
+#include "System/Time.h"
 #include <boost/property_tree/ptree.hpp>
 #include <mutex>
 
@@ -13,10 +14,16 @@ public:
 	void Update();
 
 	template<class T>
-	T Get(const std::string& p_Name, const T& p_Default) const
+	T Get(const std::string& p_Key, const T& p_Default) const
 	{
 		std::lock_guard<std::mutex> l_Lock(m_Mutex);
-		return m_Properties.get<T>(p_Name, p_Default);
+		return m_Properties.get<T>(p_Key, p_Default);
+	}
+
+	void Set(const std::string& p_Key, const std::string& p_Value)
+	{
+		std::lock_guard<std::mutex> l_Lock(m_Mutex);
+		m_Properties.put(p_Key, p_Value);
 	}
 	void Load();
 

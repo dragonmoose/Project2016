@@ -70,6 +70,8 @@ private:
 	void Register();
 	void CmdQuit();
 	void CmdListCommands(const std::string& p_Filter = std::string());
+	void CmdGetConfig(const std::string& p_Key);
+	void CmdToggleLog();
 
 	std::thread m_Thread;
 	std::atomic_bool m_bStopSignal;

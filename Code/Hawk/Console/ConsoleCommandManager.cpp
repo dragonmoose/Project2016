@@ -128,6 +128,9 @@ void ConsoleCommandManager::Register()
 	Register("quit", this, &ConsoleCommandManager::CmdQuit, m_Dispatcher.get(), "Quits the application");
 	Register("help", this, &ConsoleCommandManager::CmdListCommands, m_Dispatcher.get(), "Lists available commands. Args: [filter]");
 	Register("cls", &ConsoleAPI::ClearScreen, m_Dispatcher.get(), "Clears the console buffer");
+	Register("config.get", this, &ConsoleCommandManager::CmdGetConfig, m_Dispatcher.get(), "Gets the config variable. Args: [key]");
+	Register("config.set", &Config::Instance(), &Config::Set, m_Dispatcher.get(), "Sets the config variable. Args: [key] [value]");
+	Register("-", this, &ConsoleCommandManager::CmdToggleLog, m_Dispatcher.get(), "Toggles console log on/off");
 }
 
 void ConsoleCommandManager::CmdQuit()
@@ -149,6 +152,19 @@ void ConsoleCommandManager::CmdListCommands(const std::string& p_Filter)
 		}
 	}
 	std::cout << "------------------------------------------------------------------\n";
+}
+
+void ConsoleCommandManager::CmdGetConfig(const std::string& p_Key)
+{
+	CONSOLE_WRITE_SCOPE();
+	std::cout << Config::Instance().Get<std::string>(p_Key, "Config key not found") << "\n";
+}
+
+void ConsoleCommandManager::CmdToggleLog()
+{
+	bool l_bCurrValue = Config::Instance().Get("log.enabled", true);
+	std::string l_NewValue = l_bCurrValue ? "false" : "true";
+	Config::Instance().Set("log.enabled", l_NewValue);
 }
 
 }

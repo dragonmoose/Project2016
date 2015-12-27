@@ -68,11 +68,11 @@ void Logger::Log(const std::string& p_Msg, const std::string& p_Module, const st
 
 bool Logger::ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo, const std::string& p_Module, Level p_Level)
 {
-	if (!Config::Instance().Get("Log.enabled", true)) return false;
-	if (p_Level < StringToLevel(Config::Instance().Get<std::string>("Log.level", ""))) return false;
-	if (!MatchesFilter(p_Msg, "Log.filter")) return false;
-	if (!MatchesFilter(p_ThreadInfo, "Log.thread")) return false;
-	if (!MatchesFilter(p_Module, "Log.module")) return false;
+	if (!Config::Instance().Get("log.enabled", true)) return false;
+	if (p_Level < StringToLevel(Config::Instance().Get<std::string>("log.level", ""))) return false;
+	if (!MatchesFilter(p_Msg, "log.filter")) return false;
+	if (!MatchesFilter(p_ThreadInfo, "log.thread")) return false;
+	if (!MatchesFilter(p_Module, "log.module")) return false;
 	return true;
 }
 
