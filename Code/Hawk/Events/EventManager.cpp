@@ -23,4 +23,9 @@ void EventManager::HandleQueued()
 	}
 }
 
+void EventManager::ClearQueued()
+{
+	m_EventQueue->Clear();
+}
+
 }

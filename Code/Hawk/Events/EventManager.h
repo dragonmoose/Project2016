@@ -31,6 +31,7 @@ public:
 	}
 
 	void HandleQueued();
+	void ClearQueued();
 
 	template<class T>
 	void Send(const T& p_Event)

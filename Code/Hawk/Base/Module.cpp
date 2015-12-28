@@ -70,6 +70,10 @@ void Module::_Update(const Duration& p_Duration)
 		m_EventManager->HandleQueued();
 		Update(p_Duration);
 	}
+	else
+	{
+		m_EventManager->ClearQueued();
+	}
 }
 
 void Module::Update(const Duration& p_Duration)

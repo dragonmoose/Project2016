@@ -28,6 +28,13 @@ public:
 		std::lock_guard<std::mutex> l_Lock(m_Mutex);
 		m_Queue.swap(p_Queue);
 	}
+
+	void Clear()
+	{
+		std::lock_guard<std::mutex> l_Lock(m_Mutex);
+		m_Queue.clear();
+	}
+
 private:
 	std::mutex m_Mutex;
 	Queue_t m_Queue;
