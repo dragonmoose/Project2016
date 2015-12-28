@@ -39,6 +39,8 @@ Core::Core(bool p_bConsole)
 
 ThreadID Core::CreateModuleThread(const std::string& p_Name)
 {
+	THROW_IF(ModuleThreadExists(p_Name), "A thread has already been created with name: " << p_Name);
+
 	std::unique_ptr<ModuleThread> l_ModuleThread = std::make_unique<ModuleThread>(p_Name);
 	ThreadID l_ThreadID = l_ModuleThread->GetThreadID();
 	m_ModuleThreads.push_back(std::move(l_ModuleThread));
@@ -138,14 +140,23 @@ void Core::StopModules()
 	}
 }
 
+bool Core::ModuleThreadExists(const std::string& p_Name) const
+{
+	auto l_Itr = std::find_if(m_ModuleThreads.cbegin(), m_ModuleThreads.cend(), [p_Name](const std::unique_ptr<ModuleThread>& p_ModuleThread)
+	{
+		return StringUtil::AreEqual(p_Name, p_ModuleThread->GetName());
+	});
+	return l_Itr != m_ModuleThreads.cend();
+}
+
 bool Core::TryGetModuleThread(ThreadID p_ThreadID, ModuleThread** p_ModuleThread) const
 {
-	auto l_Itr = std::find_if(m_ModuleThreads.begin(), m_ModuleThreads.end(), [p_ThreadID](const std::unique_ptr<ModuleThread>& p_ModuleThread)
+	auto l_Itr = std::find_if(m_ModuleThreads.cbegin(), m_ModuleThreads.cend(), [p_ThreadID](const std::unique_ptr<ModuleThread>& p_ModuleThread)
 	{
 		return p_ThreadID == p_ModuleThread->GetThreadID();
 	});
 
-	if (l_Itr != m_ModuleThreads.end())
+	if (l_Itr != m_ModuleThreads.cend())
 	{
 		*p_ModuleThread = l_Itr->get();
 		return true;

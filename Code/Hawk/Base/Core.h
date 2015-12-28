@@ -46,6 +46,7 @@ private:
 	void StartModules();
 	void StopModules();
 
+	bool ModuleThreadExists(const std::string& p_Name) const;
 	bool TryGetModuleThread(ThreadID p_ThreadID, ModuleThread** p_ModuleThread) const;
 	bool TryGetModule(ModuleID p_ID, Module** p_Module) const;
 
