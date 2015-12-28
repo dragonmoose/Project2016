@@ -13,3 +13,8 @@ struct TestEvent2 : public Hawk::IEvent
 	int m_iValue;
 	//std::string m_Str;
 };
+
+struct TestEvent3 : public Hawk::IEvent
+{
+	std::string m_Str;
+};

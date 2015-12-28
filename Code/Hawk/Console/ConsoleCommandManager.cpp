@@ -17,8 +17,6 @@ namespace
 	const char Key_Return = 13;
 	const char Key_Backspace = 8;
 	const char Key_Tab = 9;
-
-	const std::vector<std::string> c_CycleIgnoreList = { "-" };
 }
 
 ConsoleCommandManager::ConsoleCommandManager(std::shared_ptr<Dispatcher>& p_Dispatcher)
@@ -154,7 +152,7 @@ void ConsoleCommandManager::CmdListCommands(const std::string& p_Filter)
 {
 	CONSOLE_WRITE_SCOPE();
 	std::string l_Filter = StringUtil::ToLower(p_Filter);
-	std::cout << "----------------------- Available commands -----------------------\n";
+	std::cout << "-------------------------------------------------------------------------------------------------\n";
 	
 	for (const auto& l_Cmd : m_Functions)
 	{
@@ -163,7 +161,7 @@ void ConsoleCommandManager::CmdListCommands(const std::string& p_Filter)
 			std::cout << std::setw(35) << std::left << l_Cmd.first << l_Cmd.second->GetHelpText() << "\n";
 		}
 	}
-	std::cout << "------------------------------------------------------------------\n";
+	std::cout << "-------------------------------------------------------------------------------------------------\n";
 }
 
 void ConsoleCommandManager::CmdGetConfig(const std::string& p_Key)

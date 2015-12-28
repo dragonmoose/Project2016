@@ -24,6 +24,12 @@ public:
 			LOGM("Value=" << p_Event.m_iValue, Debug);
 		}
 		);
+
+		p_EventManager.Register<TestEvent3>([this](const TestEvent3& p_Event)
+		{
+			LOGM("Event received. Msg=" << p_Event.m_Str, Info);
+		}
+		);
 	}
 	void Update(const Hawk::Duration& p_Duration) override
 	{

@@ -31,9 +31,17 @@ public:
 		LOGM("The text=" << p_Text << " sum=" << (a + b), Info);
 	}
 
+	void TestConsoleCmd2(const std::string& p_Text)
+	{
+		TestEvent3 l_Event;
+		l_Event.m_Str = p_Text;
+		SendEvent(l_Event);
+	}
+
 	void InitializeConsole()
 	{
 		RegisterConsole("test.cmd", this, &TestModule::TestConsoleCmd);
+		RegisterConsole("test.event", this, &TestModule::TestConsoleCmd2, "Sends test event");
 	}
 
 	void RegisterEvents(Hawk::EventManager& p_EventManager) override
