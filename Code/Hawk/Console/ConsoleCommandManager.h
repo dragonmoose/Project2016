@@ -73,6 +73,8 @@ private:
 	void CmdGetConfig(const std::string& p_Key);
 	void CmdToggleLog();
 
+	std::string GetNextCommand(const std::string& p_Command, const std::string& p_Current) const;
+
 	std::thread m_Thread;
 	std::atomic_bool m_bStopSignal;
 	std::shared_ptr<Dispatcher> m_Dispatcher;

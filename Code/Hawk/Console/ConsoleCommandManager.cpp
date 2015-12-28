@@ -4,8 +4,8 @@
 #include "Console/ConsoleCommand.h"
 #include "Console/ConsoleAPI.h"
 #include "System/Version.h"
+#include "Util/Algorithm.h"
 #include "Util/StringUtil.h"
-#include <algorithm>
 #include <iomanip>
 
 namespace Hawk {
@@ -16,6 +16,9 @@ namespace
 	const char Key_Shift = 75;
 	const char Key_Return = 13;
 	const char Key_Backspace = 8;
+	const char Key_Tab = 9;
+
+	const std::vector<std::string> c_CycleIgnoreList = { "-" };
 }
 
 ConsoleCommandManager::ConsoleCommandManager(std::shared_ptr<Dispatcher>& p_Dispatcher)
@@ -42,6 +45,7 @@ void ConsoleCommandManager::RunInputLoop()
 	Logger::RegisterThread("Thread_Console_Input", std::this_thread::get_id());
 
 	std::string l_CurrLine;
+	std::string l_CurrTypedLine;
 	while (!m_bStopSignal)
 	{
 		try
@@ -61,6 +65,12 @@ void ConsoleCommandManager::RunInputLoop()
 								l_CurrLine = StringUtil::RemoveBack(l_CurrLine, 1);
 								ConsoleAPI::ClearCurrLine();
 							}
+							l_CurrTypedLine = l_CurrLine;
+						}
+						else if (l_cChr == Key_Tab)
+						{
+							ConsoleAPI::ClearCurrLine();
+							l_CurrLine = GetNextCommand(l_CurrTypedLine, l_CurrLine);
 						}
 						else if (l_cChr == Key_Return)
 						{
@@ -86,10 +96,12 @@ void ConsoleCommandManager::RunInputLoop()
 								}
 							}
 							l_CurrLine.clear();
+							l_CurrTypedLine.clear();
 						}
 						else
 						{
 							l_CurrLine += l_cChr;
+							l_CurrTypedLine = l_CurrLine;
 						}
 					}
 				}
@@ -165,6 +177,59 @@ void ConsoleCommandManager::CmdToggleLog()
 	bool l_bCurrValue = Config::Instance().Get("log.enabled", true);
 	std::string l_NewValue = l_bCurrValue ? "false" : "true";
 	Config::Instance().Set("log.enabled", l_NewValue);
+}
+
+std::string ConsoleCommandManager::GetNextCommand(const std::string& p_Filter, const std::string& p_Current) const
+{
+	if (p_Filter.empty())
+	{
+		if (p_Current.empty())
+		{
+			return m_Functions.cbegin()->first;
+		}
+		else
+		{
+			auto l_Itr = m_Functions.find(p_Current);
+			if (l_Itr == m_Functions.cend())
+			{
+				return p_Current;
+			}
+
+			l_Itr++;
+			if (l_Itr == m_Functions.cend())
+			{
+				return m_Functions.cbegin()->first;
+			}
+			return l_Itr->first;
+		}
+	}
+	else
+	{
+		const std::string l_Filter = StringUtil::ToLower(p_Filter);
+		using MatchVec_t = std::vector<std::string>;
+		MatchVec_t l_Matches;
+		hwk::transform_first_if(m_Functions, std::back_inserter(l_Matches), [l_Filter](const FunctionMap_t::value_type& p_Value)
+		{
+			return StringUtil::StartsWith(p_Value.first, l_Filter);
+		});
+		if (!l_Matches.empty())
+		{
+			const std::string l_Current = StringUtil::ToLower(p_Current);
+			auto l_Itr = std::find(l_Matches.cbegin(), l_Matches.cend(), l_Current);
+			if (l_Itr == l_Matches.cend())
+			{
+				return *l_Matches.cbegin();
+			}
+
+			l_Itr++;
+			if (l_Itr == l_Matches.cend())
+			{
+				return *l_Matches.cbegin();
+			}
+			return *l_Itr;
+		}
+		return p_Current;
+	}
 }
 
 }

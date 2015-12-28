@@ -19,6 +19,11 @@ bool StringUtil::Contains(const std::string& p_Str, const std::string& p_SubStr)
 	return boost::algorithm::contains(p_Str, p_SubStr);
 }
 
+bool StringUtil::StartsWith(const std::string& p_Str, const std::string& p_SubStr, bool p_bCaseSensitive)
+{
+	return p_bCaseSensitive ? boost::starts_with(p_Str, p_SubStr) : boost::istarts_with(p_Str, p_SubStr);
+}
+
 std::string StringUtil::RemoveBack(const std::string& p_Str, size_t p_Num)
 {
 	if (p_Num <= p_Str.size())

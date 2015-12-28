@@ -105,6 +105,7 @@
     <ClInclude Include="System\Time.h" />
     <ClInclude Include="System\Types.h" />
     <ClInclude Include="System\Version.h" />
+    <ClInclude Include="Util\Algorithm.h" />
     <ClInclude Include="Util\FileUtil.h" />
     <ClInclude Include="Util\StringUtil.h" />
   </ItemGroup>
