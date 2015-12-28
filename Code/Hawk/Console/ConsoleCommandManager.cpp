@@ -90,7 +90,7 @@ void ConsoleCommandManager::RunInputLoop()
 								}
 								else
 								{
-									LOG("Unknown command: " << l_Command.GetName(), "console", Info);
+									std::cout << "Unknown command: " << l_Command.GetName() << "\n";
 								}
 							}
 							l_CurrLine.clear();
@@ -135,12 +135,12 @@ void ConsoleCommandManager::Unregister(const std::string& p_Name)
 
 void ConsoleCommandManager::Register()
 {
-	Register("quit", this, &ConsoleCommandManager::CmdQuit, m_Dispatcher.get(), "Quits the application");
-	Register("help", this, &ConsoleCommandManager::CmdListCommands, m_Dispatcher.get(), "Lists available commands. Args: [filter]");
-	Register("cls", &ConsoleAPI::ClearScreen, m_Dispatcher.get(), "Clears the console buffer");
-	Register("config.get", this, &ConsoleCommandManager::CmdGetConfig, m_Dispatcher.get(), "Gets the config variable. Args: [key]");
-	Register("config.set", &Config::Instance(), &Config::Set, m_Dispatcher.get(), "Sets the config variable. Args: [key] [value]");
-	Register("-", this, &ConsoleCommandManager::CmdToggleLog, m_Dispatcher.get(), "Toggles console log on/off");
+	Register("quit", this, &ConsoleCommandManager::CmdQuit, m_Dispatcher.get(), "Quits the application", "");
+	Register("help", this, &ConsoleCommandManager::CmdListCommands, m_Dispatcher.get(), "Lists available commands.", "[filter]", false);
+	Register("cls", &ConsoleAPI::ClearScreen, m_Dispatcher.get(), "Clears the console buffer", "");
+	Register("config.get", this, &ConsoleCommandManager::CmdGetConfig, m_Dispatcher.get(), "Gets the config variable.", "[key]");
+	Register("config.set", &Config::Instance(), &Config::Set, m_Dispatcher.get(), "Sets the config variable.", "[key] [value]");
+	Register("-", this, &ConsoleCommandManager::CmdToggleLog, m_Dispatcher.get(), "Toggles console log on/off", "");
 }
 
 void ConsoleCommandManager::CmdQuit()
@@ -158,7 +158,12 @@ void ConsoleCommandManager::CmdListCommands(const std::string& p_Filter)
 	{
 		if (l_Filter.empty() || StringUtil::Contains(l_Cmd.first, l_Filter))
 		{
-			std::cout << std::setw(35) << std::left << l_Cmd.first << l_Cmd.second->GetHelpText() << "\n";
+			std::cout << std::setw(35) << std::left << l_Cmd.first << l_Cmd.second->GetDesc();
+			if (!l_Cmd.second->GetArgsDesc().empty())
+			{
+				std::cout << " Args: " << l_Cmd.second->GetArgsDesc();
+			}
+			std::cout << "\n";
 		}
 	}
 	std::cout << "-------------------------------------------------------------------------------------------------\n";

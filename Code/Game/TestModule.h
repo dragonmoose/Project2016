@@ -40,8 +40,8 @@ public:
 
 	void InitializeConsole()
 	{
-		RegisterConsole("test.cmd", this, &TestModule::TestConsoleCmd);
-		RegisterConsole("test.event", this, &TestModule::TestConsoleCmd2, "Sends test event");
+		RegisterConsole("test.cmd", this, &TestModule::TestConsoleCmd, "Test command", "[Text] [num1] [num2]");
+		RegisterConsole("test.event", this, &TestModule::TestConsoleCmd2, "Sends test event", "[Text]");
 	}
 
 	void RegisterEvents(Hawk::EventManager& p_EventManager) override
