@@ -16,11 +16,10 @@ int WINAPI WinMain(HINSTANCE p_hInstance, HINSTANCE p_hPrevInstance, LPSTR p_lpC
 		Hawk::ThreadID l_Thread2 = l_Core.CreateModuleThread("Thread2");
 		l_Core.AddModule<TestModule>(l_Thread1);
 		l_Core.AddModule<TestModule2>(l_Thread2);
-
 		l_Core.Run();
 	}
 	catch (Hawk::Exception& e)
 	{
-		LOG_EXCEPTION(e, "game", Fatal);
+		std::cout << e.what() << "\n";
 	}
 }

@@ -18,6 +18,7 @@ class HAWK_DLL_EXPORT Core final
 {
 public:
 	explicit Core(bool p_bConsole = true);
+	~Core();
 	Core(const Core&) = delete;
 	Core& operator=(const Core&) = delete;
 
@@ -28,11 +29,19 @@ public:
 	template<class T>
 	ModuleID AddModule(ThreadID p_ThreadID)
 	{
-		THROW_IF(p_ThreadID == ThreadID_Invalid, "Invalid thread id");
+		try
+		{
+			THROW_IF(p_ThreadID == ThreadID_Invalid, "Invalid thread id");
 
-		ModuleThread* l_ModuleThread = nullptr;
-		THROW_IF_NOT(TryGetModuleThread(p_ThreadID, &l_ModuleThread), "No thread with ID " << p_ThreadID << " exists");
-		return l_ModuleThread->Add<T>();
+			ModuleThread* l_ModuleThread = nullptr;
+			THROW_IF_NOT(TryGetModuleThread(p_ThreadID, &l_ModuleThread), "No thread with ID " << p_ThreadID << " exists");
+			return l_ModuleThread->Add<T>();
+		}
+		catch (Exception& e)
+		{
+			LOG_EXCEPTION(e, "core", Fatal);
+		}
+		return ModuleID_Invalid;
 	}
 
 	void RemoveModule(ModuleID p_ID);

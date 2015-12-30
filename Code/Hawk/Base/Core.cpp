@@ -37,16 +37,39 @@ Core::Core(bool p_bConsole)
 	LOG("Hawk core initialized...", c_Name, Info);
 }
 
+Core::~Core()
+{
+#ifdef HAWK_DEBUG
+	m_ConsoleCommandManager->Stop();
+
+	LOG("************* Core exit *************", c_Name, Info);
+	if (Logger::FatalFlagSet())
+	{
+		FATAL("Core exit due to critical error (see above)", c_Name);
+	}
+	std::this_thread::sleep_for(std::chrono::minutes(1));
+	ConsoleAPI::Stop();
+#endif
+}
+
 ThreadID Core::CreateModuleThread(const std::string& p_Name)
 {
-	THROW_IF(ModuleThreadExists(p_Name), "A thread has already been created with name: " << p_Name);
+	try
+	{
+		THROW_IF(ModuleThreadExists(p_Name), "A thread has already been created with name: " << p_Name);
 
-	std::unique_ptr<ModuleThread> l_ModuleThread = std::make_unique<ModuleThread>(p_Name);
-	ThreadID l_ThreadID = l_ModuleThread->GetThreadID();
-	m_ModuleThreads.push_back(std::move(l_ModuleThread));
+		std::unique_ptr<ModuleThread> l_ModuleThread = std::make_unique<ModuleThread>(p_Name);
+		ThreadID l_ThreadID = l_ModuleThread->GetThreadID();
+		m_ModuleThreads.push_back(std::move(l_ModuleThread));
 
-	LOG("Thread created. Name=" << p_Name << " ID=" << l_ThreadID, c_Name, Info);
-	return l_ThreadID;
+		LOG("Thread created. Name=" << p_Name << " ID=" << l_ThreadID, c_Name, Info);
+		return l_ThreadID;
+	}
+	catch (Exception& e)
+	{
+		LOG_EXCEPTION(e, "core", Fatal);
+	}
+	return ThreadID_Invalid;
 }
 
 void Core::OpenWindow(HINSTANCE p_hInstance, const std::string& p_Name)
@@ -100,17 +123,6 @@ void Core::Run()
 		m_Dispatcher->Execute();
 	}
 	StopModules();
-#ifdef HAWK_DEBUG
-	m_ConsoleCommandManager->Stop();
-#endif
-
-	LOG("************* Core exit *************", c_Name, Info);
-	if (Logger::FatalFlagSet())
-	{
-		FATAL("Core exit due to critical error (see above)", c_Name);
-	}
-	std::this_thread::sleep_for(std::chrono::minutes(1));
-	ConsoleAPI::Stop();
 }
 
 void Core::InitializeModules()
