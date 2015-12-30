@@ -10,6 +10,9 @@ namespace Hawk {
 class Config final
 {
 public:
+	Config(const Config&) = delete;
+	Config& operator=(const Config&) = delete;
+
 	HAWK_DLL_EXPORT static Config& Instance();
 	void Update();
 
@@ -25,12 +28,12 @@ public:
 		std::lock_guard<std::mutex> l_Lock(m_Mutex);
 		m_Properties.put(p_Key, p_Value);
 	}
-	void Load();
+	bool Load(bool p_bForce = false);
 
 private:
 	Config();
-	Config(const Config&) = delete;
-	Config& operator=(const Config&) = delete;
+
+	void PrivLoad();
 
 	boost::property_tree::ptree m_Properties;
 	std::time_t m_LastWriteTime;

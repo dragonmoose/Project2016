@@ -1,5 +1,6 @@
 #include "pch.h"
 #include <atomic>
+#include <array>
 
 namespace Hawk {
 namespace Logger
@@ -37,6 +38,8 @@ namespace Logger
 	using ThreadInfoMap_t = std::unordered_map<std::thread::id, ThreadInfo>;
 	ThreadInfoMap_t m_ThreadInfoMap;
 	std::mutex m_ThreadInfoMutex;
+
+	const std::array<std::string, 6> c_LogLevels = { "trace", "debug", "info", "warning", "error", "fatal" };
 }
 
 void Logger::RegisterThread(const std::string& p_Name, std::thread::id p_SysThreadID, ThreadID p_ID)
@@ -64,6 +67,11 @@ void Logger::Log(const std::string& p_Msg, const std::string& p_Module, const st
 	ConsoleAPI::Color l_BgColor;
 	GetLevelColors(p_Level, l_Color, l_BgColor);
 	ConsoleAPI::WriteLine(p_Msg, l_Color, l_BgColor);
+}
+
+bool Logger::IsValidLogLevelString(const std::string& p_Level)
+{
+	return std::find(c_LogLevels.cbegin(), c_LogLevels.cend(), StringUtil::ToLower(p_Level)) != c_LogLevels.cend();
 }
 
 bool Logger::ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo, const std::string& p_Module, Level p_Level)

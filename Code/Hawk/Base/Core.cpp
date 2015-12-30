@@ -30,7 +30,7 @@ Core::Core(bool p_bConsole)
 		m_ConsoleCommandManager->Start();
 		RegisterConsole();
 	}
-	Config::Instance().Load();
+	Config::Instance().Load(true);
 	LOG("Working directory set to: " << boost::filesystem::current_path(), c_Name, Info);
 #endif
 	WindowManager::Initialize(m_EventRouter);

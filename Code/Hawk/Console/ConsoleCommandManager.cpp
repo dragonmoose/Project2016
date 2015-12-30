@@ -86,11 +86,11 @@ void ConsoleCommandManager::RunInputLoop()
 								auto l_Itr = m_Functions.find(l_Command.GetName());
 								if (l_Itr != m_Functions.end())
 								{
-									l_Itr->second->_Call(l_Command.GetArgs());
+									TryCallFunction(*l_Itr->second, l_Command);
 								}
 								else
 								{
-									std::cout << "Unknown command: " << l_Command.GetName() << "\n";
+									std::cout << "Unknown command: " << l_Command.GetName() << "\n\n";
 								}
 							}
 							l_CurrLine.clear();
@@ -140,7 +140,12 @@ void ConsoleCommandManager::Register()
 	Register("cls", &ConsoleAPI::ClearScreen, m_Dispatcher.get(), "Clears the console buffer", "");
 	Register("config.get", this, &ConsoleCommandManager::CmdGetConfig, m_Dispatcher.get(), "Gets the config variable.", "[key]");
 	Register("config.set", &Config::Instance(), &Config::Set, m_Dispatcher.get(), "Sets the config variable.", "[key] [value]");
+	Register("config.reload", this, &ConsoleCommandManager::CmdReloadConfig, m_Dispatcher.get(), "Reloads the config.ini file", "");
 	Register("-", this, &ConsoleCommandManager::CmdToggleLog, m_Dispatcher.get(), "Toggles console log on/off", "");
+	Register("ll", this, &ConsoleCommandManager::CmdSetLogLevel, m_Dispatcher.get(), "Sets the loglevel", "[trace|debug|info|warning|error|fatal]");
+	Register("lf", this, &ConsoleCommandManager::CmdSetLogFilter, m_Dispatcher.get(), "Sets the log filter", "[filter]", false);
+	Register("lt", this, &ConsoleCommandManager::CmdSetLogThread, m_Dispatcher.get(), "Sets the thread filter", "[filter]", false);
+	Register("lm", this, &ConsoleCommandManager::CmdSetLogModule, m_Dispatcher.get(), "Sets the module filter", "[filter]", false);
 }
 
 void ConsoleCommandManager::CmdQuit()
@@ -175,11 +180,52 @@ void ConsoleCommandManager::CmdGetConfig(const std::string& p_Key)
 	std::cout << Config::Instance().Get<std::string>(p_Key, "Config key not found") << "\n";
 }
 
+void ConsoleCommandManager::CmdReloadConfig()
+{
+	if (Config::Instance().Load(true))
+	{
+		std::cout << "Config reloaded.\n\n";
+	}
+	else
+	{
+		std::cout << "Failed to parse config file.\n\n";
+	}
+
+}
+
 void ConsoleCommandManager::CmdToggleLog()
 {
 	bool l_bCurrValue = Config::Instance().Get("log.enabled", true);
 	std::string l_NewValue = l_bCurrValue ? "false" : "true";
 	Config::Instance().Set("log.enabled", l_NewValue);
+}
+
+void ConsoleCommandManager::CmdSetLogLevel(const std::string& p_Level)
+{
+	if (Logger::IsValidLogLevelString(p_Level))
+	{
+		Config::Instance().Set("log.level", p_Level);
+	}
+	else
+	{
+		CONSOLE_WRITE_SCOPE();
+		std::cout << "Invalid log level.\n\n";
+	}
+}
+
+void ConsoleCommandManager::CmdSetLogFilter(const std::string& p_Filter)
+{
+	Config::Instance().Set("log.filter", p_Filter);
+}
+
+void ConsoleCommandManager::CmdSetLogThread(const std::string& p_Filter)
+{
+	Config::Instance().Set("log.thread", p_Filter);
+}
+
+void ConsoleCommandManager::CmdSetLogModule(const std::string& p_Filter)
+{
+	Config::Instance().Set("log.module", p_Filter);
 }
 
 std::string ConsoleCommandManager::GetNextCommand(const std::string& p_Filter, const std::string& p_Current) const
@@ -234,6 +280,51 @@ std::string ConsoleCommandManager::GetNextCommand(const std::string& p_Filter, c
 		return p_Current;
 	}
 }
+
+void ConsoleCommandManager::TryCallFunction(const CF::IConsoleFunction& p_Function, ConsoleCommand& p_Command) const
+{
+	if (!p_Function.RequiresArgs())
+	{
+		p_Command.TryExtendArgs(p_Function.GetNumArgs());
+	}
+
+	const std::size_t l_NumArgs = p_Command.GetArgs().size();
+	const std::size_t l_NumRequiredArgs = p_Function.GetNumArgs();
+
+	if (l_NumArgs == l_NumRequiredArgs)
+	{
+		try
+		{
+			p_Function._Call(p_Command.GetArgs());
+		}
+		catch (boost::bad_lexical_cast& e)
+		{
+			std::cout << "Failed to convert arguments to function parameter types.\n\n";
+		}
+	}
+	else
+	{
+		if (l_NumArgs > l_NumRequiredArgs)
+		{
+			std::cout << "Too many arguments passed: ";
+		}
+		else
+		{
+			std::cout << "Too few arguments passed: ";
+		}
+
+		std::cout << l_NumArgs << "/" << l_NumRequiredArgs << "\n";
+		std::cout << "Usage: " << p_Function.GetName();
+
+		if (!p_Function.GetArgsDesc().empty())
+		{
+			std::cout << " " << p_Function.GetArgsDesc();
+		}
+		std::cout << "\n\n";
+	}
+}
+
+
 
 }
 #endif

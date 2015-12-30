@@ -24,29 +24,33 @@ Config::Config()
 {
 }
 
-void Config::Load()
+bool Config::Load(bool p_bForce)
 {
 	try
 	{
 		if (boost::filesystem::exists(c_Filename))
 		{
-			std::time_t l_WriteTime = boost::filesystem::last_write_time(c_Filename);
-			if (l_WriteTime > m_LastWriteTime)
+			if (!p_bForce)
 			{
-				m_LastWriteTime = l_WriteTime;
-
-				boost::property_tree::ptree l_NewProperties;
-				boost::property_tree::ini_parser::read_ini(c_Filename, l_NewProperties);
-
-				std::lock_guard<std::mutex> l_Lock(m_Mutex);
-				m_Properties.swap(l_NewProperties);
+				std::time_t l_WriteTime = boost::filesystem::last_write_time(c_Filename);
+				if (l_WriteTime > m_LastWriteTime)
+				{
+					m_LastWriteTime = l_WriteTime;
+					PrivLoad();
+				}
+			}
+			else
+			{
+				PrivLoad();
 			}
 		}
+		return true;
 	}
 	catch (boost::property_tree::ini_parser_error& e)
 	{
 		LOG_STD_EXCEPTION(e, c_SysName, Fatal);
 	}
+	return false;
 }
 
 void Config::Update()
@@ -56,6 +60,15 @@ void Config::Update()
 		m_NextReloadTime = Time(c_UpdateDuration);
 		Load();
 	}
+}
+
+void Config::PrivLoad()
+{
+	boost::property_tree::ptree l_NewProperties;
+	boost::property_tree::ini_parser::read_ini(c_Filename, l_NewProperties);
+
+	std::lock_guard<std::mutex> l_Lock(m_Mutex);
+	m_Properties.swap(l_NewProperties);
 }
 
 }

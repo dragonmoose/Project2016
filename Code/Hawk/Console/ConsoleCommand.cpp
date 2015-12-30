@@ -24,5 +24,13 @@ ConsoleCommand::ConsoleCommand(const std::string& p_Input)
 		m_Args.push_back(*l_Itr);
 	}
 }
+
+void ConsoleCommand::TryExtendArgs(std::size_t p_NumArgs)
+{
+	while (m_Args.size() < p_NumArgs)
+	{
+		m_Args.push_back(std::string());
+	}
+}
 }
 #endif
