@@ -96,6 +96,7 @@
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Input\KeyCodes.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="System\Assert.h" />
     <ClInclude Include="System\Config.h" />
     <ClInclude Include="System\Dispatcher.h" />
     <ClInclude Include="System\DllExport.h" />

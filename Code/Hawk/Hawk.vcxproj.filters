@@ -152,6 +152,9 @@
     <ClInclude Include="Util\Algorithm.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="System\Assert.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
