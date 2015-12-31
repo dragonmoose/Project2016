@@ -14,7 +14,7 @@ struct IEvent;
 class HAWK_DLL_EXPORT EventRouter final
 {
 public:
-	EventRouter() {}
+	EventRouter() = default;
 	EventRouter(const EventRouter&) = delete;
 	EventRouter& operator=(const EventRouter&) = delete;
 
