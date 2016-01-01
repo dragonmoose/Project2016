@@ -36,13 +36,29 @@ void ConsoleCommandManager::Stop()
 	m_Thread.join();
 }
 
+void ConsoleCommandManager::Write(const std::string& p_Line, bool p_bNewLine) const
+{
+	std::ostringstream l_Stream;
+	l_Stream << "\rHawk " << Version::c_EngineVersion << ">" << p_Line;
+	if (p_bNewLine)
+	{
+		l_Stream << "\n";
+	}
+
+	ConsoleAPI::BeginWrite();
+	ConsoleAPI::Write(l_Stream.str(), ConsoleAPI::Color::White, ConsoleAPI::Color::None);
+	ConsoleAPI::EndWrite();
+}
+
 void ConsoleCommandManager::RunInputLoop()
 {
 	LOG("Console input thread started", "console", Info);
 	Logger::RegisterThread("Thread_Console_Input", std::this_thread::get_id());
 
 	std::string l_CurrLine;
+	std::string l_PrevLine;
 	std::string l_CurrTypedLine;
+	int l_iPrevWriteCount = 0;
 	while (!m_bStopSignal)
 	{
 		try
@@ -71,11 +87,7 @@ void ConsoleCommandManager::RunInputLoop()
 						}
 						else if (l_cChr == Key_Return)
 						{
-							std::stringstream l_CmdLine;
-							l_CmdLine << "Hawk " << Version::c_EngineVersion << ">" << l_CurrLine;
-							ConsoleAPI::BeginWrite();
-							ConsoleAPI::WriteLine(l_CmdLine.str(), ConsoleAPI::Color::White, ConsoleAPI::Color::None);
-							ConsoleAPI::EndWrite();
+							Write(l_CurrLine, true);
 
 							if (l_CurrLine.find_first_not_of("\t\n ") != std::string::npos)
 							{
@@ -103,13 +115,13 @@ void ConsoleCommandManager::RunInputLoop()
 					}
 				}
 			}
-			std::stringstream l_CmdLineStream;
-			l_CmdLineStream << "\rHawk " << Version::c_EngineVersion << ">" << l_CurrLine << "\r";
-			std::string l_Line = l_CmdLineStream.str();
-			ConsoleAPI::BeginWrite();
-			ConsoleAPI::Write(l_Line, ConsoleAPI::Color::White, ConsoleAPI::Color::None);
-			ConsoleAPI::EndWrite();
-			std::this_thread::sleep_for(std::chrono::milliseconds(25));
+			if (l_CurrLine != l_PrevLine || l_iPrevWriteCount != ConsoleAPI::GetWriteCount())
+			{
+				Write(l_CurrLine, false);
+				l_iPrevWriteCount = ConsoleAPI::GetWriteCount();
+				l_PrevLine = l_CurrLine;
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(30));
 		}
 		catch (Exception& e)
 		{
@@ -260,6 +272,7 @@ std::string ConsoleCommandManager::GetNextCommand(const std::string& p_Filter, c
 		{
 			return StringUtil::StartsWith(p_Value.first, l_Filter);
 		});
+
 		if (!l_Matches.empty())
 		{
 			const std::string l_Current = StringUtil::ToLower(p_Current);

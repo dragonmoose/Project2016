@@ -70,6 +70,7 @@ public:
 	void Unregister(const std::string& p_Name);
 
 private:
+	void Write(const std::string& p_Line, bool p_bNewLine) const;
 	void RunInputLoop();
 
 	void Register();

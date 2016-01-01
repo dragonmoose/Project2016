@@ -18,6 +18,7 @@ namespace ConsoleAPI
 	HANDLE n_hIn;
 	std::mutex n_Mutex;
 	bool n_bInitialized = false;
+	int n_iWriteCount = 0;
 }
 
 void ConsoleAPI::SetTitle()
@@ -164,7 +165,7 @@ void ConsoleAPI::Start()
 	THROW_IF_NOT(::SetConsoleScreenBufferSize(n_hOut, c_BufferSize), "Failed to set console buffer size");
 
 	CONSOLE_CURSOR_INFO l_CursorInfo;
-	l_CursorInfo.dwSize = 100;
+	l_CursorInfo.dwSize = 30;
 	l_CursorInfo.bVisible = true;
 	THROW_IF_NOT(::SetConsoleCursorInfo(n_hOut, &l_CursorInfo), "Failed to set console cursor info");
 
@@ -194,6 +195,7 @@ void ConsoleAPI::Write(const std::string& p_Text, Color p_Color, Color p_BgColor
 {
 	THROW_IF_NOT(::SetConsoleTextAttribute(n_hOut, GetColorAttr(p_Color, p_BgColor)), "Failed to set text attribute");
 	THROW_IF_NOT(::WriteConsole(n_hOut, p_Text.c_str(), p_Text.length(), LPDWORD(), nullptr), "Failed to write to console");
+	n_iWriteCount++;
 }
 
 bool ConsoleAPI::HasNextChar()
@@ -269,6 +271,11 @@ void ConsoleAPI::Stop()
 bool ConsoleAPI::Initialized()
 {
 	return n_bInitialized;
+}
+
+int ConsoleAPI::GetWriteCount()
+{
+	return n_iWriteCount;
 }
 
 }

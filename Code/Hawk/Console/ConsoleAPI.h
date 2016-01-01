@@ -33,6 +33,7 @@ namespace ConsoleAPI
 	void ClearCurrLine();
 	void Stop();
 	bool Initialized();
+	int GetWriteCount();
 
 	class WriteScope final
 	{
