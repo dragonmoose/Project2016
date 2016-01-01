@@ -155,6 +155,9 @@
     <ClInclude Include="System\Assert.h">
       <Filter>System</Filter>
     </ClInclude>
+    <ClInclude Include="Base\CoreSettings.h">
+      <Filter>Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
