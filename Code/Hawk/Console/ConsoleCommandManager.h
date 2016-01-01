@@ -81,7 +81,7 @@ private:
 	void CmdSetLogLevel(const std::string& p_Level);
 	void CmdSetLogFilter(const std::string& p_Filter);
 	void CmdSetLogThread(const std::string& p_Filter);
-	void CmdSetLogModule(const std::string& p_Filter);
+	void CmdSetLogTag(const std::string& p_Filter);
 
 	std::string GetNextCommand(const std::string& p_Command, const std::string& p_Current) const;
 	void TryCallFunction(const CF::IConsoleFunction& p_Function, ConsoleCommand& p_Command) const;

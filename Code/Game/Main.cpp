@@ -22,6 +22,6 @@ int WINAPI WinMain(HINSTANCE p_hInstance, HINSTANCE p_hPrevInstance, LPSTR p_lpC
 	}
 	catch (Hawk::Exception& e)
 	{
-		FATAL(e.what(), "game");
+		LOG_EXCEPTION(e, "game", Fatal);
 	}
 }

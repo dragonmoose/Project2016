@@ -141,10 +141,10 @@ void ConsoleCommandManager::Register()
 	Register("config.set", &Config::Instance(), &Config::Set, m_Dispatcher.get(), "Sets the config variable.", "[key] [value]");
 	Register("config.reload", this, &ConsoleCommandManager::CmdReloadConfig, m_Dispatcher.get(), "Reloads the config.ini file", "");
 	Register("-", this, &ConsoleCommandManager::CmdToggleLog, m_Dispatcher.get(), "Toggles console log on/off", "");
-	Register("ll", this, &ConsoleCommandManager::CmdSetLogLevel, m_Dispatcher.get(), "Sets the loglevel", "[trace|debug|info|warning|error|fatal]");
-	Register("lf", this, &ConsoleCommandManager::CmdSetLogFilter, m_Dispatcher.get(), "Sets the log filter", "[filter]", false);
-	Register("lt", this, &ConsoleCommandManager::CmdSetLogThread, m_Dispatcher.get(), "Sets the thread filter", "[filter]", false);
-	Register("lm", this, &ConsoleCommandManager::CmdSetLogModule, m_Dispatcher.get(), "Sets the module filter", "[filter]", false);
+	Register("log.level", this, &ConsoleCommandManager::CmdSetLogLevel, m_Dispatcher.get(), "Sets the loglevel", "[trace|debug|info|warning|error|fatal]");
+	Register("log.filter", this, &ConsoleCommandManager::CmdSetLogFilter, m_Dispatcher.get(), "Sets the log filter", "[filter]", false);
+	Register("log.thread", this, &ConsoleCommandManager::CmdSetLogThread, m_Dispatcher.get(), "Sets the thread filter", "[filter]", false);
+	Register("log.tag", this, &ConsoleCommandManager::CmdSetLogTag, m_Dispatcher.get(), "Sets the tag filter", "[filter]", false);
 }
 
 void ConsoleCommandManager::CmdQuit()
@@ -222,9 +222,9 @@ void ConsoleCommandManager::CmdSetLogThread(const std::string& p_Filter)
 	Config::Instance().Set("log.thread", p_Filter);
 }
 
-void ConsoleCommandManager::CmdSetLogModule(const std::string& p_Filter)
+void ConsoleCommandManager::CmdSetLogTag(const std::string& p_Filter)
 {
-	Config::Instance().Set("log.module", p_Filter);
+	Config::Instance().Set("log.tag", p_Filter);
 }
 
 std::string ConsoleCommandManager::GetNextCommand(const std::string& p_Filter, const std::string& p_Current) const

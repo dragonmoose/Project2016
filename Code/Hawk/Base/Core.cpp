@@ -27,7 +27,7 @@ Core::~Core()
 		LOG("************* Core exit *************", "core", Info);
 		if (Logger::FatalFlagSet())
 		{
-			FATAL("Core exit due to critical error (see above)", "core");
+			LOG("Core exit due to critical error (see above)", "core", Fatal);
 		}
 
 		int l_iExitWaitTimeSec = Config::Instance().Get("log.shutdownDelaySec", 30);

@@ -23,7 +23,7 @@ namespace Logger
 namespace Hawk {
 namespace Logger
 {
-	bool ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo, const std::string& p_Module, Level p_Level);
+	bool ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo, const std::string& p_Tag, Level p_Level);
 	std::string GetThreadInfo();
 	bool MatchesFilter(const std::string& p_Msg, const std::string& p_Filter);
 	Level StringToLevel(const std::string& p_Level);
@@ -48,25 +48,30 @@ void Logger::RegisterThread(const std::string& p_Name, std::thread::id p_SysThre
 	THROW_IF_NOT(m_ThreadInfoMap.insert(ThreadInfoMap_t::value_type(p_SysThreadID, ThreadInfo(p_Name, p_ID))).second, "Failed to insert thread name lookup. Name=" << p_Name << " ID=" << p_ID);
 }
 
-void Logger::Log(const std::string& p_Msg, const std::string& p_Module, const std::string& p_FileInfo, Level p_Level)
+void Logger::Log(const std::string& p_Msg, const std::string& p_Tag, const std::string& p_FileInfo, Level p_Level)
 {
 	if (!ConsoleAPI::Initialized()) return;
 
 	std::string l_ThreadInfo = GetThreadInfo();
-	if (!ShouldLog(p_Msg, l_ThreadInfo, p_Module, p_Level)) return;
+	if (!ShouldLog(p_Msg, l_ThreadInfo, p_Tag, p_Level)) return;
 
 	CONSOLE_WRITE_SCOPE();
 	ConsoleAPI::Write(Time::Now().ToString().append(" "), ConsoleAPI::Color::White, ConsoleAPI::Color::None);
 
 	std::ostringstream l_Stream;
-	l_Stream << l_ThreadInfo << " " << p_Module << " [" << p_FileInfo << "]";
+	l_Stream << l_ThreadInfo << " " << p_Tag;
 	ConsoleAPI::Write(l_Stream.str(), ConsoleAPI::Color::BrightWhite, ConsoleAPI::Color::Cyan);
 	ConsoleAPI::Write(" ", ConsoleAPI::Color::None, ConsoleAPI::Color::None);
 
+	l_Stream.str("");
+	l_Stream.clear();
+
+	l_Stream << p_Msg << " [" << p_FileInfo << "]";
+	
 	ConsoleAPI::Color l_Color;
 	ConsoleAPI::Color l_BgColor;
 	GetLevelColors(p_Level, l_Color, l_BgColor);
-	ConsoleAPI::WriteLine(p_Msg, l_Color, l_BgColor);
+	ConsoleAPI::WriteLine(l_Stream.str(), l_Color, l_BgColor);
 }
 
 bool Logger::IsValidLogLevelString(const std::string& p_Level)
@@ -74,13 +79,13 @@ bool Logger::IsValidLogLevelString(const std::string& p_Level)
 	return std::find(c_LogLevels.cbegin(), c_LogLevels.cend(), StringUtil::ToLower(p_Level)) != c_LogLevels.cend();
 }
 
-bool Logger::ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo, const std::string& p_Module, Level p_Level)
+bool Logger::ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo, const std::string& p_Tag, Level p_Level)
 {
 	if (!Config::Instance().Get("log.enabled", true)) return false;
 	if (p_Level < StringToLevel(Config::Instance().Get<std::string>("log.level", ""))) return false;
 	if (!MatchesFilter(p_Msg, "log.filter")) return false;
 	if (!MatchesFilter(p_ThreadInfo, "log.thread")) return false;
-	if (!MatchesFilter(p_Module, "log.module")) return false;
+	if (!MatchesFilter(p_Tag, "log.tag")) return false;
 	return true;
 }
 
@@ -103,7 +108,7 @@ std::string Logger::GetThreadInfo()
 	{
 		l_Stream << "N/A";
 	}
-	l_Stream << " [#" << l_SysThreadID << "]";
+	l_Stream << " [" << l_SysThreadID << "]";
 	return l_Stream.str();
 }
 
