@@ -12,7 +12,6 @@ namespace Hawk {
 
 namespace 
 {
-	const char* c_Name("Console");
 	const char Key_Shift = 75;
 	const char Key_Return = 13;
 	const char Key_Backspace = 8;
@@ -39,7 +38,7 @@ void ConsoleCommandManager::Stop()
 
 void ConsoleCommandManager::RunInputLoop()
 {
-	LOG("Console input thread started", c_Name, Info);
+	LOG("Console input thread started", "console", Info);
 	Logger::RegisterThread("Thread_Console_Input", std::this_thread::get_id());
 
 	std::string l_CurrLine;

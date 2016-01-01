@@ -8,9 +8,13 @@ namespace Hawk {
 
 namespace
 {
-	const std::string c_Filename("config.ini");
 	const Duration c_UpdateDuration(1, Duration::Precision::Second);
-	const char* c_SysName("config");
+}
+
+void Config::SetFilename(const std::string& p_Filename)
+{
+	m_Filename = p_Filename;
+	LOG("Using config file: " << m_Filename, "config", Info);
 }
 
 Config& Config::Instance()
@@ -28,27 +32,38 @@ bool Config::Load(bool p_bForce)
 {
 	try
 	{
-		if (boost::filesystem::exists(c_Filename))
+		if (!m_Filename.empty())
 		{
-			if (!p_bForce)
+			if (boost::filesystem::exists(m_Filename))
 			{
-				std::time_t l_WriteTime = boost::filesystem::last_write_time(c_Filename);
-				if (l_WriteTime > m_LastWriteTime)
+				if (p_bForce)
 				{
-					m_LastWriteTime = l_WriteTime;
 					PrivLoad();
+				}
+				else
+				{
+					std::time_t l_WriteTime = boost::filesystem::last_write_time(m_Filename);
+					if (l_WriteTime > m_LastWriteTime)
+					{
+						m_LastWriteTime = l_WriteTime;
+						PrivLoad();
+					}
 				}
 			}
 			else
 			{
-				PrivLoad();
+				THROW("The specified config file was not found: " << m_Filename);
 			}
 		}
 		return true;
 	}
 	catch (boost::property_tree::ini_parser_error& e)
 	{
-		LOG_STD_EXCEPTION(e, c_SysName, Fatal);
+		LOG_STD_EXCEPTION(e, "config", Fatal);
+	}
+	catch (Exception& e)
+	{
+		LOG_EXCEPTION(e, "config", Fatal);
 	}
 	return false;
 }
@@ -65,7 +80,7 @@ void Config::Update()
 void Config::PrivLoad()
 {
 	boost::property_tree::ptree l_NewProperties;
-	boost::property_tree::ini_parser::read_ini(c_Filename, l_NewProperties);
+	boost::property_tree::ini_parser::read_ini(m_Filename, l_NewProperties);
 
 	std::lock_guard<std::mutex> l_Lock(m_Mutex);
 	m_Properties.swap(l_NewProperties);

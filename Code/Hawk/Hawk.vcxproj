@@ -78,6 +78,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="Base\Core.h" />
+    <ClInclude Include="Base\CoreSettings.h" />
     <ClInclude Include="Base\Module.h" />
     <ClInclude Include="Base\ModuleThread.h" />
     <ClInclude Include="Base\WindowManager.h" />

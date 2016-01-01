@@ -13,6 +13,8 @@ public:
 	Config(const Config&) = delete;
 	Config& operator=(const Config&) = delete;
 
+	void SetFilename(const std::string& p_Filename);
+
 	HAWK_DLL_EXPORT static Config& Instance();
 	void Update();
 
@@ -39,6 +41,7 @@ private:
 	std::time_t m_LastWriteTime;
 	Time m_NextReloadTime;
 	mutable std::mutex m_Mutex;
+	std::string m_Filename;
 };
 
 }

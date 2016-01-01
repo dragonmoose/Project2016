@@ -54,7 +54,10 @@ namespace HawkUnitTests
 
 			TEST_METHOD(Modules)
 			{
-				Core l_Core(false);
+				CoreSettings l_Settings;
+				l_Settings.m_bConsole = false;
+				Core l_Core(l_Settings);
+				l_Core.Initialize();
 				LOG("testing info", "test", Info);
 				l_Core.CreateModuleThread("TestThread");
 				Assert::ExpectException<Exception>([&l_Core]() { l_Core.CreateModuleThread("testthread"); });

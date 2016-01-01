@@ -260,7 +260,10 @@ void ConsoleAPI::ClearCurrLine()
 
 void ConsoleAPI::Stop()
 {
-	THROW_IF_NOT(::FreeConsole(), "Failed to free console");
+	if (n_bInitialized)
+	{
+		THROW_IF_NOT(::FreeConsole(), "Failed to free console");
+	}
 }
 
 bool ConsoleAPI::Initialized()

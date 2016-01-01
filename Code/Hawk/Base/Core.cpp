@@ -12,76 +12,75 @@
 
 namespace Hawk {
 
-namespace { const char* c_Name("Core"); }
-
-Core::Core(bool p_bConsole)
-: m_EventRouter(std::make_shared<EventRouter>())
-, m_Dispatcher(std::make_shared<Dispatcher>())
-#ifdef HAWK_DEBUG
-, m_ConsoleCommandManager(std::make_shared<ConsoleCommandManager>(m_Dispatcher))
-#endif
+Core::Core(const CoreSettings& p_Settings)
+: m_Settings(p_Settings)
 {
-#ifdef HAWK_DEBUG
-	boost::filesystem::current_path(boost::filesystem::current_path().parent_path());
-	if (p_bConsole)
-	{
-		ConsoleAPI::Start();
-		Logger::RegisterThread(Thread::MainThreadName, std::this_thread::get_id());
-		m_ConsoleCommandManager->Start();
-		RegisterConsole();
-	}
-	Config::Instance().Load(true);
-	LOG("Working directory set to: " << boost::filesystem::current_path(), c_Name, Info);
-#endif
-	WindowManager::Initialize(m_EventRouter);
-	LOG("Hawk core initialized...", c_Name, Info);
 }
 
 Core::~Core()
 {
 #ifdef HAWK_DEBUG
-	m_ConsoleCommandManager->Stop();
-
-	LOG("************* Core exit *************", c_Name, Info);
-	if (Logger::FatalFlagSet())
+	if (m_Settings.m_bConsole)
 	{
-		FATAL("Core exit due to critical error (see above)", c_Name);
+		m_ConsoleCommandManager->Stop();
+
+		LOG("************* Core exit *************", "core", Info);
+		if (Logger::FatalFlagSet())
+		{
+			FATAL("Core exit due to critical error (see above)", "core");
+		}
+
+		int l_iExitWaitTimeSec = Config::Instance().Get("log.shutdownDelaySec", 30);
+		if (l_iExitWaitTimeSec > 0)
+		{
+			LOG("Waiting " << l_iExitWaitTimeSec << " seconds before shutting down console...", "core", Info);
+			std::this_thread::sleep_for(std::chrono::seconds(l_iExitWaitTimeSec));
+		}
+		ConsoleAPI::Stop();
 	}
-	std::this_thread::sleep_for(std::chrono::minutes(1));
-	ConsoleAPI::Stop();
 #endif
+}
+
+void Core::Initialize()
+{
+	m_EventRouter = std::make_shared<EventRouter>();
+	m_Dispatcher = std::make_shared<Dispatcher>();
+	boost::filesystem::current_path(boost::filesystem::current_path().parent_path());
+	
+#ifdef HAWK_DEBUG
+	if (m_Settings.m_bConsole)
+	{
+		ConsoleAPI::Start();
+		Logger::RegisterThread(Thread::MainThreadName, std::this_thread::get_id());
+
+		m_ConsoleCommandManager = std::make_shared<ConsoleCommandManager>(m_Dispatcher);
+		m_ConsoleCommandManager->Start();
+		RegisterConsole();
+	}
+#endif
+	Config::Instance().SetFilename(m_Settings.m_ConfigFilename);
+	Config::Instance().Load(true);
+	LOG("Working directory set to: " << boost::filesystem::current_path(), "core", Info);
+
+	WindowManager::Initialize(m_EventRouter);
+	LOG("Hawk core initialized...", "core", Info);
 }
 
 ThreadID Core::CreateModuleThread(const std::string& p_Name)
 {
-	try
-	{
-		THROW_IF(ModuleThreadExists(p_Name), "A thread has already been created with name: " << p_Name);
+	THROW_IF(ModuleThreadExists(p_Name), "A thread has already been created with name: " << p_Name);
 
-		std::unique_ptr<ModuleThread> l_ModuleThread = std::make_unique<ModuleThread>(p_Name);
-		ThreadID l_ThreadID = l_ModuleThread->GetThreadID();
-		m_ModuleThreads.push_back(std::move(l_ModuleThread));
+	std::unique_ptr<ModuleThread> l_ModuleThread = std::make_unique<ModuleThread>(p_Name);
+	ThreadID l_ThreadID = l_ModuleThread->GetThreadID();
+	m_ModuleThreads.push_back(std::move(l_ModuleThread));
 
-		LOG("Thread created. Name=" << p_Name << " ID=" << l_ThreadID, c_Name, Info);
-		return l_ThreadID;
-	}
-	catch (Exception& e)
-	{
-		LOG_EXCEPTION(e, "core", Fatal);
-	}
-	return ThreadID_Invalid;
+	LOG("Thread created. Name=" << p_Name << " ID=" << l_ThreadID, "core", Info);
+	return l_ThreadID;
 }
 
 void Core::OpenWindow(HINSTANCE p_hInstance, const std::string& p_Name)
 {
-	try
-	{
-		WindowManager::Open(p_hInstance, p_Name);
-	}
-	catch (Exception& e)
-	{
-		LOG_EXCEPTION(e, c_Name, Fatal);
-	}
+	WindowManager::Open(p_hInstance, p_Name);
 }
 
 void Core::RemoveModule(ModuleID p_ID)
@@ -95,7 +94,7 @@ void Core::RemoveModule(ModuleID p_ID)
 			return;
 		}
 	}
-	THROW("Failed to remove module with ID=" << p_ID << " (not found");
+	THROW("Failed to remove module with ID=" << p_ID << " (not found)");
 }
 
 void Core::SetPaused(ModuleID p_ID, bool p_bPaused)
@@ -117,7 +116,7 @@ void Core::Run()
 		Config::Instance().Update();
 		if (!WindowManager::Update())
 		{
-			LOG("MainWindow signalled WM_QUIT", c_Name, Info);
+			LOG("MainWindow signalled WM_QUIT", "core", Info);
 			break;
 		}
 		m_Dispatcher->Execute();

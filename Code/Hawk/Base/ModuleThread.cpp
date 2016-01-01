@@ -9,8 +9,6 @@
 
 namespace Hawk {
 
-namespace { const char* c_Name("ModuleThread"); }
-
 ModuleThread::ModuleThread(const std::string& p_Name)
 : m_Thread(p_Name, std::bind(&ModuleThread::Update, this))
 {
@@ -81,7 +79,7 @@ void ModuleThread::DebugPrint()
 
 void ModuleThread::Start()
 {
-	LOG("Running " << m_Modules.size() << " modules on thread: " << m_Thread.GetName(), c_Name, Info);
+	LOG("Running " << m_Modules.size() << " modules on thread: " << m_Thread.GetName(), "core", Info);
 	m_OldTime.SetToNow();
 	m_Thread.Start();
 }

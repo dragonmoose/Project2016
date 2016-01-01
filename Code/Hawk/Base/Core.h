@@ -2,13 +2,14 @@
 #ifdef HAWK_DEBUG
 #include "Console/ConsoleCommandManager.h"
 #endif
+#include "CoreSettings.h"
+#include "Module.h"
+#include "ModuleThread.h"
 #include "System/DllExport.h"
 #include "System/Dispatcher.h"
 #include "System/Exception.h"
 #include "Events/EventRouter.h"
 #include "System/Types.h"
-#include "Base/Module.h"
-#include "Base/ModuleThread.h"
 #include <memory>
 #include <unordered_map>
 
@@ -17,11 +18,12 @@ namespace Hawk {
 class HAWK_DLL_EXPORT Core final
 {
 public:
-	explicit Core(bool p_bConsole = true);
+	Core(const CoreSettings& p_Settings = CoreSettings());
 	~Core();
 	Core(const Core&) = delete;
 	Core& operator=(const Core&) = delete;
 
+	void Initialize();
 	void OpenWindow(HINSTANCE p_hInstance, const std::string& p_Name);
 
 	ThreadID CreateModuleThread(const std::string& p_Name);
@@ -29,19 +31,11 @@ public:
 	template<class T>
 	ModuleID AddModule(ThreadID p_ThreadID)
 	{
-		try
-		{
-			THROW_IF(p_ThreadID == ThreadID_Invalid, "Invalid thread id");
+		THROW_IF(p_ThreadID == ThreadID_Invalid, "Invalid thread id");
 
-			ModuleThread* l_ModuleThread = nullptr;
-			THROW_IF_NOT(TryGetModuleThread(p_ThreadID, &l_ModuleThread), "No thread with ID " << p_ThreadID << " exists");
-			return l_ModuleThread->Add<T>();
-		}
-		catch (Exception& e)
-		{
-			LOG_EXCEPTION(e, "core", Fatal);
-		}
-		return ModuleID_Invalid;
+		ModuleThread* l_ModuleThread = nullptr;
+		THROW_IF_NOT(TryGetModuleThread(p_ThreadID, &l_ModuleThread), "No thread with ID " << p_ThreadID << " exists");
+		return l_ModuleThread->Add<T>();
 	}
 
 	void RemoveModule(ModuleID p_ID);
@@ -69,6 +63,7 @@ private:
 	std::shared_ptr<EventRouter> m_EventRouter;
 	static std::atomic_bool m_bFatalSignal;
 	std::shared_ptr<Dispatcher> m_Dispatcher;
+	CoreSettings m_Settings;
 
 #ifdef HAWK_DEBUG
 	std::shared_ptr<ConsoleCommandManager> m_ConsoleCommandManager;
