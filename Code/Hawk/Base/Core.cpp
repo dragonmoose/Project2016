@@ -85,7 +85,6 @@ void Core::OpenWindow(HINSTANCE p_hInstance, const std::string& p_Name)
 
 void Core::RemoveModule(ModuleID p_ID)
 {
-	THROW_IF(p_ID == ModuleID_Invalid, "Invalid module ID");
 	for (auto& l_ModuleThread : m_ModuleThreads)
 	{
 		if (l_ModuleThread->TryRemove(p_ID))
@@ -94,7 +93,7 @@ void Core::RemoveModule(ModuleID p_ID)
 			return;
 		}
 	}
-	THROW("Failed to remove module with ID=" << p_ID << " (not found)");
+	LOG("Failed to remove module with ID=" << p_ID << " (not found)", "core", Error);
 }
 
 void Core::SetPaused(ModuleID p_ID, bool p_bPaused)
@@ -103,6 +102,10 @@ void Core::SetPaused(ModuleID p_ID, bool p_bPaused)
 	if (TryGetModule(p_ID, &l_Module))
 	{
 		l_Module->SetPaused(p_bPaused);
+	}
+	else
+	{
+		LOG("Failed to change pause state for module with ID=" << p_ID << " (not found)", "core", Error);
 	}
 }
 
