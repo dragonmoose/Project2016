@@ -15,7 +15,7 @@
 namespace Hawk {
 
 class Dispatcher;
-class ConsoleCommand;
+class ConsoleInputParser;
 
 class ConsoleCommandManager final
 {
@@ -85,7 +85,7 @@ private:
 	void CmdSetLogTag(const std::string& p_Filter);
 
 	std::string GetNextCommand(const std::string& p_Command, const std::string& p_Current) const;
-	void TryCallFunction(const CF::IConsoleFunction& p_Function, ConsoleCommand& p_Command) const;
+	void TryCallFunction(const CF::IConsoleFunction& p_Function, ConsoleInputParser& p_Command) const;
 
 	std::thread m_Thread;
 	std::atomic_bool m_bStopSignal;

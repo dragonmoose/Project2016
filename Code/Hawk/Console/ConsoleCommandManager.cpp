@@ -1,7 +1,7 @@
 #include "pch.h"
 #ifdef HAWK_DEBUG
 #include "Console/ConsoleCommandManager.h"
-#include "Console/ConsoleCommand.h"
+#include "Console/ConsoleInputParser.h"
 #include "Console/ConsoleAPI.h"
 #include "System/Version.h"
 #include "Util/Algorithm.h"
@@ -91,17 +91,17 @@ void ConsoleCommandManager::RunInputLoop()
 
 							if (l_CurrLine.find_first_not_of("\t\n ") != std::string::npos)
 							{
-								ConsoleCommand l_Command(l_CurrLine);
+								ConsoleInputParser l_ParsedInput(l_CurrLine);
 
 								std::lock_guard<std::mutex> l_Lock(m_Mutex);
-								auto l_Itr = m_Functions.find(l_Command.GetName());
+								auto l_Itr = m_Functions.find(l_ParsedInput.GetCommand());
 								if (l_Itr != m_Functions.end())
 								{
-									TryCallFunction(*l_Itr->second, l_Command);
+									TryCallFunction(*l_Itr->second, l_ParsedInput);
 								}
 								else
 								{
-									std::cout << "Unknown command: " << l_Command.GetName() << "\n\n";
+									std::cout << "Unknown command: " << l_ParsedInput.GetCommand() << "\n\n";
 								}
 							}
 							l_CurrLine.clear();
@@ -293,7 +293,7 @@ std::string ConsoleCommandManager::GetNextCommand(const std::string& p_Filter, c
 	}
 }
 
-void ConsoleCommandManager::TryCallFunction(const CF::IConsoleFunction& p_Function, ConsoleCommand& p_Command) const
+void ConsoleCommandManager::TryCallFunction(const CF::IConsoleFunction& p_Function, ConsoleInputParser& p_Command) const
 {
 	if (!p_Function.RequiresArgs())
 	{
