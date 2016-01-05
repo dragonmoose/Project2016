@@ -21,7 +21,9 @@ public:
 	Duration();
 	Duration(int p_iValue, Precision p_Precision);
 	std::string ToString() const;
+	std::string ToString_Perf() const;
 	void SetToZero();
+	bool IsZero() const;
 
 	bool operator==(const Duration& p_rhs) const;
 	bool operator!=(const Duration& p_rhs) const;

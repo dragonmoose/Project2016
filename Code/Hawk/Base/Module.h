@@ -2,6 +2,7 @@
 #include "System/DllExport.h"
 #include "System/Dispatcher.h"
 #include "Events/EventManager.h"
+#include "System/Duration.h"
 #include "System/Types.h"
 #ifdef HAWK_DEBUG
 #include "Console/ConsoleCommandManager.h"
@@ -58,6 +59,13 @@ namespace Hawk
 			m_RegisteredConsoleCommands.push_back(p_Name);
 #endif
 		}
+		
+		enum class FixedUpdateType
+		{
+			FramesPerSecond,
+			SecondsPerFrame
+		};
+		void SetFixedUpdate(float p_fValue, FixedUpdateType p_Type);
 
 	private:
 		std::unique_ptr<EventManager> m_EventManager;
@@ -66,6 +74,8 @@ namespace Hawk
 
 		static std::atomic_uint s_uiNextModuleID;
 		ModuleID m_ID;
+		Duration m_TimePerFrame;
+		Duration m_AccumulatedTime;
 
 #ifdef HAWK_DEBUG
 		std::shared_ptr<ConsoleCommandManager> m_ConsoleCommandManager;

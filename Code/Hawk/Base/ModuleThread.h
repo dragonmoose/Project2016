@@ -20,10 +20,10 @@ class HAWK_DLL_EXPORT ModuleThread final
 public:
 	ModuleThread(const std::string& p_Name);
 
-	template<class T>
-	ModuleID Add()
+	template<class Module_t, class... Args_t>
+	ModuleID Add(Args_t&&... p_Args)
 	{
-		std::unique_ptr<Module> l_Module = std::make_unique<T>();
+		std::unique_ptr<Module> l_Module = std::make_unique<Module_t>(std::forward<Args_t>(p_Args)...);
 
 		ModuleID l_ModuleID = l_Module->GetID();
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "Events/EventQueue.h"
+#include "Debug/Profiler.h"
 #include <unordered_map>
 #include <typeindex>
 #include <functional>
@@ -26,6 +27,7 @@ public:
 	template<class T>
 	void Dispatch(const T& p_Event)
 	{
+		PROFILE_SCOPE();
 		const std::type_index& l_TypeIndex = std::type_index(typeid(T));
 		EventQueuesMap_t::iterator l_Itr = m_EventQueues.find(l_TypeIndex);
 		if (l_Itr != m_EventQueues.end())

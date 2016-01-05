@@ -2,6 +2,7 @@
 #include "Base/Core.h"
 #include "Base/WindowManager.h"
 #include "Console/ConsoleAPI.h"
+#include "Debug/ProfilerManager.h"
 #include "System/Duration.h"
 #include "System/Time.h"
 #include "System/Thread.h"
@@ -57,6 +58,7 @@ void Core::Initialize()
 		m_ConsoleCommandManager->Start();
 		RegisterConsole();
 	}
+	ProfilerManager::Initialize(m_ConsoleCommandManager.get(), m_Dispatcher.get());
 #endif
 	Config::Instance().SetFilename(m_Settings.m_ConfigFilename);
 	Config::Instance().Load(true);

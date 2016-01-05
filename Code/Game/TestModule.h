@@ -12,6 +12,7 @@ class TestModule : public Hawk::Module
 public:
 	Hawk::Duration m_Duration;
 	std::string GetName() const override { return "TestModule"; }
+
 	virtual void Update(const Hawk::Duration& p_Duration)
 	{
 		m_Duration += p_Duration;
@@ -51,5 +52,9 @@ public:
 			LOGM("Event received. Value=" << p_Event.m_iValue, Debug);
 		}
 		);
+	}
+	void Initialize() override
+	{
+		//SetFixedUpdate(30.0f, FixedUpdateType::FramesPerSecond);
 	}
 };

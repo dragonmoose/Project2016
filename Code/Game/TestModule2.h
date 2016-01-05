@@ -43,4 +43,9 @@ public:
 			SendEvent<TestEvent>(l_Event);
 		}
 	}
+
+	void Initialize() override
+	{
+		SetFixedUpdate(2, FixedUpdateType::SecondsPerFrame);
+	}
 };

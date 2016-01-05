@@ -55,9 +55,19 @@ std::string Duration::ToString() const
 	return l_Stream.str();
 }
 
+std::string Duration::ToString_Perf() const
+{
+	return std::to_string(std::chrono::duration_cast<std::chrono::nanoseconds>(m_Duration).count());
+}
+
 void Duration::SetToZero()
 {
 	m_Duration = Duration_t::zero();
+}
+
+bool Duration::IsZero() const
+{
+	return m_Duration == Duration_t::zero();
 }
 
 bool Duration::operator==(const Duration& p_rhs) const

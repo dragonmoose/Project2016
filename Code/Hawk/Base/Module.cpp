@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Base/Module.h"
+#include "Debug/Profiler.h"
 #include "System/Duration.h"
 #include "System/Exception.h"
 #include <typeinfo>
@@ -67,8 +68,29 @@ void Module::_Update(const Duration& p_Duration)
 {
 	if (!IsPaused())
 	{
-		m_EventManager->HandleQueued();
-		Update(p_Duration);
+		if (!m_TimePerFrame.IsZero())
+		{
+			m_AccumulatedTime += p_Duration;
+			if (m_AccumulatedTime >= m_TimePerFrame)
+			{
+				Profiler l_Profiler(GetName() + ":Update");
+
+				l_Profiler.Start();
+				m_EventManager->HandleQueued();
+				Update(m_AccumulatedTime);
+				l_Profiler.Stop();
+
+				m_AccumulatedTime.SetToZero();
+			}
+		}
+		else
+		{
+			Profiler l_Profiler(GetName() + ":Update");
+			l_Profiler.Start();
+			m_EventManager->HandleQueued();
+			Update(p_Duration);
+			l_Profiler.Stop();
+		}
 	}
 	else
 	{
@@ -84,6 +106,7 @@ void Module::SetPaused(bool p_bPaused)
 {
 	LOGM_IF(p_bPaused != m_bPaused, "Pause state changed. IsPaused=" << p_bPaused, Debug);
 	m_bPaused = p_bPaused;
+	m_AccumulatedTime.SetToZero();
 }
 
 bool Module::IsPaused() const
@@ -91,5 +114,11 @@ bool Module::IsPaused() const
 	return m_bPaused;
 }
 
+void Module::SetFixedUpdate(float p_fValue, FixedUpdateType p_Type)
+{
+	float l_fValue = (p_Type == FixedUpdateType::FramesPerSecond ? (1.0f / p_fValue) : p_fValue);
+	m_TimePerFrame = Duration(static_cast<int>(l_fValue * 1000000.0f), Duration::Precision::MicroSecond);
+	LOGM("Fixed update time set. FPS: " << 1.0f / l_fValue << " Interval: " << l_fValue << " seconds", Info);
+}
 
 }

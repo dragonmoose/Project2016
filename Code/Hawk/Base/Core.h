@@ -28,14 +28,14 @@ public:
 
 	ThreadID CreateModuleThread(const std::string& p_Name);
 
-	template<class T>
-	ModuleID AddModule(ThreadID p_ThreadID)
+	template<class Module_t, class... Args_t>
+	ModuleID AddModule(ThreadID p_ThreadID, Args_t&&... p_Args)
 	{
 		THROW_IF(p_ThreadID == ThreadID_Invalid, "Invalid thread id");
 
 		ModuleThread* l_ModuleThread = nullptr;
 		THROW_IF_NOT(TryGetModuleThread(p_ThreadID, &l_ModuleThread), "No thread with ID " << p_ThreadID << " exists");
-		return l_ModuleThread->Add<T>();
+		return l_ModuleThread->Add<Module_t>(std::forward<Args_t>(p_Args)...);
 	}
 
 	void RemoveModule(ModuleID p_ID);

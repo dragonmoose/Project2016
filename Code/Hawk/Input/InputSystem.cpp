@@ -15,6 +15,7 @@ void InputSystem::OnKeyDown(unsigned char p_ucKeyCode)
 	{
 		m_EventManager.Send<InputEvents::KeyDownEvent>(InputEvents::KeyDownEvent(static_cast<KeyCode>(p_ucKeyCode)));
 		m_KeyTable.set(p_ucKeyCode, 1);
+		LOG("Key pressed: " << p_ucKeyCode, "input", Trace);
 	}
 }
 
@@ -22,6 +23,7 @@ void InputSystem::OnKeyUp(unsigned char p_ucKeyCode)
 {
 	m_EventManager.Send<InputEvents::KeyUpEvent>(InputEvents::KeyUpEvent(static_cast<KeyCode>(p_ucKeyCode)));
 	m_KeyTable.set(p_ucKeyCode, 0);
+	LOG("Key released: " << p_ucKeyCode, "input", Trace);
 }
 
 }

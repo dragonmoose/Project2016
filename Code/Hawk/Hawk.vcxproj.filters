@@ -59,6 +59,12 @@
     <ClCompile Include="Console\ConsoleInputParser.cpp">
       <Filter>Console</Filter>
     </ClCompile>
+    <ClCompile Include="Debug\Profiler.cpp">
+      <Filter>Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\ProfilerManager.cpp">
+      <Filter>Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -149,14 +155,20 @@
     <ClInclude Include="Util\Algorithm.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="System\Assert.h">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="Base\CoreSettings.h">
       <Filter>Base</Filter>
     </ClInclude>
     <ClInclude Include="Console\ConsoleInputParser.h">
       <Filter>Console</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug\Assert.h">
+      <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug\Profiler.h">
+      <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug\ProfilerManager.h">
+      <Filter>Debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +189,9 @@
     </Filter>
     <Filter Include="System">
       <UniqueIdentifier>{a46c3953-987d-454e-9d71-60a857659919}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debug">
+      <UniqueIdentifier>{09768996-1543-40e4-ae20-d580a453246c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
