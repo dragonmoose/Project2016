@@ -5,7 +5,7 @@
     <RootDir>$(SolutionDir)..\..\</RootDir>
     <CodeDir>$(RootDir)Code\</CodeDir>
     <ThirdPartyDir>$(CodeDir)ThirdParty\</ThirdPartyDir>
-    <BoostDir>$(ThirdPartyDir)boost_1_59_0\</BoostDir>
+    <BoostDir>$(ThirdPartyDir)boost_1_60_0\</BoostDir>
   </PropertyGroup>
   <PropertyGroup>
     <OutDir>$(RootDir)\$(Platform)\</OutDir>

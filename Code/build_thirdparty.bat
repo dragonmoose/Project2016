@@ -3,7 +3,7 @@ cd ThirdParty
 mkdir Win32
 mkdir x64
 
-cd boost_1_59_0
+cd boost_1_60_0
 
 if not exist b2.exe (
 	call bootstrap.bat
