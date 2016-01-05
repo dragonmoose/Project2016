@@ -193,5 +193,8 @@
     <Filter Include="Debug">
       <UniqueIdentifier>{09768996-1543-40e4-ae20-d580a453246c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{d1821ec8-2d2f-4268-8503-d363412c0779}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
