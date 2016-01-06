@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "System/Thread.h"
+#include "Thread.h"
 #include "Console/Logger.h"
 
 namespace Hawk {

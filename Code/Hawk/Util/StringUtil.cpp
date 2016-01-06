@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "Util/StringUtil.h"
+#include "StringUtil.h"
 #include "boost/algorithm/string.hpp"
 
 namespace Hawk {

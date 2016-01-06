@@ -1,6 +1,6 @@
 #pragma once
-#include "System/Dispatcher.h"
-#include "System/Types.h"
+#include "Dispatcher.h"
+#include "Types.h"
 #include <atomic>
 #include <thread>
 #include <functional>

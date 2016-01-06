@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "Base/Core.h"
-#include "Base/WindowManager.h"
+#include "Core.h"
+#include "WindowManager.h"
 #include "Console/ConsoleAPI.h"
 #include "Debug/ProfilerManager.h"
 #include "System/Duration.h"

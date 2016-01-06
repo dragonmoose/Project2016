@@ -1,5 +1,5 @@
 #pragma once
-#include "Events/EventHandler.h"
+#include "EventHandler.h"
 #include <typeindex>
 
 namespace Hawk {

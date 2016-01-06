@@ -1,7 +1,7 @@
 #pragma once
 #ifdef HAWK_DEBUG
-#include "Console/ConsoleFunction.h"
-#include "Console/Logger.h"
+#include "ConsoleFunction.h"
+#include "Logger.h"
 #include "System/Exception.h"
 #include "Util/StringUtil.h"
 #include <string>

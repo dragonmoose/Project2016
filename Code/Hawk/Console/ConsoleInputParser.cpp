@@ -1,7 +1,7 @@
 #include "pch.h"
 
 #ifdef HAWK_DEBUG
-#include "Console/ConsoleInputParser.h"
+#include "ConsoleInputParser.h"
 #include "Util/StringUtil.h"
 #include <boost/tokenizer.hpp>
 

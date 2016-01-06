@@ -1,7 +1,7 @@
 #pragma once
+#include "DllExport.h"
+#include "Time.h"
 #include "Console/Logger.h"
-#include "System/DllExport.h"
-#include "System/Time.h"
 #include <boost/property_tree/ptree.hpp>
 #include <mutex>
 

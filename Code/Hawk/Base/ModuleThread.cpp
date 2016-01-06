@@ -1,9 +1,8 @@
 #include "pch.h"
-#include "Base/ModuleThread.h"
-#include "Base/Module.h"
-#include "Time.h"
-#include "System/Duration.h"
+#include "ModuleThread.h"
+#include "Module.h"
 #include "Events/EventManager.h"
+#include "System/Duration.h"
 #include "Util/StringUtil.h"
 #include <iomanip>
 

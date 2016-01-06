@@ -1,8 +1,8 @@
 #pragma once
-#include "Events/IEvent.h"
-#include "Events/EventRouter.h"
-#include "Events/EventQueue.h"
-#include "Events/EventHandler.h"
+#include "IEvent.h"
+#include "EventRouter.h"
+#include "EventQueue.h"
+#include "EventHandler.h"
 #include "System/DllExport.h"
 #include "Console/Logger.h"
 #include <unordered_map>

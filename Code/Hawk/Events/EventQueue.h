@@ -1,5 +1,5 @@
 #pragma once
-#include "Events/QueuedEvent.h"
+#include "QueuedEvent.h"
 #include <vector>
 #include <memory>
 #include <mutex>

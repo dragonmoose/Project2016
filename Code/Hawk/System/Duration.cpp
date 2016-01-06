@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "System/Duration.h"
+#include "Duration.h"
 #include <iomanip>
 
 namespace Hawk {

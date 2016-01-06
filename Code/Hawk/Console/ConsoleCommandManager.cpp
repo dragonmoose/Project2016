@@ -1,8 +1,8 @@
 #include "pch.h"
 #ifdef HAWK_DEBUG
-#include "Console/ConsoleCommandManager.h"
-#include "Console/ConsoleInputParser.h"
-#include "Console/ConsoleAPI.h"
+#include "ConsoleCommandManager.h"
+#include "ConsoleInputParser.h"
+#include "ConsoleAPI.h"
 #include "System/Version.h"
 #include "Util/Algorithm.h"
 #include "Util/StringUtil.h"

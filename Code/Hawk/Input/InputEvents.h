@@ -1,6 +1,6 @@
 #pragma once
+#include "KeyCodes.h"
 #include "Events/IEvent.h"
-#include "Input/KeyCodes.h"
 #include "System/DllExport.h"
 
 namespace Hawk {

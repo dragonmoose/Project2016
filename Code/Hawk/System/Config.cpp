@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "System/Config.h"
-#include "System/Duration.h"
+#include "Config.h"
+#include "Duration.h"
 #include <boost/filesystem.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 

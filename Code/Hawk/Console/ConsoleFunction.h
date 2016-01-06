@@ -1,14 +1,14 @@
 #pragma once
 #ifdef HAWK_DEBUG
-#include "Console/Logger.h"
+#include "Logger.h"
 #include "System/Dispatcher.h"
+#include <boost/lexical_cast.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/at.hpp>
 #include <functional>
 #include <memory>
 #include <string>
 #include <vector>
-#include <boost/lexical_cast.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/at.hpp>
 
 namespace Hawk {
 

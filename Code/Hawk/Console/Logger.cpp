@@ -12,8 +12,8 @@ namespace Logger
 }
 
 #ifdef HAWK_DEBUG
-#include "Console/Logger.h"
-#include "Console/ConsoleAPI.h"
+#include "Logger.h"
+#include "ConsoleAPI.h"
 #include "System/Time.h"
 #include "System/Duration.h"
 #include "Util/StringUtil.h"

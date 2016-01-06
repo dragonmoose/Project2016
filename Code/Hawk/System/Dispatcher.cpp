@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "System/Dispatcher.h"
+#include "Dispatcher.h"
 
 namespace Hawk {
 
