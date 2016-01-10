@@ -23,35 +23,83 @@ namespace ProfilerManager
 	using DataMap_t = std::unordered_map<std::string, Data>;
 	DataMap_t m_DataMap;
 	std::mutex m_Mutex;
+	bool m_bPaused = false;
 
+	void Pause();
+	void Resume();
+	void Clear();
 	void Print();
 }
 
 void ProfilerManager::Initialize(ConsoleCommandManager* p_ConsoleManager, Dispatcher* p_Dispatcher)
 {
 	p_ConsoleManager->Register("profiler.print", &ProfilerManager::Print, p_Dispatcher, "Prints profiling data", "");
+	p_ConsoleManager->Register("profiler.pause", &ProfilerManager::Pause, p_Dispatcher, "Pauses the collection of profiling data", "");
+	p_ConsoleManager->Register("profiler.resume", &ProfilerManager::Resume, p_Dispatcher, "Resumes the collection of profiling data", "");
+	p_ConsoleManager->Register("profiler.clear", &ProfilerManager::Clear, p_Dispatcher, "Clears all profiling data", "");
 }
 
 void ProfilerManager::Add(const std::string& p_Name, const Duration& p_Duration)
 {
-	std::lock_guard<std::mutex> l_Lock(m_Mutex);
-	auto l_Itr = m_DataMap.find(p_Name);
-	if (l_Itr == m_DataMap.end())
+	if (!m_bPaused)
 	{
-		std::pair<DataMap_t::iterator, bool> l_bResult = m_DataMap.insert(DataMap_t::value_type(p_Name, Data(p_Duration)));
-		ASSERT(l_bResult.second, "Failed to insert profiler data. Name=" << p_Name);
+		std::lock_guard<std::mutex> l_Lock(m_Mutex);
+		auto l_Itr = m_DataMap.find(p_Name);
+		if (l_Itr == m_DataMap.end())
+		{
+			std::pair<DataMap_t::iterator, bool> l_bResult = m_DataMap.insert(DataMap_t::value_type(p_Name, Data(p_Duration)));
+			ASSERT(l_bResult.second, "Failed to insert profiler data. Name=" << p_Name);
+		}
+		else
+		{
+			Data& l_Data = l_Itr->second;
+			l_Data.m_uiCount++;
+			l_Data.m_TotalTime += p_Duration;
+
+			if (p_Duration > l_Data.m_PeakTime)
+			{
+				l_Data.m_PeakTime = p_Duration;
+			}
+		}
+	}
+}
+
+void ProfilerManager::Pause()
+{
+	CONSOLE_WRITE_SCOPE();
+	if (!m_bPaused)
+	{
+		std::cout << "\nProfiler paused.\n\n";
 	}
 	else
 	{
-		Data& l_Data = l_Itr->second;
-		l_Data.m_uiCount++;
-		l_Data.m_TotalTime += p_Duration;
-
-		if (p_Duration > l_Data.m_PeakTime)
-		{
-			l_Data.m_PeakTime = p_Duration;
-		}
+		std::cout << "\nProfiler already paused.\n\n";
 	}
+	m_bPaused = true;
+}
+
+void ProfilerManager::Resume()
+{
+	CONSOLE_WRITE_SCOPE();
+	if (m_bPaused)
+	{
+		std::cout << "\nProfiler resumed.\n\n";
+	}
+	else
+	{
+		std::cout << "\nProfiler already running.\n\n";
+	}
+	m_bPaused = false;
+}
+
+void ProfilerManager::Clear()
+{
+	std::lock_guard<std::mutex> l_Lock(m_Mutex);
+	m_DataMap.clear();
+
+	CONSOLE_WRITE_SCOPE();
+	std::cout << "Cleared all profiling data.\n\n";
+
 }
 
 void ProfilerManager::Print()

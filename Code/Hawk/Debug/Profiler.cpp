@@ -25,7 +25,7 @@ Profiler::~Profiler()
 void Profiler::Start()
 {
 #ifdef HAWK_DEBUG
-	ASSERT(!m_bRunning, "Attempting to start an already running profiler.Name: " << m_Name);
+	ASSERT(!m_bRunning, "Attempting to start an already running profiler. Name: " << m_Name);
 	m_StartTime.SetToNow();
 	m_bRunning = true;
 #endif
