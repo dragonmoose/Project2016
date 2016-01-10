@@ -56,27 +56,22 @@ void Logger::Log(const std::string& p_Msg, const std::string& p_Tag, const std::
 	if (!ShouldLog(p_Msg, l_ThreadInfo, p_Tag, p_Level)) return;
 
 	CONSOLE_WRITE_SCOPE();
+	ConsoleAPI::Write(Time::Now().ToString().append(" "), ConsoleAPI::Color::White, ConsoleAPI::Color::None);
 
 	std::ostringstream l_Stream;
-	l_Stream << "\r" << Time::Now().ToString() << " ";
-	ConsoleAPI::Write(l_Stream.str(), ConsoleAPI::Color::White, ConsoleAPI::Color::None);
-
-	l_Stream.str("");
-	l_Stream.clear();
-
 	l_Stream << l_ThreadInfo << " " << p_Tag;
 	ConsoleAPI::Write(l_Stream.str(), ConsoleAPI::Color::BrightWhite, ConsoleAPI::Color::Cyan);
 	ConsoleAPI::Write(" ", ConsoleAPI::Color::None, ConsoleAPI::Color::None);
 
+	l_Stream.str("");
+	l_Stream.clear();
+
+	l_Stream << p_Msg << " [" << p_FileInfo << "]";
+	
 	ConsoleAPI::Color l_Color;
 	ConsoleAPI::Color l_BgColor;
 	GetLevelColors(p_Level, l_Color, l_BgColor);
-	ConsoleAPI::Write(p_Msg, l_Color, l_BgColor);
-
-	l_Stream.str("");
-	l_Stream.clear();
-	l_Stream << " [" << p_FileInfo << "]";
-	ConsoleAPI::WriteLine(l_Stream.str(), ConsoleAPI::Color::BrightBlue, ConsoleAPI::Color::None);
+	ConsoleAPI::WriteLine(l_Stream.str(), l_Color, l_BgColor);
 }
 
 bool Logger::IsValidLogLevelString(const std::string& p_Level)
