@@ -29,7 +29,7 @@ namespace ProfilerManager
 
 void ProfilerManager::Initialize(ConsoleCommandManager* p_ConsoleManager, Dispatcher* p_Dispatcher)
 {
-	p_ConsoleManager->Register("profiler.print", &ProfilerManager::Print, p_Dispatcher, "Prints profiling data", "[filter]", false);
+	p_ConsoleManager->Register("profiler.print", &ProfilerManager::Print, p_Dispatcher, "Prints profiling data", "");
 }
 
 void ProfilerManager::Add(const std::string& p_Name, const Duration& p_Duration)
@@ -60,7 +60,7 @@ void ProfilerManager::Print()
 	static const int w2 = 20;
 
 	CONSOLE_WRITE_SCOPE();
-	std::cout << "\n" << std::left << std::setw(w1) << "Name" << std::setw(w2) << "Peak time" << std::setw(w2) << "Total time" << "Count\n";
+	std::cout << "\n" << std::left << std::setw(w1) << "Name" << std::setw(w2) << "Peak time (s)" << std::setw(w2) << "Total time (s)" << "Count\n";
 	std::cout << "-------------------------------------------------------------------------------------\n";
 
 	std::lock_guard<std::mutex> l_Lock(m_Mutex);
@@ -68,8 +68,8 @@ void ProfilerManager::Print()
 	{
 		const std::string& l_Name = l_KeyVal.first;
 		const Data& l_Data = l_KeyVal.second;
-		std::cout << std::left << std::setw(w1) << l_Name << std::setw(w2) << l_Data.m_PeakTime.ToString_Perf() << std::setw(w2) <<
-			l_Data.m_TotalTime.ToString_Perf() << l_Data.m_uiCount << "\n";
+		std::cout << std::left << std::setw(w1) << l_Name << std::setw(w2) << l_Data.m_PeakTime.ToString(Duration::Format::Seconds) << std::setw(w2) <<
+			l_Data.m_TotalTime.ToString(Duration::Format::Seconds) << l_Data.m_uiCount << "\n";
 	}
 	std::cout << "\n";
 }

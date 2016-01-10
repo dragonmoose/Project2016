@@ -14,3 +14,5 @@
 #else
 	#define ASSERT(p, msg)
 #endif
+
+#define ASSERT_LN(msg) ASSERT(false, msg)

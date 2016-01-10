@@ -18,10 +18,16 @@ public:
 		NanoSecond
 	};
 
+	enum class Format
+	{
+		HourMinSecMS,
+		Seconds,
+		LargestUnit
+	};
+
 	Duration();
 	Duration(int p_iValue, Precision p_Precision);
-	std::string ToString() const;
-	std::string ToString_Perf() const;
+	std::string ToString(Format p_Format = Format::HourMinSecMS) const;
 	void SetToZero();
 	bool IsZero() const;
 
@@ -37,6 +43,10 @@ public:
 	friend class Time;
 
 private:
+	std::string ToString_HourMinSecMS() const;
+	std::string ToString_Seconds() const;
+	std::string ToString_LargestUnit() const;
+
 	using Duration_t = std::chrono::steady_clock::duration;
 	Duration_t m_Duration;
 };
