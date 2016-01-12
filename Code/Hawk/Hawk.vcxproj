@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3296EC47-FDBA-4F2E-8320-CDFC04A1D1DB}</ProjectGuid>
     <RootNamespace>Hawk</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -100,6 +100,8 @@
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Input\KeyCodes.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Rendering\d3dx12.h" />
+    <ClInclude Include="Rendering\RenderingModule.h" />
     <ClInclude Include="System\Config.h" />
     <ClInclude Include="System\Dispatcher.h" />
     <ClInclude Include="System\DllExport.h" />
@@ -133,6 +135,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Rendering\RenderingModule.cpp" />
     <ClCompile Include="System\Config.cpp" />
     <ClCompile Include="System\Dispatcher.cpp" />
     <ClCompile Include="System\Duration.cpp" />

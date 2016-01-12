@@ -65,6 +65,9 @@
     <ClCompile Include="Debug\ProfilerManager.cpp">
       <Filter>Debug</Filter>
     </ClCompile>
+    <ClCompile Include="Rendering\RenderingModule.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -169,6 +172,12 @@
     </ClInclude>
     <ClInclude Include="Debug\ProfilerManager.h">
       <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderingModule.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\d3dx12.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
