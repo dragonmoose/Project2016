@@ -99,7 +99,6 @@ void ProfilerManager::Clear()
 
 	CONSOLE_WRITE_SCOPE();
 	std::cout << "Cleared all profiling data.\n\n";
-
 }
 
 void ProfilerManager::Print()
