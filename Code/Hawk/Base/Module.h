@@ -60,12 +60,12 @@ namespace Hawk
 #endif
 		}
 		
-		enum class FixedUpdateType
+		enum class FixedTimeStepDecl
 		{
 			FramesPerSecond,
 			SecondsPerFrame
 		};
-		void SetFixedUpdate(float p_fValue, FixedUpdateType p_Type);
+		void SetFixedTimeStep(float p_fValue, FixedTimeStepDecl p_Decl);
 
 	private:
 		std::unique_ptr<EventManager> m_EventManager;

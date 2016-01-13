@@ -3,6 +3,10 @@
 #include "WindowManager.h"
 #include "Console/ConsoleAPI.h"
 #include "Debug/ProfilerManager.h"
+#include "Gfx/RenderingModule.h"
+#ifdef HAWK_RENDERER_D3D12
+#include "Gfx/D3D12/D3D12Renderer.h"
+#endif
 #include "System/Duration.h"
 #include "System/Time.h"
 #include "System/Thread.h"
@@ -65,6 +69,13 @@ void Core::Initialize()
 	LOG("Working directory set to: " << boost::filesystem::current_path(), "core", Info);
 
 	WindowManager::Initialize(m_EventRouter);
+
+	if (m_Settings.m_bRenderingModule)
+	{
+#ifdef HAWK_RENDERER_D3D12
+		AddModule<Gfx::RenderingModule>(CreateModuleThread("gfx"), std::make_unique<Gfx::D3D12Renderer>());
+#endif
+	}
 	LOG("Hawk core initialized...", "core", Info);
 }
 

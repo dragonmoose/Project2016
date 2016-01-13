@@ -176,7 +176,7 @@ void ConsoleCommandManager::CmdListCommands(const std::string& p_Filter)
 void ConsoleCommandManager::CmdGetConfig(const std::string& p_Key)
 {
 	CONSOLE_WRITE_SCOPE();
-	std::cout << Config::Instance().Get<std::string>(p_Key, "Config key not found") << "\n";
+	std::cout << Config::Instance().Get<std::string>(p_Key, "Config key not found") << "            \n\n";
 }
 
 void ConsoleCommandManager::CmdReloadConfig()

@@ -114,11 +114,11 @@ bool Module::IsPaused() const
 	return m_bPaused;
 }
 
-void Module::SetFixedUpdate(float p_fValue, FixedUpdateType p_Type)
+void Module::SetFixedTimeStep(float p_fValue, FixedTimeStepDecl p_Decl)
 {
-	float l_fValue = (p_Type == FixedUpdateType::FramesPerSecond ? (1.0f / p_fValue) : p_fValue);
+	float l_fValue = (p_Decl == FixedTimeStepDecl::FramesPerSecond ? (1.0f / p_fValue) : p_fValue);
 	m_TimePerFrame = Duration(static_cast<int>(l_fValue * 1000000.0f), Duration::Precision::MicroSecond);
-	LOGM("Fixed update time set. FPS: " << 1.0f / l_fValue << " Interval: " << l_fValue << " seconds", Info);
+	LOGM("Using fixed time step. " << 1.0f / l_fValue << " FPS Interval: " << l_fValue << " seconds", Info);
 }
 
 }

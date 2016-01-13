@@ -65,8 +65,11 @@
     <ClCompile Include="Debug\ProfilerManager.cpp">
       <Filter>Debug</Filter>
     </ClCompile>
-    <ClCompile Include="Rendering\RenderingModule.cpp">
-      <Filter>Rendering</Filter>
+    <ClCompile Include="Gfx\RenderingModule.cpp">
+      <Filter>Gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\D3D12\D3D12Renderer.cpp">
+      <Filter>Gfx\D3D12</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,11 +176,17 @@
     <ClInclude Include="Debug\ProfilerManager.h">
       <Filter>Debug</Filter>
     </ClInclude>
-    <ClInclude Include="Rendering\RenderingModule.h">
-      <Filter>Rendering</Filter>
+    <ClInclude Include="Gfx\RenderingModule.h">
+      <Filter>Gfx</Filter>
     </ClInclude>
-    <ClInclude Include="Rendering\d3dx12.h">
-      <Filter>Rendering</Filter>
+    <ClInclude Include="Gfx\D3D12\d3dx12.h">
+      <Filter>Gfx\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\IRenderingAPI.h">
+      <Filter>Gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\D3D12\D3D12Renderer.h">
+      <Filter>Gfx\D3D12</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -202,8 +211,11 @@
     <Filter Include="Debug">
       <UniqueIdentifier>{09768996-1543-40e4-ae20-d580a453246c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Rendering">
+    <Filter Include="Gfx">
       <UniqueIdentifier>{d1821ec8-2d2f-4268-8503-d363412c0779}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gfx\D3D12">
+      <UniqueIdentifier>{4658b528-dfa4-485d-8d87-78298e709671}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

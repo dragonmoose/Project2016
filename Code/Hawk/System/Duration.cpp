@@ -7,6 +7,7 @@ namespace Hawk {
 
 Duration::Duration()
 {
+	SetToZero();
 }
 
 Duration::Duration(int p_iValue, Precision p_Precision)

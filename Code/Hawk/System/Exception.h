@@ -1,5 +1,6 @@
 #pragma once
 #include "DllExport.h"
+#include <comdef.h>
 #include <stdexcept>
 #include <sstream>
 
@@ -24,4 +25,4 @@ private:
 }
 #define THROW_IF(p, msg)						if ((p)) THROW(msg)
 #define THROW_IF_NOT(p, msg)					if (!(p)) THROW(msg)
-#define THROW_IF_COMERR(p, msg)					if ((p < 0)) THROW(msg)
+#define THROW_IF_COMERR(p, msg)					if ((p < 0)) THROW(msg << " [" << _com_error(p).ErrorMessage() << "]")

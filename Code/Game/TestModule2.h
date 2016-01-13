@@ -46,6 +46,6 @@ public:
 
 	void Initialize() override
 	{
-		SetFixedUpdate(2, FixedUpdateType::SecondsPerFrame);
+		SetFixedTimeStep(2, FixedTimeStepDecl::SecondsPerFrame);
 	}
 };
