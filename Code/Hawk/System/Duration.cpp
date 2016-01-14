@@ -37,7 +37,7 @@ Duration::Duration(int p_iValue, Precision p_Precision)
 	}
 }
 
-std::string Duration::ToString(Duration::Format p_Format) const
+std::string Duration::ToString(Format p_Format) const
 {
 	switch (p_Format)
 	{
@@ -96,6 +96,11 @@ Duration& Duration::operator+=(const Duration& p_rhs)
 {
 	m_Duration += p_rhs.m_Duration;
 	return *this;
+}
+
+Duration Duration::operator/(unsigned int p_uiDenominator) const
+{
+	return Duration((m_Duration / p_uiDenominator).count(), Precision::NanoSecond);
 }
 
 std::string Duration::ToString_HourMinSecMS() const

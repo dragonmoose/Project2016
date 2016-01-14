@@ -49,7 +49,6 @@ Core::~Core()
 void Core::Initialize()
 {
 	m_EventRouter = std::make_shared<EventRouter>();
-	m_Dispatcher = std::make_shared<Dispatcher>();
 	boost::filesystem::current_path(boost::filesystem::current_path().parent_path());
 	
 #ifdef HAWK_DEBUG
@@ -57,12 +56,13 @@ void Core::Initialize()
 	{
 		ConsoleAPI::Start();
 		Logger::RegisterThread(Thread::MainThreadName, std::this_thread::get_id());
-
-		m_ConsoleCommandManager = std::make_shared<ConsoleCommandManager>(m_Dispatcher);
+		
+		m_DebugDispatcher = std::make_shared<Dispatcher>();
+		m_ConsoleCommandManager = std::make_shared<ConsoleCommandManager>(m_DebugDispatcher);
 		m_ConsoleCommandManager->Start();
 		RegisterConsole();
 	}
-	ProfilerManager::Initialize(m_ConsoleCommandManager.get(), m_Dispatcher.get());
+	ProfilerManager::Initialize(m_ConsoleCommandManager.get(), m_DebugDispatcher.get());
 #endif
 	Config::Instance().SetFilename(m_Settings.m_ConfigFilename);
 	Config::Instance().Load(true);
@@ -135,7 +135,9 @@ void Core::Run()
 			LOG("MainWindow signalled WM_QUIT", "core", Info);
 			break;
 		}
-		m_Dispatcher->Execute();
+#ifdef HAWK_DEBUG
+		m_DebugDispatcher->Execute();
+#endif
 	}
 	StopModules();
 }
@@ -206,9 +208,9 @@ bool Core::TryGetModule(ModuleID p_ID, Module** p_Module) const
 #ifdef HAWK_DEBUG
 void Core::RegisterConsole()
 {
-	m_ConsoleCommandManager->Register("module.remove", this, &Core::RemoveModule, m_Dispatcher.get(), "Removes the specified module.", "[moduleID]");
-	m_ConsoleCommandManager->Register("module.setPaused", this, &Core::SetPaused, m_Dispatcher.get(), "Pause/resume module.", "[mouleID] [0/1]");
-	m_ConsoleCommandManager->Register("module.list", this, &Core::CmdListModules, m_Dispatcher.get(), "Lists modules", "");
+	m_ConsoleCommandManager->Register("module.remove", this, &Core::RemoveModule, m_DebugDispatcher.get(), "Removes the specified module.", "[moduleID]");
+	m_ConsoleCommandManager->Register("module.setPaused", this, &Core::SetPaused, m_DebugDispatcher.get(), "Pause/resume module.", "[mouleID] [0/1]");
+	m_ConsoleCommandManager->Register("module.list", this, &Core::CmdListModules, m_DebugDispatcher.get(), "Lists modules", "");
 }
 
 void Core::CmdListModules()

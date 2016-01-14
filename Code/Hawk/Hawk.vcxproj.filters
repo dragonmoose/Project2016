@@ -71,6 +71,9 @@
     <ClCompile Include="Gfx\D3D12\D3D12Renderer.cpp">
       <Filter>Gfx\D3D12</Filter>
     </ClCompile>
+    <ClCompile Include="System\Mutex.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -187,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="Gfx\D3D12\D3D12Renderer.h">
       <Filter>Gfx\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Mutex.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

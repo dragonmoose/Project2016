@@ -25,6 +25,7 @@ Config& Config::Instance()
 
 Config::Config()
 : m_LastWriteTime(0)
+, m_Mutex("Config")
 {
 }
 
@@ -82,7 +83,7 @@ void Config::PrivLoad()
 	boost::property_tree::ptree l_NewProperties;
 	boost::property_tree::ini_parser::read_ini(m_Filename, l_NewProperties);
 
-	std::lock_guard<std::mutex> l_Lock(m_Mutex);
+	MutexScope_t l_MutexScope(m_Mutex);
 	m_Properties.swap(l_NewProperties);
 }
 

@@ -4,6 +4,7 @@
 #include "EventQueue.h"
 #include "EventHandler.h"
 #include "System/DllExport.h"
+#include "System/Mutex.h"
 #include "Console/Logger.h"
 #include <unordered_map>
 #include <typeinfo>
@@ -11,7 +12,6 @@
 #include <memory>
 #include <string>
 #include <functional>
-#include <mutex>
 
 namespace Hawk {
 

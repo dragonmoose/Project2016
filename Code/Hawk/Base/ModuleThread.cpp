@@ -10,12 +10,13 @@ namespace Hawk {
 
 ModuleThread::ModuleThread(const std::string& p_Name)
 : m_Thread(p_Name, std::bind(&ModuleThread::Update, this))
+, m_Mutex(p_Name)
 {
 }
 
 bool ModuleThread::TryRemove(ModuleID p_ID)
 {
-	std::lock_guard<std::mutex> l_Lock(m_Mutex);
+	MutexScope_t l_MutexScope(m_Mutex);
 	Modules_t::const_iterator l_Itr = FindByID(p_ID);
 	if (l_Itr != m_Modules.end())
 	{
@@ -27,7 +28,7 @@ bool ModuleThread::TryRemove(ModuleID p_ID)
 
 bool ModuleThread::TryGetModule(ModuleID p_ID, Module** p_Module) const
 {
-	std::lock_guard<std::mutex> l_Lock(m_Mutex);
+	MutexScope_t l_MutexScope(m_Mutex);
 	Modules_t::const_iterator l_Itr = FindByID(p_ID);
 	if (l_Itr != m_Modules.end())
 	{
@@ -95,7 +96,7 @@ void ModuleThread::Update()
 	Duration l_Delta(l_CurrTime - m_OldTime);
 	m_OldTime = l_CurrTime;
 
-	std::lock_guard<std::mutex> l_Lock(m_Mutex);
+	MutexScope_t l_MutexScope(m_Mutex);
 	for (auto& l_Module : m_Modules)
 	{
 		l_Module->_Update(l_Delta);

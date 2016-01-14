@@ -3,9 +3,14 @@
 
 namespace Hawk {
 
+Dispatcher::Dispatcher(const std::string& p_ThreadName)
+: m_Mutex(std::string("Dispatcher") + "->" + p_ThreadName)
+{
+}
+
 void Dispatcher::Post(Func_t p_Func)
 {
-	std::lock_guard<std::mutex> l_Lock(m_Mutex);
+	MutexScope_t l_MutexScope(m_Mutex);
 	m_Functions.push_back(p_Func);
 }
 
@@ -13,7 +18,7 @@ void Dispatcher::Execute()
 {
 	FuncVec_t l_Functions;
 	{
-		std::lock_guard<std::mutex> l_Lock(m_Mutex);
+		MutexScope_t l_MutexScope(m_Mutex);
 		m_Functions.swap(l_Functions);
 	}
 

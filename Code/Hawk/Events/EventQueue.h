@@ -1,15 +1,15 @@
 #pragma once
 #include "QueuedEvent.h"
+#include "System/Mutex.h"
 #include <vector>
 #include <memory>
-#include <mutex>
 
 namespace Hawk {
 
 class EventQueue final
 {
 public:
-	EventQueue() {}
+	EventQueue() : m_Mutex("EventQueue") {}
 	EventQueue(const EventQueue&) = delete;
 	EventQueue& operator=(const EventQueue&) = delete;
 
@@ -19,24 +19,24 @@ public:
 	void Push(const T& p_Event)
 	{
 		std::unique_ptr<QueuedEvent<T>> l_QueuedEvent = std::make_unique<QueuedEvent<T>>(p_Event);
-		std::lock_guard<std::mutex> l_Lock(m_Mutex);
+		MutexScope_t l_MutexScope(m_Mutex);
 		m_Queue.push_back(std::move(l_QueuedEvent));
 	}
 
 	void Pop(Queue_t& p_Queue)
 	{
-		std::lock_guard<std::mutex> l_Lock(m_Mutex);
+		MutexScope_t l_MutexScope(m_Mutex);
 		m_Queue.swap(p_Queue);
 	}
 
 	void Clear()
 	{
-		std::lock_guard<std::mutex> l_Lock(m_Mutex);
+		MutexScope_t l_MutexScope(m_Mutex);
 		m_Queue.clear();
 	}
 
 private:
-	std::mutex m_Mutex;
+	Mutex m_Mutex;
 	Queue_t m_Queue;
 };
 

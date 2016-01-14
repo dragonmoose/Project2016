@@ -62,11 +62,11 @@ private:
 
 	std::shared_ptr<EventRouter> m_EventRouter;
 	static std::atomic_bool m_bFatalSignal;
-	std::shared_ptr<Dispatcher> m_Dispatcher;
 	CoreSettings m_Settings;
 
 #ifdef HAWK_DEBUG
 	std::shared_ptr<ConsoleCommandManager> m_ConsoleCommandManager;
+	std::shared_ptr<Dispatcher> m_DebugDispatcher;
 #endif
 
 };

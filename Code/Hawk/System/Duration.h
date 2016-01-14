@@ -39,6 +39,7 @@ public:
 	bool operator>=(const Duration& p_rhs) const;
 
 	Duration& operator+=(const Duration& p_rhs);
+	Duration operator/(unsigned int p_iDenominator) const;
 
 	friend class Time;
 

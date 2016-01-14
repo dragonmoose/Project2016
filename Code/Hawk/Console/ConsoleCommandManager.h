@@ -3,11 +3,11 @@
 #include "ConsoleFunction.h"
 #include "Logger.h"
 #include "System/Exception.h"
+#include "System/Mutex.h"
 #include "Util/StringUtil.h"
 #include <string>
 #include <vector>
 #include <memory>
-#include <mutex>
 #include <atomic>
 #include <thread>
 #include <map>
@@ -38,7 +38,7 @@ public:
 
 			const std::string l_Name = StringUtil::ToLower(p_Name);
 
-			std::lock_guard<std::mutex> l_Lock(m_Mutex);
+			MutexScope_t l_MutexScope(m_Mutex);
 			bool l_bInserted = m_Functions.insert(FunctionMap_t::value_type(l_Name, std::make_unique<CF::MemberConsoleFunction<Object_t, Args_t...>>(p_Object, p_Func, p_Dispatcher, l_Name, p_Desc, p_ArgsDesc, p_bRequireArgs))).second;
 			THROW_IF_NOT(l_bInserted, "Failed to register member console function (already registered?): " << p_Name);
 		}
@@ -57,7 +57,7 @@ public:
 
 			const std::string l_Name = StringUtil::ToLower(p_Name);
 
-			std::lock_guard<std::mutex> l_Lock(m_Mutex);
+			MutexScope_t l_MutexScope(m_Mutex);
 			bool l_bInserted = m_Functions.insert(FunctionMap_t::value_type(l_Name, std::make_unique<CF::FreeConsoleFunction<Args_t...>>(p_Func, p_Dispatcher, l_Name, p_Desc, p_ArgsDesc, p_bRequireArgs))).second;
 			THROW_IF_NOT(l_bInserted, "Failed to register free console function (already registered?): " << p_Name);
 		}
@@ -90,7 +90,7 @@ private:
 	std::atomic_bool m_bStopSignal;
 	std::shared_ptr<Dispatcher> m_Dispatcher;
 
-	mutable std::mutex m_Mutex;
+	mutable Mutex m_Mutex;
 	using FunctionMap_t = std::map<std::string, std::unique_ptr<CF::IConsoleFunction>>;
 	FunctionMap_t m_Functions;
 };

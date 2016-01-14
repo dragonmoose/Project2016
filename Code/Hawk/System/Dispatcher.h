@@ -1,7 +1,7 @@
 #pragma once
 #include "DllExport.h"
+#include "System/Mutex.h"
 #include <functional>
-#include <mutex>
 #include <vector>
 
 namespace Hawk {
@@ -12,6 +12,7 @@ public:
 	using Func_t = std::function<void(void)>;
 
 	Dispatcher() = default;
+	Dispatcher(const std::string& p_ThreadName);
 	Dispatcher(const Dispatcher&) = delete;
 	Dispatcher& operator=(const Dispatcher&) = delete;
 
@@ -22,6 +23,6 @@ private:
 	using FuncVec_t = std::vector<Func_t>;
 
 	FuncVec_t m_Functions;
-	mutable std::mutex m_Mutex;
+	mutable Mutex m_Mutex;
 };
 }

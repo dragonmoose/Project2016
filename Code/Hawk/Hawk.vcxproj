@@ -133,6 +133,7 @@
     <ClInclude Include="System\DllExport.h" />
     <ClInclude Include="System\Duration.h" />
     <ClInclude Include="System\Exception.h" />
+    <ClInclude Include="System\Mutex.h" />
     <ClInclude Include="System\Thread.h" />
     <ClInclude Include="System\Time.h" />
     <ClInclude Include="System\Types.h" />
@@ -167,6 +168,7 @@
     <ClCompile Include="System\Dispatcher.cpp" />
     <ClCompile Include="System\Duration.cpp" />
     <ClCompile Include="System\Exception.cpp" />
+    <ClCompile Include="System\Mutex.cpp" />
     <ClCompile Include="System\Thread.cpp" />
     <ClCompile Include="System\Time.cpp" />
     <ClCompile Include="Util\FileUtil.cpp" />

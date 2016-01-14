@@ -21,6 +21,7 @@ namespace
 ConsoleCommandManager::ConsoleCommandManager(std::shared_ptr<Dispatcher>& p_Dispatcher)
 : m_Dispatcher(p_Dispatcher)
 , m_bStopSignal(false)
+, m_Mutex("ConsoleCommandManager")
 {
 }
 
@@ -81,7 +82,7 @@ void ConsoleCommandManager::RunInputLoop()
 							{
 								ConsoleInputParser l_ParsedInput(l_CurrLine);
 
-								std::lock_guard<std::mutex> l_Lock(m_Mutex);
+								MutexScope_t l_MutexScope(m_Mutex);
 								auto l_Itr = m_Functions.find(l_ParsedInput.GetCommand());
 								if (l_Itr != m_Functions.end())
 								{
@@ -155,12 +156,11 @@ void ConsoleCommandManager::CmdQuit()
 void ConsoleCommandManager::CmdListCommands(const std::string& p_Filter)
 {
 	CONSOLE_WRITE_SCOPE();
-	std::string l_Filter = StringUtil::ToLower(p_Filter);
 	std::cout << "-------------------------------------------------------------------------------------------------\n";
 	
 	for (const auto& l_Cmd : m_Functions)
 	{
-		if (l_Filter.empty() || StringUtil::Contains(l_Cmd.first, l_Filter))
+		if (p_Filter.empty() || StringUtil::Contains(l_Cmd.first, p_Filter))
 		{
 			std::cout << std::setw(35) << std::left << l_Cmd.first << l_Cmd.second->GetDesc();
 			if (!l_Cmd.second->GetArgsDesc().empty())

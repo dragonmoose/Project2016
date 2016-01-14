@@ -1,5 +1,6 @@
 #pragma once
 #include "System/DllExport.h"
+#include "System/Mutex.h"
 #include "System/Thread.h"
 #include "System/Time.h"
 #include "System/Types.h"
@@ -9,7 +10,6 @@
 #endif
 #include <memory>
 #include <vector>
-#include <mutex>
 
 namespace Hawk {
 
@@ -27,7 +27,7 @@ public:
 
 		ModuleID l_ModuleID = l_Module->GetID();
 
-		std::lock_guard<std::mutex> l_Lock(m_Mutex);
+		MutexScope_t l_MutexScope(m_Mutex);
 		m_Modules.push_back(std::move(l_Module));
 		return l_ModuleID;
 	}
@@ -59,7 +59,7 @@ private:
 	Modules_t m_Modules;
 	Time m_OldTime;
 	Thread m_Thread;
-	mutable std::mutex m_Mutex;
+	mutable Mutex m_Mutex;
 
 #ifdef HAWK_DEBUG
 	std::shared_ptr<ConsoleCommandManager> m_ConsoleCommandManager;

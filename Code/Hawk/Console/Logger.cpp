@@ -16,9 +16,9 @@ namespace Logger
 #include "ConsoleAPI.h"
 #include "System/Time.h"
 #include "System/Duration.h"
+#include "System/Mutex.h"
 #include "Util/StringUtil.h"
 #include <unordered_map>
-#include <mutex>
 
 namespace Hawk {
 namespace Logger
@@ -37,14 +37,14 @@ namespace Logger
 	};
 	using ThreadInfoMap_t = std::unordered_map<std::thread::id, ThreadInfo>;
 	ThreadInfoMap_t m_ThreadInfoMap;
-	std::mutex m_ThreadInfoMutex;
+	Mutex m_ThreadInfoMutex("LoggerThreadInfo");
 
 	const std::array<std::string, 6> c_LogLevels = { "trace", "debug", "info", "warning", "error", "fatal" };
 }
 
 void Logger::RegisterThread(const std::string& p_Name, std::thread::id p_SysThreadID, ThreadID p_ID)
 {
-	std::lock_guard<std::mutex> l_Lock(m_ThreadInfoMutex);
+	MutexScope_t l_MutexScope(m_ThreadInfoMutex);
 	THROW_IF_NOT(m_ThreadInfoMap.insert(ThreadInfoMap_t::value_type(p_SysThreadID, ThreadInfo(p_Name, p_ID))).second, "Failed to insert thread name lookup. Name=" << p_Name << " ID=" << p_ID);
 }
 
@@ -94,7 +94,7 @@ std::string Logger::GetThreadInfo()
 	std::thread::id l_SysThreadID = std::this_thread::get_id();
 	std::ostringstream l_Stream;
 
-	std::lock_guard<std::mutex> l_Lock(m_ThreadInfoMutex);
+	MutexScope_t l_MutexScope(m_ThreadInfoMutex);
 	auto l_Itr = m_ThreadInfoMap.find(l_SysThreadID);
 	if (l_Itr != m_ThreadInfoMap.end())
 	{
