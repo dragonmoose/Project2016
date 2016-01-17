@@ -93,6 +93,8 @@ void ModuleThread::Stop()
 
 void ModuleThread::Update()
 {
+	Profiler l_Profiler(std::string("MTUpdate:").append(m_Thread.GetName()));
+	l_Profiler.Start();
 	Duration l_Delta(m_CurrFrameStartTime - m_PrevFrameStartTime);
 	MutexScope_t l_MutexScope(m_Mutex);
 	for (auto& l_Module : m_Modules)
