@@ -109,6 +109,7 @@
     <ClInclude Include="Console\ConsoleAPI.h" />
     <ClInclude Include="Console\ConsoleFunction.h" />
     <ClInclude Include="Console\ConsoleCommandManager.h" />
+    <ClInclude Include="Console\ConsoleHistory.h" />
     <ClInclude Include="Console\Logger.h" />
     <ClInclude Include="Console\ConsoleInputParser.h" />
     <ClInclude Include="Debug\Assert.h" />
@@ -148,6 +149,7 @@
     <ClCompile Include="Base\ModuleThread.cpp" />
     <ClCompile Include="Base\WindowManager.cpp" />
     <ClCompile Include="Console\ConsoleAPI.cpp" />
+    <ClCompile Include="Console\ConsoleHistory.cpp" />
     <ClCompile Include="Console\ConsoleInputParser.cpp" />
     <ClCompile Include="Console\ConsoleCommandManager.cpp" />
     <ClCompile Include="Console\Logger.cpp" />

@@ -122,12 +122,18 @@ void ProfilerManager::Clear()
 
 void ProfilerManager::Print(const std::string& p_SortMode, int p_iMax, const std::string& p_Filter)
 {
+	CONSOLE_WRITE_SCOPE();
 	ViewDataVec_t l_DataVec = GetViewDataVec(p_SortMode, p_iMax, p_Filter);
+
+	if (l_DataVec.empty())
+	{
+		std::cout << "No profiling data available for specified options.\n\n";
+		return;
+	}
 
 	static const int w1 = 40;
 	static const int w2 = 20;
 
-	CONSOLE_WRITE_SCOPE();
 	std::cout << "\n" << std::left << std::setw(w1) << "Name" << std::setw(w2) << "Peak time (s)" << std::setw(w2) << "Avg time (s)" << std::setw(w2) << "Total time (s)" << "Count\n";
 	std::cout << "---------------------------------------------------------------------------------------------------------\n";
 
@@ -155,28 +161,25 @@ ProfilerManager::ViewDataVec_t ProfilerManager::GetViewDataVec(const std::string
 		l_DataVec.push_back(ViewData(l_KeyVal.first, l_KeyVal.second.m_TotalTime / l_KeyVal.second.m_uiCount, l_KeyVal.second));
 	}
 
-	if (!p_SortMode.empty())
+	if (StringUtil::AreEqual(p_SortMode, "avg"))
 	{
-		if (StringUtil::AreEqual(p_SortMode, "peak"))
-		{
-			std::sort(l_DataVec.begin(), l_DataVec.end(), [](const ViewData& p_lhs, const ViewData& p_rhs)
-			{ return p_lhs.m_Data.m_PeakTime > p_rhs.m_Data.m_PeakTime; });
-		}
-		else if (StringUtil::AreEqual(p_SortMode, "avg"))
-		{
-			std::sort(l_DataVec.begin(), l_DataVec.end(), [](const ViewData& p_lhs, const ViewData& p_rhs)
-			{ return p_lhs.m_AvgTime > p_rhs.m_AvgTime; });
-		}
-		else if (StringUtil::AreEqual(p_SortMode, "total"))
-		{
-			std::sort(l_DataVec.begin(), l_DataVec.end(), [](const ViewData& p_lhs, const ViewData& p_rhs)
-			{ return p_lhs.m_Data.m_TotalTime > p_rhs.m_Data.m_TotalTime; });
-		}
-		else if (StringUtil::AreEqual(p_SortMode, "count"))
-		{
-			std::sort(l_DataVec.begin(), l_DataVec.end(), [](const ViewData& p_lhs, const ViewData& p_rhs)
-			{ return p_lhs.m_Data.m_uiCount > p_rhs.m_Data.m_uiCount; });
-		}
+		std::sort(l_DataVec.begin(), l_DataVec.end(), [](const ViewData& p_lhs, const ViewData& p_rhs)
+		{ return p_lhs.m_AvgTime > p_rhs.m_AvgTime; });
+	}
+	else if (StringUtil::AreEqual(p_SortMode, "total"))
+	{
+		std::sort(l_DataVec.begin(), l_DataVec.end(), [](const ViewData& p_lhs, const ViewData& p_rhs)
+		{ return p_lhs.m_Data.m_TotalTime > p_rhs.m_Data.m_TotalTime; });
+	}
+	else if (StringUtil::AreEqual(p_SortMode, "count"))
+	{
+		std::sort(l_DataVec.begin(), l_DataVec.end(), [](const ViewData& p_lhs, const ViewData& p_rhs)
+		{ return p_lhs.m_Data.m_uiCount > p_rhs.m_Data.m_uiCount; });
+	}
+	else
+	{
+		std::sort(l_DataVec.begin(), l_DataVec.end(), [](const ViewData& p_lhs, const ViewData& p_rhs)
+		{ return p_lhs.m_Data.m_PeakTime > p_rhs.m_Data.m_PeakTime; });
 	}
 
 	if (!p_Filter.empty())
@@ -184,9 +187,10 @@ ProfilerManager::ViewDataVec_t ProfilerManager::GetViewDataVec(const std::string
 		hwk::erase_if(l_DataVec, [&p_Filter](const ViewData& p_Data) { return !StringUtil::Contains(p_Data.m_Name, p_Filter); });
 	}
 
-	if (p_iMax < l_DataVec.size())
+	int l_iMax = p_iMax > 0 ? p_iMax : 10;
+	if (l_iMax < l_DataVec.size())
 	{
-		l_DataVec.resize(p_iMax);
+		l_DataVec.resize(l_iMax);
 	}
 
 	return l_DataVec;

@@ -37,7 +37,7 @@ namespace Logger
 	};
 	using ThreadInfoMap_t = std::unordered_map<std::thread::id, ThreadInfo>;
 	ThreadInfoMap_t m_ThreadInfoMap;
-	Mutex m_ThreadInfoMutex("LoggerThreadInfo");
+	Mutex m_ThreadInfoMutex;
 
 	const std::array<std::string, 6> c_LogLevels = { "trace", "debug", "info", "warning", "error", "fatal" };
 }

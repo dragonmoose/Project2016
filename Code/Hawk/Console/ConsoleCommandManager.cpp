@@ -16,12 +16,20 @@ namespace
 	const char Key_Return = 13;
 	const char Key_Backspace = 8;
 	const char Key_Tab = 9;
+
+	const unsigned int c_uiMaxHistoryRecords = 30;
+	const std::array<std::string, 4> c_HistoryExcludedCmds = { "-", "quit", "help", "cls" };
+
+	bool SaveToHistory(const std::string& p_Cmd)
+	{
+		return std::find(c_HistoryExcludedCmds.cbegin(), c_HistoryExcludedCmds.cend(), p_Cmd) == c_HistoryExcludedCmds.end();
+	}
 }
 
 ConsoleCommandManager::ConsoleCommandManager(std::shared_ptr<Dispatcher>& p_Dispatcher)
 : m_Dispatcher(p_Dispatcher)
 , m_bStopSignal(false)
-, m_Mutex("ConsoleCommandManager")
+, m_History(std::make_unique<ConsoleHistory>(c_uiMaxHistoryRecords))
 {
 }
 
@@ -35,6 +43,7 @@ void ConsoleCommandManager::Stop()
 {
 	m_bStopSignal = true;
 	m_Thread.join();
+	m_History.reset(nullptr);
 }
 
 void ConsoleCommandManager::RunInputLoop()
@@ -51,10 +60,29 @@ void ConsoleCommandManager::RunInputLoop()
 			while (ConsoleAPI::HasNextChar())
 			{
 				char l_cChr = 0;
-				bool l_bModifierKey = false;
-				if (ConsoleAPI::TryGetNextChar(l_cChr, l_bModifierKey))
+				bool l_bIsVirtualKeyCode = false;
+				if (ConsoleAPI::TryGetNextChar(l_cChr, l_bIsVirtualKeyCode))
 				{
-					if (!l_bModifierKey)
+					if (l_bIsVirtualKeyCode)
+					{
+						if (l_cChr == VK_UP)
+						{
+							if (m_History->Back())
+							{
+								ConsoleAPI::ClearCurrLine();
+								l_CurrLine = m_History->GetCurrRecord();
+							}
+						}
+						else if (l_cChr == VK_DOWN)
+						{
+							if (m_History->Forward())
+							{
+								ConsoleAPI::ClearCurrLine();
+								l_CurrLine = m_History->GetCurrRecord();
+							}
+						}
+					}
+					else
 					{
 						if (l_cChr == Key_Backspace)
 						{
@@ -91,6 +119,10 @@ void ConsoleCommandManager::RunInputLoop()
 								else
 								{
 									std::cout << "Unknown command: " << l_ParsedInput.GetCommand() << "\n\n";
+								}
+								if (SaveToHistory(l_ParsedInput.GetCommand()))
+								{
+									m_History->Add(l_CurrLine);
 								}
 							}
 							l_CurrLine.clear();

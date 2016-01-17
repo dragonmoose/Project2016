@@ -74,6 +74,9 @@
     <ClCompile Include="System\Mutex.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="Console\ConsoleHistory.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -193,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="System\Mutex.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\ConsoleHistory.h">
+      <Filter>Console</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

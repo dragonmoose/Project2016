@@ -28,7 +28,7 @@ namespace ConsoleAPI
 	void WriteLine(const std::string& p_Text, Color p_Color, Color p_BgColor);
 	void Write(const std::string& p_Text, Color p_Color, Color p_BgColor);
 	bool HasNextChar();
-	bool TryGetNextChar(char& p_cChar, bool& p_bIsModifierKey);
+	bool TryGetNextChar(char& p_cChar, bool& p_bVirtualKeyCode);
 	void ClearScreen();
 	void ClearCurrLine();
 	void Stop();

@@ -20,3 +20,4 @@
 *.codeanalysisast
 /Code/ThirdParty
 Code/Solution/Hawk.VC.opendb
+console_history.txt

@@ -1,6 +1,7 @@
 #pragma once
 #ifdef HAWK_DEBUG
 #include "ConsoleFunction.h"
+#include "ConsoleHistory.h"
 #include "Logger.h"
 #include "System/Exception.h"
 #include "System/Mutex.h"
@@ -93,6 +94,8 @@ private:
 	mutable Mutex m_Mutex;
 	using FunctionMap_t = std::map<std::string, std::unique_ptr<CF::IConsoleFunction>>;
 	FunctionMap_t m_Functions;
+
+	std::unique_ptr<ConsoleHistory> m_History;
 };
 }
 #endif

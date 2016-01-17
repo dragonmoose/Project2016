@@ -6,7 +6,7 @@ namespace Hawk {
 
 bool StringUtil::AreEqual(const std::string& p_Str1, const std::string& p_Str2, bool p_bCaseSensitive)
 {
-	return p_bCaseSensitive ? boost::iequals(p_Str1, p_Str2) : boost::iequals(p_Str1, p_Str2);
+	return p_bCaseSensitive ? boost::equals(p_Str1, p_Str2) : boost::iequals(p_Str1, p_Str2);
 }
 
 std::string StringUtil::ToLower(const std::string& p_Source)
@@ -16,7 +16,7 @@ std::string StringUtil::ToLower(const std::string& p_Source)
 
 bool StringUtil::Contains(const std::string& p_Str, const std::string& p_SubStr, bool p_bCaseSensitive)
 {
-	return p_bCaseSensitive ? boost::algorithm::icontains(p_Str, p_SubStr) : boost::algorithm::contains(p_Str, p_SubStr);
+	return p_bCaseSensitive ? boost::algorithm::contains(p_Str, p_SubStr) : boost::algorithm::icontains(p_Str, p_SubStr);
 }
 
 bool StringUtil::StartsWith(const std::string& p_Str, const std::string& p_SubStr, bool p_bCaseSensitive)
