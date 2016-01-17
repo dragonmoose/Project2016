@@ -22,6 +22,9 @@ public:
 	void unlock();
 
 private:
+	void _Lock();
+	void _Unlock();
+
 	std::mutex m_Mutex;
 
 #ifdef HAWK_DEBUG

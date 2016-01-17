@@ -31,6 +31,8 @@ public:
 	void SetToZero();
 	bool IsZero() const;
 
+	I64 Get(Precision p_Precision) const;
+
 	bool operator==(const Duration& p_rhs) const;
 	bool operator!=(const Duration& p_rhs) const;
 	bool operator<(const Duration& p_rhs) const;
@@ -40,6 +42,7 @@ public:
 
 	Duration& operator+=(const Duration& p_rhs);
 	Duration operator/(unsigned int p_iDenominator) const;
+	Duration operator-(const Duration& p_rhs) const;
 
 	friend class Time;
 

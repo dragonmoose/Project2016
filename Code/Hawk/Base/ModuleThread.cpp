@@ -12,6 +12,8 @@ ModuleThread::ModuleThread(const std::string& p_Name)
 : m_Thread(p_Name, std::bind(&ModuleThread::Update, this))
 , m_Mutex(p_Name)
 {
+	m_Thread.RegisterFrameBegin(std::bind(&ModuleThread::OnFrameBegin, this));
+	m_Thread.RegisterFrameEnd(std::bind(&ModuleThread::OnFrameEnd, this));
 }
 
 bool ModuleThread::TryRemove(ModuleID p_ID)
@@ -80,7 +82,7 @@ void ModuleThread::DebugPrint()
 void ModuleThread::Start()
 {
 	LOG("Running " << m_Modules.size() << " modules on thread: " << m_Thread.GetName(), "core", Info);
-	m_OldTime.SetToNow();
+	m_PrevFrameStartTime.SetToNow();
 	m_Thread.Start();
 }
 
@@ -91,16 +93,22 @@ void ModuleThread::Stop()
 
 void ModuleThread::Update()
 {
-	Time l_CurrTime;
-	l_CurrTime.SetToNow();
-	Duration l_Delta(l_CurrTime - m_OldTime);
-	m_OldTime = l_CurrTime;
-
+	Duration l_Delta(m_CurrFrameStartTime - m_PrevFrameStartTime);
 	MutexScope_t l_MutexScope(m_Mutex);
 	for (auto& l_Module : m_Modules)
 	{
 		l_Module->_Update(l_Delta);
 	}
+}
+
+void ModuleThread::OnFrameBegin()
+{
+	m_CurrFrameStartTime = Time::Now();
+}
+
+void ModuleThread::OnFrameEnd()
+{
+	m_PrevFrameStartTime = m_CurrFrameStartTime;
 }
 
 ModuleThread::Modules_t::const_iterator ModuleThread::FindByID(ModuleID p_ID) const

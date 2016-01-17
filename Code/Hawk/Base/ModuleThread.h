@@ -1,5 +1,6 @@
 #pragma once
 #include "System/DllExport.h"
+#include "System/Duration.h"
 #include "System/Mutex.h"
 #include "System/Thread.h"
 #include "System/Time.h"
@@ -54,10 +55,13 @@ private:
 	using Modules_t = std::vector<std::unique_ptr<Module>>;
 
 	void Update();
+	void OnFrameBegin();
+	void OnFrameEnd();
 	Modules_t::const_iterator FindByID(ModuleID p_ID) const;
 
 	Modules_t m_Modules;
-	Time m_OldTime;
+	Time m_CurrFrameStartTime;
+	Time m_PrevFrameStartTime;
 	Thread m_Thread;
 	mutable Mutex m_Mutex;
 

@@ -7,7 +7,6 @@
 #ifdef HAWK_RENDERER_D3D12
 #include "Gfx/D3D12/D3D12Renderer.h"
 #endif
-#include "System/Duration.h"
 #include "System/Time.h"
 #include "System/Thread.h"
 #include "Util/StringUtil.h"
@@ -138,6 +137,7 @@ void Core::Run()
 #ifdef HAWK_DEBUG
 		m_DebugDispatcher->Execute();
 #endif
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
 	StopModules();
 }

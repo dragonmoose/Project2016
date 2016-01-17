@@ -7,6 +7,7 @@
 #undef NOMINMAX
 
 #include "Console/Logger.h"
+#include "Debug/Profiler.h"
 #include "System/Config.h"
 #include "System/Exception.h"
 #include <string>

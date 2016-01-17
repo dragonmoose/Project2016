@@ -26,14 +26,24 @@ void Mutex::lock()
 	}
 	else
 	{
-		m_Mutex.lock();
+		_Lock();
 	}
 #else
-	m_Mutex.lock();
+	_Lock();
 #endif
 }
 
 void Mutex::unlock()
+{
+	_Unlock();
+}
+
+void Mutex::_Lock()
+{
+	m_Mutex.lock();
+}
+
+void Mutex::_Unlock()
 {
 	m_Mutex.unlock();
 }
@@ -43,7 +53,7 @@ void Mutex::LockAndProfile()
 {
 	Profiler l_Profiler(m_DebugName);
 	l_Profiler.Start();
-	m_Mutex.lock();
+	_Lock();
 }
 #endif
 }

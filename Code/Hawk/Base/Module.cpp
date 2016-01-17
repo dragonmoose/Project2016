@@ -73,7 +73,7 @@ void Module::_Update(const Duration& p_Duration)
 			m_AccumulatedTime += p_Duration;
 			if (m_AccumulatedTime >= m_TimePerFrame)
 			{
-				Profiler l_Profiler(GetName() + ":Update");
+				Profiler l_Profiler(GetName() + ":FixedUpdate");
 
 				l_Profiler.Start();
 				m_EventManager->HandleQueued();

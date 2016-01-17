@@ -5,10 +5,10 @@
 #include "Console/ConsoleAPI.h"
 #include "Console/ConsoleCommandManager.h"
 #include "System/Duration.h"
+#include "System/Mutex.h"
 #include "Util/Algorithm.h"
 #include <unordered_map>
 #include <iomanip>
-#include <mutex>
 
 namespace Hawk {
 namespace ProfilerManager
@@ -40,7 +40,7 @@ namespace ProfilerManager
 
 	using DataMap_t = std::unordered_map<std::string, Data>;
 	DataMap_t n_DataMap;
-	std::mutex n_Mutex;
+	Mutex n_Mutex;
 	bool n_bPaused = false;
 
 	void Pause();
@@ -62,7 +62,7 @@ void ProfilerManager::Add(const std::string& p_Name, const Duration& p_Duration)
 {
 	if (!n_bPaused)
 	{
-		std::lock_guard<std::mutex> l_MutexScope(n_Mutex);
+		MutexScope_t l_MutexScope(n_Mutex);
 		auto l_Itr = n_DataMap.find(p_Name);
 		if (l_Itr == n_DataMap.end())
 		{
@@ -113,7 +113,7 @@ void ProfilerManager::Resume()
 
 void ProfilerManager::Clear()
 {
-	std::lock_guard<std::mutex> l_MutexScope(n_Mutex);
+	MutexScope_t l_MutexScope(n_Mutex);
 	n_DataMap.clear();
 
 	CONSOLE_WRITE_SCOPE();
@@ -152,7 +152,7 @@ void ProfilerManager::Print(const std::string& p_SortMode, int p_iMax, const std
 
 ProfilerManager::ViewDataVec_t ProfilerManager::GetViewDataVec(const std::string& p_SortMode, int p_iMax, const std::string& p_Filter)
 {
-	std::lock_guard<std::mutex> l_MutexScope(n_Mutex);
+	MutexScope_t l_MutexScope(n_Mutex);
 	ViewDataVec_t l_DataVec;
 	l_DataVec.reserve(n_DataMap.size());
 
