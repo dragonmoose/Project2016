@@ -361,8 +361,5 @@ void ConsoleCommandManager::TryCallFunction(const CF::IConsoleFunction& p_Functi
 		std::cout << "\n\n";
 	}
 }
-
-
-
 }
 #endif
