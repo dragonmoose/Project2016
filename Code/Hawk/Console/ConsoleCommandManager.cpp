@@ -127,6 +127,7 @@ void ConsoleCommandManager::RunInputLoop()
 							}
 							l_CurrLine.clear();
 							l_CurrTypedLine.clear();
+							std::this_thread::sleep_for(std::chrono::milliseconds(50));
 						}
 						else
 						{
@@ -142,7 +143,7 @@ void ConsoleCommandManager::RunInputLoop()
 			ConsoleAPI::BeginWrite();
 			ConsoleAPI::Write(l_Line, ConsoleAPI::Color::White, ConsoleAPI::Color::None);
 			ConsoleAPI::EndWrite();
-			std::this_thread::sleep_for(std::chrono::milliseconds(25));
+			std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		}
 		catch (Exception& e)
 		{
@@ -210,7 +211,7 @@ void ConsoleCommandManager::CmdListCommands(const std::string& p_Filter)
 void ConsoleCommandManager::CmdGetConfig(const std::string& p_Key)
 {
 	CONSOLE_WRITE_SCOPE();
-	std::cout << Config::Instance().Get<std::string>(p_Key, "Config key not found") << "            \n\n";
+	std::cout << Config::Instance().Get<std::string>(p_Key, "Config key not found.") << "\n\n";
 }
 
 void ConsoleCommandManager::CmdReloadConfig()
@@ -270,6 +271,7 @@ void ConsoleCommandManager::CmdPrintHistory()
 void ConsoleCommandManager::CmdClearHistory()
 {
 	m_History->Clear();
+	std::cout << "History cleared.\n\n";
 }
 
 std::string ConsoleCommandManager::GetNextCommand(const std::string& p_Filter, const std::string& p_Current) const
