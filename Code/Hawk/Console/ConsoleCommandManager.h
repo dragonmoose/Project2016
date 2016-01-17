@@ -83,6 +83,7 @@ private:
 	void CmdSetLogFilter(const std::string& p_Filter);
 	void CmdSetLogThread(const std::string& p_Filter);
 	void CmdSetLogTag(const std::string& p_Filter);
+	void CmdPrintHistory();
 
 	std::string GetNextCommand(const std::string& p_Command, const std::string& p_Current) const;
 	void TryCallFunction(const CF::IConsoleFunction& p_Function, ConsoleInputParser& p_Command) const;

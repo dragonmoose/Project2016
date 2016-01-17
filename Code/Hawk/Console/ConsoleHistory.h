@@ -18,6 +18,8 @@ public:
 	const std::string& GetCurrRecord() const;
 	void Add(const std::string& p_Cmd);
 
+	void Print() const;
+
 private:
 	void Load();
 	void Save();

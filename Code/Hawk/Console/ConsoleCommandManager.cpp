@@ -18,7 +18,7 @@ namespace
 	const char Key_Tab = 9;
 
 	const unsigned int c_uiMaxHistoryRecords = 30;
-	const std::array<std::string, 4> c_HistoryExcludedCmds = { "-", "quit", "help", "cls" };
+	const std::array<std::string, 5> c_HistoryExcludedCmds = { "-", "quit", "help", "cls", "console.history" };
 
 	bool SaveToHistory(const std::string& p_Cmd)
 	{
@@ -178,6 +178,7 @@ void ConsoleCommandManager::Register()
 	Register("log.filter", this, &ConsoleCommandManager::CmdSetLogFilter, m_Dispatcher.get(), "Sets the log filter", "[filter]", false);
 	Register("log.thread", this, &ConsoleCommandManager::CmdSetLogThread, m_Dispatcher.get(), "Sets the thread filter", "[filter]", false);
 	Register("log.tag", this, &ConsoleCommandManager::CmdSetLogTag, m_Dispatcher.get(), "Sets the tag filter", "[filter]", false);
+	Register("console.history", this, &ConsoleCommandManager::CmdPrintHistory, m_Dispatcher.get(), "Prints the console history", "");
 }
 
 void ConsoleCommandManager::CmdQuit()
@@ -257,6 +258,12 @@ void ConsoleCommandManager::CmdSetLogThread(const std::string& p_Filter)
 void ConsoleCommandManager::CmdSetLogTag(const std::string& p_Filter)
 {
 	Config::Instance().Set("log.tag", p_Filter);
+}
+
+void ConsoleCommandManager::CmdPrintHistory()
+{
+	CONSOLE_WRITE_SCOPE();
+	m_History->Print();
 }
 
 std::string ConsoleCommandManager::GetNextCommand(const std::string& p_Filter, const std::string& p_Current) const

@@ -72,6 +72,15 @@ void ConsoleHistory::Add(const std::string& p_Cmd)
 	m_bStartState = true;
 }
 
+void ConsoleHistory::Print() const
+{
+	for (const std::string& l_Cmd : m_Cmds)
+	{
+		std::cout << l_Cmd << "\n";
+	}
+	std::cout << "\n" << m_Cmds.size() << " commands in history. Max: " << m_uiMaxSize << "\n\n";
+}
+
 void ConsoleHistory::Load()
 {
 	std::ifstream l_File(c_Filename);
