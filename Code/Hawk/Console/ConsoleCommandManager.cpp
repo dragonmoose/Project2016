@@ -179,6 +179,7 @@ void ConsoleCommandManager::Register()
 	Register("log.thread", this, &ConsoleCommandManager::CmdSetLogThread, m_Dispatcher.get(), "Sets the thread filter", "[filter]", false);
 	Register("log.tag", this, &ConsoleCommandManager::CmdSetLogTag, m_Dispatcher.get(), "Sets the tag filter", "[filter]", false);
 	Register("console.history", this, &ConsoleCommandManager::CmdPrintHistory, m_Dispatcher.get(), "Prints the console history", "");
+	Register("console.clearHistory", this, &ConsoleCommandManager::CmdClearHistory, m_Dispatcher.get(), "Clears the console history", "");
 }
 
 void ConsoleCommandManager::CmdQuit()
@@ -264,6 +265,11 @@ void ConsoleCommandManager::CmdPrintHistory()
 {
 	CONSOLE_WRITE_SCOPE();
 	m_History->Print();
+}
+
+void ConsoleCommandManager::CmdClearHistory()
+{
+	m_History->Clear();
 }
 
 std::string ConsoleCommandManager::GetNextCommand(const std::string& p_Filter, const std::string& p_Current) const

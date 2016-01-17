@@ -19,6 +19,7 @@ public:
 	void Add(const std::string& p_Cmd);
 
 	void Print() const;
+	void Clear();
 
 private:
 	void Load();

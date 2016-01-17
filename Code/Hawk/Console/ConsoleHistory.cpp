@@ -81,6 +81,11 @@ void ConsoleHistory::Print() const
 	std::cout << "\n" << m_Cmds.size() << " commands in history. Max: " << m_uiMaxSize << "\n\n";
 }
 
+void ConsoleHistory::Clear()
+{
+	m_Cmds.clear();
+}
+
 void ConsoleHistory::Load()
 {
 	std::ifstream l_File(c_Filename);
