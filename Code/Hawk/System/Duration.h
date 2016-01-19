@@ -1,4 +1,5 @@
 #pragma once
+#include "System/Types.h"
 #include <chrono>
 
 namespace Hawk {

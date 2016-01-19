@@ -34,4 +34,10 @@ std::string StringUtil::RemoveBack(const std::string& p_Str, size_t p_Num)
 	return p_Str;
 }
 
+std::string StringUtil::WCharToString(const wchar_t* p_Str)
+{
+	std::wstring l_WString(p_Str);
+	return std::string(l_WString.begin(), l_WString.end());
+}
+
 }
