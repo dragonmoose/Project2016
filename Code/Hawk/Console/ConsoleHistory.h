@@ -8,7 +8,6 @@ class ConsoleHistory final
 {
 public:
 	ConsoleHistory(unsigned int p_uiMaxSize);
-	~ConsoleHistory();
 
 	ConsoleHistory(const ConsoleHistory&) = delete;
 	ConsoleHistory& operator=(const ConsoleHistory&) = delete;

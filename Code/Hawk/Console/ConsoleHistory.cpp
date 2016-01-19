@@ -16,11 +16,6 @@ ConsoleHistory::ConsoleHistory(unsigned int p_uiMaxSize)
 	Load();
 }
 
-ConsoleHistory::~ConsoleHistory()
-{
-	Save();
-}
-
 bool ConsoleHistory::Back()
 {
 	if (m_Cmds.empty()) return false;
@@ -70,6 +65,7 @@ void ConsoleHistory::Add(const std::string& p_Cmd)
 	}
 	m_uiCurrRecord = 0;
 	m_bStartState = true;
+	Save();
 }
 
 void ConsoleHistory::Print() const
@@ -84,6 +80,7 @@ void ConsoleHistory::Print() const
 void ConsoleHistory::Clear()
 {
 	m_Cmds.clear();
+	Save();
 }
 
 void ConsoleHistory::Load()
