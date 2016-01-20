@@ -109,8 +109,28 @@ IDXGIAdapter* D3D12Renderer::GetPreferredHWAdapter(const HWAdapters_t& p_HWAdapt
 #ifdef HAWK_DEBUG
 void D3D12Renderer::CmdListAdapters()
 {
+	ComPtr<IDXGIFactory4> l_Factory;
+	THROW_IF_COMERR(CreateDXGIFactory1(IID_PPV_ARGS(&l_Factory)), "Failed to create DXGI Factory");
+
+	HWAdapters_t l_Adapters;
+	GetHWAdapters(l_Factory.Get(), l_Adapters);
+
 	CONSOLE_WRITE_SCOPE();
-	std::cout << "Available adapters...\n";
+	for (const auto& l_pAdapter : l_Adapters)
+	{
+		DXGI_ADAPTER_DESC l_Desc;
+		THROW_IF_COMERR(l_pAdapter->GetDesc(&l_Desc), "Failed to get adapter desc");
+
+		std::cout << StringUtil::WCharToString(l_Desc.Description) << "\n";
+		std::cout << "\tVendorId: " << l_Desc.VendorId << "\n";
+		std::cout << "\tDeviceId: " << l_Desc.DeviceId << "\n";
+		std::cout << "\tSubSysId: " << l_Desc.SubSysId << "\n";
+		std::cout << "\tRevision: " << l_Desc.Revision << "\n";
+		std::cout << "\tDedicatedVideoMemory: " << (l_Desc.DedicatedVideoMemory / (1024 * 1024)) << " MB\n";
+		std::cout << "\tDedicatedSystemMemory: " << (l_Desc.DedicatedSystemMemory / (1024 * 1024)) << " MB\n";
+		std::cout << "\tSharedSystemMemory: " << (l_Desc.SharedSystemMemory / (1024 * 1024)) << " MB\n";
+		std::cout << "\tLuid: " << l_Desc.AdapterLuid.HighPart << ":" << l_Desc.AdapterLuid.LowPart << "\n\n";
+	}
 }
 #endif
 
