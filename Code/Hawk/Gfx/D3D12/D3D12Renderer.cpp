@@ -64,16 +64,7 @@ void D3D12Renderer::GetHWAdapters(IDXGIFactory1* p_pFactory, HWAdapters_t& p_HWA
 			if (D3D12CreateDevice(l_pAdapter, D3D_FEATURE_LEVEL_11_0, __uuidof(ID3D12Device), nullptr))
 			{
 				p_HWAdapters.push_back(l_pAdapter);
-				LOG("Adding d3d12 compatible adapter: " << StringUtil::WCharToString(l_Desc.Description), "d3d12", Debug);
 			}
-			else
-			{
-				LOG("Adapter " << StringUtil::WCharToString(l_Desc.Description) << " did not support D3D12 - skipped. AdapterNo: " << l_iAdapterNo, "d3d12", Debug);
-			}
-		}
-		else
-		{
-			LOG("Skipped software adapter: " << StringUtil::WCharToString(l_Desc.Description), "d3d12", Debug);
 		}
 		l_iAdapterNo++;
 	}
@@ -91,7 +82,7 @@ IDXGIAdapter* D3D12Renderer::GetPreferredHWAdapter(const HWAdapters_t& p_HWAdapt
 		DXGI_ADAPTER_DESC l_Desc;
 		THROW_IF_COMERR(l_pAdapter->GetDesc(&l_Desc), "Failed to get adapter desc");
 		std::string l_DescStr = StringUtil::WCharToString(l_Desc.Description);
-		LOG("Adapter: " << l_DescStr << " Dedicated video mem: " << l_Desc.DedicatedVideoMemory / (1024 * 1024) << " MB", "d3d12", Debug);
+		LOG("Evaluating hardware adapter: " << l_DescStr << " Dedicated video mem: " << l_Desc.DedicatedVideoMemory / (1024 * 1024) << " MB", "d3d12", Debug);
 		if (l_Desc.DedicatedVideoMemory > l_DedicatedVidMemMax)
 		{
 			l_pPreferredAdapter = l_pAdapter;
