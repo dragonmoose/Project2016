@@ -4,20 +4,19 @@
 #include "System/DllExport.h"
 
 namespace Hawk {
-
 namespace InputEvents {
 
-	struct KeyDownEvent : IEvent
-	{
-		explicit KeyDownEvent(KeyCode p_Code) : m_Code(p_Code) {}
-		KeyCode m_Code;
-	};
+struct KeyDownEvent : IEvent
+{
+	explicit KeyDownEvent(KeyCode p_Code) : m_Code(p_Code) {}
+	KeyCode m_Code;
+};
 
-	struct KeyUpEvent : IEvent
-	{
-		explicit KeyUpEvent(KeyCode p_Code) : m_Code(p_Code) {}
-		KeyCode m_Code;
-	};
+struct KeyUpEvent : IEvent
+{
+	explicit KeyUpEvent(KeyCode p_Code) : m_Code(p_Code) {}
+	KeyCode m_Code;
+};
 }
 }
 

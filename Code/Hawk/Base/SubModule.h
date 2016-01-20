@@ -35,7 +35,7 @@ namespace Hawk
 		template<class T>
 		void SendEvent(const T& p_Event)
 		{
-			m_pParentModule->Send<T>(p_Event);
+			m_pParentModule->SendEvent<T>(p_Event);
 		}
 
 		template<class Object_t, class... Args_t>

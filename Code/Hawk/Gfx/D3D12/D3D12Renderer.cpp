@@ -110,7 +110,7 @@ IDXGIAdapter* D3D12Renderer::GetPreferredHWAdapter(const HWAdapters_t& p_HWAdapt
 void D3D12Renderer::CmdListAdapters()
 {
 	CONSOLE_WRITE_SCOPE();
-	std::cout << "Availalbe adapters...\n";
+	std::cout << "Available adapters...\n";
 }
 #endif
 
