@@ -1,12 +1,8 @@
 #include "pch.h"
 #include "Core.h"
 #include "WindowManager.h"
-#include "Console/ConsoleAPI.h"
 #include "Debug/ProfilerManager.h"
 #include "Gfx/RenderingModule.h"
-#ifdef HAWK_RENDERER_D3D12
-#include "Gfx/D3D12/D3D12Renderer.h"
-#endif
 #include "System/Time.h"
 #include "System/Thread.h"
 #include "Util/StringUtil.h"
@@ -71,9 +67,7 @@ void Core::Initialize()
 
 	if (m_Settings.m_bRenderingModule)
 	{
-#ifdef HAWK_RENDERER_D3D12
-		AddModule<Gfx::RenderingModule>(CreateModuleThread("gfx"), std::make_unique<Gfx::D3D12Renderer>());
-#endif
+		AddModule<Gfx::RenderingModule>(CreateModuleThread("gfx"));
 	}
 	LOG("Hawk core initialized...", "core", Info);
 }

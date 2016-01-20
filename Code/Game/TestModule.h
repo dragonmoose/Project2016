@@ -23,13 +23,12 @@ public:
 			//l_Event.m_Str = "fdsfsdfdsfsdfsdf";
 			l_Event.m_iValue = 321321;
 			//SendEvent<TestEvent2>(l_Event);
-			//LOGM("testing testing the grejs", Fatal);
 		}
 	}
 
 	void TestConsoleCmd(const std::string& p_Text, int a, int b)
 	{
-		LOGM("The text=" << p_Text << " sum=" << (a + b), Info);
+		LOG("The text=" << p_Text << " sum=" << (a + b), GetLogDesc(), Info);
 	}
 
 	void TestConsoleCmd2(const std::string& p_Text)
@@ -49,7 +48,7 @@ public:
 	{
 		p_EventManager.Register<TestEvent>([=](const TestEvent& p_Event)
 		{
-			LOGM("Event received. Value=" << p_Event.m_iValue, Debug);
+			LOG("Event received. Value=" << p_Event.m_iValue, GetLogDesc(), Debug);
 		}
 		);
 	}

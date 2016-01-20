@@ -2,7 +2,6 @@
 #ifdef HAWK_DEBUG
 #include "ProfilerManager.h"
 #include "Assert.h"
-#include "Console/ConsoleAPI.h"
 #include "Console/ConsoleCommandManager.h"
 #include "System/Duration.h"
 #include "System/Mutex.h"

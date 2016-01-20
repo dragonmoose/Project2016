@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "Module.h"
+#include "SubModule.h"
+#include "Debug/Assert.h"
 #include "Debug/Profiler.h"
 #include "System/Duration.h"
 #include "System/Exception.h"
@@ -12,6 +14,7 @@ std::atomic_uint Module::s_uiNextModuleID = 1;
 Module::Module()
 : m_bPaused(false)
 , m_ID(s_uiNextModuleID++)
+, m_bInitialized(false)
 {
 }
 
@@ -32,11 +35,22 @@ ModuleID Module::GetID() const
 
 void Module::_Initialize(std::unique_ptr<EventManager> p_EventManager, std::shared_ptr<Dispatcher>& p_Dispatcher)
 {
-	LOGM("Initializing module: " << GetName(), Info);
+#ifdef HAWK_DEBUG
+	m_LogDesc = GetName() + " #" + std::to_string(GetID());
+#endif
+
+	LOG("Initializing module", GetLogDesc(), Info);
 	m_Dispatcher = p_Dispatcher;
 	m_EventManager = std::move(p_EventManager);
 	Initialize();
 	RegisterEvents(*m_EventManager);
+
+	for (auto& l_SubModule : m_SubModules)
+	{
+		l_SubModule->_Initialize();
+		l_SubModule->RegisterEvents(*m_EventManager);
+	}
+	m_bInitialized = true;
 }
 
 void Module::Initialize()
@@ -48,15 +62,20 @@ void Module::_InitializeConsole(std::shared_ptr<ConsoleCommandManager>& p_Consol
 {
 	m_ConsoleCommandManager = p_ConsoleCommandManager;
 	InitializeConsole();
+
+	for (auto& l_SubModule : m_SubModules)
+	{
+		l_SubModule->InitializeConsole();
+	}
 }
 
 void Module::InitializeConsole()
 {
 }
 
-std::string Module::GetLogDesc() const
+const std::string& Module::GetLogDesc() const
 {
-	return GetName() + " #" + std::to_string(GetID());
+	return m_LogDesc;
 }
 #endif
 
@@ -78,6 +97,12 @@ void Module::_Update(const Duration& p_Duration)
 				l_Profiler.Start();
 				m_EventManager->HandleQueued();
 				Update(m_AccumulatedTime);
+
+				for (auto& l_SubModule : m_SubModules)
+				{
+					l_SubModule->Update(m_AccumulatedTime);
+
+				}
 				l_Profiler.Stop();
 
 				m_AccumulatedTime.SetToZero();
@@ -89,6 +114,12 @@ void Module::_Update(const Duration& p_Duration)
 			l_Profiler.Start();
 			m_EventManager->HandleQueued();
 			Update(p_Duration);
+
+			for (auto& l_SubModule : m_SubModules)
+			{
+				l_SubModule->Update(p_Duration);
+
+			}
 			l_Profiler.Stop();
 		}
 	}
@@ -104,7 +135,7 @@ void Module::Update(const Duration& p_Duration)
 
 void Module::SetPaused(bool p_bPaused)
 {
-	LOGM_IF(p_bPaused != m_bPaused, "Pause state changed. IsPaused=" << p_bPaused, Debug);
+	LOG_IF(p_bPaused != m_bPaused, "Pause state changed. IsPaused=" << p_bPaused, GetLogDesc(), Debug);
 	m_bPaused = p_bPaused;
 	m_AccumulatedTime.SetToZero();
 }
@@ -118,7 +149,16 @@ void Module::SetFixedTimeStep(float p_fValue, FixedTimeStepDecl p_Decl)
 {
 	float l_fValue = (p_Decl == FixedTimeStepDecl::FramesPerSecond ? (1.0f / p_fValue) : p_fValue);
 	m_TimePerFrame = Duration(static_cast<int>(l_fValue * 1000000.0f), Duration::Precision::MicroSecond);
-	LOGM("Using fixed time step. " << 1.0f / l_fValue << " FPS Interval: " << l_fValue << " seconds", Info);
+	LOG("Using fixed time step. " << 1.0f / l_fValue << " FPS Interval: " << l_fValue << " seconds", GetLogDesc(), Info);
+}
+
+void Module::AddSubModule(std::unique_ptr<SubModule> p_SubModule)
+{
+	ASSERT(!m_bInitialized, "Sub modules should be added prior to parent module initialization");
+	ASSERT(std::find_if(m_SubModules.cbegin(), m_SubModules.cend(), [&p_SubModule](const std::unique_ptr<SubModule>& p_Other) { return p_SubModule->GetName() == p_Other->GetName(); }) == m_SubModules.cend(), "SubModule by the same name already added: " << p_SubModule->GetName());
+
+	p_SubModule->SetParentModule(this);
+	m_SubModules.push_back(std::move(p_SubModule));
 }
 
 }

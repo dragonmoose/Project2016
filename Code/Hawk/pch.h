@@ -6,6 +6,7 @@
 #undef WIN32_LEAN_AND_MEAN
 #undef NOMINMAX
 
+#include "Console/ConsoleAPI.h"
 #include "Console/Logger.h"
 #include "Debug/Profiler.h"
 #include "System/Config.h"

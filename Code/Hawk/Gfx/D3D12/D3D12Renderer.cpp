@@ -14,12 +14,24 @@ namespace Gfx {
 
 using Microsoft::WRL::ComPtr;
 
+std::string D3D12Renderer::GetName() const
+{
+	return "d3d";
+}
+
 void D3D12Renderer::Initialize()
 {
 	CreateDebugInterface();
 	CreateDevice();
 	LOG("Init done (D3D12)", "d3d", Info);
 }
+
+#ifdef HAWK_DEBUG
+void D3D12Renderer::InitializeConsole()
+{
+	RegisterConsole("d3d.listAdapters", this, &D3D12Renderer::CmdListAdapters, "Lists the available hardware adapters", "");
+}
+#endif
 
 void D3D12Renderer::CreateDebugInterface()
 {
@@ -93,6 +105,14 @@ IDXGIAdapter* D3D12Renderer::GetPreferredHWAdapter(const HWAdapters_t& p_HWAdapt
 	LOG("Preferred adapter: " << l_PreferredAdapterDesc, "d3d12", Info);
 	return l_pPreferredAdapter;
 }
+
+#ifdef HAWK_DEBUG
+void D3D12Renderer::CmdListAdapters()
+{
+	CONSOLE_WRITE_SCOPE();
+	std::cout << "Availalbe adapters...\n";
+}
+#endif
 
 }
 }

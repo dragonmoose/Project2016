@@ -105,6 +105,7 @@
     <ClInclude Include="Base\CoreSettings.h" />
     <ClInclude Include="Base\Module.h" />
     <ClInclude Include="Base\ModuleThread.h" />
+    <ClInclude Include="Base\SubModule.h" />
     <ClInclude Include="Base\WindowManager.h" />
     <ClInclude Include="Console\ConsoleAPI.h" />
     <ClInclude Include="Console\ConsoleFunction.h" />
@@ -123,7 +124,7 @@
     <ClInclude Include="Events\QueuedEvent.h" />
     <ClInclude Include="Gfx\D3D12\D3D12Renderer.h" />
     <ClInclude Include="Gfx\D3D12\d3dx12.h" />
-    <ClInclude Include="Gfx\IRenderingAPI.h" />
+    <ClInclude Include="Gfx\RenderingAPISubModule.h" />
     <ClInclude Include="Gfx\RenderingModule.h" />
     <ClInclude Include="Input\InputEvents.h" />
     <ClInclude Include="Input\InputSystem.h" />
@@ -147,6 +148,7 @@
     <ClCompile Include="Base\Core.cpp" />
     <ClCompile Include="Base\Module.cpp" />
     <ClCompile Include="Base\ModuleThread.cpp" />
+    <ClCompile Include="Base\SubModule.cpp" />
     <ClCompile Include="Base\WindowManager.cpp" />
     <ClCompile Include="Console\ConsoleAPI.cpp" />
     <ClCompile Include="Console\ConsoleHistory.cpp" />

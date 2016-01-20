@@ -2,7 +2,6 @@
 #ifdef HAWK_DEBUG
 #include "ConsoleCommandManager.h"
 #include "ConsoleInputParser.h"
-#include "ConsoleAPI.h"
 #include "System/Version.h"
 #include "Util/Algorithm.h"
 #include "Util/StringUtil.h"

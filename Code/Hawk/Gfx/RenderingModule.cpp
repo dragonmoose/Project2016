@@ -1,15 +1,19 @@
 #include "pch.h"
 #include "RenderingModule.h"
-#include "IRenderingAPI.h"
+#include "RenderingAPISubModule.h"
 #include "Debug/Assert.h"
+#ifdef HAWK_RENDERER_D3D12
+#include "D3D12/D3D12Renderer.h"
+#endif
 
 namespace Hawk {
 namespace Gfx {
 
-RenderingModule::RenderingModule(std::unique_ptr<IRenderingAPI> p_RenderingAPI)
-: m_API(std::move(p_RenderingAPI))
+RenderingModule::RenderingModule()
 {
-	ASSERT(m_API, "Rendering API is null - RenderingModule should not have been created");
+#ifdef HAWK_RENDERER_D3D12
+	AddSubModule(std::make_unique<D3D12Renderer>());
+#endif
 }
 
 std::string RenderingModule::GetName() const
@@ -25,9 +29,8 @@ void RenderingModule::Initialize()
 		{
 			SetFixedTimeStep(Config::Instance().Get("gfx.fixedFPS", 60), Module::FixedTimeStepDecl::FramesPerSecond);
 		}
-		m_API->Initialize();
 
-		LOGM("Init done", Info);
+		LOG("Init done", GetLogDesc(), Info);
 	}
 	catch (Exception& e)
 	{
@@ -41,7 +44,6 @@ void RenderingModule::RegisterEvents(EventManager& p_EventManager)
 
 void RenderingModule::Update(const Duration& p_Duration)
 {
-	LOGM("Update", Trace);
 }
 
 }

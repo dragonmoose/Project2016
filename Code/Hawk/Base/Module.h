@@ -14,6 +14,7 @@
 namespace Hawk
 {
 	class Duration;
+	class SubModule;
 
 	class HAWK_DLL_EXPORT Module
 	{
@@ -33,7 +34,7 @@ namespace Hawk
 #ifdef HAWK_DEBUG
 		void _InitializeConsole(std::shared_ptr<ConsoleCommandManager>& p_ConsoleCommandManager);
 		virtual void InitializeConsole();
-		std::string GetLogDesc() const;
+		const std::string& GetLogDesc() const;
 #endif
 
 		virtual void RegisterEvents(EventManager& p_EventManager);
@@ -44,7 +45,6 @@ namespace Hawk
 		void SetPaused(bool p_bPaused);
 		bool IsPaused() const;
 
-	protected:
 		template<class T>
 		void SendEvent(const T& p_Event)
 		{
@@ -59,13 +59,16 @@ namespace Hawk
 			m_RegisteredConsoleCommands.push_back(p_Name);
 #endif
 		}
-		
+
+	protected:
 		enum class FixedTimeStepDecl
 		{
 			FramesPerSecond,
 			SecondsPerFrame
 		};
 		void SetFixedTimeStep(float p_fValue, FixedTimeStepDecl p_Decl);
+
+		void AddSubModule(std::unique_ptr<SubModule> p_SubModule);
 
 	private:
 		std::unique_ptr<EventManager> m_EventManager;
@@ -77,9 +80,14 @@ namespace Hawk
 		Duration m_TimePerFrame;
 		Duration m_AccumulatedTime;
 
+		using SubModules_t = std::vector<std::unique_ptr<SubModule>>;
+		SubModules_t m_SubModules;
+		bool m_bInitialized;
+
 #ifdef HAWK_DEBUG
 		std::shared_ptr<ConsoleCommandManager> m_ConsoleCommandManager;
 		std::vector<std::string> m_RegisteredConsoleCommands;
+		std::string m_LogDesc;
 #endif
 	};
 }

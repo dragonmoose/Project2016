@@ -9,12 +9,10 @@ class EventManager;
 
 namespace Gfx {
 
-class IRenderingAPI;
-
 class RenderingModule : public Module
 {
 public:
-	RenderingModule(std::unique_ptr<IRenderingAPI> p_RenderingAPI);
+	RenderingModule();
 
 	std::string GetName() const override;
 
@@ -25,9 +23,6 @@ public:
 
 	RenderingModule(const RenderingModule&) = delete;
 	RenderingModule& operator=(const RenderingModule&) = delete;
-
-private:
-	std::unique_ptr<IRenderingAPI> m_API;
 };
 
 }
