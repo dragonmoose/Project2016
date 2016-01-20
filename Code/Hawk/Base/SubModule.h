@@ -46,6 +46,14 @@ namespace Hawk
 #endif
 		}
 
+		template<class... Args_t>
+		void RegisterConsole(const std::string& p_Name, void(*p_Func)(Args_t...), const std::string& p_Desc, const std::string& p_ArgsDesc, bool p_bRequireArgs = true)
+		{
+#ifdef HAWK_DEBUG
+			m_pParentModule->RegisterConsole(p_Name, p_Func, p_Desc, p_ArgsDesc, p_bRequireArgs);
+#endif
+		}
+
 	private:
 		Module* m_pParentModule;
 

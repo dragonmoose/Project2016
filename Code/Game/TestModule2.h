@@ -15,19 +15,19 @@ public:
 	{
 		p_EventManager.Register<TestEvent>([this](const TestEvent& p_Event)
 		{
-			LOG("Receives event submitted by self", GetLogDesc(), Debug);
+			LOGM("Receives event submitted by self", Debug);
 		}
 		);
 
 		p_EventManager.Register<TestEvent2>([this](const TestEvent2& p_Event)
 		{
-			LOG("Value=" << p_Event.m_iValue, GetLogDesc(), Debug);
+			LOGM("Value=" << p_Event.m_iValue, Debug);
 		}
 		);
 
 		p_EventManager.Register<TestEvent3>([this](const TestEvent3& p_Event)
 		{
-			LOG("Event received. Msg=" << p_Event.m_Str, GetLogDesc(), Info);
+			LOGM("Event received. Msg=" << p_Event.m_Str, Info);
 		}
 		);
 	}

@@ -57,14 +57,28 @@ namespace Logger
 }
 
 #define LOG(msg, tag, level)						LOG_WITH_SOURCE_INFO(msg, tag, level)
+#define LOGM(msg, level)							LOG_WITH_SOURCE_INFO(msg, GetLogDesc(), level)
+
 #define LOG_IF(p, msg, tag, level)					if ((p)) LOG(msg, tag, level)
+#define LOGM_IF(p, msg, level)						if ((p)) LOG(msg, GetLogDesc(), level)
+
 #define LOG_EXCEPTION(e, tag, level)				LOG_EXCEPTION_WITH_SOURCE_INFO(e, tag, level);
+#define LOGM_EXCEPTION(e, level)					LOG_EXCEPTION_WITH_SOURCE_INFO(e, GetLogDesc(), level);
+
 #define LOG_STD_EXCEPTION(e, tag, level)			LOG_WITH_SOURCE_INFO(e.what(), tag, level);
+#define LOGM_STD_EXCEPTION(e, level)				LOG_WITH_SOURCE_INFO(e.what(), GetLogDesc(), level);
 
 #else
 #define LOG(msg, tag, level)
+#define LOGM(msg, level)
+
 #define LOG_IF(p, msg, tag, level)
+#define LOGM_IF(p, msg, level)
+
 #define LOG_EXCEPTION(e, tag, level)			
+#define LOGM_EXCEPTION(e, level)			
+
 #define LOG_STD_EXCEPTION(e, tag, level)
+#define LOGM_STD_EXCEPTION(e, level)
 
 #endif

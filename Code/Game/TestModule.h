@@ -28,7 +28,7 @@ public:
 
 	void TestConsoleCmd(const std::string& p_Text, int a, int b)
 	{
-		LOG("The text=" << p_Text << " sum=" << (a + b), GetLogDesc(), Info);
+		LOGM("The text=" << p_Text << " sum=" << (a + b), Info);
 	}
 
 	void TestConsoleCmd2(const std::string& p_Text)
@@ -48,7 +48,7 @@ public:
 	{
 		p_EventManager.Register<TestEvent>([=](const TestEvent& p_Event)
 		{
-			LOG("Event received. Value=" << p_Event.m_iValue, GetLogDesc(), Debug);
+			LOGM("Event received. Value=" << p_Event.m_iValue, Debug);
 		}
 		);
 	}

@@ -80,6 +80,9 @@
     <ClCompile Include="Base\SubModule.cpp">
       <Filter>Base</Filter>
     </ClCompile>
+    <ClCompile Include="Gfx\D3D12\D3D12DeviceManager.cpp">
+      <Filter>Gfx\D3D12</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -205,6 +208,9 @@
     </ClInclude>
     <ClInclude Include="Gfx\RenderingAPISubModule.h">
       <Filter>Gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\D3D12\D3D12DeviceManager.h">
+      <Filter>Gfx\D3D12</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

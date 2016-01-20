@@ -35,22 +35,33 @@ ModuleID Module::GetID() const
 
 void Module::_Initialize(std::unique_ptr<EventManager> p_EventManager, std::shared_ptr<Dispatcher>& p_Dispatcher)
 {
+	try
+	{
 #ifdef HAWK_DEBUG
-	m_LogDesc = GetName() + " #" + std::to_string(GetID());
+		m_LogDesc = GetName() + " #" + std::to_string(GetID());
 #endif
 
-	LOG("Initializing module", GetLogDesc(), Info);
-	m_Dispatcher = p_Dispatcher;
-	m_EventManager = std::move(p_EventManager);
-	Initialize();
-	RegisterEvents(*m_EventManager);
+		LOGM("Initializing module", Info);
+		m_Dispatcher = p_Dispatcher;
+		m_EventManager = std::move(p_EventManager);
+		Initialize();
+		RegisterEvents(*m_EventManager);
 
-	for (auto& l_SubModule : m_SubModules)
-	{
-		l_SubModule->_Initialize();
-		l_SubModule->RegisterEvents(*m_EventManager);
+		for (auto& l_SubModule : m_SubModules)
+		{
+			l_SubModule->_Initialize();
+			l_SubModule->RegisterEvents(*m_EventManager);
+		}
+		m_bInitialized = true;
 	}
-	m_bInitialized = true;
+	catch (Exception& e)
+	{
+		LOGM_EXCEPTION(e, Fatal);
+	}
+	catch (std::exception& e)
+	{
+		LOGM_STD_EXCEPTION(e, Fatal);
+	}
 }
 
 void Module::Initialize()
@@ -149,7 +160,7 @@ void Module::Update(const Duration& p_Duration)
 
 void Module::SetPaused(bool p_bPaused)
 {
-	LOG_IF(p_bPaused != m_bPaused, "Pause state changed. IsPaused=" << p_bPaused, GetLogDesc(), Debug);
+	LOGM_IF(p_bPaused != m_bPaused, "Pause state changed. IsPaused=" << p_bPaused, Debug);
 	m_bPaused = p_bPaused;
 	m_AccumulatedTime.SetToZero();
 }
@@ -163,7 +174,7 @@ void Module::SetFixedTimeStep(float p_fValue, FixedTimeStepDecl p_Decl)
 {
 	float l_fValue = (p_Decl == FixedTimeStepDecl::FramesPerSecond ? (1.0f / p_fValue) : p_fValue);
 	m_TimePerFrame = Duration(static_cast<int>(l_fValue * 1000000.0f), Duration::Precision::MicroSecond);
-	LOG("Using fixed time step. " << 1.0f / l_fValue << " FPS Interval: " << l_fValue << " seconds", GetLogDesc(), Info);
+	LOGM("Using fixed time step. " << 1.0f / l_fValue << " FPS Interval: " << l_fValue << " seconds", Debug);
 }
 
 void Module::AddSubModule(std::unique_ptr<SubModule> p_SubModule)

@@ -69,7 +69,7 @@ void Core::Initialize()
 	{
 		AddModule<Gfx::RenderingModule>(CreateModuleThread("gfx"));
 	}
-	LOG("Hawk core initialized...", "core", Info);
+	LOG("***** Hawk core initialized *****", "core", Info);
 }
 
 ThreadID Core::CreateModuleThread(const std::string& p_Name)
@@ -80,7 +80,7 @@ ThreadID Core::CreateModuleThread(const std::string& p_Name)
 	ThreadID l_ThreadID = l_ModuleThread->GetThreadID();
 	m_ModuleThreads.push_back(std::move(l_ModuleThread));
 
-	LOG("Thread created. Name=" << p_Name << " ID=" << l_ThreadID, "core", Info);
+	LOG("Thread created. Name=" << p_Name << " ID=" << l_ThreadID, "core", Debug);
 	return l_ThreadID;
 }
 
