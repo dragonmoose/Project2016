@@ -18,7 +18,9 @@ void SubModule::SetParentModule(Module* p_pModule)
 void SubModule::_Initialize()
 {
 	ASSERT(m_pParentModule, "Parent module not set");
+#ifdef HAWK_DEBUG
 	m_LogDesc = m_pParentModule->GetLogDesc() + ":" + GetName();
+#endif
 	Initialize();
 }
 

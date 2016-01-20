@@ -48,6 +48,9 @@ namespace Hawk
 
 	private:
 		Module* m_pParentModule;
+
+#ifdef HAWK_DEBUG
 		std::string m_LogDesc;
+#endif
 	};
 }
