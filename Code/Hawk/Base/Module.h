@@ -35,6 +35,7 @@ namespace Hawk
 		void _InitializeConsole(std::shared_ptr<ConsoleCommandManager>& p_ConsoleCommandManager);
 		virtual void InitializeConsole();
 		const std::string& GetLogDesc() const;
+		void DebugPrint() const;
 #endif
 
 		virtual void RegisterEvents(EventManager& p_EventManager);

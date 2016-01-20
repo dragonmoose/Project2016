@@ -77,6 +77,20 @@ const std::string& Module::GetLogDesc() const
 {
 	return m_LogDesc;
 }
+
+void Module::DebugPrint() const
+{
+	std::cout << "\t" << GetLogDesc() << "\n";
+	std::cout << "\t\t" << "Paused: " << IsPaused() << "\n";
+	if (!m_SubModules.empty())
+	{
+		std::cout << "\t\tSubModules:\n";
+		for (const auto& l_SubModule : m_SubModules)
+		{
+			std::cout << "\t\t\t" << l_SubModule->GetName() << "\n";
+		}
+	}
+}
 #endif
 
 void Module::RegisterEvents(EventManager& p_EventManager)

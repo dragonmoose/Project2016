@@ -72,8 +72,7 @@ void ModuleThread::DebugPrint()
 	std::cout << "[" << GetName() << " #" << GetThreadID() << "]\n";
 	for (const auto& l_Module : m_Modules)
 	{
-		std::cout << "\t" << l_Module->GetLogDesc() << "\n";
-		std::cout << "\t\t" << "Paused: " << l_Module->IsPaused() << "\n";
+		l_Module->DebugPrint();
 	}
 	std::cout << "\n";
 }
