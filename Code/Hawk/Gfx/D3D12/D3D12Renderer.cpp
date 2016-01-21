@@ -22,15 +22,14 @@ void D3D12Renderer::Initialize()
 {
 	CreateDebugInterface();
 
-	bool l_bPreferSWRendering = Config::Instance().Get("gfx.preferSWRendering", false);
-	std::string l_DeviceLuid = Config::Instance().Get<std::string>("gfx.deviceLuid", "");
-	if (l_bPreferSWRendering)
+	if (Config::Instance().Get("gfx.preferSWRendering", false))
 	{
 		m_Device = D3D12DeviceManager::CreateWARPDevice();
 		LOGM("Created WARP device", Info);
 	}
 	else
 	{
+		std::string l_DeviceLuid = Config::Instance().Get<std::string>("gfx.deviceLuid", "");
 		m_Device = D3D12DeviceManager::CreateDevice(l_DeviceLuid);
 		LOGM_IF(!l_DeviceLuid.empty(), "Created device from Luid: " << l_DeviceLuid, Info);
 		LOGM_IF(l_DeviceLuid.empty(), "Created auto-selected device", Info);
