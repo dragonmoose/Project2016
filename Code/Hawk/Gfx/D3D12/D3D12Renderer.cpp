@@ -6,7 +6,7 @@
 #endif
 
 #include "D3D12Renderer.h"
-#include "D3D12DeviceManager.h"
+#include "D3D12DeviceFactory.h"
 
 namespace Hawk {
 namespace Gfx {
@@ -24,13 +24,13 @@ void D3D12Renderer::Initialize()
 
 	if (Config::Instance().Get("gfx.preferSWRendering", false))
 	{
-		m_Device = D3D12DeviceManager::CreateWARPDevice();
+		m_Device = D3D12DeviceFactory::CreateWARPDevice();
 		LOGM("Created WARP device", Info);
 	}
 	else
 	{
 		std::string l_DeviceLuid = Config::Instance().Get<std::string>("gfx.deviceLuid", "");
-		m_Device = D3D12DeviceManager::CreateDevice(l_DeviceLuid);
+		m_Device = D3D12DeviceFactory::CreateDevice(l_DeviceLuid);
 		LOGM_IF(!l_DeviceLuid.empty(), "Created device from Luid: " << l_DeviceLuid, Info);
 		LOGM_IF(l_DeviceLuid.empty(), "Created auto-selected device", Info);
 	}
@@ -39,7 +39,7 @@ void D3D12Renderer::Initialize()
 #ifdef HAWK_DEBUG
 void D3D12Renderer::InitializeConsole()
 {
-	RegisterConsole("d3d.listAdapters", &D3D12DeviceManager::CmdListAdapters, "Lists the available hardware adapters", "");
+	RegisterConsole("d3d.listAdapters", &D3D12DeviceFactory::CmdListAdapters, "Lists the available hardware adapters", "");
 }
 #endif
 

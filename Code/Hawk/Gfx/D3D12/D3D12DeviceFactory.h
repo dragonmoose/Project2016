@@ -6,7 +6,7 @@ struct ID3D12Device;
 namespace Hawk {
 namespace Gfx {
 
-namespace D3D12DeviceManager
+namespace D3D12DeviceFactory
 {
 	ID3D12Device* CreateDevice(const std::string& p_Luid = std::string());
 	ID3D12Device* CreateWARPDevice();

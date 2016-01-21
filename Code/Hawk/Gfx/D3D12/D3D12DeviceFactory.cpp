@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "D3D12DeviceManager.h"
+#include "D3D12DeviceFactory.h"
 #include "Debug/Assert.h"
 #include "Util/StringUtil.h"
 #include <boost/lexical_cast.hpp>
@@ -10,7 +10,7 @@
 namespace Hawk {
 namespace Gfx {
 
-namespace D3D12DeviceManager
+namespace D3D12DeviceFactory
 {
 	using HWAdapters_t = std::vector<IDXGIAdapter*>;
 
@@ -21,7 +21,7 @@ namespace D3D12DeviceManager
 
 using Microsoft::WRL::ComPtr;
 
-ID3D12Device* D3D12DeviceManager::CreateDevice(const std::string& p_Luid)
+ID3D12Device* D3D12DeviceFactory::CreateDevice(const std::string& p_Luid)
 {
 	ComPtr<IDXGIFactory4> l_Factory;	//ComPtr destr. calls Release() on ptr, which should be done according to CreateDXGIFactory1 documentation: https://msdn.microsoft.com/en-us/library/windows/desktop/ff471318(v=vs.85).aspx
 	THROW_IF_COMERR(CreateDXGIFactory1(IID_PPV_ARGS(&l_Factory)), "Failed to create DXGI Factory");
@@ -36,7 +36,7 @@ ID3D12Device* D3D12DeviceManager::CreateDevice(const std::string& p_Luid)
 	return l_pDevice;
 }
 
-ID3D12Device* D3D12DeviceManager::CreateWARPDevice()
+ID3D12Device* D3D12DeviceFactory::CreateWARPDevice()
 {
 	ComPtr<IDXGIFactory4> l_Factory;
 	THROW_IF_COMERR(CreateDXGIFactory1(IID_PPV_ARGS(&l_Factory)), "Failed to create DXGI Factory");
@@ -50,7 +50,7 @@ ID3D12Device* D3D12DeviceManager::CreateWARPDevice()
 	return l_pDevice;
 }
 
-void D3D12DeviceManager::GetHWAdapters(IDXGIFactory1* p_pFactory, HWAdapters_t& p_HWAdapters)
+void D3D12DeviceFactory::GetHWAdapters(IDXGIFactory1* p_pFactory, HWAdapters_t& p_HWAdapters)
 {
 	int l_iAdapterNo = 0;
 	IDXGIAdapter1* l_pAdapter;
@@ -70,7 +70,7 @@ void D3D12DeviceManager::GetHWAdapters(IDXGIFactory1* p_pFactory, HWAdapters_t& 
 	THROW_IF(p_HWAdapters.empty(), "No d3d12 compatible hardware adapters found");
 }
 
-IDXGIAdapter* D3D12DeviceManager::GetPreferredHWAdapter(const HWAdapters_t& p_HWAdapters)
+IDXGIAdapter* D3D12DeviceFactory::GetPreferredHWAdapter(const HWAdapters_t& p_HWAdapters)
 {
 	ASSERT(!p_HWAdapters.empty(), "Vector is empty");
 	IDXGIAdapter* l_pPreferredAdapter = nullptr;
@@ -93,7 +93,7 @@ IDXGIAdapter* D3D12DeviceManager::GetPreferredHWAdapter(const HWAdapters_t& p_HW
 	return l_pPreferredAdapter;
 }
 
-IDXGIAdapter* D3D12DeviceManager::GetSpecificDevice(const std::string& p_Luid, const HWAdapters_t& p_HWAdapters)
+IDXGIAdapter* D3D12DeviceFactory::GetSpecificDevice(const std::string& p_Luid, const HWAdapters_t& p_HWAdapters)
 {
 	ASSERT(!p_Luid.empty(), "Luid string should not be empty");
 
@@ -125,7 +125,7 @@ IDXGIAdapter* D3D12DeviceManager::GetSpecificDevice(const std::string& p_Luid, c
 }
 
 #ifdef HAWK_DEBUG
-void D3D12DeviceManager::CmdListAdapters()
+void D3D12DeviceFactory::CmdListAdapters()
 {
 	ComPtr<IDXGIFactory4> l_Factory;
 	THROW_IF_COMERR(CreateDXGIFactory1(IID_PPV_ARGS(&l_Factory)), "Failed to create DXGI Factory");
