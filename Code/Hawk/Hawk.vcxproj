@@ -122,8 +122,10 @@
     <ClInclude Include="Events\EventRouter.h" />
     <ClInclude Include="Events\IEvent.h" />
     <ClInclude Include="Events\QueuedEvent.h" />
+    <ClInclude Include="Gfx\D3D12\D3D12BaseFactory.h" />
     <ClInclude Include="Gfx\D3D12\D3D12DeviceFactory.h" />
     <ClInclude Include="Gfx\D3D12\D3D12Renderer.h" />
+    <ClInclude Include="Gfx\D3D12\D3D12Util.h" />
     <ClInclude Include="Gfx\D3D12\d3dx12.h" />
     <ClInclude Include="Gfx\RenderingAPISubModule.h" />
     <ClInclude Include="Gfx\RenderingModule.h" />
@@ -160,8 +162,10 @@
     <ClCompile Include="Debug\ProfilerManager.cpp" />
     <ClCompile Include="Events\EventManager.cpp" />
     <ClCompile Include="Events\EventRouter.cpp" />
+    <ClCompile Include="Gfx\D3D12\D3D12BaseFactory.cpp" />
     <ClCompile Include="Gfx\D3D12\D3D12DeviceFactory.cpp" />
     <ClCompile Include="Gfx\D3D12\D3D12Renderer.cpp" />
+    <ClCompile Include="Gfx\D3D12\D3D12Util.cpp" />
     <ClCompile Include="Gfx\RenderingModule.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
     <ClCompile Include="pch.cpp">

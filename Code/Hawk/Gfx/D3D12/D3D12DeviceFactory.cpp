@@ -14,20 +14,17 @@ namespace D3D12DeviceFactory
 {
 	using HWAdapters_t = std::vector<IDXGIAdapter*>;
 
-	void GetHWAdapters(IDXGIFactory1* p_pFactory, HWAdapters_t& p_HWAdapters);
+	void GetHWAdapters(IDXGIFactory4* p_pFactory, HWAdapters_t& p_HWAdapters);
 	IDXGIAdapter* GetPreferredHWAdapter(const HWAdapters_t& p_HWAdapters);
 	IDXGIAdapter* GetSpecificDevice(const std::string& p_Luid, const HWAdapters_t& p_HWAdapters);
 }
 
 using Microsoft::WRL::ComPtr;
 
-ID3D12Device* D3D12DeviceFactory::CreateDevice(const std::string& p_Luid)
+ID3D12Device* D3D12DeviceFactory::CreateDevice(IDXGIFactory4* p_Factory, const std::string& p_Luid)
 {
-	ComPtr<IDXGIFactory4> l_Factory;	//ComPtr destr. calls Release() on ptr, which should be done according to CreateDXGIFactory1 documentation: https://msdn.microsoft.com/en-us/library/windows/desktop/ff471318(v=vs.85).aspx
-	THROW_IF_COMERR(CreateDXGIFactory1(IID_PPV_ARGS(&l_Factory)), "Failed to create DXGI Factory");
-
 	HWAdapters_t l_Adapters;
-	GetHWAdapters(l_Factory.Get(), l_Adapters);
+	GetHWAdapters(p_Factory, l_Adapters);
 	IDXGIAdapter* l_pAdapter = p_Luid.empty() ? GetPreferredHWAdapter(l_Adapters) : GetSpecificDevice(p_Luid, l_Adapters);
 
 	ID3D12Device* l_pDevice = nullptr;
@@ -36,13 +33,10 @@ ID3D12Device* D3D12DeviceFactory::CreateDevice(const std::string& p_Luid)
 	return l_pDevice;
 }
 
-ID3D12Device* D3D12DeviceFactory::CreateWARPDevice()
+ID3D12Device* D3D12DeviceFactory::CreateWARPDevice(IDXGIFactory4* p_Factory)
 {
-	ComPtr<IDXGIFactory4> l_Factory;
-	THROW_IF_COMERR(CreateDXGIFactory1(IID_PPV_ARGS(&l_Factory)), "Failed to create DXGI Factory");
-
 	IDXGIAdapter* l_pWarpAdapter;
-	THROW_IF_COMERR(l_Factory->EnumWarpAdapter(IID_PPV_ARGS(&l_pWarpAdapter)), "EnumWarpAdapter failed");
+	THROW_IF_COMERR(p_Factory->EnumWarpAdapter(IID_PPV_ARGS(&l_pWarpAdapter)), "EnumWarpAdapter failed");
 
 	ID3D12Device* l_pDevice = nullptr;
 	THROW_IF_COMERR(D3D12CreateDevice(l_pWarpAdapter, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&l_pDevice)), "Failed to initialize WARP device");
@@ -50,7 +44,7 @@ ID3D12Device* D3D12DeviceFactory::CreateWARPDevice()
 	return l_pDevice;
 }
 
-void D3D12DeviceFactory::GetHWAdapters(IDXGIFactory1* p_pFactory, HWAdapters_t& p_HWAdapters)
+void D3D12DeviceFactory::GetHWAdapters(IDXGIFactory4* p_pFactory, HWAdapters_t& p_HWAdapters)
 {
 	int l_iAdapterNo = 0;
 	IDXGIAdapter1* l_pAdapter;

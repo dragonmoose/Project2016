@@ -129,7 +129,6 @@ void Module::_Update(const Duration& p_Duration)
 
 				}
 				l_Profiler.Stop();
-
 				m_AccumulatedTime.SetToZero();
 			}
 		}

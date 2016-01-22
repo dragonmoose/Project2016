@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "WindowManager.h"
+#include "Debug/Assert.h"
 #include "Input/InputSystem.h"
 #include <memory>
 
@@ -10,6 +11,7 @@ namespace WindowManager
 	LRESULT CALLBACK WindowProc(HWND p_hWindow, UINT p_Message, WPARAM p_wParam, LPARAM p_lParam);
 	const char* n_WindowName = "HawkWindowClass";
 	std::unique_ptr<InputSystem> n_InputSystem;
+	HWND n_hWindow = nullptr;
 }
 
 void WindowManager::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
@@ -33,22 +35,28 @@ void WindowManager::Open(HINSTANCE p_hInstance, const std::string& p_Name)
 
 	THROW_IF_NOT(RegisterClassEx(&l_WC), "Failed to register windows class");
 
-	HWND l_hWindow = CreateWindowEx(
+	n_hWindow = CreateWindowEx(
 		0,
 		n_WindowName,
 		p_Name.c_str(),
 		WS_OVERLAPPEDWINDOW,
 		300,
 		300,
-		640,
-		480,
+		Config::Instance().Get("gfx.width", 800),
+		Config::Instance().Get("gfx.height", 600),
 		nullptr,
 		nullptr,
 		p_hInstance,
 		nullptr
 	);
-	THROW_IF_NOT(l_hWindow, "Failed to create window");
-	ShowWindow(l_hWindow, SW_SHOWNORMAL);
+	THROW_IF_NOT(n_hWindow, "Failed to create window");
+	ShowWindow(n_hWindow, SW_SHOWNORMAL);
+}
+
+HWND WindowManager::GetHandle()
+{
+	ASSERT(n_hWindow, "Window not created yet");
+	return n_hWindow;
 }
 
 bool WindowManager::Update()

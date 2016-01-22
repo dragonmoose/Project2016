@@ -3,6 +3,11 @@
 #include <wrl/client.h>
 #include <vector>
 #include <d3d12.h>
+#include <dxgi1_4.h>
+
+struct IDXGIFactory4;
+
+using Microsoft::WRL::ComPtr;
 
 namespace Hawk {
 namespace Gfx {
@@ -18,9 +23,11 @@ public:
 #endif
 
 private:
-	void CreateDebugInterface();
+	void CreateDevice(IDXGIFactory4* p_Factory);
 
-	Microsoft::WRL::ComPtr<ID3D12Device> m_Device;
+	ComPtr<ID3D12Device> m_Device;
+	ComPtr<ID3D12CommandQueue> m_CommandQueue;
+	ComPtr<IDXGISwapChain3> m_SwapChain;
 };
 
 }

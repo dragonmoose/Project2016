@@ -83,6 +83,12 @@
     <ClCompile Include="Gfx\D3D12\D3D12DeviceFactory.cpp">
       <Filter>Gfx\D3D12</Filter>
     </ClCompile>
+    <ClCompile Include="Gfx\D3D12\D3D12BaseFactory.cpp">
+      <Filter>Gfx\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\D3D12\D3D12Util.cpp">
+      <Filter>Gfx\D3D12</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -210,6 +216,12 @@
       <Filter>Gfx</Filter>
     </ClInclude>
     <ClInclude Include="Gfx\D3D12\D3D12DeviceFactory.h">
+      <Filter>Gfx\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\D3D12\D3D12BaseFactory.h">
+      <Filter>Gfx\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\D3D12\D3D12Util.h">
       <Filter>Gfx\D3D12</Filter>
     </ClInclude>
   </ItemGroup>

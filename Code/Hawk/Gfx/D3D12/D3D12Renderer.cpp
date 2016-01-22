@@ -6,12 +6,12 @@
 #endif
 
 #include "D3D12Renderer.h"
+#include "D3D12BaseFactory.h"
 #include "D3D12DeviceFactory.h"
+#include "D3D12Util.h"
 
 namespace Hawk {
 namespace Gfx {
-
-using Microsoft::WRL::ComPtr;
 
 std::string D3D12Renderer::GetName() const
 {
@@ -20,20 +20,14 @@ std::string D3D12Renderer::GetName() const
 
 void D3D12Renderer::Initialize()
 {
-	CreateDebugInterface();
+	D3D12Util::EnableDebugLayer();
 
-	if (Config::Instance().Get("gfx.preferSWRendering", false))
-	{
-		m_Device = D3D12DeviceFactory::CreateWARPDevice();
-		LOGM("Created WARP device", Info);
-	}
-	else
-	{
-		std::string l_DeviceLuid = Config::Instance().Get<std::string>("gfx.deviceLuid", "");
-		m_Device = D3D12DeviceFactory::CreateDevice(l_DeviceLuid);
-		LOGM_IF(!l_DeviceLuid.empty(), "Created device from Luid: " << l_DeviceLuid, Info);
-		LOGM_IF(l_DeviceLuid.empty(), "Created auto-selected device", Info);
-	}
+	ComPtr<IDXGIFactory4> l_Factory;
+	THROW_IF_COMERR(CreateDXGIFactory1(IID_PPV_ARGS(&l_Factory)), "Failed to create DXGIFactory4");
+
+	CreateDevice(l_Factory.Get());
+	m_CommandQueue = D3D12BaseFactory::CreateCommandQueue(m_Device.Get());
+	m_SwapChain = D3D12BaseFactory::CreateSwapChain(l_Factory.Get(), m_CommandQueue.Get());
 }
 
 #ifdef HAWK_DEBUG
@@ -43,13 +37,20 @@ void D3D12Renderer::InitializeConsole()
 }
 #endif
 
-void D3D12Renderer::CreateDebugInterface()
+void D3D12Renderer::CreateDevice(IDXGIFactory4* p_Factory)
 {
-#ifdef HAWK_DEBUG
-	ComPtr<ID3D12Debug> l_DebugInterface;
-	THROW_IF_COMERR(D3D12GetDebugInterface(IID_PPV_ARGS(&l_DebugInterface)), "Failed to get d3d debug interface");
-	l_DebugInterface->EnableDebugLayer();
-#endif
+	if (Config::Instance().Get("gfx.preferSWRendering", false))
+	{
+		m_Device = D3D12DeviceFactory::CreateWARPDevice(p_Factory);
+		LOGM("Created WARP device", Info);
+	}
+	else
+	{
+		std::string l_DeviceLuid = Config::Instance().Get<std::string>("gfx.deviceLuid", "");
+		m_Device = D3D12DeviceFactory::CreateDevice(p_Factory, l_DeviceLuid);
+		LOGM_IF(!l_DeviceLuid.empty(), "Created device from Luid: " << l_DeviceLuid, Info);
+		LOGM_IF(l_DeviceLuid.empty(), "Created auto-selected device", Info);
+	}
 }
 
 }
