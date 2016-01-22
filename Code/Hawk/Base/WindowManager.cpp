@@ -22,8 +22,7 @@ void WindowManager::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
 
 void WindowManager::Open(HINSTANCE p_hInstance, const std::string& p_Name)
 {
-	WNDCLASSEX l_WC;
-	ZeroMemory(&l_WC, sizeof(WNDCLASSEX));
+	WNDCLASSEX l_WC = { 0 };
 
 	l_WC.cbSize = sizeof(WNDCLASSEX);
 	l_WC.style = CS_HREDRAW | CS_VREDRAW;
@@ -40,10 +39,10 @@ void WindowManager::Open(HINSTANCE p_hInstance, const std::string& p_Name)
 		n_WindowName,
 		p_Name.c_str(),
 		WS_OVERLAPPEDWINDOW,
-		300,
-		300,
-		Config::Instance().Get("gfx.width", 800),
-		Config::Instance().Get("gfx.height", 600),
+		CW_USEDEFAULT,
+		CW_USEDEFAULT,
+		Config::Instance().Get("gfx.width", 1280),
+		Config::Instance().Get("gfx.height", 720),
 		nullptr,
 		nullptr,
 		p_hInstance,
