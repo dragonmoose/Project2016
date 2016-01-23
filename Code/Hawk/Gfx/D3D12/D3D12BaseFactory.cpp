@@ -45,7 +45,7 @@ IDXGISwapChain3* D3D12BaseFactory::CreateSwapChain(IDXGIFactory4* p_Factory, ID3
 ID3D12CommandAllocator* D3D12BaseFactory::CreateCommandAllocator(ID3D12Device* p_pDevice)
 {
 	ID3D12CommandAllocator* l_pAllocator;
-	p_pDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&l_pAllocator));
+	THROW_IF_COMERR(p_pDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&l_pAllocator)), "Failed to create comand allocator");
 	return l_pAllocator;
 }
 

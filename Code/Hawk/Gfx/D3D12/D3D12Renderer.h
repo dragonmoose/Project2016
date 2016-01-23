@@ -24,6 +24,7 @@ public:
 
 private:
 	void CreateDevice(IDXGIFactory4* p_Factory);
+	void SetFullscreen(bool p_bValue);
 
 	ComPtr<ID3D12Device> m_Device;
 	ComPtr<ID3D12CommandQueue> m_CommandQueue;

@@ -32,6 +32,7 @@ void D3D12Renderer::Initialize()
 	CreateDevice(l_Factory.Get());
 	m_CommandQueue = D3D12BaseFactory::CreateCommandQueue(m_Device.Get());
 	m_SwapChain = D3D12BaseFactory::CreateSwapChain(l_Factory.Get(), m_CommandQueue.Get());
+	SetFullscreen(Config::Instance().Get("gfx.fullscreen", false));
 }
 
 #ifdef HAWK_DEBUG
@@ -55,6 +56,11 @@ void D3D12Renderer::CreateDevice(IDXGIFactory4* p_Factory)
 		LOGM_IF(!l_DeviceLuid.empty(), "Created device from Luid: " << l_DeviceLuid, Info);
 		LOGM_IF(l_DeviceLuid.empty(), "Created auto-selected device", Info);
 	}
+}
+
+void D3D12Renderer::SetFullscreen(bool p_bValue)
+{
+	THROW_IF_COMERR(m_SwapChain->SetFullscreenState(p_bValue, nullptr), "Failed to set fullscreen state. Value=" << p_bValue);
 }
 
 }
