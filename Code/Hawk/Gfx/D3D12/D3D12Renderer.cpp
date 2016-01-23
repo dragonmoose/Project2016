@@ -23,7 +23,11 @@ void D3D12Renderer::Initialize()
 	D3D12Util::EnableDebugLayer();
 
 	ComPtr<IDXGIFactory4> l_Factory;
+#ifdef HAWK_DEBUG
+	THROW_IF_COMERR(CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(&l_Factory)), "Failed to create DXGIFactory4");
+#else
 	THROW_IF_COMERR(CreateDXGIFactory1(IID_PPV_ARGS(&l_Factory)), "Failed to create DXGIFactory4");
+#endif
 
 	CreateDevice(l_Factory.Get());
 	m_CommandQueue = D3D12BaseFactory::CreateCommandQueue(m_Device.Get());
