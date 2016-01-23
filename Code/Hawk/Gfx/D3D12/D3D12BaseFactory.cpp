@@ -26,29 +26,29 @@ ID3D12CommandQueue* D3D12BaseFactory::CreateCommandQueue(ID3D12Device* p_pDevice
 
 IDXGISwapChain3* D3D12BaseFactory::CreateSwapChain(IDXGIFactory4* p_Factory, ID3D12CommandQueue* p_CommandQueue)
 {
-	DXGI_SWAP_CHAIN_DESC l_Desc = {};	
-	l_Desc.BufferDesc.Width = 0;			// Will get width/height from window by the runtime
-	l_Desc.BufferDesc.Height = 0;
-	//l_Desc.BufferDesc.RefreshRate
-	l_Desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	//l_Desc.BufferDesc.ScanlineOrdering
-	//l_Desc.BufferDesc.Scaling
+	DXGI_SWAP_CHAIN_DESC1 l_Desc = {};
+	l_Desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	l_Desc.SampleDesc.Count = 1;
-	l_Desc.SampleDesc.Quality = 0;
 	l_Desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	l_Desc.BufferCount = Config::Instance().Get("gfx.backBufferCount", 2);
-	l_Desc.OutputWindow = WindowManager::GetHandle();
-	l_Desc.Windowed = Config::Instance().Get("gfx.windowed", TRUE);
 	l_Desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-	//l_Desc.Flags =
 
-	ComPtr<IDXGISwapChain> l_SwapChain;
-	THROW_IF_COMERR(p_Factory->CreateSwapChain(p_CommandQueue, &l_Desc, &l_SwapChain), "Failed to create swap chain");
+	ComPtr<IDXGISwapChain1> l_SwapChain;
+
+	THROW_IF_COMERR(p_Factory->CreateSwapChainForHwnd(p_CommandQueue, WindowManager::GetHandle(), &l_Desc, nullptr, nullptr, &l_SwapChain), "Failed to create swap chain");
 
 	IDXGISwapChain3* l_pSwapChain3;
 	THROW_IF_COMERR(l_SwapChain.CopyTo<IDXGISwapChain3>(&l_pSwapChain3), "Failed to cast to IDXGISwapChain3");
 	return l_pSwapChain3;
 }
+
+ID3D12CommandAllocator* D3D12BaseFactory::CreateCommandAllocator(ID3D12Device* p_pDevice)
+{
+	ID3D12CommandAllocator* l_pAllocator;
+	p_pDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&l_pAllocator));
+	return l_pAllocator;
+}
+
 
 }
 }
