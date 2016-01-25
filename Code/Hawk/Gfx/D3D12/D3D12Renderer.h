@@ -1,13 +1,11 @@
 #pragma once
+#include "D3D12Types.h"
 #include "Gfx/RenderingAPISubModule.h"
-#include <wrl/client.h>
 #include <vector>
 #include <d3d12.h>
 #include <dxgi1_4.h>
 
 struct IDXGIFactory4;
-
-using Microsoft::WRL::ComPtr;
 
 namespace Hawk {
 namespace Gfx {
@@ -26,9 +24,9 @@ private:
 	void CreateDevice(IDXGIFactory4* p_Factory);
 	void SetFullscreen(bool p_bValue);
 
-	ComPtr<ID3D12Device> m_Device;
-	ComPtr<ID3D12CommandQueue> m_CommandQueue;
-	ComPtr<IDXGISwapChain3> m_SwapChain;
+	DeviceComPtr_t m_Device;
+	CommandQueueComPtr_t m_CommandQueue;
+	SwapChainComPtr_t m_SwapChain;
 };
 
 }

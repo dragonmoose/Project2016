@@ -125,6 +125,7 @@
     <ClInclude Include="Gfx\D3D12\D3D12BaseFactory.h" />
     <ClInclude Include="Gfx\D3D12\D3D12DeviceFactory.h" />
     <ClInclude Include="Gfx\D3D12\D3D12Renderer.h" />
+    <ClInclude Include="Gfx\D3D12\D3D12Types.h" />
     <ClInclude Include="Gfx\D3D12\D3D12Util.h" />
     <ClInclude Include="Gfx\D3D12\d3dx12.h" />
     <ClInclude Include="Gfx\RenderingAPISubModule.h" />

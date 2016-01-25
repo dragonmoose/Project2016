@@ -224,6 +224,9 @@
     <ClInclude Include="Gfx\D3D12\D3D12Util.h">
       <Filter>Gfx\D3D12</Filter>
     </ClInclude>
+    <ClInclude Include="Gfx\D3D12\D3D12Types.h">
+      <Filter>Gfx\D3D12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">

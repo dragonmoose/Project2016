@@ -22,7 +22,7 @@ void D3D12Renderer::Initialize()
 {
 	D3D12Util::EnableDebugLayer();
 
-	ComPtr<IDXGIFactory4> l_Factory;
+	DXGIFacoryComPtr_t l_Factory;
 #ifdef HAWK_DEBUG
 	THROW_IF_COMERR(CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(&l_Factory)), "Failed to create DXGIFactory4");
 #else
@@ -30,8 +30,8 @@ void D3D12Renderer::Initialize()
 #endif
 
 	CreateDevice(l_Factory.Get());
-	m_CommandQueue = D3D12BaseFactory::CreateCommandQueue(m_Device.Get());
-	m_SwapChain = D3D12BaseFactory::CreateSwapChain(l_Factory.Get(), m_CommandQueue.Get());
+	D3D12BaseFactory::CreateCommandQueue(m_Device.Get(), m_CommandQueue);
+	D3D12BaseFactory::CreateSwapChain(l_Factory.Get(), m_CommandQueue.Get(), m_SwapChain);
 	SetFullscreen(Config::Instance().Get("gfx.fullscreen", false));
 }
 
@@ -46,13 +46,13 @@ void D3D12Renderer::CreateDevice(IDXGIFactory4* p_Factory)
 {
 	if (Config::Instance().Get("gfx.preferSWRendering", false))
 	{
-		m_Device = D3D12DeviceFactory::CreateWARPDevice(p_Factory);
+		D3D12DeviceFactory::CreateWARPDevice(p_Factory, m_Device);
 		LOGM("Created WARP device", Info);
 	}
 	else
 	{
 		std::string l_DeviceLuid = Config::Instance().Get<std::string>("gfx.deviceLuid", "");
-		m_Device = D3D12DeviceFactory::CreateDevice(p_Factory, l_DeviceLuid);
+		D3D12DeviceFactory::CreateDevice(p_Factory, l_DeviceLuid, m_Device);
 		LOGM_IF(!l_DeviceLuid.empty(), "Created device from Luid: " << l_DeviceLuid, Info);
 		LOGM_IF(l_DeviceLuid.empty(), "Created auto-selected device", Info);
 	}

@@ -3,16 +3,13 @@
 #include "Base/WindowManager.h"
 #include <d3d12.h>
 #include <dxgi1_4.h>
-#include <wrl/client.h>
-
-using Microsoft::WRL::ComPtr;
 
 namespace Hawk {
 namespace Gfx {
 
-ID3D12CommandQueue* D3D12BaseFactory::CreateCommandQueue(ID3D12Device* p_pDevice)
+void D3D12BaseFactory::CreateCommandQueue(ID3D12Device* p_pDevice, CommandQueueComPtr_t& p_CommandQueue)
 {
-	ID3D12CommandQueue* l_pQueue = nullptr;
+	CommandQueueComPtr_t l_CommandQueue;
 
 	D3D12_COMMAND_QUEUE_DESC l_Desc = {};
 	l_Desc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
@@ -20,11 +17,11 @@ ID3D12CommandQueue* D3D12BaseFactory::CreateCommandQueue(ID3D12Device* p_pDevice
 	l_Desc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
 	l_Desc.NodeMask = 0;
 
-	THROW_IF_COMERR(p_pDevice->CreateCommandQueue(&l_Desc, IID_PPV_ARGS(&l_pQueue)), "Failed to create CommandQueue");
-	return l_pQueue;
+	THROW_IF_COMERR(p_pDevice->CreateCommandQueue(&l_Desc, IID_PPV_ARGS(&l_CommandQueue)), "Failed to create CommandQueue");
+	p_CommandQueue = std::move(l_CommandQueue);
 }
 
-IDXGISwapChain3* D3D12BaseFactory::CreateSwapChain(IDXGIFactory4* p_Factory, ID3D12CommandQueue* p_CommandQueue)
+void D3D12BaseFactory::CreateSwapChain(IDXGIFactory4* p_Factory, ID3D12CommandQueue* p_CommandQueue, SwapChainComPtr_t& p_SwapChain)
 {
 	DXGI_SWAP_CHAIN_DESC1 l_Desc = {};
 	l_Desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -33,20 +30,16 @@ IDXGISwapChain3* D3D12BaseFactory::CreateSwapChain(IDXGIFactory4* p_Factory, ID3
 	l_Desc.BufferCount = Config::Instance().Get("gfx.backBufferCount", 2);
 	l_Desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 
-	ComPtr<IDXGISwapChain1> l_SwapChain;
-
+	Microsoft::WRL::ComPtr<IDXGISwapChain1> l_SwapChain;
 	THROW_IF_COMERR(p_Factory->CreateSwapChainForHwnd(p_CommandQueue, WindowManager::GetHandle(), &l_Desc, nullptr, nullptr, &l_SwapChain), "Failed to create swap chain");
-
-	IDXGISwapChain3* l_pSwapChain3;
-	THROW_IF_COMERR(l_SwapChain.CopyTo<IDXGISwapChain3>(&l_pSwapChain3), "Failed to cast to IDXGISwapChain3");
-	return l_pSwapChain3;
+	THROW_IF_COMERR(l_SwapChain.CopyTo<IDXGISwapChain3>(&p_SwapChain), "Failed to cast and copy to IDXGISwapChain3");
 }
 
-ID3D12CommandAllocator* D3D12BaseFactory::CreateCommandAllocator(ID3D12Device* p_pDevice)
+void D3D12BaseFactory::CreateCommandAllocator(ID3D12Device* p_pDevice, CommandAllocatorComPtr_t& p_Allocator)
 {
-	ID3D12CommandAllocator* l_pAllocator;
-	THROW_IF_COMERR(p_pDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&l_pAllocator)), "Failed to create comand allocator");
-	return l_pAllocator;
+	CommandAllocatorComPtr_t l_Allocator;
+	THROW_IF_COMERR(p_pDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&l_Allocator)), "Failed to create comand allocator");
+	p_Allocator = std::move(l_Allocator);
 }
 
 
