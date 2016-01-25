@@ -32,6 +32,7 @@ void D3D12Renderer::Initialize()
 	CreateDevice(l_Factory.Get());
 	D3D12BaseFactory::CreateCommandQueue(m_Device.Get(), m_CommandQueue);
 	D3D12BaseFactory::CreateSwapChain(l_Factory.Get(), m_CommandQueue.Get(), m_SwapChain);
+	D3D12BaseFactory::CreateCommandAllocator(m_Device.Get(), m_CommandAllocator);
 	SetFullscreen(Config::Instance().Get("gfx.fullscreen", false));
 }
 

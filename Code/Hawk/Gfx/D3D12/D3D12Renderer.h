@@ -27,6 +27,7 @@ private:
 	DeviceComPtr_t m_Device;
 	CommandQueueComPtr_t m_CommandQueue;
 	SwapChainComPtr_t m_SwapChain;
+	CommandAllocatorComPtr_t m_CommandAllocator;
 };
 
 }

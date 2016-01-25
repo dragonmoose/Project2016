@@ -42,6 +42,5 @@ void D3D12BaseFactory::CreateCommandAllocator(ID3D12Device* p_pDevice, CommandAl
 	p_Allocator = std::move(l_Allocator);
 }
 
-
 }
 }
