@@ -1,16 +1,14 @@
 #include "pch.h"
-#include "D3D12DeviceFactory.h"
+#include "DeviceFactory.h"
 #include "Debug/Assert.h"
 #include "Util/StringUtil.h"
 #include <boost/lexical_cast.hpp>
-#include <d3d12.h>
-#include <dxgi1_4.h>
-#include <wrl/client.h>
 
 namespace Hawk {
 namespace Gfx {
+namespace D3D12 {
 
-namespace D3D12DeviceFactory
+namespace DeviceFactory
 {
 	using HWAdapters_t = std::vector<DXGIAdapterComPtr_t>;
 
@@ -19,7 +17,7 @@ namespace D3D12DeviceFactory
 	void GetSpecificAdapter(const std::string& p_Luid, const HWAdapters_t& p_HWAdapters, DXGIAdapterComPtr_t& p_Adapter);
 }
 
-void D3D12DeviceFactory::CreateDevice(IDXGIFactory4* p_Factory, const std::string& p_Luid, DeviceComPtr_t& p_Device)
+void DeviceFactory::CreateDevice(IDXGIFactory4* p_Factory, const std::string& p_Luid, DeviceComPtr_t& p_Device)
 {
 	HWAdapters_t l_Adapters;
 	GetHWAdapters(p_Factory, l_Adapters);
@@ -39,7 +37,7 @@ void D3D12DeviceFactory::CreateDevice(IDXGIFactory4* p_Factory, const std::strin
 	p_Device = std::move(l_Device);
 }
 
-void D3D12DeviceFactory::CreateWARPDevice(IDXGIFactory4* p_Factory, DeviceComPtr_t& p_Device)
+void DeviceFactory::CreateWARPDevice(IDXGIFactory4* p_Factory, DeviceComPtr_t& p_Device)
 {
 	DXGIAdapterComPtr_t l_WarpAdapter;
 	THROW_IF_COMERR(p_Factory->EnumWarpAdapter(IID_PPV_ARGS(&l_WarpAdapter)), "EnumWarpAdapter failed");
@@ -49,7 +47,7 @@ void D3D12DeviceFactory::CreateWARPDevice(IDXGIFactory4* p_Factory, DeviceComPtr
 	p_Device = std::move(l_Device);
 }
 
-void D3D12DeviceFactory::GetHWAdapters(IDXGIFactory4* p_pFactory, HWAdapters_t& p_HWAdapters)
+void DeviceFactory::GetHWAdapters(IDXGIFactory4* p_pFactory, HWAdapters_t& p_HWAdapters)
 {
 	int l_iAdapterNo = 0;
 	Microsoft::WRL::ComPtr<IDXGIAdapter1> l_Adapter;
@@ -69,7 +67,7 @@ void D3D12DeviceFactory::GetHWAdapters(IDXGIFactory4* p_pFactory, HWAdapters_t& 
 	THROW_IF(p_HWAdapters.empty(), "No d3d12 compatible hardware adapters found");
 }
 
-void D3D12DeviceFactory::GetPreferredHWAdapter(const HWAdapters_t& p_HWAdapters, DXGIAdapterComPtr_t& p_Adapter)
+void DeviceFactory::GetPreferredHWAdapter(const HWAdapters_t& p_HWAdapters, DXGIAdapterComPtr_t& p_Adapter)
 {
 	ASSERT(!p_HWAdapters.empty(), "Vector is empty");
 	IDXGIAdapter* l_pPreferredAdapter = nullptr;
@@ -92,7 +90,7 @@ void D3D12DeviceFactory::GetPreferredHWAdapter(const HWAdapters_t& p_HWAdapters,
 	p_Adapter = l_pPreferredAdapter;
 }
 
-void D3D12DeviceFactory::GetSpecificAdapter(const std::string& p_Luid, const HWAdapters_t& p_HWAdapters, DXGIAdapterComPtr_t& p_Adapter)
+void DeviceFactory::GetSpecificAdapter(const std::string& p_Luid, const HWAdapters_t& p_HWAdapters, DXGIAdapterComPtr_t& p_Adapter)
 {
 	ASSERT(!p_Luid.empty(), "Luid string should not be empty");
 
@@ -125,7 +123,7 @@ void D3D12DeviceFactory::GetSpecificAdapter(const std::string& p_Luid, const HWA
 }
 
 #ifdef HAWK_DEBUG
-void D3D12DeviceFactory::CmdListAdapters()
+void DeviceFactory::CmdListAdapters()
 {
 	Microsoft::WRL::ComPtr<IDXGIFactory4> l_Factory;
 	THROW_IF_COMERR(CreateDXGIFactory1(IID_PPV_ARGS(&l_Factory)), "Failed to create DXGI Factory");
@@ -152,5 +150,6 @@ void D3D12DeviceFactory::CmdListAdapters()
 }
 #endif
 
+}
 }
 }

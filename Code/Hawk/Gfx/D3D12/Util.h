@@ -2,10 +2,12 @@
 
 namespace Hawk {
 namespace Gfx {
+namespace D3D12 {
 
-namespace D3D12Util
+namespace Util
 {
 	void EnableDebugLayer();
+}
 }
 }
 }

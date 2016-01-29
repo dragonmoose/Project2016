@@ -68,9 +68,6 @@
     <ClCompile Include="Gfx\RenderingModule.cpp">
       <Filter>Gfx</Filter>
     </ClCompile>
-    <ClCompile Include="Gfx\D3D12\D3D12Renderer.cpp">
-      <Filter>Gfx\D3D12</Filter>
-    </ClCompile>
     <ClCompile Include="System\Mutex.cpp">
       <Filter>System</Filter>
     </ClCompile>
@@ -80,13 +77,22 @@
     <ClCompile Include="Base\SubModule.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="Gfx\D3D12\D3D12DeviceFactory.cpp">
+    <ClCompile Include="Gfx\D3D12\BaseFactory.cpp">
       <Filter>Gfx\D3D12</Filter>
     </ClCompile>
-    <ClCompile Include="Gfx\D3D12\D3D12BaseFactory.cpp">
+    <ClCompile Include="Gfx\D3D12\DeviceFactory.cpp">
       <Filter>Gfx\D3D12</Filter>
     </ClCompile>
-    <ClCompile Include="Gfx\D3D12\D3D12Util.cpp">
+    <ClCompile Include="Gfx\D3D12\Renderer.cpp">
+      <Filter>Gfx\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\D3D12\Util.cpp">
+      <Filter>Gfx\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\D3D12\BackBuffer.cpp">
+      <Filter>Gfx\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\D3D12\CommandQueue.cpp">
       <Filter>Gfx\D3D12</Filter>
     </ClCompile>
   </ItemGroup>
@@ -200,9 +206,6 @@
     <ClInclude Include="Gfx\D3D12\d3dx12.h">
       <Filter>Gfx\D3D12</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\D3D12\D3D12Renderer.h">
-      <Filter>Gfx\D3D12</Filter>
-    </ClInclude>
     <ClInclude Include="System\Mutex.h">
       <Filter>System</Filter>
     </ClInclude>
@@ -215,16 +218,28 @@
     <ClInclude Include="Gfx\RenderingAPISubModule.h">
       <Filter>Gfx</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\D3D12\D3D12DeviceFactory.h">
+    <ClInclude Include="Gfx\D3D12\BackBuffer.h">
       <Filter>Gfx\D3D12</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\D3D12\D3D12BaseFactory.h">
+    <ClInclude Include="Gfx\D3D12\BaseFactory.h">
       <Filter>Gfx\D3D12</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\D3D12\D3D12Util.h">
+    <ClInclude Include="Gfx\D3D12\DeviceFactory.h">
       <Filter>Gfx\D3D12</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\D3D12\D3D12Types.h">
+    <ClInclude Include="Gfx\D3D12\Renderer.h">
+      <Filter>Gfx\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\D3D12\Common.h">
+      <Filter>Gfx\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\D3D12\Util.h">
+      <Filter>Gfx\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\D3D12\Constants.h">
+      <Filter>Gfx\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\D3D12\CommandQueue.h">
       <Filter>Gfx\D3D12</Filter>
     </ClInclude>
   </ItemGroup>

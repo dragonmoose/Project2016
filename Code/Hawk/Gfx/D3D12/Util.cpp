@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "D3D12Util.h"
+#include "Util.h"
 #include <wrl/client.h>
 #include <d3d12.h>
 
@@ -7,8 +7,9 @@ using Microsoft::WRL::ComPtr;
 
 namespace Hawk {
 namespace Gfx {
+namespace D3D12 {
 
-void D3D12Util::EnableDebugLayer()
+void Util::EnableDebugLayer()
 {
 #ifdef HAWK_DEBUG
 	ComPtr<ID3D12Debug> l_DebugInterface;
@@ -18,5 +19,5 @@ void D3D12Util::EnableDebugLayer()
 }
 
 }
-
+}
 }

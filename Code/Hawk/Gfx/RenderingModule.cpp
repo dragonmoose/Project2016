@@ -3,7 +3,7 @@
 #include "RenderingAPISubModule.h"
 #include "Debug/Assert.h"
 #ifdef HAWK_RENDERER_D3D12
-#include "D3D12/D3D12Renderer.h"
+#include "D3D12/Renderer.h"
 #endif
 
 namespace Hawk {
@@ -12,7 +12,7 @@ namespace Gfx {
 RenderingModule::RenderingModule()
 {
 #ifdef HAWK_RENDERER_D3D12
-	AddSubModule(std::make_unique<D3D12Renderer>());
+	AddSubModule(std::make_unique<D3D12::Renderer>());
 #endif
 }
 
