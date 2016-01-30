@@ -1,6 +1,7 @@
 #pragma once
 #include "Common.h"
-#include "BackBuffer.h"
+#include "RenderView.h"
+#include "CommandList.h"
 #include "CommandQueue.h"
 #include "Gfx/RenderingAPISubModule.h"
 #include <vector>
@@ -13,7 +14,7 @@ namespace Gfx {
 namespace D3D12 {
 
 class CommandQueue;
-class BackBuffer;
+class RenderView;
 
 class Renderer final : public RenderingAPISubModule
 {
@@ -33,11 +34,16 @@ private:
 	void CreateDevice(IDXGIFactory4* p_Factory);
 	void SetFullscreen(bool p_bValue);
 
+	void BeginFrame();
+	void EndFrame();
+	void RecordCommands();
+
 	DeviceComPtr_t m_Device;
 	std::unique_ptr<CommandQueue> m_CommandQueue;
 	SwapChainComPtr_t m_SwapChain;
 	CommandAllocatorComPtr_t m_CommandAllocator;
-	std::unique_ptr<BackBuffer> m_BackBuffer;
+	std::shared_ptr<RenderView> m_RenderView;
+	std::vector<std::unique_ptr<CommandList>> m_CommandLists;
 };
 
 }

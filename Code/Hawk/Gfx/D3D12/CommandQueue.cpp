@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CommandQueue.h"
+#include "CommandList.h"
 #include "BaseFactory.h"
 
 namespace Hawk {
@@ -16,19 +17,24 @@ CommandQueue::CommandQueue(DeviceComPtr_t& p_Device)
 	m_Event = CreateEvent(nullptr, false, false, nullptr);
 	if (!m_Event)
 	{
-		THROW_IF_COMERR(HRESULT_FROM_WIN32(GetLastError()), "Failed to create fence event");
-		THROW("Failed to create fence event (prev statement should have thrown");
+		THROW_COMERR(HRESULT_FROM_WIN32(GetLastError()), "Failed to create fence event");
 	}
 }
 
 CommandQueue::~CommandQueue()
 {
+	WaitForGPU();
 	CloseHandle(m_Event);
 }
 
-CommandQueueComPtr_t& CommandQueue::GetD3DObject()
+void CommandQueue::AddCommandList(std::unique_ptr<CommandList>& p_CommandList)
 {
-	return m_Object;
+	m_CommandLists.push_back(p_CommandList->GetD3DObject());
+}
+
+ID3D12CommandQueue* CommandQueue::GetD3DObject()
+{
+	return m_Object.Get();
 }
 
 void CommandQueue::WaitForGPU()
@@ -42,6 +48,11 @@ void CommandQueue::WaitForGPU()
 		THROW_IF_COMERR(m_Fence->SetEventOnCompletion(l_uiValue, m_Event), "Failed to set completed event for fence");
 		WaitForSingleObject(m_Event, INFINITE);
 	}
+}
+
+void CommandQueue::Execute()
+{
+	m_Object->ExecuteCommandLists(m_CommandLists.size(), m_CommandLists.data());
 }
 
 }

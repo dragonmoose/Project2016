@@ -8,6 +8,7 @@
 #include "Renderer.h"
 #include "BaseFactory.h"
 #include "DeviceFactory.h"
+#include "ClearRenderViewCL.h"
 #include "Util.h"
 
 namespace Hawk {
@@ -17,7 +18,6 @@ namespace D3D12 {
 Renderer::Renderer()
 {
 }
-
 
 std::string Renderer::GetName() const
 {
@@ -37,10 +37,15 @@ void Renderer::Initialize()
 
 	CreateDevice(l_Factory.Get());
 	m_CommandQueue = std::make_unique<CommandQueue>(m_Device);
-	BaseFactory::CreateSwapChain(l_Factory.Get(), m_CommandQueue->GetD3DObject().Get(), m_SwapChain);
+	BaseFactory::CreateSwapChain(l_Factory.Get(), m_CommandQueue->GetD3DObject(), m_SwapChain);
 	BaseFactory::CreateCommandAllocator(m_Device.Get(), m_CommandAllocator);
-	m_BackBuffer = std::make_unique<BackBuffer>(m_SwapChain, m_Device);
+	m_RenderView = std::make_unique<RenderView>(m_SwapChain, m_Device);
 	SetFullscreen(Config::Instance().Get("gfx.fullscreen", false));
+
+	std::unique_ptr<CommandList> l_ClearRenderViewCL = std::make_unique<ClearRenderViewCL>(m_Device, m_RenderView, m_CommandAllocator);
+	m_CommandQueue->AddCommandList(l_ClearRenderViewCL);
+	m_CommandLists.push_back(std::move(l_ClearRenderViewCL));
+
 }
 
 #ifdef HAWK_DEBUG
@@ -52,9 +57,10 @@ void Renderer::InitializeConsole()
 
 void Renderer::Update(const Duration& p_Duration)
 {
-	m_BackBuffer->BeginFrame();
-	m_BackBuffer->EndFrame();
-	m_CommandQueue->WaitForGPU();
+	BeginFrame();
+	RecordCommands();
+	m_CommandQueue->Execute();
+	EndFrame();
 }
 
 void Renderer::CreateDevice(IDXGIFactory4* p_Factory)
@@ -76,6 +82,27 @@ void Renderer::CreateDevice(IDXGIFactory4* p_Factory)
 void Renderer::SetFullscreen(bool p_bValue)
 {
 	THROW_IF_COMERR(m_SwapChain->SetFullscreenState(p_bValue, nullptr), "Failed to set fullscreen state. Value=" << p_bValue);
+}
+
+void Renderer::BeginFrame()
+{
+	m_CommandQueue->WaitForGPU();
+	THROW_IF_COMERR(m_CommandAllocator->Reset(), "Failed to reset command allocator (GPU not finished with associated command lists?)");
+	m_RenderView->BeginFrame();
+}
+void Renderer::EndFrame()
+{
+	m_RenderView->EndFrame();
+}
+
+void Renderer::RecordCommands()
+{
+	for (auto& l_CommandList : m_CommandLists)
+	{
+		l_CommandList->BeginRecord();
+		l_CommandList->Record();
+		l_CommandList->EndRecord();
+	}
 }
 
 }

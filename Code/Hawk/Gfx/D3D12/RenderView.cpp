@@ -1,13 +1,12 @@
 #include "pch.h"
-#include "BackBuffer.h"
+#include "RenderView.h"
 #include "Constants.h"
-#include "d3dx12.h"
 
 namespace Hawk {
 namespace Gfx {
 namespace D3D12 {
 
-BackBuffer::BackBuffer(SwapChainComPtr_t& p_SwapChain, DeviceComPtr_t& p_Device)
+RenderView::RenderView(SwapChainComPtr_t& p_SwapChain, DeviceComPtr_t& p_Device)
 : m_SwapChain(p_SwapChain)
 , m_uiDescriptorSize(0)
 {
@@ -16,17 +15,27 @@ BackBuffer::BackBuffer(SwapChainComPtr_t& p_SwapChain, DeviceComPtr_t& p_Device)
 	CreateRTV(p_Device);
 }
 
-void BackBuffer::BeginFrame()
+void RenderView::BeginFrame()
 {
-	m_uiCurrFrameIndex = m_SwapChain->GetCurrentBackBufferIndex();
+	m_uiCurrBufferIndex = m_SwapChain->GetCurrentBackBufferIndex();
 }
 
-void BackBuffer::EndFrame()
+void RenderView::EndFrame()
 {
 	THROW_IF_COMERR(m_SwapChain->Present(c_uiPresentSyncInterval, 0), "Present failed");
 }
 
-void BackBuffer::CreateDescriptorHeap(DeviceComPtr_t& p_Device)
+ID3D12Resource* RenderView::GetBackBuffer()
+{
+	return m_Buffers[m_uiCurrBufferIndex].Get();
+}
+
+CD3DX12_CPU_DESCRIPTOR_HANDLE RenderView::GetHandle() const
+{
+	return CD3DX12_CPU_DESCRIPTOR_HANDLE(m_Heap->GetCPUDescriptorHandleForHeapStart(), m_uiCurrBufferIndex, m_uiDescriptorSize);
+}
+
+void RenderView::CreateDescriptorHeap(DeviceComPtr_t& p_Device)
 {
 	D3D12_DESCRIPTOR_HEAP_DESC l_Desc = {};
 	l_Desc.NumDescriptors = c_uiNumBackBuffers;
@@ -35,7 +44,7 @@ void BackBuffer::CreateDescriptorHeap(DeviceComPtr_t& p_Device)
 	THROW_IF_COMERR(p_Device->CreateDescriptorHeap(&l_Desc, IID_PPV_ARGS(&m_Heap)), "Failed to create descriptor heap");
 }
 
-void BackBuffer::CreateRTV(DeviceComPtr_t& p_Device)
+void RenderView::CreateRTV(DeviceComPtr_t& p_Device)
 {
 	CD3DX12_CPU_DESCRIPTOR_HANDLE l_Handle(m_Heap->GetCPUDescriptorHandleForHeapStart());
 	for (unsigned int i = 0; i < c_uiNumBackBuffers; i++)

@@ -1,18 +1,22 @@
 #pragma once
 #include "Constants.h"
-#include "Common.h" 
+#include "Common.h"
+#include "d3dx12.h"
 #include <array>
 
 namespace Hawk {
 namespace Gfx {
 namespace D3D12 {
 
-class BackBuffer final
+class RenderView final
 {
 public:
-	BackBuffer(SwapChainComPtr_t& p_SwapChain, DeviceComPtr_t& p_Device);
+	RenderView(SwapChainComPtr_t& p_SwapChain, DeviceComPtr_t& p_Device);
 	void BeginFrame();
 	void EndFrame();
+
+	ID3D12Resource* GetBackBuffer();
+	CD3DX12_CPU_DESCRIPTOR_HANDLE GetHandle() const;
 
 private:
 	void CreateDescriptorHeap(DeviceComPtr_t& p_Device);
@@ -20,7 +24,7 @@ private:
 
 	SwapChainComPtr_t m_SwapChain;
 	RTVHeapComPtr_t m_Heap;
-	unsigned int m_uiCurrFrameIndex;
+	unsigned int m_uiCurrBufferIndex;
 	unsigned int m_uiDescriptorSize;
 	std::array<ResourceComPtr_t, c_uiNumBackBuffers> m_Buffers;
 };

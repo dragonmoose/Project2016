@@ -110,46 +110,57 @@ void Module::RegisterEvents(EventManager& p_EventManager)
 
 void Module::_Update(const Duration& p_Duration)
 {
-	if (!IsPaused())
+	try
 	{
-		if (!m_TimePerFrame.IsZero())
+		if (!IsPaused())
 		{
-			m_AccumulatedTime += p_Duration;
-			if (m_AccumulatedTime >= m_TimePerFrame)
+			if (!m_TimePerFrame.IsZero())
 			{
-				Profiler l_Profiler(GetName() + ":FixedUpdate");
+				m_AccumulatedTime += p_Duration;
+				if (m_AccumulatedTime >= m_TimePerFrame)
+				{
+					Profiler l_Profiler(GetName() + ":FixedUpdate");
 
+					l_Profiler.Start();
+					m_EventManager->HandleQueued();
+					Update(m_AccumulatedTime);
+
+					for (auto& l_SubModule : m_SubModules)
+					{
+						l_SubModule->Update(m_AccumulatedTime);
+
+					}
+					l_Profiler.Stop();
+					m_AccumulatedTime.SetToZero();
+				}
+			}
+			else
+			{
+				Profiler l_Profiler(GetName() + ":Update");
 				l_Profiler.Start();
 				m_EventManager->HandleQueued();
-				Update(m_AccumulatedTime);
+				Update(p_Duration);
 
 				for (auto& l_SubModule : m_SubModules)
 				{
-					l_SubModule->Update(m_AccumulatedTime);
+					l_SubModule->Update(p_Duration);
 
 				}
 				l_Profiler.Stop();
-				m_AccumulatedTime.SetToZero();
 			}
 		}
 		else
 		{
-			Profiler l_Profiler(GetName() + ":Update");
-			l_Profiler.Start();
-			m_EventManager->HandleQueued();
-			Update(p_Duration);
-
-			for (auto& l_SubModule : m_SubModules)
-			{
-				l_SubModule->Update(p_Duration);
-
-			}
-			l_Profiler.Stop();
+			m_EventManager->ClearQueued();
 		}
 	}
-	else
+	catch (Exception& e)
 	{
-		m_EventManager->ClearQueued();
+		LOGM_EXCEPTION(e, Error);
+	}
+	catch (std::exception& e)
+	{
+		LOGM_STD_EXCEPTION(e, Error);
 	}
 }
 

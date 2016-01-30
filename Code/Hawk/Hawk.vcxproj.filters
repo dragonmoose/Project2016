@@ -89,10 +89,16 @@
     <ClCompile Include="Gfx\D3D12\Util.cpp">
       <Filter>Gfx\D3D12</Filter>
     </ClCompile>
-    <ClCompile Include="Gfx\D3D12\BackBuffer.cpp">
+    <ClCompile Include="Gfx\D3D12\CommandQueue.cpp">
       <Filter>Gfx\D3D12</Filter>
     </ClCompile>
-    <ClCompile Include="Gfx\D3D12\CommandQueue.cpp">
+    <ClCompile Include="Gfx\D3D12\CommandList.cpp">
+      <Filter>Gfx\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\D3D12\RenderView.cpp">
+      <Filter>Gfx\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\D3D12\ClearRenderViewCL.cpp">
       <Filter>Gfx\D3D12</Filter>
     </ClCompile>
   </ItemGroup>
@@ -218,9 +224,6 @@
     <ClInclude Include="Gfx\RenderingAPISubModule.h">
       <Filter>Gfx</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\D3D12\BackBuffer.h">
-      <Filter>Gfx\D3D12</Filter>
-    </ClInclude>
     <ClInclude Include="Gfx\D3D12\BaseFactory.h">
       <Filter>Gfx\D3D12</Filter>
     </ClInclude>
@@ -240,6 +243,15 @@
       <Filter>Gfx\D3D12</Filter>
     </ClInclude>
     <ClInclude Include="Gfx\D3D12\CommandQueue.h">
+      <Filter>Gfx\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\D3D12\CommandList.h">
+      <Filter>Gfx\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\D3D12\RenderView.h">
+      <Filter>Gfx\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\D3D12\ClearRenderViewCL.h">
       <Filter>Gfx\D3D12</Filter>
     </ClInclude>
   </ItemGroup>

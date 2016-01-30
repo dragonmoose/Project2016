@@ -25,4 +25,5 @@ private:
 }
 #define THROW_IF(p, msg)						if ((p)) THROW(msg)
 #define THROW_IF_NOT(p, msg)					if (!(p)) THROW(msg)
-#define THROW_IF_COMERR(p, msg)					if ((p < 0)) THROW(msg << " [" << _com_error(p).ErrorMessage() << "]")
+#define THROW_COMERR(p, msg)					THROW(msg << " [" << _com_error(p).ErrorMessage() << "]")
+#define THROW_IF_COMERR(p, msg)					if ((p < 0)) THROW_COMERR(p, msg)
