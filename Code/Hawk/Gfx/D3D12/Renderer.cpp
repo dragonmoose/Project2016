@@ -40,12 +40,12 @@ void Renderer::Initialize()
 	BaseFactory::CreateSwapChain(l_Factory.Get(), m_CommandQueue->GetD3DObject(), m_SwapChain);
 	BaseFactory::CreateCommandAllocator(m_Device.Get(), m_CommandAllocator);
 	m_RenderView = std::make_unique<RenderView>(m_SwapChain, m_Device);
-	SetFullscreen(Config::Instance().Get("gfx.fullscreen", false));
 
 	std::unique_ptr<CommandList> l_ClearRenderViewCL = std::make_unique<ClearRenderViewCL>(m_Device, m_RenderView, m_CommandAllocator);
 	m_CommandQueue->AddCommandList(l_ClearRenderViewCL);
 	m_CommandLists.push_back(std::move(l_ClearRenderViewCL));
 
+	SetFullscreen(Config::Instance().Get("gfx.fullscreen", false));
 }
 
 #ifdef HAWK_DEBUG
