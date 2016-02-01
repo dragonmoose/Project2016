@@ -16,9 +16,9 @@ CommandList::CommandList(DeviceComPtr_t& p_Device, std::shared_ptr<RenderView>& 
 }
 
 
-ID3D12CommandList* CommandList::GetD3DObject()
+GfxCommandListComPtr_t& CommandList::GetD3DObject()
 {
-	return m_CommandList.Get();
+	return m_CommandList;
 }
 
 void CommandList::BeginRecord()

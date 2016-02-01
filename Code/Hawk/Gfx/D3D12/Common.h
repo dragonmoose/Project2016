@@ -18,7 +18,6 @@ using ResourceComPtr_t			= Microsoft::WRL::ComPtr<ID3D12Resource>;
 using FenceComPtr_t				= Microsoft::WRL::ComPtr<ID3D12Fence>;
 using GfxCommandListComPtr_t	= Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>;
 using PipelineStateComPtr_t		= Microsoft::WRL::ComPtr<ID3D12PipelineState>;
-
 }
 }
 }

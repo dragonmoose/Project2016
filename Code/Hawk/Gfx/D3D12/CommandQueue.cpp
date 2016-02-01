@@ -25,16 +25,23 @@ CommandQueue::~CommandQueue()
 {
 	WaitForGPU();
 	CloseHandle(m_Event);
+
+	for (auto l_List : m_CommandLists)
+	{
+		l_List->Release();
+	}
 }
 
 void CommandQueue::AddCommandList(std::unique_ptr<CommandList>& p_CommandList)
 {
-	m_CommandLists.push_back(p_CommandList->GetD3DObject());
+	ID3D12CommandList* l_CmdList;
+	p_CommandList->GetD3DObject().CopyTo<ID3D12CommandList>(&l_CmdList);
+	m_CommandLists.push_back(l_CmdList);
 }
 
-ID3D12CommandQueue* CommandQueue::GetD3DObject()
+CommandQueueComPtr_t& CommandQueue::GetD3DObject()
 {
-	return m_Object.Get();
+	return m_Object;
 }
 
 void CommandQueue::WaitForGPU()

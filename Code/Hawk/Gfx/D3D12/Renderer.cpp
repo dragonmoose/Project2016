@@ -3,6 +3,7 @@
 #ifdef HAWK_RENDERER_D3D12
 #pragma comment(lib, "d3d12")
 #pragma comment(lib, "dxgi")
+#pragma comment(lib, "d3d11")
 #endif
 
 #include "Renderer.h"
@@ -37,13 +38,14 @@ void Renderer::Initialize()
 
 	CreateDevice(l_Factory.Get());
 	m_CommandQueue = std::make_unique<CommandQueue>(m_Device);
-	BaseFactory::CreateSwapChain(l_Factory.Get(), m_CommandQueue->GetD3DObject(), m_SwapChain);
+	BaseFactory::CreateSwapChain(l_Factory.Get(), m_CommandQueue->GetD3DObject().Get(), m_SwapChain);
 	BaseFactory::CreateCommandAllocator(m_Device.Get(), m_CommandAllocator);
 	m_RenderView = std::make_unique<RenderView>(m_SwapChain, m_Device);
 
 	std::unique_ptr<CommandList> l_ClearRenderViewCL = std::make_unique<ClearRenderViewCL>(m_Device, m_RenderView, m_CommandAllocator);
 	m_CommandQueue->AddCommandList(l_ClearRenderViewCL);
 	m_CommandLists.push_back(std::move(l_ClearRenderViewCL));
+	m_TextRenderer = std::make_unique<TextRenderer>(m_Device.Get(), reinterpret_cast<IUnknown**>(m_CommandQueue->GetD3DObject().GetAddressOf()));
 
 	SetFullscreen(Config::Instance().Get("gfx.fullscreen", false));
 }

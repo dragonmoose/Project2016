@@ -18,7 +18,7 @@ public:
 
 	void AddCommandList(std::unique_ptr<CommandList>& p_CommandList);
 
-	ID3D12CommandQueue* GetD3DObject();
+	CommandQueueComPtr_t& GetD3DObject();
 	void WaitForGPU();
 	void Execute();
 

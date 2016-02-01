@@ -3,6 +3,7 @@
 #include "RenderView.h"
 #include "CommandList.h"
 #include "CommandQueue.h"
+#include "TextRenderer.h"
 #include "Gfx/RenderingAPISubModule.h"
 #include <vector>
 #include <memory>
@@ -44,6 +45,7 @@ private:
 	CommandAllocatorComPtr_t m_CommandAllocator;
 	std::shared_ptr<RenderView> m_RenderView;
 	std::vector<std::unique_ptr<CommandList>> m_CommandLists;
+	std::unique_ptr<TextRenderer> m_TextRenderer;
 };
 
 }

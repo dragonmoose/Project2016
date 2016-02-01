@@ -18,7 +18,7 @@ public:
 	CommandList(const CommandList&) = delete;
 	CommandList& operator=(const CommandList&) = delete;
 
-	ID3D12CommandList* GetD3DObject();
+	GfxCommandListComPtr_t& GetD3DObject();
 	void BeginRecord();
 	void EndRecord();
 	virtual void Record() = 0;

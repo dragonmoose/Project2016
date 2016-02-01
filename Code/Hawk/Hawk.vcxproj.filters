@@ -101,6 +101,9 @@
     <ClCompile Include="Gfx\D3D12\ClearRenderViewCL.cpp">
       <Filter>Gfx\D3D12</Filter>
     </ClCompile>
+    <ClCompile Include="Gfx\D3D12\TextRenderer.cpp">
+      <Filter>Gfx\D3D12</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -252,6 +255,9 @@
       <Filter>Gfx\D3D12</Filter>
     </ClInclude>
     <ClInclude Include="Gfx\D3D12\ClearRenderViewCL.h">
+      <Filter>Gfx\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\D3D12\TextRenderer.h">
       <Filter>Gfx\D3D12</Filter>
     </ClInclude>
   </ItemGroup>
