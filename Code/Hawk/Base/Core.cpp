@@ -160,6 +160,7 @@ void Core::StopModules()
 	for (auto& l_Manager : m_ModuleThreads)
 	{
 		l_Manager->Stop();
+		l_Manager.reset();
 	}
 }
 

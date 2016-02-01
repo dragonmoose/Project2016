@@ -9,10 +9,10 @@ namespace D3D12 {
 RenderView::RenderView(SwapChainComPtr_t& p_SwapChain, DeviceComPtr_t& p_Device)
 : m_SwapChain(p_SwapChain)
 , m_uiDescriptorSize(0)
+, m_Device(p_Device)
 {
-	CreateDescriptorHeap(p_Device);
-	m_uiDescriptorSize = p_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	CreateRTV(p_Device);
+	Initialize();
+
 }
 
 void RenderView::BeginFrame()
@@ -25,14 +25,38 @@ void RenderView::EndFrame()
 	THROW_IF_COMERR(m_SwapChain->Present(c_uiPresentSyncInterval, 0), "Present failed");
 }
 
-ID3D12Resource* RenderView::GetBackBuffer()
+ID3D12Resource* RenderView::GetCurrBackBuffer()
 {
 	return m_Buffers[m_uiCurrBufferIndex].Get();
+}
+
+const RenderView::BackBufferArray_t& RenderView::GetBackBuffers() const
+{
+	return m_Buffers;
 }
 
 CD3DX12_CPU_DESCRIPTOR_HANDLE RenderView::GetHandle() const
 {
 	return CD3DX12_CPU_DESCRIPTOR_HANDLE(m_Heap->GetCPUDescriptorHandleForHeapStart(), m_uiCurrBufferIndex, m_uiDescriptorSize);
+}
+
+unsigned int RenderView::GetCurrBufferIndex() const
+{
+	return m_uiCurrBufferIndex;
+}
+
+void RenderView::SetFullscreenState(bool p_bState)
+{
+	THROW_IF_COMERR(m_SwapChain->SetFullscreenState(p_bState, nullptr), "Failed to set fullscreen state. State=" << p_bState);
+	//THROW_IF_COMERR(m_SwapChain->ResizeBuffers(c_uiNumBackBuffers, 0, 0, DXGI_FORMAT_UNKNOWN, 0), "Resize buffers failed. State=" << p_bState);
+	//Initialize();
+}
+
+void RenderView::Initialize()
+{
+	CreateDescriptorHeap(m_Device);
+	m_uiDescriptorSize = m_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	CreateRTV(m_Device);
 }
 
 void RenderView::CreateDescriptorHeap(DeviceComPtr_t& p_Device)

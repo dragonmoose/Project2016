@@ -15,7 +15,6 @@ CommandList::CommandList(DeviceComPtr_t& p_Device, std::shared_ptr<RenderView>& 
 	THROW_IF_COMERR(m_CommandList->Close(), "Failed to close command list");	// Need to close since Reset() requires it to be closed
 }
 
-
 GfxCommandListComPtr_t& CommandList::GetD3DObject()
 {
 	return m_CommandList;
@@ -24,12 +23,12 @@ GfxCommandListComPtr_t& CommandList::GetD3DObject()
 void CommandList::BeginRecord()
 {
 	THROW_IF_COMERR(m_CommandList->Reset(m_Allocator.Get(), m_State.Get()), "Failed to reset command list");
-	m_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_RenderView->GetBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+	m_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_RenderView->GetCurrBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 }
 
 void CommandList::EndRecord()
 {
-	m_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_RenderView->GetBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+	//m_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_RenderView->GetCurrBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 	THROW_IF_COMERR(m_CommandList->Close(), "Failed to close command list");
 }
 

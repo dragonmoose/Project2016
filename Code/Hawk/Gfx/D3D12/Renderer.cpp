@@ -4,6 +4,8 @@
 #pragma comment(lib, "d3d12")
 #pragma comment(lib, "dxgi")
 #pragma comment(lib, "d3d11")
+#pragma comment(lib, "d2d1")
+#pragma comment(lib, "dwrite")
 #endif
 
 #include "Renderer.h"
@@ -45,9 +47,11 @@ void Renderer::Initialize()
 	std::unique_ptr<CommandList> l_ClearRenderViewCL = std::make_unique<ClearRenderViewCL>(m_Device, m_RenderView, m_CommandAllocator);
 	m_CommandQueue->AddCommandList(l_ClearRenderViewCL);
 	m_CommandLists.push_back(std::move(l_ClearRenderViewCL));
-	m_TextRenderer = std::make_unique<TextRenderer>(m_Device.Get(), reinterpret_cast<IUnknown**>(m_CommandQueue->GetD3DObject().GetAddressOf()));
+	m_TextRenderer = std::make_unique<TextRenderer>(m_Device.Get(), reinterpret_cast<IUnknown**>(m_CommandQueue->GetD3DObject().GetAddressOf()), m_RenderView);
 
-	SetFullscreen(Config::Instance().Get("gfx.fullscreen", false));
+	SetFullscreenState(Config::Instance().Get("gfx.fullscreen", false));
+
+	m_LastFrameTime = Time::Now();
 }
 
 #ifdef HAWK_DEBUG
@@ -59,9 +63,14 @@ void Renderer::InitializeConsole()
 
 void Renderer::Update(const Duration& p_Duration)
 {
+	Duration l_FrameDuration = Time::Now() - m_LastFrameTime;
+	unsigned int l_uiFPS = static_cast<unsigned int>((1.0f / l_FrameDuration.Get(Duration::Precision::Millisecond)) * 1000.0f);
+
+	m_LastFrameTime = Time::Now();
 	BeginFrame();
 	RecordCommands();
 	m_CommandQueue->Execute();
+	m_TextRenderer->Draw("FPS: " + std::to_string(l_uiFPS));
 	EndFrame();
 }
 
@@ -81,9 +90,9 @@ void Renderer::CreateDevice(IDXGIFactory4* p_Factory)
 	}
 }
 
-void Renderer::SetFullscreen(bool p_bValue)
+void Renderer::SetFullscreenState(bool p_bState)
 {
-	THROW_IF_COMERR(m_SwapChain->SetFullscreenState(p_bValue, nullptr), "Failed to set fullscreen state. Value=" << p_bValue);
+	m_RenderView->SetFullscreenState(p_bState);
 }
 
 void Renderer::BeginFrame()

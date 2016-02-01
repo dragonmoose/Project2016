@@ -33,7 +33,7 @@ public:
 
 private:
 	void CreateDevice(IDXGIFactory4* p_Factory);
-	void SetFullscreen(bool p_bValue);
+	void SetFullscreenState(bool p_bState);
 
 	void BeginFrame();
 	void EndFrame();
@@ -46,6 +46,8 @@ private:
 	std::shared_ptr<RenderView> m_RenderView;
 	std::vector<std::unique_ptr<CommandList>> m_CommandLists;
 	std::unique_ptr<TextRenderer> m_TextRenderer;
+
+	Time m_LastFrameTime;
 };
 
 }
