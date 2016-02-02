@@ -5,7 +5,7 @@
 #include "Hawk/Events/EventManager.h"
 #include "TestEvent.h"
 #include "Hawk/System/Duration.h"
-#include "Hawk/Gfx/GfxDebugEvents.h"
+#include "Hawk/Gfx/DebugEvents.h"
 #include <string>
 
 class TestModule : public Hawk::Module
@@ -27,29 +27,34 @@ public:
 		}
 	}
 
-	void TestConsoleCmd(const std::string& p_Text, int a, int b)
+	void TestConsoleCmd()
 	{
-		Hawk::Gfx::UpdateDebugTextEvent l_Ev("value", "123", "gfxStats");
+		Hawk::Gfx::UpdateDebugTextEvent l_Ev("value", "1234", "gfx");
 		SendEvent(l_Ev);
 		Hawk::Gfx::UpdateDebugTextEvent l_Ev2("test", "123fdf", "test");
 		SendEvent(l_Ev2);
-		Hawk::Gfx::UpdateDebugTextEvent l_Ev3("ffgf", "123wererw", "gfxStats");
+		Hawk::Gfx::UpdateDebugTextEvent l_Ev3("ffgf", "123wererw", "gfx");
 		SendEvent(l_Ev3);
 		Hawk::Gfx::UpdateDebugTextEvent l_Ev4("erw", "123fsdfd", "test");
 		SendEvent(l_Ev4);
 	}
 
-	void TestConsoleCmd2(const std::string& p_Text)
+	void TestConsoleCmd2()
 	{
-		TestEvent3 l_Event;
-		l_Event.m_Str = p_Text;
-		SendEvent(l_Event);
+		Hawk::Gfx::RemoveDebugTextEvent l_Ev("value", "gfx");
+		SendEvent(l_Ev);
+		Hawk::Gfx::RemoveDebugTextEvent l_Ev2("test", "test");
+		SendEvent(l_Ev2);
+		Hawk::Gfx::RemoveDebugTextEvent l_Ev3("ffgf", "gfx");
+		SendEvent(l_Ev3);
+		Hawk::Gfx::RemoveDebugTextEvent l_Ev4("aerw", "test");
+		SendEvent(l_Ev4);
 	}
 
 	void InitializeConsole()
 	{
 		RegisterConsole("test.cmd", this, &TestModule::TestConsoleCmd, "Test command", "[Text] [num1] [num2]");
-		RegisterConsole("test.event", this, &TestModule::TestConsoleCmd2, "Sends test event", "[Text]");
+		RegisterConsole("test.rem", this, &TestModule::TestConsoleCmd2, "Sends test event", "[Text]");
 	}
 
 	void RegisterEvents(Hawk::EventManager& p_EventManager) override

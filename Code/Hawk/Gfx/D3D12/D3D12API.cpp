@@ -62,10 +62,12 @@ void D3D12API::SetDebugText(const std::string& p_Text)
 	m_TextRenderer->SetText(p_Text);
 }
 
+#ifdef HAWK_DEBUG
 void D3D12API::CmdListDevices()
 {
 	DeviceFactory::CmdListAdapters();
 }
+#endif
 
 void D3D12API::CreateDevice(IDXGIFactory4* p_Factory)
 {

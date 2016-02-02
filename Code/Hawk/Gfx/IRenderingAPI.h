@@ -18,7 +18,9 @@ public:
 	virtual void SetFullscreenState(bool p_bState) = 0;
 	virtual void SetDebugText(const std::string& p_Text) = 0;
 
+#ifdef HAWK_DEBUG
 	virtual void CmdListDevices() { CmdNotImplemented(); }
+#endif
 
 private:
 	void CmdNotImplemented() { std::cout << "Command not implemented.\n\n"; }

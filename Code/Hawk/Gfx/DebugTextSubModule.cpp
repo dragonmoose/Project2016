@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "DebugTextSubModule.h"
-#include "GfxDebugEvents.h"
+#include "DebugEvents.h"
 #include "IRenderingAPI.h"
 
 namespace Hawk {
@@ -9,6 +9,7 @@ namespace Gfx {
 DebugTextSubModule::DebugTextSubModule(std::shared_ptr<IRenderingAPI>& p_API)
 : m_API(p_API)
 {
+	m_Map["gfx"] = {};
 }
 
 std::string DebugTextSubModule::GetName() const
@@ -29,29 +30,26 @@ void DebugTextSubModule::RegisterEvents(EventManager& p_EventManager)
 	});
 }
 
+#ifdef HAWK_DEBUG
 void DebugTextSubModule::InitializeConsole()
 {
-	RegisterConsole("gfx.dbgStatSet", this, &DebugTextSubModule::CmdSetActiveCategory, "Sets the currenty displayed debug category", "[category]", false);
-	RegisterConsole("gfx.dbgStatList", this, &DebugTextSubModule::CmdList, "Lists categories and variables", "");
+	RegisterConsole("rstat.list", this, &DebugTextSubModule::CmdList, "Lists categories and variables", "");
 }
+#endif
 
 void DebugTextSubModule::Update(const Duration& p_Duration)
 {
 	std::string l_Text;
-	if (!m_ActiveCategory.empty())
+	const std::string l_ActiveCategory = Config::Instance().Get<std::string>("gfx.rstat", "gfx");
+	if (!l_ActiveCategory.empty())
 	{
-		auto l_Itr = m_Map.find(m_ActiveCategory);
+		auto l_Itr = m_Map.find(l_ActiveCategory);
 		if (l_Itr != m_Map.cend())
 		{
 			for (const auto& l_Node : l_Itr->second)
 			{
 				l_Text += l_Node.m_Label + ": " + l_Node.m_Value + "\n";
 			}
-		}
-		else
-		{
-			std::cout << "Failed to find debug text category - clearing category.\n\n";
-			m_ActiveCategory.clear();
 		}
 	}
 	m_API->SetDebugText(l_Text);
@@ -91,26 +89,23 @@ void DebugTextSubModule::RemoveValue(const std::string& p_Label, const std::stri
 		}
 		else
 		{
-			std::cout << "Failed to find label " << p_Label << " in category " << p_Category << ".\n\n";
+			LOGM("Failed to find label " << p_Label << " in category " << p_Category, Warning);
 		}
 	}
 	else
 	{
-		std::cout << "Failed to find category: " << p_Category << ".\n\n";
+		LOGM("Failed to find category: " << p_Category, Warning);
 	}
-}
-
-void DebugTextSubModule::CmdSetActiveCategory(const std::string& p_Category)
-{
-	m_ActiveCategory = p_Category;
 }
 
 void DebugTextSubModule::CmdList()
 {
+	const std::string l_ActiveCategory = Config::Instance().Get<std::string>("gfx.rstat", "gfx");
+
 	CONSOLE_WRITE_SCOPE();
 	for (const auto& l_Cat : m_Map)
 	{
-		std::cout << l_Cat.first << (l_Cat.first == m_ActiveCategory ? " *" : "") << "\n";
+		std::cout << l_Cat.first << (l_Cat.first == l_ActiveCategory ? " *" : "") << "\n";
 		for (const auto& l_Node : l_Cat.second)
 		{
 			std::cout << "\t" << l_Node.m_Label << ": " << l_Node.m_Value << "\n";

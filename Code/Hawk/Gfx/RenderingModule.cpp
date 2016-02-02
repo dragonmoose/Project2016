@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "RenderingModule.h"
 #include "DebugTextSubModule.h"
+#include "FPSTrackerSubModule.h"
 #include "Debug/Assert.h"
 #ifdef HAWK_RENDERER_D3D12
 #include "D3D12/D3D12API.h"
@@ -15,6 +16,7 @@ RenderingModule::RenderingModule()
 	m_API = std::make_shared<D3D12::D3D12API>();
 #endif
 	m_DebugTextSubModule = std::make_shared<DebugTextSubModule>(m_API);
+	AddSubModule(std::make_shared<FPSTrackerSubModule>(m_DebugTextSubModule));
 	AddSubModule(m_DebugTextSubModule);
 }
 
@@ -45,8 +47,6 @@ void RenderingModule::InitializeConsole()
 
 void RenderingModule::Update(const Duration& p_Duration)
 {
-	unsigned int l_uiFPS = static_cast<unsigned int>((1.0f / p_Duration.Get(Duration::Precision::Millisecond)) * 1000.0f);
-	m_DebugTextSubModule->UpdateValue("FPS", std::to_string(l_uiFPS), "gfxStats");
 	m_API->Render();
 }
 

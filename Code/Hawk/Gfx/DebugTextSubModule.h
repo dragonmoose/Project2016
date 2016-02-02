@@ -16,7 +16,9 @@ public:
 	std::string GetName() const override;
 
 	void RegisterEvents(EventManager& p_EventManager) override;
+#ifdef HAWK_DEBUG
 	void InitializeConsole() override;
+#endif
 	void Update(const Duration& p_Duration) override;
 
 	void UpdateValue(const std::string& p_Label, const std::string& p_Value, const std::string& p_Category);
@@ -27,7 +29,6 @@ private:
 	void CmdList();
 	std::shared_ptr<IRenderingAPI> m_API;
 	using Category_t = std::string;
-	Category_t m_ActiveCategory;
 
 	struct Node
 	{

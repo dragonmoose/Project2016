@@ -107,6 +107,9 @@
     <ClCompile Include="Gfx\DebugTextSubModule.cpp">
       <Filter>Gfx</Filter>
     </ClCompile>
+    <ClCompile Include="Gfx\FPSTrackerSubModule.cpp">
+      <Filter>Gfx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -266,7 +269,10 @@
     <ClInclude Include="Gfx\DebugTextSubModule.h">
       <Filter>Gfx</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\GfxDebugEvents.h">
+    <ClInclude Include="Gfx\DebugEvents.h">
+      <Filter>Gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\FPSTrackerSubModule.h">
       <Filter>Gfx</Filter>
     </ClInclude>
   </ItemGroup>

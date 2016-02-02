@@ -26,7 +26,9 @@ public:
 	void SetFullscreenState(bool p_bState) override;
 	void SetDebugText(const std::string& p_Text) override;
 
+#ifdef HAWK_DEBUG
 	void CmdListDevices() override;
+#endif
 
 private:
 	void CreateDevice(IDXGIFactory4* p_Factory);

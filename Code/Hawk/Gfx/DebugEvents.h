@@ -20,8 +20,9 @@ struct UpdateDebugTextEvent : public IEvent
 
 struct RemoveDebugTextEvent : public IEvent
 {
-	RemoveDebugTextEvent(std::string&& p_Label)
-	: m_Label(std::move(p_Label)) {}
+	RemoveDebugTextEvent(std::string&& p_Label, std::string&& p_Category)
+	: m_Label(std::move(p_Label))
+	, m_Category(std::move(p_Category)) {}
 
 	std::string m_Label;
 	std::string m_Category;
