@@ -4,7 +4,7 @@
 #include "CommandList.h"
 #include "CommandQueue.h"
 #include "TextRenderer.h"
-#include "Gfx/RenderingAPISubModule.h"
+#include "Gfx/IRenderingAPI.h"
 #include <vector>
 #include <memory>
 
@@ -17,27 +17,24 @@ namespace D3D12 {
 class CommandQueue;
 class RenderView;
 
-class Renderer final : public RenderingAPISubModule
+class D3D12API final : public IRenderingAPI
 {
 public:
-	Renderer();
-
-	std::string GetName() const override;
+	D3D12API() = default;
 	void Initialize() override;
+	void Render() override;
+	void SetFullscreenState(bool p_bState) override;
 
-#ifdef HAWK_DEBUG
-	void InitializeConsole() override;
-#endif
-
-	void Update(const Duration& p_Duration) override;
+	void CmdListDevices() override;
 
 private:
 	void CreateDevice(IDXGIFactory4* p_Factory);
-	void SetFullscreenState(bool p_bState);
 
 	void BeginFrame();
 	void EndFrame();
 	void RecordCommands();
+
+	static const std::string& GetLogDesc();
 
 	DeviceComPtr_t m_Device;
 	std::unique_ptr<CommandQueue> m_CommandQueue;
@@ -46,8 +43,6 @@ private:
 	std::shared_ptr<RenderView> m_RenderView;
 	std::vector<std::unique_ptr<CommandList>> m_CommandLists;
 	std::unique_ptr<TextRenderer> m_TextRenderer;
-
-	Time m_LastFrameTime;
 };
 
 }

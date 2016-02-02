@@ -83,9 +83,6 @@
     <ClCompile Include="Gfx\D3D12\DeviceFactory.cpp">
       <Filter>Gfx\D3D12</Filter>
     </ClCompile>
-    <ClCompile Include="Gfx\D3D12\Renderer.cpp">
-      <Filter>Gfx\D3D12</Filter>
-    </ClCompile>
     <ClCompile Include="Gfx\D3D12\Util.cpp">
       <Filter>Gfx\D3D12</Filter>
     </ClCompile>
@@ -102,6 +99,9 @@
       <Filter>Gfx\D3D12</Filter>
     </ClCompile>
     <ClCompile Include="Gfx\D3D12\TextRenderer.cpp">
+      <Filter>Gfx\D3D12</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\D3D12\D3D12API.cpp">
       <Filter>Gfx\D3D12</Filter>
     </ClCompile>
   </ItemGroup>
@@ -224,16 +224,10 @@
     <ClInclude Include="Base\SubModule.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\RenderingAPISubModule.h">
-      <Filter>Gfx</Filter>
-    </ClInclude>
     <ClInclude Include="Gfx\D3D12\BaseFactory.h">
       <Filter>Gfx\D3D12</Filter>
     </ClInclude>
     <ClInclude Include="Gfx\D3D12\DeviceFactory.h">
-      <Filter>Gfx\D3D12</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\D3D12\Renderer.h">
       <Filter>Gfx\D3D12</Filter>
     </ClInclude>
     <ClInclude Include="Gfx\D3D12\Common.h">
@@ -259,6 +253,12 @@
     </ClInclude>
     <ClInclude Include="Gfx\D3D12\TextRenderer.h">
       <Filter>Gfx\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\D3D12\D3D12API.h">
+      <Filter>Gfx\D3D12</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\IRenderingAPI.h">
+      <Filter>Gfx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

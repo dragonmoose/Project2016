@@ -8,7 +8,7 @@
 #pragma comment(lib, "dwrite")
 #endif
 
-#include "Renderer.h"
+#include "D3D12API.h"
 #include "BaseFactory.h"
 #include "DeviceFactory.h"
 #include "ClearRenderViewCL.h"
@@ -18,16 +18,7 @@ namespace Hawk {
 namespace Gfx {
 namespace D3D12 {
 
-Renderer::Renderer()
-{
-}
-
-std::string Renderer::GetName() const
-{
-	return "d3d";
-}
-
-void Renderer::Initialize()
+void D3D12API::Initialize()
 {
 	Util::EnableDebugLayer();
 
@@ -50,31 +41,27 @@ void Renderer::Initialize()
 	m_TextRenderer = std::make_unique<TextRenderer>(m_Device.Get(), reinterpret_cast<IUnknown**>(m_CommandQueue->GetD3DObject().GetAddressOf()), m_RenderView);
 
 	SetFullscreenState(Config::Instance().Get("gfx.fullscreen", false));
-
-	m_LastFrameTime = Time::Now();
 }
 
-#ifdef HAWK_DEBUG
-void Renderer::InitializeConsole()
+void D3D12API::Render()
 {
-	RegisterConsole("d3d.listAdapters", &DeviceFactory::CmdListAdapters, "Lists the available hardware adapters", "");
-}
-#endif
-
-void Renderer::Update(const Duration& p_Duration)
-{
-	Duration l_FrameDuration = Time::Now() - m_LastFrameTime;
-	unsigned int l_uiFPS = static_cast<unsigned int>((1.0f / l_FrameDuration.Get(Duration::Precision::Millisecond)) * 1000.0f);
-
-	m_LastFrameTime = Time::Now();
 	BeginFrame();
 	RecordCommands();
 	m_CommandQueue->Execute();
-	m_TextRenderer->Draw("FPS: " + std::to_string(l_uiFPS));
 	EndFrame();
 }
 
-void Renderer::CreateDevice(IDXGIFactory4* p_Factory)
+void D3D12API::SetFullscreenState(bool p_bState)
+{
+	m_RenderView->SetFullscreenState(p_bState);
+}
+
+void D3D12API::CmdListDevices()
+{
+	DeviceFactory::CmdListAdapters();
+}
+
+void D3D12API::CreateDevice(IDXGIFactory4* p_Factory)
 {
 	if (Config::Instance().Get("gfx.preferSWRendering", false))
 	{
@@ -90,23 +77,18 @@ void Renderer::CreateDevice(IDXGIFactory4* p_Factory)
 	}
 }
 
-void Renderer::SetFullscreenState(bool p_bState)
-{
-	m_RenderView->SetFullscreenState(p_bState);
-}
-
-void Renderer::BeginFrame()
+void D3D12API::BeginFrame()
 {
 	m_CommandQueue->WaitForGPU();
 	THROW_IF_COMERR(m_CommandAllocator->Reset(), "Failed to reset command allocator (GPU not finished with associated command lists?)");
 	m_RenderView->BeginFrame();
 }
-void Renderer::EndFrame()
+void D3D12API::EndFrame()
 {
 	m_RenderView->EndFrame();
 }
 
-void Renderer::RecordCommands()
+void D3D12API::RecordCommands()
 {
 	for (auto& l_CommandList : m_CommandLists)
 	{
@@ -114,6 +96,12 @@ void Renderer::RecordCommands()
 		l_CommandList->Record();
 		l_CommandList->EndRecord();
 	}
+}
+
+const std::string& D3D12API::GetLogDesc()
+{
+	static const std::string l_Desc("d3d");
+	return l_Desc;
 }
 
 }

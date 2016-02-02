@@ -129,12 +129,12 @@
     <ClInclude Include="Gfx\D3D12\Constants.h" />
     <ClInclude Include="Gfx\D3D12\DeviceFactory.h" />
     <ClInclude Include="Gfx\D3D12\CommandQueue.h" />
-    <ClInclude Include="Gfx\D3D12\Renderer.h" />
+    <ClInclude Include="Gfx\D3D12\D3D12API.h" />
     <ClInclude Include="Gfx\D3D12\Common.h" />
     <ClInclude Include="Gfx\D3D12\TextRenderer.h" />
     <ClInclude Include="Gfx\D3D12\Util.h" />
     <ClInclude Include="Gfx\D3D12\d3dx12.h" />
-    <ClInclude Include="Gfx\RenderingAPISubModule.h" />
+    <ClInclude Include="Gfx\IRenderingAPI.h" />
     <ClInclude Include="Gfx\RenderingModule.h" />
     <ClInclude Include="Input\InputEvents.h" />
     <ClInclude Include="Input\InputSystem.h" />
@@ -175,7 +175,7 @@
     <ClCompile Include="Gfx\D3D12\CommandList.cpp" />
     <ClCompile Include="Gfx\D3D12\DeviceFactory.cpp" />
     <ClCompile Include="Gfx\D3D12\CommandQueue.cpp" />
-    <ClCompile Include="Gfx\D3D12\Renderer.cpp" />
+    <ClCompile Include="Gfx\D3D12\D3D12API.cpp" />
     <ClCompile Include="Gfx\D3D12\TextRenderer.cpp" />
     <ClCompile Include="Gfx\D3D12\Util.cpp" />
     <ClCompile Include="Gfx\RenderingModule.cpp" />
