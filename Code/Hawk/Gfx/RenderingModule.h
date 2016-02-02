@@ -10,6 +10,7 @@ class EventManager;
 namespace Gfx {
 
 class IRenderingAPI;
+class DebugTextSubModule;
 
 class RenderingModule : public Module
 {
@@ -31,7 +32,8 @@ public:
 	RenderingModule& operator=(const RenderingModule&) = delete;
 
 private:
-	std::unique_ptr<IRenderingAPI> m_API;
+	std::shared_ptr<IRenderingAPI> m_API;
+	std::shared_ptr<DebugTextSubModule> m_DebugTextSubModule;
 };
 
 }

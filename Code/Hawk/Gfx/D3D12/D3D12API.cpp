@@ -48,12 +48,18 @@ void D3D12API::Render()
 	BeginFrame();
 	RecordCommands();
 	m_CommandQueue->Execute();
+	m_TextRenderer->Render();
 	EndFrame();
 }
 
 void D3D12API::SetFullscreenState(bool p_bState)
 {
 	m_RenderView->SetFullscreenState(p_bState);
+}
+
+void D3D12API::SetDebugText(const std::string& p_Text)
+{
+	m_TextRenderer->SetText(p_Text);
 }
 
 void D3D12API::CmdListDevices()

@@ -56,11 +56,11 @@ TextRenderer::TextRenderer(ID3D12Device* p_Device, IUnknown** p_CommandQueues, s
 			&l_BitmapProperties, &m_D2DRenderTargets[i]), "Failed to create rendertarget from back buffer surface");
 
 		THROW_IF_COMERR(m_D2DDeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &m_Brush), "Failed to create brush");
-		THROW_IF_COMERR(l_WriteFactory->CreateTextFormat(L"Verdana", nullptr, DWRITE_FONT_WEIGHT_NORMAL,
+		THROW_IF_COMERR(l_WriteFactory->CreateTextFormat(L"Verdana", nullptr, DWRITE_FONT_WEIGHT_BOLD,
 			DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 16, L"en-us", &m_TextFormat), "Failed to create text format");
 
-		THROW_IF_COMERR(m_TextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER), "Failed to set text alignment");
-		THROW_IF_COMERR(m_TextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER), "Failed to set paragraph alignment");
+		THROW_IF_COMERR(m_TextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING), "Failed to set text alignment");
+		THROW_IF_COMERR(m_TextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR), "Failed to set paragraph alignment");
 	}
 
 	LOG("TextRenderer initialized", "d3d", Info);
@@ -70,20 +70,23 @@ TextRenderer::~TextRenderer()
 {
 }
 
-void TextRenderer::Draw(const std::string& p_Text)
+void TextRenderer::SetText(const std::string& p_Text)
+{
+	m_Text = std::wstring(p_Text.cbegin(), p_Text.cend());
+}
+
+void TextRenderer::Render()
 {
 	const unsigned int l_uiBackBufferIndex = m_RenderView->GetCurrBufferIndex();
 
 	D2D1_SIZE_F l_Size = m_D2DRenderTargets[l_uiBackBufferIndex]->GetSize();
-	D2D1_RECT_F l_Rect = D2D1::RectF(0, 0, l_Size.width, 20);
-
-	std::wstring l_Text(p_Text.cbegin(), p_Text.cend());
+	D2D1_RECT_F l_Rect = D2D1::RectF(0, 0, l_Size.width, l_Size.height);
 
 	m_D3D11On12Device->AcquireWrappedResources(m_WrappedBackBuffers[l_uiBackBufferIndex].GetAddressOf(), 1);
 	m_D2DDeviceContext->SetTarget(m_D2DRenderTargets[l_uiBackBufferIndex].Get());
 	m_D2DDeviceContext->BeginDraw();
 	m_D2DDeviceContext->SetTransform(D2D1::Matrix3x2F::Identity());
-	m_D2DDeviceContext->DrawText(l_Text.c_str(), l_Text.size(), m_TextFormat.Get(), l_Rect, m_Brush.Get());
+	m_D2DDeviceContext->DrawText(m_Text.c_str(), m_Text.size(), m_TextFormat.Get(), l_Rect, m_Brush.Get());
 	THROW_IF_COMERR(m_D2DDeviceContext->EndDraw(), "EndDraw failed");
 
 	m_D3D11On12Device->ReleaseWrappedResources(m_WrappedBackBuffers[l_uiBackBufferIndex].GetAddressOf(), 1);

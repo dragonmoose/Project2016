@@ -24,6 +24,7 @@ public:
 	void Initialize() override;
 	void Render() override;
 	void SetFullscreenState(bool p_bState) override;
+	void SetDebugText(const std::string& p_Text) override;
 
 	void CmdListDevices() override;
 

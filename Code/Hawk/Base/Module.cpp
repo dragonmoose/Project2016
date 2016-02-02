@@ -44,14 +44,15 @@ void Module::_Initialize(std::unique_ptr<EventManager> p_EventManager, std::shar
 		LOGM("Initializing module", Info);
 		m_Dispatcher = p_Dispatcher;
 		m_EventManager = std::move(p_EventManager);
-		Initialize();
-		RegisterEvents(*m_EventManager);
 
+		Initialize();
 		for (auto& l_SubModule : m_SubModules)
 		{
 			l_SubModule->_Initialize();
 			l_SubModule->RegisterEvents(*m_EventManager);
 		}
+
+		RegisterEvents(*m_EventManager);
 		m_bInitialized = true;
 	}
 	catch (Exception& e)
@@ -72,8 +73,8 @@ void Module::Initialize()
 void Module::_InitializeConsole(std::shared_ptr<ConsoleCommandManager>& p_ConsoleCommandManager)
 {
 	m_ConsoleCommandManager = p_ConsoleCommandManager;
-	InitializeConsole();
 
+	InitializeConsole();
 	for (auto& l_SubModule : m_SubModules)
 	{
 		l_SubModule->InitializeConsole();
@@ -123,13 +124,13 @@ void Module::_Update(const Duration& p_Duration)
 
 					l_Profiler.Start();
 					m_EventManager->HandleQueued();
-					Update(m_AccumulatedTime);
 
+					Update(m_AccumulatedTime);
 					for (auto& l_SubModule : m_SubModules)
 					{
 						l_SubModule->Update(m_AccumulatedTime);
-
 					}
+
 					l_Profiler.Stop();
 					m_AccumulatedTime.SetToZero();
 				}
@@ -139,13 +140,13 @@ void Module::_Update(const Duration& p_Duration)
 				Profiler l_Profiler(GetName() + ":Update");
 				l_Profiler.Start();
 				m_EventManager->HandleQueued();
-				Update(p_Duration);
 
+				Update(p_Duration);
 				for (auto& l_SubModule : m_SubModules)
 				{
 					l_SubModule->Update(p_Duration);
-
 				}
+
 				l_Profiler.Stop();
 			}
 		}
@@ -187,13 +188,13 @@ void Module::SetFixedTimeStep(float p_fValue, FixedTimeStepDecl p_Decl)
 	LOGM("Using fixed time step. " << 1.0f / l_fValue << " FPS Interval: " << l_fValue << " seconds", Debug);
 }
 
-void Module::AddSubModule(std::unique_ptr<SubModule> p_SubModule)
+void Module::AddSubModule(std::shared_ptr<SubModule> p_SubModule)
 {
 	ASSERT(!m_bInitialized, "Sub modules should be added prior to parent module initialization");
-	ASSERT(std::find_if(m_SubModules.cbegin(), m_SubModules.cend(), [&p_SubModule](const std::unique_ptr<SubModule>& p_Other) { return p_SubModule->GetName() == p_Other->GetName(); }) == m_SubModules.cend(), "SubModule by the same name already added: " << p_SubModule->GetName());
+	ASSERT(std::find_if(m_SubModules.cbegin(), m_SubModules.cend(), [&p_SubModule](const std::shared_ptr<SubModule>& p_Other) { return p_SubModule->GetName() == p_Other->GetName(); }) == m_SubModules.cend(), "SubModule by the same name already added: " << p_SubModule->GetName());
 
 	p_SubModule->SetParentModule(this);
-	m_SubModules.push_back(std::move(p_SubModule));
+	m_SubModules.push_back(p_SubModule);
 }
 
 }

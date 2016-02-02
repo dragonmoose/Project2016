@@ -78,7 +78,7 @@ namespace Hawk
 		};
 		void SetFixedTimeStep(float p_fValue, FixedTimeStepDecl p_Decl);
 
-		void AddSubModule(std::unique_ptr<SubModule> p_SubModule);
+		void AddSubModule(std::shared_ptr<SubModule> p_SubModule);
 
 	private:
 		std::unique_ptr<EventManager> m_EventManager;
@@ -90,7 +90,7 @@ namespace Hawk
 		Duration m_TimePerFrame;
 		Duration m_AccumulatedTime;
 
-		using SubModules_t = std::vector<std::unique_ptr<SubModule>>;
+		using SubModules_t = std::vector<std::shared_ptr<SubModule>>;
 		SubModules_t m_SubModules;
 		bool m_bInitialized;
 

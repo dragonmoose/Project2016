@@ -23,8 +23,8 @@ public:
 	TextRenderer(const TextRenderer&) = delete;
 	TextRenderer& operator=(const TextRenderer&) = delete;
 
-//void DrawText(const std::string& p_Text, unsigned int p_uiXPos, unsigned int p_uiYPos, unsigned int p_uiSize);
-	void Draw(const std::string& p_Text);
+	void SetText(const std::string& p_Text);
+	void Render();
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11On12Device> m_D3D11On12Device;
@@ -36,6 +36,8 @@ private:
 	Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> m_Brush;
 	Microsoft::WRL::ComPtr<IDWriteTextFormat> m_TextFormat;
 	std::shared_ptr<RenderView> m_RenderView;
+
+	std::wstring m_Text;
 };
 
 }

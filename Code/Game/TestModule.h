@@ -5,6 +5,7 @@
 #include "Hawk/Events/EventManager.h"
 #include "TestEvent.h"
 #include "Hawk/System/Duration.h"
+#include "Hawk/Gfx/GfxDebugEvents.h"
 #include <string>
 
 class TestModule : public Hawk::Module
@@ -28,7 +29,14 @@ public:
 
 	void TestConsoleCmd(const std::string& p_Text, int a, int b)
 	{
-		LOGM("The text=" << p_Text << " sum=" << (a + b), Info);
+		Hawk::Gfx::UpdateDebugTextEvent l_Ev("value", "123", "gfxStats");
+		SendEvent(l_Ev);
+		Hawk::Gfx::UpdateDebugTextEvent l_Ev2("test", "123fdf", "test");
+		SendEvent(l_Ev2);
+		Hawk::Gfx::UpdateDebugTextEvent l_Ev3("ffgf", "123wererw", "gfxStats");
+		SendEvent(l_Ev3);
+		Hawk::Gfx::UpdateDebugTextEvent l_Ev4("erw", "123fsdfd", "test");
+		SendEvent(l_Ev4);
 	}
 
 	void TestConsoleCmd2(const std::string& p_Text)
@@ -49,6 +57,8 @@ public:
 		p_EventManager.Register<TestEvent>([=](const TestEvent& p_Event)
 		{
 			LOGM("Event received. Value=" << p_Event.m_iValue, Debug);
+
+
 		}
 		);
 	}

@@ -134,6 +134,8 @@
     <ClInclude Include="Gfx\D3D12\TextRenderer.h" />
     <ClInclude Include="Gfx\D3D12\Util.h" />
     <ClInclude Include="Gfx\D3D12\d3dx12.h" />
+    <ClInclude Include="Gfx\DebugTextSubModule.h" />
+    <ClInclude Include="Gfx\GfxDebugEvents.h" />
     <ClInclude Include="Gfx\IRenderingAPI.h" />
     <ClInclude Include="Gfx\RenderingModule.h" />
     <ClInclude Include="Input\InputEvents.h" />
@@ -178,6 +180,7 @@
     <ClCompile Include="Gfx\D3D12\D3D12API.cpp" />
     <ClCompile Include="Gfx\D3D12\TextRenderer.cpp" />
     <ClCompile Include="Gfx\D3D12\Util.cpp" />
+    <ClCompile Include="Gfx\DebugTextSubModule.cpp" />
     <ClCompile Include="Gfx\RenderingModule.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
     <ClCompile Include="pch.cpp">
