@@ -57,7 +57,7 @@ TextRenderer::TextRenderer(ID3D12Device* p_Device, IUnknown** p_CommandQueues, s
 
 		THROW_IF_COMERR(m_D2DDeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &m_Brush), "Failed to create brush");
 		THROW_IF_COMERR(l_WriteFactory->CreateTextFormat(L"Verdana", nullptr, DWRITE_FONT_WEIGHT_BOLD,
-			DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 16, L"en-us", &m_TextFormat), "Failed to create text format");
+			DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 21, L"en-us", &m_TextFormat), "Failed to create text format");
 
 		THROW_IF_COMERR(m_TextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING), "Failed to set text alignment");
 		THROW_IF_COMERR(m_TextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR), "Failed to set paragraph alignment");
