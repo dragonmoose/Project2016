@@ -6,6 +6,7 @@
     <CodeDir>$(RootDir)Code\</CodeDir>
     <ThirdPartyDir>$(CodeDir)ThirdParty\</ThirdPartyDir>
     <BoostDir>$(ThirdPartyDir)boost_1_60_0\</BoostDir>
+    <GLMDir>$(ThirdPartyDir)glm-0.9.7.2\</GLMDir>
   </PropertyGroup>
   <PropertyGroup>
     <OutDir>$(RootDir)\$(Platform)\</OutDir>
@@ -20,7 +21,7 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(CodeDir);$(BoostDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CodeDir);$(BoostDir);$(GLMDir)</AdditionalIncludeDirectories>
       <WarningLevel>Level1</WarningLevel>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
@@ -41,6 +42,9 @@
     </BuildMacro>
     <BuildMacro Include="BoostDir">
       <Value>$(BoostDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="GLMDir">
+      <Value>$(GLMDir)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>
