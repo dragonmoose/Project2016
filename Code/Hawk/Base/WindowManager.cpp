@@ -12,6 +12,7 @@ namespace WindowManager
 	const char* n_WindowName = "HawkWindowClass";
 	std::unique_ptr<InputSystem> n_InputSystem;
 	HWND n_hWindow = nullptr;
+	WindowSizeChangedCallback_t n_OnWindowSizeChanged;
 }
 
 void WindowManager::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
@@ -82,9 +83,22 @@ LRESULT CALLBACK WindowManager::WindowProc(HWND p_hWindow, UINT p_Message, WPARA
 		case WM_KEYUP:
 			n_InputSystem->OnKeyUp(static_cast<unsigned char>(p_wParam));
 			return 0;
+		case WM_SIZE:
+			if (n_OnWindowSizeChanged)
+			{
+				RECT l_Rect;
+				GetClientRect(n_hWindow, &l_Rect);
+				n_OnWindowSizeChanged(l_Rect.right - l_Rect.left, l_Rect.bottom - l_Rect.top, p_wParam != SIZE_MINIMIZED);
+			}
+			return 0;
 		default:
 			break;
 	}
 	return DefWindowProc(p_hWindow, p_Message, p_wParam, p_lParam);
+}
+
+void WindowManager::RegisterWindowSizeChanged(WindowSizeChangedCallback_t p_Callback)
+{
+	n_OnWindowSizeChanged = p_Callback;
 }
 }

@@ -22,6 +22,7 @@ public:
 	CD3DX12_CPU_DESCRIPTOR_HANDLE GetHandle() const;
 	unsigned int GetCurrBufferIndex() const;
 	void SetFullscreenState(bool p_bState);
+	void OnWindowSizeChanged(unsigned int p_uiWidth, unsigned int p_uiHeight);
 
 private:
 	void Initialize();

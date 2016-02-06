@@ -62,13 +62,13 @@ void Core::Initialize()
 	Config::Instance().SetFilename(m_Settings.m_ConfigFilename);
 	Config::Instance().Load(true);
 	LOG("Working directory set to: " << boost::filesystem::current_path(), "core", Info);
-
-	WindowManager::Initialize(m_EventRouter);
-
+	
 	if (m_Settings.m_bRenderingModule)
 	{
 		AddModule<Gfx::RenderingModule>(CreateModuleThread("gfx"));
 	}
+	WindowManager::Initialize(m_EventRouter);
+
 	LOG("***** Hawk core initialized *****", "core", Info);
 }
 

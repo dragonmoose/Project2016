@@ -54,7 +54,13 @@ void D3D12API::Render()
 
 void D3D12API::SetFullscreenState(bool p_bState)
 {
-	m_RenderView->SetFullscreenState(p_bState);
+	m_RenderView->SetFullscreenState(p_bState); // Triggers WM_SIZE
+}
+
+void D3D12API::OnWindowSizeChanged(unsigned int p_uiWidth, unsigned int p_uiHeight)
+{
+	m_CommandQueue->WaitForGPU();
+	m_RenderView->OnWindowSizeChanged(p_uiWidth, p_uiHeight);
 }
 
 void D3D12API::SetDebugText(const std::string& p_Text)

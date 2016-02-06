@@ -32,8 +32,11 @@ public:
 	RenderingModule& operator=(const RenderingModule&) = delete;
 
 private:
+	void OnWindowSizeChanged(unsigned int p_uiWidth, unsigned int p_uiHeight, bool p_bIsVisible);
+
 	std::shared_ptr<IRenderingAPI> m_API;
 	std::shared_ptr<DebugTextSubModule> m_DebugTextSubModule;
+	bool m_bRender;
 };
 
 }

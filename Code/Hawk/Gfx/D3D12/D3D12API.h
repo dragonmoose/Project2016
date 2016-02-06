@@ -24,6 +24,7 @@ public:
 	void Initialize() override;
 	void Render() override;
 	void SetFullscreenState(bool p_bState) override;
+	void OnWindowSizeChanged(unsigned int p_uiWidth, unsigned int p_uiHeight);
 	void SetDebugText(const std::string& p_Text) override;
 
 #ifdef HAWK_DEBUG

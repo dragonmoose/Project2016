@@ -48,8 +48,14 @@ unsigned int RenderView::GetCurrBufferIndex() const
 void RenderView::SetFullscreenState(bool p_bState)
 {
 	THROW_IF_COMERR(m_SwapChain->SetFullscreenState(p_bState, nullptr), "Failed to set fullscreen state. State=" << p_bState);
-	//THROW_IF_COMERR(m_SwapChain->ResizeBuffers(c_uiNumBackBuffers, 0, 0, DXGI_FORMAT_UNKNOWN, 0), "Resize buffers failed. State=" << p_bState);
-	//Initialize();
+}
+
+void RenderView::OnWindowSizeChanged(unsigned int p_uiWidth, unsigned int p_uiHeight)
+{
+	DXGI_SWAP_CHAIN_DESC1 l_Desc;
+	m_SwapChain->GetDesc1(&l_Desc);
+	m_SwapChain->ResizeBuffers(c_uiNumBackBuffers, p_uiWidth, p_uiHeight, l_Desc.Format, l_Desc.Flags);
+	m_uiCurrBufferIndex = m_SwapChain->GetCurrentBackBufferIndex();
 }
 
 void RenderView::Initialize()
