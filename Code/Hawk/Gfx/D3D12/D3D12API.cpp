@@ -60,9 +60,9 @@ void D3D12API::SetFullscreenState(bool p_bState)
 void D3D12API::OnWindowSizeChanged(unsigned int p_uiWidth, unsigned int p_uiHeight)
 {
 	m_CommandQueue->WaitForGPU();
-	m_TextRenderer->ReleaseBackBufferResources();
+	m_TextRenderer.reset();
 	m_RenderView->OnWindowSizeChanged(p_uiWidth, p_uiHeight);
-	m_TextRenderer->CreateBackBufferResources();
+	m_TextRenderer = std::make_unique<TextRenderer>(m_Device.Get(), reinterpret_cast<IUnknown**>(m_CommandQueue->GetD3DObject().GetAddressOf()), m_RenderView);
 }
 
 void D3D12API::SetDebugText(const std::string& p_Text)

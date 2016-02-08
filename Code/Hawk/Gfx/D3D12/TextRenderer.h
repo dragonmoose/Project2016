@@ -26,9 +26,8 @@ public:
 	void SetText(const std::string& p_Text);
 	void Render();
 
-	void ReleaseBackBufferResources();
-	void CreateBackBufferResources();
 private:
+	void CreateBackBufferResources();
 
 	Microsoft::WRL::ComPtr<ID3D11On12Device> m_D3D11On12Device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_D3D11Context;

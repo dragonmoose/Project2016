@@ -72,15 +72,6 @@ void TextRenderer::Render()
 	m_D3D11Context->Flush();	// Submit to shared command queue
 }
 
-void TextRenderer::ReleaseBackBufferResources()
-{
-	for (int i = 0; i < m_RenderView->GetBackBuffers().size(); i++)
-	{
-		m_WrappedBackBuffers[i].Reset();
-		m_D2DRenderTargets[i].Reset();
-	}
-}
-
 void TextRenderer::CreateBackBufferResources()
 {
 	float l_fDpiX;
@@ -93,7 +84,7 @@ void TextRenderer::CreateBackBufferResources()
 
 	D3D11_RESOURCE_FLAGS l_ResourceFlags = { D3D11_BIND_RENDER_TARGET };
 
-	for (int i = 0; i < m_RenderView->GetBackBuffers().size(); i++)
+	for (int i = 0; i < c_uiNumBackBuffers; i++)
 	{
 		THROW_IF_COMERR(m_D3D11On12Device->CreateWrappedResource(m_RenderView->GetBackBuffers()[i].Get(), &l_ResourceFlags, D3D12_RESOURCE_STATE_RENDER_TARGET,
 			D3D12_RESOURCE_STATE_PRESENT, IID_PPV_ARGS(&m_WrappedBackBuffers[i])), "Failed to create wrapped back buffer");
