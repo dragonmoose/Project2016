@@ -133,7 +133,7 @@ void Core::Run()
 #ifdef HAWK_DEBUG
 		m_DebugDispatcher->Execute();
 #endif
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		Thread::Sleep();
 	}
 	StopModules();
 }

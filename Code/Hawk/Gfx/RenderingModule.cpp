@@ -14,6 +14,7 @@ namespace Gfx {
 
 RenderingModule::RenderingModule()
 : m_bFullscreenTransition(false)
+, m_bWindowMinimized(false)
 {
 #ifdef HAWK_RENDERER_D3D12
 	m_API = std::make_shared<D3D12::D3D12API>();

@@ -29,6 +29,7 @@ public:
 	const std::string& GetName() const;
 	ThreadID GetID() const;
 	std::shared_ptr<Dispatcher> GetDispatcher() const;
+	static void Sleep();
 
 	static std::string MainThreadName;
 
