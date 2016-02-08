@@ -26,9 +26,13 @@ public:
 	void SetText(const std::string& p_Text);
 	void Render();
 
+	void ReleaseBackBufferResources();
+	void CreateBackBufferResources();
 private:
+
 	Microsoft::WRL::ComPtr<ID3D11On12Device> m_D3D11On12Device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_D3D11Context;
+	Microsoft::WRL::ComPtr<ID2D1Factory3> m_D2DFactory;
 	Microsoft::WRL::ComPtr<ID2D1Device2> m_D2DDevice;
 	Microsoft::WRL::ComPtr<ID2D1DeviceContext2> m_D2DDeviceContext;
 	Microsoft::WRL::ComPtr<ID3D11Resource> m_WrappedBackBuffers[c_uiNumBackBuffers];

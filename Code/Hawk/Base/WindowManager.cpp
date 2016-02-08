@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "WindowManager.h"
+#include "SystemEvents.h"
 #include "Debug/Assert.h"
 #include "Input/InputSystem.h"
 #include <memory>
@@ -12,17 +13,21 @@ namespace WindowManager
 	const char* n_WindowName = "HawkWindowClass";
 	std::unique_ptr<InputSystem> n_InputSystem;
 	HWND n_hWindow = nullptr;
-	WindowSizeChangedCallback_t n_OnWindowSizeChanged;
+	std::unique_ptr<EventManager> n_EventManager;
 }
 
 void WindowManager::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
 {
 	n_InputSystem = std::make_unique<InputSystem>(p_EventRouter);
+	n_EventManager = std::make_unique<EventManager>(p_EventRouter);
 	LOG("WindowManager initialized", "window", Info);
 }
 
 void WindowManager::Open(HINSTANCE p_hInstance, const std::string& p_Name)
 {
+	ASSERT(p_hInstance, "No hInstance set");
+	ASSERT(!p_Name.empty(), "No window name specified");
+
 	WNDCLASSEX l_WC = { 0 };
 
 	l_WC.cbSize = sizeof(WNDCLASSEX);
@@ -84,21 +89,16 @@ LRESULT CALLBACK WindowManager::WindowProc(HWND p_hWindow, UINT p_Message, WPARA
 			n_InputSystem->OnKeyUp(static_cast<unsigned char>(p_wParam));
 			return 0;
 		case WM_SIZE:
-			if (n_OnWindowSizeChanged)
+			RECT l_Rect;
+			GetClientRect(n_hWindow, &l_Rect);
 			{
-				RECT l_Rect;
-				GetClientRect(n_hWindow, &l_Rect);
-				n_OnWindowSizeChanged(l_Rect.right - l_Rect.left, l_Rect.bottom - l_Rect.top, p_wParam != SIZE_MINIMIZED);
+				WindowSizeChangedEvent l_Ev(l_Rect.right - l_Rect.left, l_Rect.bottom - l_Rect.top, p_wParam == SIZE_MINIMIZED);
+				n_EventManager->Send(l_Ev);
 			}
 			return 0;
 		default:
 			break;
 	}
 	return DefWindowProc(p_hWindow, p_Message, p_wParam, p_lParam);
-}
-
-void WindowManager::RegisterWindowSizeChanged(WindowSizeChangedCallback_t p_Callback)
-{
-	n_OnWindowSizeChanged = p_Callback;
 }
 }

@@ -38,7 +38,7 @@ void D3D12API::Initialize()
 	std::unique_ptr<CommandList> l_ClearRenderViewCL = std::make_unique<ClearRenderViewCL>(m_Device, m_RenderView, m_CommandAllocator);
 	m_CommandQueue->AddCommandList(l_ClearRenderViewCL);
 	m_CommandLists.push_back(std::move(l_ClearRenderViewCL));
-	m_TextRenderer = std::make_unique<TextRenderer>(m_Device.Get(), reinterpret_cast<IUnknown**>(m_CommandQueue->GetD3DObject().GetAddressOf()), m_RenderView);
+	//m_TextRenderer = std::make_unique<TextRenderer>(m_Device.Get(), reinterpret_cast<IUnknown**>(m_CommandQueue->GetD3DObject().GetAddressOf()), m_RenderView);
 
 	SetFullscreenState(Config::Instance().Get("gfx.fullscreen", false));
 }
@@ -48,7 +48,7 @@ void D3D12API::Render()
 	BeginFrame();
 	RecordCommands();
 	m_CommandQueue->Execute();
-	m_TextRenderer->Render();
+	//m_TextRenderer->Render();
 	EndFrame();
 }
 
@@ -60,12 +60,14 @@ void D3D12API::SetFullscreenState(bool p_bState)
 void D3D12API::OnWindowSizeChanged(unsigned int p_uiWidth, unsigned int p_uiHeight)
 {
 	m_CommandQueue->WaitForGPU();
+	//m_TextRenderer->ReleaseBackBufferResources();
 	m_RenderView->OnWindowSizeChanged(p_uiWidth, p_uiHeight);
+	//m_TextRenderer->CreateBackBufferResources();
 }
 
 void D3D12API::SetDebugText(const std::string& p_Text)
 {
-	m_TextRenderer->SetText(p_Text);
+	//m_TextRenderer->SetText(p_Text);
 }
 
 #ifdef HAWK_DEBUG

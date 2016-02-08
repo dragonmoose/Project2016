@@ -1,5 +1,6 @@
 #pragma once
 #include "Base/Module.h"
+#include "Base/SystemEvents.h"
 #include <memory>
 #include <string>
 
@@ -32,11 +33,14 @@ public:
 	RenderingModule& operator=(const RenderingModule&) = delete;
 
 private:
-	void OnWindowSizeChanged(unsigned int p_uiWidth, unsigned int p_uiHeight, bool p_bIsVisible);
+	void SetFullscreenState(bool p_bState);
+	void OnWindowSizeChanged(const WindowSizeChangedEvent& p_Event);
+	bool ShouldRender() const;
 
 	std::shared_ptr<IRenderingAPI> m_API;
 	std::shared_ptr<DebugTextSubModule> m_DebugTextSubModule;
-	bool m_bRender;
+	bool m_bFullscreenTransition;
+	bool m_bWindowMinimized;
 };
 
 }

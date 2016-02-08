@@ -57,6 +57,7 @@ void Core::Initialize()
 		m_ConsoleCommandManager->Start();
 		RegisterConsole();
 	}
+
 	ProfilerManager::Initialize(m_ConsoleCommandManager.get(), m_DebugDispatcher.get());
 #endif
 	Config::Instance().SetFilename(m_Settings.m_ConfigFilename);
@@ -117,6 +118,7 @@ void Core::SetPaused(ModuleID p_ID, bool p_bPaused)
 
 void Core::Run()
 {
+	WindowManager::Open(m_Settings.m_hInstance, m_Settings.m_WindowName);
 	InitializeModules();
 	StartModules();
 

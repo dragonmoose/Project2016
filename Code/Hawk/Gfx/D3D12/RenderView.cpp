@@ -52,9 +52,15 @@ void RenderView::SetFullscreenState(bool p_bState)
 
 void RenderView::OnWindowSizeChanged(unsigned int p_uiWidth, unsigned int p_uiHeight)
 {
+	for (int i = 0; i < c_uiNumBackBuffers; i++)
+	{
+		m_Buffers[i].Reset();
+	}
+
 	DXGI_SWAP_CHAIN_DESC1 l_Desc;
 	m_SwapChain->GetDesc1(&l_Desc);
 	m_SwapChain->ResizeBuffers(c_uiNumBackBuffers, p_uiWidth, p_uiHeight, l_Desc.Format, l_Desc.Flags);
+	CreateRTV(m_Device);
 	m_uiCurrBufferIndex = m_SwapChain->GetCurrentBackBufferIndex();
 }
 

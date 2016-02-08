@@ -106,6 +106,7 @@
     <ClInclude Include="Base\Module.h" />
     <ClInclude Include="Base\ModuleThread.h" />
     <ClInclude Include="Base\SubModule.h" />
+    <ClInclude Include="Base\SystemEvents.h" />
     <ClInclude Include="Base\WindowManager.h" />
     <ClInclude Include="Console\ConsoleAPI.h" />
     <ClInclude Include="Console\ConsoleFunction.h" />

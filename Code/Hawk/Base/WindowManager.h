@@ -12,8 +12,5 @@ namespace WindowManager
 	void Open(HINSTANCE p_hInstance, const std::string& p_Name);
 	HWND GetHandle();
 	bool Update();
-
-	using WindowSizeChangedCallback_t = std::function<void(unsigned int, unsigned int, bool)>;
-	void RegisterWindowSizeChanged(WindowSizeChangedCallback_t p_Callback);
 }
 }

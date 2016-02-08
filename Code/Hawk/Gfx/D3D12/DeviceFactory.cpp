@@ -12,6 +12,7 @@ namespace DeviceFactory
 {
 	using HWAdapters_t = std::vector<DXGIAdapterComPtr_t>;
 
+	void GetPrimaryAdapter(IDXGIFactory4* p_pFactory, DXGIAdapterComPtr_t& p_Adapter);
 	void GetHWAdapters(IDXGIFactory4* p_pFactory, HWAdapters_t& p_HWAdapters);
 	void GetPreferredHWAdapter(const HWAdapters_t& p_HWAdapters, DXGIAdapterComPtr_t& p_Adapter);
 	void GetSpecificAdapter(const std::string& p_Luid, const HWAdapters_t& p_HWAdapters, DXGIAdapterComPtr_t& p_Adapter);
@@ -19,16 +20,15 @@ namespace DeviceFactory
 
 void DeviceFactory::CreateDevice(IDXGIFactory4* p_Factory, const std::string& p_Luid, DeviceComPtr_t& p_Device)
 {
-	HWAdapters_t l_Adapters;
-	GetHWAdapters(p_Factory, l_Adapters);
-
 	DXGIAdapterComPtr_t l_Adapter;
 	if (p_Luid.empty())
 	{
-		GetPreferredHWAdapter(l_Adapters, l_Adapter);
+		GetPrimaryAdapter(p_Factory, l_Adapter);
 	}
 	else
 	{
+		HWAdapters_t l_Adapters;
+		GetHWAdapters(p_Factory, l_Adapters);
 		GetSpecificAdapter(p_Luid, l_Adapters, l_Adapter);
 	}
 
@@ -45,6 +45,28 @@ void DeviceFactory::CreateWARPDevice(IDXGIFactory4* p_Factory, DeviceComPtr_t& p
 	DeviceComPtr_t l_Device;
 	THROW_IF_COMERR(D3D12CreateDevice(l_WarpAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&l_Device)), "Failed to initialize WARP device");
 	p_Device = std::move(l_Device);
+}
+
+void DeviceFactory::GetPrimaryAdapter(IDXGIFactory4* p_pFactory, DXGIAdapterComPtr_t& p_Adapter)
+{
+	int l_iAdapterNo = 0;
+	Microsoft::WRL::ComPtr<IDXGIAdapter1> l_Adapter;
+	while (p_pFactory->EnumAdapters1(l_iAdapterNo, &l_Adapter) != DXGI_ERROR_NOT_FOUND)
+	{
+		DXGI_ADAPTER_DESC1 l_Desc;
+		THROW_IF_COMERR(l_Adapter->GetDesc1(&l_Desc), "Failed to get adapter desc. AdapterNo: " << l_iAdapterNo);
+		if (!(l_Desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE))
+		{
+			if (D3D12CreateDevice(l_Adapter.Get(), D3D_FEATURE_LEVEL_11_0, __uuidof(ID3D12Device), nullptr))
+			{
+				LOG("Primary adapter: " << StringUtil::WCharToString(l_Desc.Description), "d3d12", Debug);
+				p_Adapter = std::move(l_Adapter);
+				return;
+			}
+		}
+		l_iAdapterNo++;
+	}
+	THROW("No d3d12 compatible hardware adapter found");
 }
 
 void DeviceFactory::GetHWAdapters(IDXGIFactory4* p_pFactory, HWAdapters_t& p_HWAdapters)

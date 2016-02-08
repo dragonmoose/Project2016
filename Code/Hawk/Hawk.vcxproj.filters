@@ -11,9 +11,6 @@
     <ClCompile Include="Base\Core.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="Base\WindowManager.cpp">
-      <Filter>Base</Filter>
-    </ClCompile>
     <ClCompile Include="Events\EventManager.cpp">
       <Filter>Events</Filter>
     </ClCompile>
@@ -110,6 +107,9 @@
     <ClCompile Include="Gfx\FPSTrackerSubModule.cpp">
       <Filter>Gfx</Filter>
     </ClCompile>
+    <ClCompile Include="Base\WindowManager.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -120,9 +120,6 @@
       <Filter>Console</Filter>
     </ClInclude>
     <ClInclude Include="Base\Core.h">
-      <Filter>Base</Filter>
-    </ClInclude>
-    <ClInclude Include="Base\WindowManager.h">
       <Filter>Base</Filter>
     </ClInclude>
     <ClInclude Include="Events\EventHandler.h">
@@ -274,6 +271,12 @@
     </ClInclude>
     <ClInclude Include="Gfx\FPSTrackerSubModule.h">
       <Filter>Gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\WindowManager.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\SystemEvents.h">
+      <Filter>Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
