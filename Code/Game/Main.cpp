@@ -8,7 +8,7 @@
 int WINAPI WinMain(HINSTANCE p_hInstance, HINSTANCE p_hPrevInstance, LPSTR p_lpCmdLine, int p_nCmdShow)
 {
 	Hawk::CoreSettings l_Settings;
-	l_Settings.m_hInstance = 0;
+	l_Settings.m_hInstance = p_hInstance;
 	l_Settings.m_WindowName = "TestAppWindow";
 	Hawk::Core l_Core(l_Settings);
 	try
