@@ -39,7 +39,7 @@ private:
 
 	std::shared_ptr<IRenderingAPI> m_API;
 	std::shared_ptr<DebugTextSubModule> m_DebugTextSubModule;
-	bool m_bFullscreenTransition;
+	bool m_bWindowTransition;
 	bool m_bWindowMinimized;
 };
 

@@ -10,10 +10,13 @@ namespace Hawk {
 namespace WindowManager
 {
 	LRESULT CALLBACK WindowProc(HWND p_hWindow, UINT p_Message, WPARAM p_wParam, LPARAM p_lParam);
+	void SendWindowSizeChanged(bool p_bMinimized);
+
 	const char* n_WindowName = "HawkWindowClass";
 	std::unique_ptr<InputSystem> n_InputSystem;
 	HWND n_hWindow = nullptr;
 	std::unique_ptr<EventManager> n_EventManager;
+	bool n_bWindowManipulated = false;
 }
 
 void WindowManager::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
@@ -44,7 +47,7 @@ void WindowManager::Open(HINSTANCE p_hInstance, const std::string& p_Name)
 		0,
 		n_WindowName,
 		p_Name.c_str(),
-		WS_OVERLAPPEDWINDOW,
+		WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
 		Config::Instance().Get("gfx.width", 640),
@@ -89,16 +92,32 @@ LRESULT CALLBACK WindowManager::WindowProc(HWND p_hWindow, UINT p_Message, WPARA
 			n_InputSystem->OnKeyUp(static_cast<unsigned char>(p_wParam));
 			return 0;
 		case WM_SIZE:
-			RECT l_Rect;
-			GetClientRect(n_hWindow, &l_Rect);
+			if (!n_bWindowManipulated)
 			{
-				WindowSizeChangedEvent l_Ev(l_Rect.right - l_Rect.left, l_Rect.bottom - l_Rect.top, p_wParam == SIZE_MINIMIZED);
-				n_EventManager->Send(l_Ev);
+				SendWindowSizeChanged(p_wParam == SIZE_MINIMIZED);
 			}
+			return 0;
+		case WM_ENTERSIZEMOVE:
+			n_EventManager->Send(WindowManipulatedEvent());
+			n_bWindowManipulated = true;
+			return 0;
+		case WM_EXITSIZEMOVE:
+			SendWindowSizeChanged(p_wParam == SIZE_MINIMIZED);
+			n_bWindowManipulated = false;
 			return 0;
 		default:
 			break;
 	}
 	return DefWindowProc(p_hWindow, p_Message, p_wParam, p_lParam);
+}
+
+void WindowManager::SendWindowSizeChanged(bool p_bMinimized)
+{
+	RECT l_Rect;
+	GetClientRect(n_hWindow, &l_Rect);
+	{
+		WindowSizeChangedEvent l_Ev(l_Rect.right - l_Rect.left, l_Rect.bottom - l_Rect.top, p_bMinimized);
+		n_EventManager->Send(l_Ev);
+	}
 }
 }

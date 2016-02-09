@@ -14,4 +14,6 @@ struct WindowSizeChangedEvent : IEvent
 	unsigned int m_uiHeight;
 	bool m_bMinimized;
 };
+
+struct WindowManipulatedEvent : IEvent {};
 }

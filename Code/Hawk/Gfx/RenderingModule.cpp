@@ -13,7 +13,7 @@ namespace Hawk {
 namespace Gfx {
 
 RenderingModule::RenderingModule()
-: m_bFullscreenTransition(false)
+: m_bWindowTransition(false)
 , m_bWindowMinimized(false)
 {
 #ifdef HAWK_RENDERER_D3D12
@@ -41,6 +41,7 @@ void RenderingModule::Initialize()
 void RenderingModule::RegisterEvents(EventManager& p_EventManager)
 {
 	p_EventManager.Register<WindowSizeChangedEvent>(std::bind(&RenderingModule::OnWindowSizeChanged, this, std::placeholders::_1));
+	p_EventManager.Register<WindowManipulatedEvent>([&](const WindowManipulatedEvent&) { m_bWindowTransition = true; });
 }
 
 #ifdef HAWK_DEBUG
@@ -61,7 +62,7 @@ void RenderingModule::Update(const Duration& p_Duration)
 
 void RenderingModule::SetFullscreenState(bool p_bState)
 {
-	m_bFullscreenTransition = true;
+	m_bWindowTransition = true;
 	m_API->SetFullscreenState(p_bState);
 }
 
@@ -70,12 +71,12 @@ void RenderingModule::OnWindowSizeChanged(const WindowSizeChangedEvent& p_Event)
 	LOGM("Window size changed event received. Width=" << p_Event.m_uiWidth << " Height=" << p_Event.m_uiHeight << " Minimized=" << p_Event.m_bMinimized, Info);
 	m_bWindowMinimized = p_Event.m_bMinimized;
 	m_API->OnWindowSizeChanged(p_Event.m_uiWidth, p_Event.m_uiHeight);
-	m_bFullscreenTransition = false;
+	m_bWindowTransition = false;
 }
 
 bool RenderingModule::ShouldRender() const
 {
-	return !(m_bFullscreenTransition || m_bWindowMinimized);
+	return !(m_bWindowTransition || m_bWindowMinimized);
 }
 
 }

@@ -23,6 +23,10 @@ private:
 	std::shared_ptr<DebugTextSubModule> m_DebugTextSubModule;
 	int m_iMin;
 	int m_iMax;
+	
+	static const int sc_iNumValues = 10;
+	int m_iCurrIndex;
+	std::vector<int> m_Values;
 };
 
 }}
