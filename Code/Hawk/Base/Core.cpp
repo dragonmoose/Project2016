@@ -30,7 +30,7 @@ Core::~Core()
 			LOG("Core exit due to critical error (see above)", "core", Fatal);
 		}
 
-		int l_iExitWaitTimeSec = Config::Instance().Get("log.shutdownDelaySec", 30);
+		int l_iExitWaitTimeSec = Config::Instance().Get("dev.shutdownDelaySec", 30);
 		if (l_iExitWaitTimeSec > 0)
 		{
 			LOG("Waiting " << l_iExitWaitTimeSec << " seconds before shutting down console...", "core", Info);

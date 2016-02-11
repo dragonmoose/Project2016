@@ -6,6 +6,10 @@
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <IncludePath>$(CodeDir)Hawk;$(IncludePath)</IncludePath>
   </PropertyGroup>
-  <ItemDefinitionGroup />
+  <ItemDefinitionGroup>
+    <Manifest>
+      <EnableDpiAwareness>false</EnableDpiAwareness>
+    </Manifest>
+  </ItemDefinitionGroup>
   <ItemGroup />
 </Project>

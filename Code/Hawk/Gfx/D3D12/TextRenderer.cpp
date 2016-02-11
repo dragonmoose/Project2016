@@ -34,8 +34,8 @@ TextRenderer::TextRenderer(ID3D12Device* p_Device, IUnknown** p_CommandQueues, s
 	THROW_IF_COMERR(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &l_WriteFactory), "Failed to create write factory");
 
 	THROW_IF_COMERR(m_D2DDeviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &m_Brush), "Failed to create brush");
-	THROW_IF_COMERR(l_WriteFactory->CreateTextFormat(L"Verdana", nullptr, DWRITE_FONT_WEIGHT_BOLD,
-		DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 21, L"en-us", &m_TextFormat), "Failed to create text format");
+	THROW_IF_COMERR(l_WriteFactory->CreateTextFormat(L"Verdana", nullptr, DWRITE_FONT_WEIGHT_NORMAL,
+		DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 18, L"en-us", &m_TextFormat), "Failed to create text format");
 
 	THROW_IF_COMERR(m_TextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING), "Failed to set text alignment");
 	THROW_IF_COMERR(m_TextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR), "Failed to set paragraph alignment");
@@ -74,13 +74,9 @@ void TextRenderer::Render()
 
 void TextRenderer::CreateBackBufferResources()
 {
-	float l_fDpiX;
-	float l_fDpiY;
-	m_D2DFactory->GetDesktopDpi(&l_fDpiX, &l_fDpiY);
-
 	D2D1_BITMAP_PROPERTIES1 l_BitmapProperties = D2D1::BitmapProperties1(
 		D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
-		D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED), l_fDpiX, l_fDpiY);
+		D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED));
 
 	D3D11_RESOURCE_FLAGS l_ResourceFlags = { D3D11_BIND_RENDER_TARGET };
 

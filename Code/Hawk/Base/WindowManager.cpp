@@ -43,15 +43,20 @@ void WindowManager::Open(HINSTANCE p_hInstance, const std::string& p_Name)
 
 	THROW_IF_NOT(RegisterClassEx(&l_WC), "Failed to register windows class");
 
+	DWORD l_dwStyle = WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME;
+
+	RECT l_Rect = { 0, 0, Config::Instance().Get("gfx.width", 640), Config::Instance().Get("gfx.height", 480) };
+	AdjustWindowRect(&l_Rect, l_dwStyle, FALSE);
+
 	n_hWindow = CreateWindowEx(
 		0,
 		n_WindowName,
 		p_Name.c_str(),
-		WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME,
+		l_dwStyle,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
-		Config::Instance().Get("gfx.width", 640),
-		Config::Instance().Get("gfx.height", 480),
+		l_Rect.right - l_Rect.left,
+		l_Rect.bottom - l_Rect.top,
 		nullptr,
 		nullptr,
 		p_hInstance,
