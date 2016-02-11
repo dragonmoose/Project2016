@@ -144,6 +144,9 @@
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Input\KeyCodes.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SceneNode.h" />
     <ClInclude Include="System\Config.h" />
     <ClInclude Include="System\Dispatcher.h" />
     <ClInclude Include="System\DllExport.h" />
@@ -192,6 +195,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="System\Config.cpp" />
     <ClCompile Include="System\Dispatcher.cpp" />
     <ClCompile Include="System\Duration.cpp" />

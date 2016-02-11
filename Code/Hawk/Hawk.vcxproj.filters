@@ -110,6 +110,15 @@
     <ClCompile Include="Base\WindowManager.cpp">
       <Filter>Base</Filter>
     </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -278,6 +287,15 @@
     <ClInclude Include="Base\SystemEvents.h">
       <Filter>Base</Filter>
     </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
@@ -306,6 +324,9 @@
     </Filter>
     <Filter Include="Gfx\D3D12">
       <UniqueIdentifier>{4658b528-dfa4-485d-8d87-78298e709671}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{aa60566d-635c-47f9-97c0-04a02b54832c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
