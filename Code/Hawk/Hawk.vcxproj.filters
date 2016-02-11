@@ -110,13 +110,10 @@
     <ClCompile Include="Base\WindowManager.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="SceneManager.cpp">
+    <ClCompile Include="Scene\SceneManager.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneNode.cpp">
+    <ClCompile Include="Scene\SceneNode.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
@@ -287,13 +284,10 @@
     <ClInclude Include="Base\SystemEvents.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="SceneManager.h">
+    <ClInclude Include="Scene\SceneManager.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneNode.h">
+    <ClInclude Include="Scene\SceneNode.h">
       <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
