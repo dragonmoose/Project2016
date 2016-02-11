@@ -8,6 +8,8 @@
 
 namespace Hawk {
 
+const Duration ModuleThread::sc_MaxFrameDuration(1, Duration::Precision::Second);
+
 ModuleThread::ModuleThread(const std::string& p_Name)
 : m_Thread(p_Name, std::bind(&ModuleThread::Update, this))
 , m_Mutex(p_Name)
@@ -95,6 +97,8 @@ void ModuleThread::Update()
 	Profiler l_Profiler(std::string("MTUpdate:").append(m_Thread.GetName()));
 	l_Profiler.Start();
 	Duration l_Delta(m_CurrFrameStartTime - m_PrevFrameStartTime);
+	l_Delta = std::min(l_Delta, sc_MaxFrameDuration);
+
 	MutexScope_t l_MutexScope(m_Mutex);
 	for (auto& l_Module : m_Modules)
 	{

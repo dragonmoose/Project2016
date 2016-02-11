@@ -64,6 +64,7 @@ private:
 	Time m_PrevFrameStartTime;
 	Thread m_Thread;
 	mutable Mutex m_Mutex;
+	static const Duration sc_MaxFrameDuration;
 
 #ifdef HAWK_DEBUG
 	std::shared_ptr<ConsoleCommandManager> m_ConsoleCommandManager;
