@@ -7,11 +7,8 @@
 namespace Hawk {
 namespace Gfx {
 
-
-
 FPSTrackerSubModule::FPSTrackerSubModule(std::shared_ptr<DebugTextSubModule> p_DebugTextSubModule)
 : m_DebugTextSubModule(p_DebugTextSubModule)
-, m_iCurrIndex(0)
 {
 	Reset();
 }
@@ -27,15 +24,15 @@ void FPSTrackerSubModule::Update(const Duration& p_Duration)
 	m_iMin = std::min(l_iFPS, m_iMin);
 	m_iMax = std::max(l_iFPS, m_iMax);
 
-	m_Values[m_iCurrIndex] = l_iFPS;
-	m_iCurrIndex++;
-	if (m_iCurrIndex >= sc_iNumValues)
+	m_Samples[m_iCurrSampleIndex] = l_iFPS;
+	m_iCurrSampleIndex++;
+	if (m_iCurrSampleIndex >= sc_iNumSamples)
 	{
-		m_iCurrIndex = 0;
+		m_iCurrSampleIndex = 0;
 	}
 
 	std::ostringstream l_Stream;
-	l_Stream << l_iFPS << " [" << m_iMin << ", " << m_iMax << "] avg: " << hwk::average(m_Values) << " dt: " << p_Duration.Get(Duration::Precision::Millisecond) << " ms";
+	l_Stream << l_iFPS << " [" << m_iMin << ", " << m_iMax << "] avg: " << hwk::average(m_Samples) << " dt: " << p_Duration.Get(Duration::Precision::Millisecond) << " ms";
 	m_DebugTextSubModule->UpdateValue("FPS", l_Stream.str(), "gfx");
 }
 
@@ -48,7 +45,8 @@ void FPSTrackerSubModule::InitializeConsole()
 
 void FPSTrackerSubModule::Reset()
 {
-	m_Values.assign(sc_iNumValues, 0);
+	m_iCurrSampleIndex = 0;
+	m_Samples.assign(sc_iNumSamples, 30);
 	m_iMin = INT_MAX;
 	m_iMax = INT_MIN;
 }

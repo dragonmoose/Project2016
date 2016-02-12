@@ -24,9 +24,9 @@ private:
 	int m_iMin;
 	int m_iMax;
 	
-	static const int sc_iNumValues = 100;
-	int m_iCurrIndex;
-	std::vector<int> m_Values;
+	static const int sc_iNumSamples = 100;
+	int m_iCurrSampleIndex;
+	std::vector<int> m_Samples;
 };
 
 }}
