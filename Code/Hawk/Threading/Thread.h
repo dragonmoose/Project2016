@@ -50,9 +50,3 @@ private:
 };
 
 }
-
-#ifdef HAWK_DEBUG
-	#define ASSERT_THREAD(p)		ASSERT(Hawk::ThreadInfoManager::IsThread(p), "Not on thread: " << p);
-#else
-	#define ASSERT_THREAD(p)
-#endif
