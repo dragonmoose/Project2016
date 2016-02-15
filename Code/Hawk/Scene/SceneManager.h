@@ -1,13 +1,15 @@
 #pragma once
-#include "SceneNode.h"
+#include "Entity.h"
 
 namespace Hawk {
 
 class SceneManager
 {
 public:
+	Entity& GetRoot();
+
 private:
-	SceneNode m_Root;
+	Entity m_Root;
 };
 
 }

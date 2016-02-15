@@ -1,8 +1,8 @@
 #pragma once
 #include "System/DllExport.h"
 #include "System/Duration.h"
-#include "System/Mutex.h"
-#include "System/Thread.h"
+#include "Threading/Mutex.h"
+#include "Threading/Thread.h"
 #include "System/Time.h"
 #include "System/Types.h"
 #include "Events/EventRouter.h"

@@ -5,6 +5,7 @@
 #include "System/Version.h"
 #include "Util/Algorithm.h"
 #include "Util/StringUtil.h"
+#include "Threading/ThreadInfoManager.h"
 #include <iomanip>
 
 namespace Hawk {
@@ -48,7 +49,7 @@ void ConsoleCommandManager::Stop()
 void ConsoleCommandManager::RunInputLoop()
 {
 	LOG("Console input thread started", "console", Info);
-	Logger::RegisterThread("Thread_Console_Input", std::this_thread::get_id());
+	ThreadInfoManager::RegisterThread("Thread_Console_Input", std::this_thread::get_id());
 
 	std::string l_CurrLine;
 	std::string l_CurrTypedLine;

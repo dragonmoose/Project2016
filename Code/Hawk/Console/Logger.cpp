@@ -16,7 +16,8 @@ namespace Logger
 #include "ConsoleAPI.h"
 #include "System/Time.h"
 #include "System/Duration.h"
-#include "System/Mutex.h"
+#include "Threading/Mutex.h"
+#include "Threading/ThreadInfoManager.h"
 #include "Util/StringUtil.h"
 #include <unordered_map>
 
@@ -24,35 +25,18 @@ namespace Hawk {
 namespace Logger
 {
 	bool ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo, const std::string& p_Tag, Level p_Level);
-	std::string GetThreadInfo();
 	bool MatchesFilter(const std::string& p_Msg, const std::string& p_Filter);
 	Level StringToLevel(const std::string& p_Level);
 	void GetLevelColors(Level p_Level, ConsoleAPI::Color& p_Color, ConsoleAPI::Color& p_BgColor);
 
-	struct ThreadInfo
-	{
-		ThreadInfo(const std::string& p_Name, ThreadID p_ID) : m_Name(p_Name), m_ID(p_ID) {}
-		std::string m_Name;
-		ThreadID m_ID;
-	};
-	using ThreadInfoMap_t = std::unordered_map<std::thread::id, ThreadInfo>;
-	ThreadInfoMap_t m_ThreadInfoMap;
-	Mutex m_ThreadInfoMutex;
-
 	const std::array<std::string, 6> c_LogLevels = { "trace", "debug", "info", "warning", "error", "fatal" };
-}
-
-void Logger::RegisterThread(const std::string& p_Name, std::thread::id p_SysThreadID, ThreadID p_ID)
-{
-	MutexScope_t l_MutexScope(m_ThreadInfoMutex);
-	THROW_IF_NOT(m_ThreadInfoMap.insert(ThreadInfoMap_t::value_type(p_SysThreadID, ThreadInfo(p_Name, p_ID))).second, "Failed to insert thread name lookup. Name=" << p_Name << " ID=" << p_ID);
 }
 
 void Logger::Log(const std::string& p_Msg, const std::string& p_Tag, const std::string& p_FileInfo, Level p_Level)
 {
 	if (!ConsoleAPI::Initialized()) return;
 
-	std::string l_ThreadInfo = GetThreadInfo();
+	const std::string& l_ThreadInfo = ThreadInfoManager::GetLogText(std::this_thread::get_id());
 	if (!ShouldLog(p_Msg, l_ThreadInfo, p_Tag, p_Level)) return;
 
 	CONSOLE_WRITE_SCOPE();
@@ -87,29 +71,6 @@ bool Logger::ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo
 	if (!MatchesFilter(p_ThreadInfo, "log.thread")) return false;
 	if (!MatchesFilter(p_Tag, "log.tag")) return false;
 	return true;
-}
-
-std::string Logger::GetThreadInfo()
-{
-	std::thread::id l_SysThreadID = std::this_thread::get_id();
-	std::ostringstream l_Stream;
-
-	MutexScope_t l_MutexScope(m_ThreadInfoMutex);
-	auto l_Itr = m_ThreadInfoMap.find(l_SysThreadID);
-	if (l_Itr != m_ThreadInfoMap.end())
-	{
-		l_Stream << l_Itr->second.m_Name;
-		if (l_Itr->second.m_ID != ThreadID_Invalid)
-		{
-			l_Stream << " #" << l_Itr->second.m_ID;
-		}
-	}
-	else
-	{
-		l_Stream << "N/A";
-	}
-	l_Stream << " [" << l_SysThreadID << "]";
-	return l_Stream.str();
 }
 
 bool Logger::MatchesFilter(const std::string& p_Msg, const std::string& p_Filter)

@@ -27,7 +27,7 @@ public:
 	template<class T>
 	void Dispatch(const T& p_Event)
 	{
-		PROFILE_SCOPE();
+		PROFILE();
 		const std::type_index& l_TypeIndex = std::type_index(typeid(T));
 		EventQueuesMap_t::iterator l_Itr = m_EventQueues.find(l_TypeIndex);
 		if (l_Itr != m_EventQueues.end())

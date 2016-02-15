@@ -2,7 +2,7 @@
 #include "DllExport.h"
 #include "Time.h"
 #include "Console/Logger.h"
-#include "System/Mutex.h"
+#include "Threading/Mutex.h"
 #include <boost/property_tree/ptree.hpp>
 
 namespace Hawk {

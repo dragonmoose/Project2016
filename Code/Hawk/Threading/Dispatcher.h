@@ -1,6 +1,6 @@
 #pragma once
-#include "DllExport.h"
-#include "System/Mutex.h"
+#include "System/DllExport.h"
+#include "Threading/Mutex.h"
 #include <functional>
 #include <vector>
 

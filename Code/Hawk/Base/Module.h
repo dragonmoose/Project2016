@@ -1,6 +1,6 @@
 #pragma once
 #include "System/DllExport.h"
-#include "System/Dispatcher.h"
+#include "Threading/Dispatcher.h"
 #include "Events/EventManager.h"
 #include "System/Duration.h"
 #include "System/Types.h"

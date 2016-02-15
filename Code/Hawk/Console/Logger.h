@@ -29,7 +29,6 @@ namespace Logger
 		Fatal,
 	};
 
-	void RegisterThread(const std::string& p_Name, std::thread::id p_SysThreadID, ThreadID p_ID = ThreadID_Invalid);
 	HAWK_DLL_EXPORT void Log(const std::string& p_Msg, const std::string& p_Tag, const std::string& p_FileInfo, Level p_Level);
 	bool IsValidLogLevelString(const std::string& p_Level);
 }

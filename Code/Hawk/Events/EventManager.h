@@ -4,7 +4,7 @@
 #include "EventQueue.h"
 #include "EventHandler.h"
 #include "System/DllExport.h"
-#include "System/Mutex.h"
+#include "Threading/Mutex.h"
 #include "Console/Logger.h"
 #include <unordered_map>
 #include <typeinfo>

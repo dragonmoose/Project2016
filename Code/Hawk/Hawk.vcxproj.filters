@@ -41,12 +41,6 @@
     <ClCompile Include="Util\FileUtil.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="System\Dispatcher.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
-    <ClCompile Include="System\Thread.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
     <ClCompile Include="Console\ConsoleCommandManager.cpp">
       <Filter>Console</Filter>
     </ClCompile>
@@ -64,9 +58,6 @@
     </ClCompile>
     <ClCompile Include="Gfx\RenderingModule.cpp">
       <Filter>Gfx</Filter>
-    </ClCompile>
-    <ClCompile Include="System\Mutex.cpp">
-      <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="Console\ConsoleHistory.cpp">
       <Filter>Console</Filter>
@@ -113,8 +104,20 @@
     <ClCompile Include="Scene\SceneManager.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\SceneNode.cpp">
+    <ClCompile Include="Scene\Entity.cpp">
       <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Threading\Mutex.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Threading\Thread.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Threading\ThreadInfoManager.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Threading\Dispatcher.cpp">
+      <Filter>Threading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -182,12 +185,6 @@
     <ClInclude Include="Console\ConsoleFunction.h">
       <Filter>Console</Filter>
     </ClInclude>
-    <ClInclude Include="System\Dispatcher.h">
-      <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Thread.h">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="Console\ConsoleCommandManager.h">
       <Filter>Console</Filter>
     </ClInclude>
@@ -223,9 +220,6 @@
     </ClInclude>
     <ClInclude Include="Gfx\D3D12\d3dx12.h">
       <Filter>Gfx\D3D12</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Mutex.h">
-      <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="Console\ConsoleHistory.h">
       <Filter>Console</Filter>
@@ -287,8 +281,26 @@
     <ClInclude Include="Scene\SceneManager.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\SceneNode.h">
+    <ClInclude Include="Scene\Entity.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Component.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\EntityManager.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Threading\Mutex.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Threading\Thread.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Threading\ThreadInfoManager.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Threading\Dispatcher.h">
+      <Filter>Threading</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -321,6 +333,9 @@
     </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{aa60566d-635c-47f9-97c0-04a02b54832c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Threading">
+      <UniqueIdentifier>{d4337952-0268-4c09-ae16-f9acad754a25}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

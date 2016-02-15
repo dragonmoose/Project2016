@@ -1,5 +1,5 @@
 #pragma once
-#include "DllExport.h"
+#include "System/DllExport.h"
 #include <mutex>
 #ifdef HAWK_DEBUG
 #include <atomic>

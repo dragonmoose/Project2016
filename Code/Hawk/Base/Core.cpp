@@ -4,7 +4,8 @@
 #include "Debug/ProfilerManager.h"
 #include "Gfx/RenderingModule.h"
 #include "System/Time.h"
-#include "System/Thread.h"
+#include "Threading/Thread.h"
+#include "Threading/ThreadInfoManager.h"
 #include "Util/StringUtil.h"
 #include <boost/filesystem.hpp>
 #include <thread>
@@ -50,7 +51,7 @@ void Core::Initialize()
 	if (m_Settings.m_bConsole)
 	{
 		ConsoleAPI::Start();
-		Logger::RegisterThread(Thread::MainThreadName, std::this_thread::get_id());
+		ThreadInfoManager::RegisterThread(Thread::sc_MainThreadName, std::this_thread::get_id());
 		
 		m_DebugDispatcher = std::make_shared<Dispatcher>();
 		m_ConsoleCommandManager = std::make_shared<ConsoleCommandManager>(m_DebugDispatcher);
@@ -63,11 +64,8 @@ void Core::Initialize()
 	Config::Instance().SetFilename(m_Settings.m_ConfigFilename);
 	Config::Instance().Load(true);
 	LOG("Working directory set to: " << boost::filesystem::current_path(), "core", Info);
-	
-	if (m_Settings.m_bRenderingModule)
-	{
-		AddModule<Gfx::RenderingModule>(CreateModuleThread("gfx"));
-	}
+
+	AddModules();	
 	WindowManager::Initialize(m_EventRouter);
 
 	LOG("***** Hawk core initialized *****", "core", Info);
@@ -136,6 +134,14 @@ void Core::Run()
 		Thread::Sleep();
 	}
 	StopModules();
+}
+
+void Core::AddModules()
+{
+	if (m_Settings.m_bRenderingModule)
+	{
+		AddModule<Gfx::RenderingModule>(CreateModuleThread("gfx"));
+	}
 }
 
 void Core::InitializeModules()

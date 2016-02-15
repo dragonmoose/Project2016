@@ -4,7 +4,7 @@
 #include "ConsoleHistory.h"
 #include "Logger.h"
 #include "System/Exception.h"
-#include "System/Mutex.h"
+#include "Threading/Mutex.h"
 #include "Util/StringUtil.h"
 #include <string>
 #include <vector>

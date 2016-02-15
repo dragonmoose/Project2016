@@ -1,7 +1,7 @@
 #pragma once
 #ifdef HAWK_DEBUG
 #include "Logger.h"
-#include "System/Dispatcher.h"
+#include "Threading/Dispatcher.h"
 #include <boost/lexical_cast.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/at.hpp>

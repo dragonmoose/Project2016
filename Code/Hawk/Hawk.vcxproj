@@ -144,18 +144,21 @@
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Input\KeyCodes.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Scene\Component.h" />
+    <ClInclude Include="Scene\EntityManager.h" />
     <ClInclude Include="Scene\SceneManager.h" />
-    <ClInclude Include="Scene\SceneNode.h" />
+    <ClInclude Include="Scene\Entity.h" />
     <ClInclude Include="System\Config.h" />
-    <ClInclude Include="System\Dispatcher.h" />
     <ClInclude Include="System\DllExport.h" />
     <ClInclude Include="System\Duration.h" />
     <ClInclude Include="System\Exception.h" />
-    <ClInclude Include="System\Mutex.h" />
-    <ClInclude Include="System\Thread.h" />
     <ClInclude Include="System\Time.h" />
     <ClInclude Include="System\Types.h" />
     <ClInclude Include="System\Version.h" />
+    <ClInclude Include="Threading\Dispatcher.h" />
+    <ClInclude Include="Threading\Mutex.h" />
+    <ClInclude Include="Threading\Thread.h" />
+    <ClInclude Include="Threading\ThreadInfoManager.h" />
     <ClInclude Include="Util\Algorithm.h" />
     <ClInclude Include="Util\FileUtil.h" />
     <ClInclude Include="Util\StringUtil.h" />
@@ -195,14 +198,15 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Scene\SceneManager.cpp" />
-    <ClCompile Include="Scene\SceneNode.cpp" />
+    <ClCompile Include="Scene\Entity.cpp" />
     <ClCompile Include="System\Config.cpp" />
-    <ClCompile Include="System\Dispatcher.cpp" />
     <ClCompile Include="System\Duration.cpp" />
     <ClCompile Include="System\Exception.cpp" />
-    <ClCompile Include="System\Mutex.cpp" />
-    <ClCompile Include="System\Thread.cpp" />
     <ClCompile Include="System\Time.cpp" />
+    <ClCompile Include="Threading\Dispatcher.cpp" />
+    <ClCompile Include="Threading\Mutex.cpp" />
+    <ClCompile Include="Threading\Thread.cpp" />
+    <ClCompile Include="Threading\ThreadInfoManager.cpp" />
     <ClCompile Include="Util\FileUtil.cpp" />
     <ClCompile Include="Util\StringUtil.cpp" />
   </ItemGroup>

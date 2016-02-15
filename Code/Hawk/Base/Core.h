@@ -6,7 +6,7 @@
 #include "Module.h"
 #include "ModuleThread.h"
 #include "System/DllExport.h"
-#include "System/Dispatcher.h"
+#include "Threading/Dispatcher.h"
 #include "System/Exception.h"
 #include "Events/EventRouter.h"
 #include "System/Types.h"
@@ -45,6 +45,7 @@ public:
 private:
 	using ModuleThreads_t = std::vector<std::unique_ptr<ModuleThread>>;
 
+	void AddModules();
 	void InitializeModules();
 	void StartModules();
 	void StopModules();

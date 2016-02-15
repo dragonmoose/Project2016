@@ -1,6 +1,7 @@
 #pragma once
 #include "Dispatcher.h"
-#include "Types.h"
+#include "Debug/Assert.h"
+#include "System/Types.h"
 #include <atomic>
 #include <thread>
 #include <functional>
@@ -31,7 +32,7 @@ public:
 	std::shared_ptr<Dispatcher> GetDispatcher() const;
 	static void Sleep();
 
-	static std::string MainThreadName;
+	static const std::string sc_MainThreadName;
 
 private:
 	void Run();
@@ -46,7 +47,12 @@ private:
 
 	static std::atomic_uint s_uiNextThreadID;
 	ThreadID m_ID;
-	
 };
 
 }
+
+#ifdef HAWK_DEBUG
+	#define ASSERT_THREAD(p)		ASSERT(Hawk::ThreadInfoManager::IsThread(p), "Not on thread: " << p);
+#else
+	#define ASSERT_THREAD(p)
+#endif
