@@ -5,10 +5,10 @@
 
 namespace Hawk {
 
-unsigned int Entity::s_uiNextObjectID = 1;
+EntityID_t Entity::s_NextID = 1;
 
 Entity::Entity()
-: Entity(std::string("Entity_") + std::to_string(s_uiNextObjectID))
+: Entity(std::string("Entity_") + std::to_string(s_NextID))
 {
 }
 
@@ -16,9 +16,27 @@ Entity::Entity(const std::string& p_Name)
 : m_Name(p_Name)
 , m_bInitialized(false)
 , m_pSceneManager(nullptr)
-, m_uiObjectID(s_uiNextObjectID)
+, m_ID(s_NextID)
 {
-	s_uiNextObjectID++;
+	s_NextID++;
+}
+
+Entity::~Entity()
+{
+	LOG("Entity deleted. Name=" << m_Name << " ID=" << m_ID, "scene", Debug);
+}
+
+void Entity::SetParent(EntityPtr_t p_Parent)
+{
+	ASSERT(p_Parent.get() != this, "Cannot set parent to itself");
+	if (HasParent())
+	{
+		m_Parent->DetachChild(shared_from_this());
+	}
+	if (p_Parent)
+	{
+		p_Parent->AddChild(shared_from_this());
+	}
 }
 
 const std::string& Entity::GetName() const
@@ -28,15 +46,17 @@ const std::string& Entity::GetName() const
 
 void Entity::AddChild(EntityPtr_t p_Entity)
 {
+	ASSERT(std::find(m_Children.begin(), m_Children.end(), p_Entity) == m_Children.end(), "Cannot add entity to itself");
 	//ASSERT_THREAD("scene");
 	bool l_bHadParent = p_Entity->HasParent();
 	if (p_Entity->HasParent())
 	{
 		p_Entity->m_Parent->DetachChild(p_Entity);
-		p_Entity->m_Parent = shared_from_this();
 	}
 
 	m_Children.push_back(p_Entity);
+	p_Entity->m_Parent = shared_from_this();
+
 	if (InScene())
 	{
 		p_Entity->AddToScene(m_pSceneManager);
@@ -58,6 +78,21 @@ Entity::EntityPtr_t Entity::GetParent() const
 bool Entity::HasParent() const
 {
 	return m_Parent != nullptr;
+}
+
+bool Entity::HasChild(EntityPtr_t p_Entity) const
+{
+	return std::find(m_Children.begin(), m_Children.end(), p_Entity) != m_Children.end();
+}
+
+void Entity::AddToScene(SceneManager* p_pSceneManager)
+{
+	ASSERT(p_pSceneManager, "SceneManager should not be null");
+	if (!InScene())
+	{
+		m_pSceneManager = p_pSceneManager;
+		m_pSceneManager->AddToScene(shared_from_this());
+	}
 }
 
 void Entity::Initialize()
@@ -86,6 +121,11 @@ void Entity::Update(const Duration& p_Duration)
 	}
 }
 
+EntityID_t Entity::GetID() const
+{
+	return m_ID;
+}
+
 const glm::mat4x4& Entity::GetFrameWorldMatrix()
 {
 	return m_FrameWorldMatrix;
@@ -94,7 +134,7 @@ const glm::mat4x4& Entity::GetFrameWorldMatrix()
 void Entity::DebugPrint(unsigned int p_uiDepth) const
 {
 	std::fill_n(std::ostreambuf_iterator<char>(std::cout), p_uiDepth * 3, ' ');
-	std::cout << GetName() << "\t#" << m_uiObjectID << "\n";
+	std::cout << GetName() << "\t#" << m_ID << "\n";
 	unsigned int l_uiChildDepth = p_uiDepth + 1;
 	for (auto& l_Child : m_Children)
 	{
@@ -114,16 +154,6 @@ void Entity::DetachChild(EntityPtr_t p_Entity)
 bool Entity::InScene() const
 {
 	return m_pSceneManager != nullptr;
-}
-
-void Entity::AddToScene(SceneManager* p_pSceneManager)
-{
-	ASSERT(p_pSceneManager, "SceneManager should not be null");
-	if (!InScene())
-	{
-		m_pSceneManager = p_pSceneManager;
-		m_pSceneManager->AddToScene(shared_from_this());
-	}
 }
 
 void Entity::RemoveFromScene()

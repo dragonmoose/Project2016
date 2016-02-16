@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "Threading/Mutex.h"
+#include "System/Types.h"
 #include <glm/vec3.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <memory>
@@ -19,6 +20,8 @@ public:
 
 	Entity();
 	Entity(const std::string& p_Name);
+	~Entity();
+	void SetParent(EntityPtr_t p_Parent);
 
 	template<class T, class... Args>
 	T& AddComponent(Args&&... p_Args)
@@ -33,10 +36,13 @@ public:
 	void RemoveChild(EntityPtr_t p_Entity);
 	EntityPtr_t GetParent() const;
 	bool HasParent() const;
+	bool HasChild(EntityPtr_t p_Entity) const;
+	void AddToScene(SceneManager* p_pSceneManager);
 
 	void Initialize();
 	void RegisterEvents(EventManager& p_EventManager);
 	void Update(const Duration& p_Duration);
+	EntityID_t GetID() const;
 
 	const glm::mat4x4& GetFrameWorldMatrix();
 
@@ -45,13 +51,12 @@ public:
 private:
 	void DetachChild(EntityPtr_t p_Entity);
 	bool InScene() const;
-	void AddToScene(SceneManager* p_pSceneManager);
 	void RemoveFromScene();
 
 	std::string m_Name;
 	bool m_bInitialized;
 
-	static unsigned int s_uiNextObjectID;
+	static EntityID_t s_NextID;
 
 	using Components_t = std::vector<Component>;
 	Components_t m_Components;
@@ -66,7 +71,7 @@ private:
 	glm::vec3 m_Position;
 	glm::quat m_Rotation;
 	glm::mat4x4 m_FrameWorldMatrix;
-	unsigned int m_uiObjectID;
+	EntityID_t m_ID;
 };
 
 }
