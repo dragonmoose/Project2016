@@ -140,12 +140,12 @@
     <ClInclude Include="Gfx\FPSTrackerSubModule.h" />
     <ClInclude Include="Gfx\IRenderingAPI.h" />
     <ClInclude Include="Gfx\RenderingModule.h" />
+    <ClInclude Include="Gfx\Vulkan\VulkanAPI.h" />
     <ClInclude Include="Input\InputEvents.h" />
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Input\KeyCodes.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Scene\Component.h" />
-    <ClInclude Include="Scene\EntityManager.h" />
     <ClInclude Include="Scene\SceneManager.h" />
     <ClInclude Include="Scene\Entity.h" />
     <ClInclude Include="System\Config.h" />
@@ -190,6 +190,7 @@
     <ClCompile Include="Gfx\DebugTextSubModule.cpp" />
     <ClCompile Include="Gfx\FPSTrackerSubModule.cpp" />
     <ClCompile Include="Gfx\RenderingModule.cpp" />
+    <ClCompile Include="Gfx\Vulkan\VulkanAPI.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

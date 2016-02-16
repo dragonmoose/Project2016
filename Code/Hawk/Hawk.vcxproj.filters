@@ -119,6 +119,9 @@
     <ClCompile Include="Threading\Dispatcher.cpp">
       <Filter>Threading</Filter>
     </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\VulkanAPI.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -287,9 +290,6 @@
     <ClInclude Include="Scene\Component.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\EntityManager.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Threading\Mutex.h">
       <Filter>Threading</Filter>
     </ClInclude>
@@ -301,6 +301,9 @@
     </ClInclude>
     <ClInclude Include="Threading\Dispatcher.h">
       <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\VulkanAPI.h">
+      <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -336,6 +339,9 @@
     </Filter>
     <Filter Include="Threading">
       <UniqueIdentifier>{d4337952-0268-4c09-ae16-f9acad754a25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gfx\Vulkan">
+      <UniqueIdentifier>{d49e3854-cd48-4461-b5ea-f8a9a531eb23}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

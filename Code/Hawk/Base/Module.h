@@ -79,6 +79,8 @@ namespace Hawk
 		void SetFixedTimeStep(float p_fValue, FixedTimeStepDecl p_Decl);
 
 		void AddSubModule(std::shared_ptr<SubModule> p_SubModule);
+		bool IsInitialized() const;
+		EventManager& GetEventManager();
 
 	private:
 		std::unique_ptr<EventManager> m_EventManager;

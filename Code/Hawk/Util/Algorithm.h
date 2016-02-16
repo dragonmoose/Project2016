@@ -31,5 +31,11 @@ decltype(auto) average(Range_t& p_Range)
 	return (std::accumulate(p_Range.begin(), p_Range.end(), 0) / p_Range.size());
 }
 
+template<class Range_t, class T>
+decltype(auto) contains(Range_t& p_Range, const T& p_Value)
+{
+	return std::find(p_Range.cbegin(), p_Range.cend(), p_Value) != p_Range.cend();
+}
+
 }
 }

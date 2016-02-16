@@ -3,6 +3,7 @@
 #include "WindowManager.h"
 #include "Debug/ProfilerManager.h"
 #include "Gfx/RenderingModule.h"
+#include "Scene/SceneManager.h"
 #include "System/Time.h"
 #include "Threading/Thread.h"
 #include "Threading/ThreadInfoManager.h"
@@ -142,6 +143,7 @@ void Core::AddModules()
 	{
 		AddModule<Gfx::RenderingModule>(CreateModuleThread("gfx"));
 	}
+	AddModule<SceneManager>(CreateModuleThread("scene"));
 }
 
 void Core::InitializeModules()

@@ -197,4 +197,14 @@ void Module::AddSubModule(std::shared_ptr<SubModule> p_SubModule)
 	m_SubModules.push_back(p_SubModule);
 }
 
+bool Module::IsInitialized() const
+{
+	return m_bInitialized;
+}
+
+EventManager& Module::GetEventManager()
+{
+	return *m_EventManager.get();
+}
+
 }
