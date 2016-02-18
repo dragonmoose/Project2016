@@ -40,7 +40,7 @@ CD3DX12_CPU_DESCRIPTOR_HANDLE RenderView::GetHandle() const
 	return CD3DX12_CPU_DESCRIPTOR_HANDLE(m_Heap->GetCPUDescriptorHandleForHeapStart(), m_uiCurrBufferIndex, m_uiDescriptorSize);
 }
 
-unsigned int RenderView::GetCurrBufferIndex() const
+UINT32 RenderView::GetCurrBufferIndex() const
 {
 	return m_uiCurrBufferIndex;
 }
@@ -50,9 +50,9 @@ void RenderView::SetFullscreenState(bool p_bState)
 	THROW_IF_COMERR(m_SwapChain->SetFullscreenState(p_bState, nullptr), "Failed to set fullscreen state. State=" << p_bState);
 }
 
-void RenderView::OnWindowSizeChanged(unsigned int p_uiWidth, unsigned int p_uiHeight)
+void RenderView::OnWindowSizeChanged(UINT32 p_uiWidth, UINT32 p_uiHeight)
 {
-	for (int i = 0; i < c_uiNumBackBuffers; i++)
+	for (INT32 i = 0; i < c_uiNumBackBuffers; i++)
 	{
 		m_Buffers[i].Reset();
 	}
@@ -83,7 +83,7 @@ void RenderView::CreateDescriptorHeap(DeviceComPtr_t& p_Device)
 void RenderView::CreateRTV(DeviceComPtr_t& p_Device)
 {
 	CD3DX12_CPU_DESCRIPTOR_HANDLE l_Handle(m_Heap->GetCPUDescriptorHandleForHeapStart());
-	for (unsigned int i = 0; i < c_uiNumBackBuffers; i++)
+	for (UINT32 i = 0; i < c_uiNumBackBuffers; i++)
 	{
 		THROW_IF_COMERR(m_SwapChain->GetBuffer(i, IID_PPV_ARGS(&m_Buffers[i])), "Failed to get back buffer from swap chain");
 		p_Device->CreateRenderTargetView(m_Buffers[i].Get(), nullptr, l_Handle);

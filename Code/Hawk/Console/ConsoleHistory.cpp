@@ -8,7 +8,7 @@ namespace Hawk {
 
 const std::string ConsoleHistory::c_Filename = "console_history.txt";
 
-ConsoleHistory::ConsoleHistory(unsigned int p_uiMaxSize)
+ConsoleHistory::ConsoleHistory(UINT32 p_uiMaxSize)
 : m_uiMaxSize(p_uiMaxSize)
 , m_uiCurrRecord(0)
 , m_bStartState(true)
@@ -95,7 +95,7 @@ void ConsoleHistory::Load()
 		}
 		if (m_Cmds.size() > m_uiMaxSize)
 		{
-			unsigned int l_uiSize = m_Cmds.size();
+			UINT32 l_uiSize = m_Cmds.size();
 			m_Cmds.erase(m_Cmds.begin() + (m_uiMaxSize - 1), m_Cmds.end() - 1);
 			LOG("History file contained " << l_uiSize << " commands, was truncated to " << m_Cmds.size(), "console", Warning);
 		}

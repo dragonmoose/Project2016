@@ -5,6 +5,7 @@
 #include "Logger.h"
 #include "System/Exception.h"
 #include "Threading/Mutex.h"
+#include "Threading/Thread.h"
 #include "Util/StringUtil.h"
 #include <string>
 #include <vector>
@@ -89,9 +90,11 @@ private:
 	std::string GetNextCommand(const std::string& p_Command, const std::string& p_Current) const;
 	void TryCallFunction(const CF::IConsoleFunction& p_Function, ConsoleInputParser& p_Command) const;
 
-	std::thread m_Thread;
-	std::atomic_bool m_bStopSignal;
+	Thread m_Thread;
 	std::shared_ptr<Dispatcher> m_Dispatcher;
+
+	std::string m_CurrLine;
+	std::string m_CurrTypedLine;
 
 	mutable Mutex m_Mutex;
 	using FunctionMap_t = std::map<std::string, std::unique_ptr<CF::IConsoleFunction>>;

@@ -17,7 +17,7 @@ namespace
 	const char Key_Backspace = 8;
 	const char Key_Tab = 9;
 
-	const unsigned int c_uiMaxHistoryRecords = 30;
+	const UINT32 c_uiMaxHistoryRecords = 30;
 	const std::array<std::string, 5> c_HistoryExcludedCmds = { "-", "quit", "help", "cls", "console.history" };
 
 	bool SaveToHistory(const std::string& p_Cmd)
@@ -28,127 +28,118 @@ namespace
 
 ConsoleCommandManager::ConsoleCommandManager(std::shared_ptr<Dispatcher>& p_Dispatcher)
 : m_Dispatcher(p_Dispatcher)
-, m_bStopSignal(false)
 , m_History(std::make_unique<ConsoleHistory>(c_uiMaxHistoryRecords))
+, m_Thread("Console", std::bind(&ConsoleCommandManager::RunInputLoop, this))
 {
 }
 
 void ConsoleCommandManager::Start()
 {
 	Register();
-	m_Thread = std::thread(&ConsoleCommandManager::RunInputLoop, this);
+	m_Thread.Start();
 }
 
 void ConsoleCommandManager::Stop()
 {
-	m_bStopSignal = true;
-	m_Thread.join();
+	m_Thread.Stop();
 	m_History.reset(nullptr);
 }
 
 void ConsoleCommandManager::RunInputLoop()
 {
-	LOG("Console input thread started", "console", Info);
-	ThreadInfoManager::RegisterThread("Thread_Console_Input", std::this_thread::get_id());
-
-	std::string l_CurrLine;
-	std::string l_CurrTypedLine;
-	while (!m_bStopSignal)
+	try
 	{
-		try
+		while (ConsoleAPI::HasNextChar())
 		{
-			while (ConsoleAPI::HasNextChar())
+			char l_cChr = 0;
+			bool l_bIsVirtualKeyCode = false;
+			if (ConsoleAPI::TryGetNextChar(l_cChr, l_bIsVirtualKeyCode))
 			{
-				char l_cChr = 0;
-				bool l_bIsVirtualKeyCode = false;
-				if (ConsoleAPI::TryGetNextChar(l_cChr, l_bIsVirtualKeyCode))
+				if (l_bIsVirtualKeyCode)
 				{
-					if (l_bIsVirtualKeyCode)
+					if (l_cChr == VK_UP)
 					{
-						if (l_cChr == VK_UP)
-						{
-							if (m_History->Back())
-							{
-								ConsoleAPI::ClearCurrLine();
-								l_CurrLine = m_History->GetCurrRecord();
-							}
-						}
-						else if (l_cChr == VK_DOWN)
-						{
-							if (m_History->Forward())
-							{
-								ConsoleAPI::ClearCurrLine();
-								l_CurrLine = m_History->GetCurrRecord();
-							}
-						}
-					}
-					else
-					{
-						if (l_cChr == Key_Backspace)
-						{
-							if (l_CurrLine.size() > 0)
-							{
-								l_CurrLine = StringUtil::RemoveBack(l_CurrLine, 1);
-								ConsoleAPI::ClearCurrLine();
-							}
-							l_CurrTypedLine = l_CurrLine;
-						}
-						else if (l_cChr == Key_Tab)
+						if (m_History->Back())
 						{
 							ConsoleAPI::ClearCurrLine();
-							l_CurrLine = GetNextCommand(l_CurrTypedLine, l_CurrLine);
+							m_CurrLine = m_History->GetCurrRecord();
 						}
-						else if (l_cChr == Key_Return)
+					}
+					else if (l_cChr == VK_DOWN)
+					{
+						if (m_History->Forward())
 						{
-							std::stringstream l_CmdLine;
-							l_CmdLine << "Hawk " << Version::c_EngineVersion << ">" << l_CurrLine;
-							ConsoleAPI::BeginWrite();
-							ConsoleAPI::WriteLine(l_CmdLine.str(), ConsoleAPI::Color::White, ConsoleAPI::Color::None);
-							ConsoleAPI::EndWrite();
-
-							if (l_CurrLine.find_first_not_of("\t\n ") != std::string::npos)
-							{
-								ConsoleInputParser l_ParsedInput(l_CurrLine);
-
-								MutexScope_t l_MutexScope(m_Mutex);
-								auto l_Itr = m_Functions.find(l_ParsedInput.GetCommand());
-								if (l_Itr != m_Functions.end())
-								{
-									TryCallFunction(*l_Itr->second, l_ParsedInput);
-								}
-								else
-								{
-									std::cout << "Unknown command: " << l_ParsedInput.GetCommand() << "\n\n";
-								}
-								if (SaveToHistory(l_ParsedInput.GetCommand()))
-								{
-									m_History->Add(l_CurrLine);
-								}
-							}
-							l_CurrLine.clear();
-							l_CurrTypedLine.clear();
-							std::this_thread::sleep_for(std::chrono::milliseconds(50));
-						}
-						else
-						{
-							l_CurrLine += l_cChr;
-							l_CurrTypedLine = l_CurrLine;
+							ConsoleAPI::ClearCurrLine();
+							m_CurrLine = m_History->GetCurrRecord();
 						}
 					}
 				}
+				else
+				{
+					if (l_cChr == Key_Backspace)
+					{
+						if (m_CurrLine.size() > 0)
+						{
+							m_CurrLine = StringUtil::RemoveBack(m_CurrLine, 1);
+							ConsoleAPI::ClearCurrLine();
+						}
+						m_CurrTypedLine = m_CurrLine;
+					}
+					else if (l_cChr == Key_Tab)
+					{
+						ConsoleAPI::ClearCurrLine();
+						m_CurrLine = GetNextCommand(m_CurrTypedLine, m_CurrLine);
+					}
+					else if (l_cChr == Key_Return)
+					{
+						std::stringstream l_CmdLine;
+						l_CmdLine << "Hawk " << Version::c_EngineVersion << ">" << m_CurrLine;
+						ConsoleAPI::BeginWrite();
+						ConsoleAPI::WriteLine(l_CmdLine.str(), ConsoleAPI::Color::White, ConsoleAPI::Color::None);
+						ConsoleAPI::EndWrite();
+
+						if (m_CurrLine.find_first_not_of("\t\n ") != std::string::npos)
+						{
+							ConsoleInputParser l_ParsedInput(m_CurrLine);
+
+							MutexScope_t l_MutexScope(m_Mutex);
+							auto l_Itr = m_Functions.find(l_ParsedInput.GetCommand());
+							if (l_Itr != m_Functions.end())
+							{
+								TryCallFunction(*l_Itr->second, l_ParsedInput);
+							}
+							else
+							{
+								std::cout << "Unknown command: " << l_ParsedInput.GetCommand() << "\n\n";
+							}
+							if (SaveToHistory(l_ParsedInput.GetCommand()))
+							{
+								m_History->Add(m_CurrLine);
+							}
+						}
+						m_CurrLine.clear();
+						m_CurrTypedLine.clear();
+						std::this_thread::sleep_for(std::chrono::milliseconds(50));
+					}
+					else
+					{
+						m_CurrLine += l_cChr;
+						m_CurrTypedLine = m_CurrLine;
+					}
+				}
 			}
-			std::stringstream l_CmdLineStream;
-			l_CmdLineStream << "\rHawk " << Version::c_EngineVersion << ">" << l_CurrLine << "\r";
-			std::string l_Line = l_CmdLineStream.str();
-			ConsoleAPI::BeginWrite();
-			ConsoleAPI::Write(l_Line, ConsoleAPI::Color::White, ConsoleAPI::Color::None);
-			ConsoleAPI::EndWrite();
-			std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		}
-		catch (Exception& e)
-		{
-			LOG_EXCEPTION(e, "console", Fatal);
-		}
+		std::stringstream l_CmdLineStream;
+		l_CmdLineStream << "\rHawk " << Version::c_EngineVersion << ">" << m_CurrLine << "\r";
+		std::string l_Line = l_CmdLineStream.str();
+		ConsoleAPI::BeginWrite();
+		ConsoleAPI::Write(l_Line, ConsoleAPI::Color::White, ConsoleAPI::Color::None);
+		ConsoleAPI::EndWrite();
+		std::this_thread::sleep_for(std::chrono::milliseconds(50));
+	}
+	catch (Exception& e)
+	{
+		LOG_EXCEPTION(e, "console", Fatal);
 	}
 }
 

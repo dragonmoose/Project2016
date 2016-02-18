@@ -16,7 +16,7 @@ public:
 	virtual void Initialize() = 0;
 	virtual void Render() = 0;
 	virtual void SetFullscreenState(bool p_bState) = 0;
-	virtual void OnWindowSizeChanged(unsigned int p_uiWidth, unsigned int p_uiHeight) = 0;
+	virtual void OnWindowSizeChanged(UINT32 p_uiWidth, UINT32 p_uiHeight) = 0;
 	virtual void SetDebugText(const std::string& p_Text) = 0;
 
 #ifdef HAWK_DEBUG

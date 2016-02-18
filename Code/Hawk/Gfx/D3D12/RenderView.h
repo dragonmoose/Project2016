@@ -20,9 +20,9 @@ public:
 	ID3D12Resource* GetCurrBackBuffer();
 	const BackBufferArray_t& GetBackBuffers() const;
 	CD3DX12_CPU_DESCRIPTOR_HANDLE GetHandle() const;
-	unsigned int GetCurrBufferIndex() const;
+	UINT32 GetCurrBufferIndex() const;
 	void SetFullscreenState(bool p_bState);
-	void OnWindowSizeChanged(unsigned int p_uiWidth, unsigned int p_uiHeight);
+	void OnWindowSizeChanged(UINT32 p_uiWidth, UINT32 p_uiHeight);
 
 private:
 	void Initialize();
@@ -31,8 +31,8 @@ private:
 
 	SwapChainComPtr_t m_SwapChain;
 	RTVHeapComPtr_t m_Heap;
-	unsigned int m_uiCurrBufferIndex;
-	unsigned int m_uiDescriptorSize;
+	UINT32 m_uiCurrBufferIndex;
+	UINT32 m_uiDescriptorSize;
 	BackBufferArray_t m_Buffers;
 	DeviceComPtr_t m_Device;
 };

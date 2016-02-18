@@ -85,6 +85,11 @@ bool Entity::HasChild(EntityPtr_t p_Entity) const
 	return std::find(m_Children.begin(), m_Children.end(), p_Entity) != m_Children.end();
 }
 
+bool Entity::IsChildOf(EntityPtr_t p_Entity) const
+{
+	return m_Parent == p_Entity;
+}
+
 void Entity::AddToScene(SceneManager* p_pSceneManager)
 {
 	ASSERT(p_pSceneManager, "SceneManager should not be null");
@@ -131,11 +136,11 @@ const glm::mat4x4& Entity::GetFrameWorldMatrix()
 	return m_FrameWorldMatrix;
 }
 
-void Entity::DebugPrint(unsigned int p_uiDepth) const
+void Entity::DebugPrint(UINT32 p_uiDepth) const
 {
 	std::fill_n(std::ostreambuf_iterator<char>(std::cout), p_uiDepth * 3, ' ');
 	std::cout << GetName() << "\t#" << m_ID << "\n";
-	unsigned int l_uiChildDepth = p_uiDepth + 1;
+	UINT32 l_uiChildDepth = p_uiDepth + 1;
 	for (auto& l_Child : m_Children)
 	{
 		l_Child->DebugPrint(l_uiChildDepth);

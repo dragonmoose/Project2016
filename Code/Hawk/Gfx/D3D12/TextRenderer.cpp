@@ -56,7 +56,7 @@ void TextRenderer::SetText(const std::string& p_Text)
 
 void TextRenderer::Render()
 {
-	const unsigned int l_uiBackBufferIndex = m_RenderView->GetCurrBufferIndex();
+	const UINT32 l_uiBackBufferIndex = m_RenderView->GetCurrBufferIndex();
 
 	D2D1_SIZE_F l_Size = m_D2DRenderTargets[l_uiBackBufferIndex]->GetSize();
 	D2D1_RECT_F l_Rect = D2D1::RectF(0, 0, l_Size.width, l_Size.height);
@@ -80,7 +80,7 @@ void TextRenderer::CreateBackBufferResources()
 
 	D3D11_RESOURCE_FLAGS l_ResourceFlags = { D3D11_BIND_RENDER_TARGET };
 
-	for (int i = 0; i < c_uiNumBackBuffers; i++)
+	for (INT32 i = 0; i < c_uiNumBackBuffers; i++)
 	{
 		THROW_IF_COMERR(m_D3D11On12Device->CreateWrappedResource(m_RenderView->GetBackBuffers()[i].Get(), &l_ResourceFlags, D3D12_RESOURCE_STATE_RENDER_TARGET,
 			D3D12_RESOURCE_STATE_PRESENT, IID_PPV_ARGS(&m_WrappedBackBuffers[i])), "Failed to create wrapped back buffer");

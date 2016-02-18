@@ -34,7 +34,7 @@ Core::~Core()
 			LOG("Core exit due to critical error (see above)", "core", Fatal);
 		}
 
-		int l_iExitWaitTimeSec = Config::Instance().Get("dev.shutdownDelaySec", 30);
+		INT32 l_iExitWaitTimeSec = Config::Instance().Get("dev.shutdownDelaySec", 30);
 		if (l_iExitWaitTimeSec > 0)
 		{
 			LOG("Waiting " << l_iExitWaitTimeSec << " seconds before shutting down console...", "core", Info);
@@ -49,12 +49,16 @@ void Core::Initialize()
 {
 	m_EventRouter = std::make_shared<EventRouter>();
 	boost::filesystem::current_path(boost::filesystem::current_path().parent_path());
+
+	Config::Instance().SetFilename(m_Settings.m_ConfigFilename);
+	Config::Instance().Load(true);
 	
 #ifdef HAWK_DEBUG
 	if (m_Settings.m_bConsole)
 	{
 		ConsoleAPI::Start();
 		ThreadInfoManager::RegisterThread(Thread::sc_MainThreadName, std::this_thread::get_id());
+		LOG("Logger awakened...", "core", Info);
 		
 		m_DebugDispatcher = std::make_shared<Dispatcher>();
 		m_ConsoleCommandManager = std::make_shared<ConsoleCommandManager>(m_DebugDispatcher);
@@ -64,11 +68,9 @@ void Core::Initialize()
 
 	ProfilerManager::Initialize(m_ConsoleCommandManager.get(), m_DebugDispatcher.get());
 #endif
-	Config::Instance().SetFilename(m_Settings.m_ConfigFilename);
-	Config::Instance().Load(true);
 	LOG("Working directory set to: " << boost::filesystem::current_path(), "core", Info);
 
-	Random::Initialize(Config::Instance().Get<unsigned int>("dev.randSeed", 0));
+	Random::Initialize(Config::Instance().Get<UINT32>("dev.randSeed", 0));
 
 	AddModules();	
 	WindowManager::Initialize(m_EventRouter);

@@ -57,7 +57,7 @@ void D3D12API::SetFullscreenState(bool p_bState)
 	m_RenderView->SetFullscreenState(p_bState); // Triggers WM_SIZE
 }
 
-void D3D12API::OnWindowSizeChanged(unsigned int p_uiWidth, unsigned int p_uiHeight)
+void D3D12API::OnWindowSizeChanged(UINT32 p_uiWidth, UINT32 p_uiHeight)
 {
 	m_CommandQueue->WaitForGPU();
 	m_TextRenderer.reset();

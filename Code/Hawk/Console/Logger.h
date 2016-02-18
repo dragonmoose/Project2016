@@ -63,6 +63,7 @@ namespace Logger
 
 #define LOG_EXCEPTION(e, tag, level)				LOG_EXCEPTION_WITH_SOURCE_INFO(e, tag, level);
 #define LOGM_EXCEPTION(e, level)					LOG_EXCEPTION_WITH_SOURCE_INFO(e, GetLogDesc(), level);
+#define LOG_EXCEPTION_CONSOLE(e)					std::cout << "Exception: " << e.what() << "\n\n";
 
 #define LOG_STD_EXCEPTION(e, tag, level)			LOG_WITH_SOURCE_INFO(e.what(), tag, level);
 #define LOGM_STD_EXCEPTION(e, level)				LOG_WITH_SOURCE_INFO(e.what(), GetLogDesc(), level);

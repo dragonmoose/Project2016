@@ -11,6 +11,7 @@
 #include "Debug/Profiler.h"
 #include "System/Config.h"
 #include "System/Exception.h"
+#include "System/Types.h"
 #include <string>
 #include <sstream>
 #include <iostream>

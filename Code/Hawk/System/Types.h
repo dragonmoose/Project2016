@@ -1,13 +1,17 @@
 #pragma once
+#include <cstdint>
 
 namespace Hawk {
 
-using ModuleID = unsigned int;
-using ThreadID = unsigned int;
-using EntityID_t = unsigned int;
+using INT32			= int32_t;
+using UINT32		= uint32_t;
+using INT64			= int64_t;
+using UINT64		= uint64_t;
+
+using ModuleID		= UINT32;
+using ThreadID		= UINT32;
+using EntityID_t	= UINT32;
 
 __declspec(selectany) ThreadID ThreadID_Invalid = ThreadID();
 __declspec(selectany) ThreadID ModuleID_Invalid = ModuleID();
-
-using I64 = __int64;
 }

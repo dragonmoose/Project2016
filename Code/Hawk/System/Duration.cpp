@@ -10,7 +10,7 @@ Duration::Duration()
 	SetToZero();
 }
 
-Duration::Duration(int p_iValue, Precision p_Precision)
+Duration::Duration(INT32 p_iValue, Precision p_Precision)
 {
 	switch (p_Precision)
 	{
@@ -33,7 +33,7 @@ Duration::Duration(int p_iValue, Precision p_Precision)
 			m_Duration = std::chrono::nanoseconds(p_iValue);
 			break;
 		default:
-			ASSERT_LN("Invalid precision type given: " << static_cast<int>(p_Precision));
+			ASSERT_LN("Invalid precision type given: " << static_cast<INT32>(p_Precision));
 	}
 }
 
@@ -48,7 +48,7 @@ std::string Duration::ToString(Format p_Format) const
 		case Format::LargestUnit:
 			return ToString_LargestUnit();
 	}
-	ASSERT_LN("Invalid duration format: " << static_cast<int>(p_Format));
+	ASSERT_LN("Invalid duration format: " << static_cast<INT32>(p_Format));
 	return std::string();
 }
 
@@ -62,7 +62,7 @@ bool Duration::IsZero() const
 	return m_Duration == Duration_t::zero();
 }
 
-I64 Duration::Get(Precision p_Precision) const
+INT64 Duration::Get(Precision p_Precision) const
 {
 	switch (p_Precision)
 	{
@@ -119,7 +119,7 @@ Duration& Duration::operator+=(const Duration& p_rhs)
 	return *this;
 }
 
-Duration Duration::operator/(unsigned int p_uiDenominator) const
+Duration Duration::operator/(UINT32 p_uiDenominator) const
 {
 	return Duration((m_Duration / p_uiDenominator).count(), Precision::NanoSecond);
 }

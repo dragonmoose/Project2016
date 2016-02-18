@@ -12,12 +12,12 @@ namespace Random
 	const float c_fMaxValue = static_cast<float>(n_Generator.max());
 }
 
-void Random::Initialize(unsigned int p_uiSeed)
+void Random::Initialize(UINT32 p_uiSeed)
 {
-	unsigned int l_uiSeed = p_uiSeed;
+	UINT32 l_uiSeed = p_uiSeed;
 	if (l_uiSeed == 0)
 	{
-		l_uiSeed = static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count());
+		l_uiSeed = static_cast<UINT32>(std::chrono::system_clock::now().time_since_epoch().count());
 	}
 	n_Generator.seed(l_uiSeed);
 	LOG_IF(p_uiSeed == 0, "Random number generator initialized from system clock. Seed=" << l_uiSeed, "core", Info);
@@ -30,7 +30,7 @@ float Random::GetFloat(float p_fMin, float p_fMax)
 	return Math::Lerp(p_fMin, p_fMax, GetNormalized());
 }
 
-int Random::GetInt(int p_iMin, int p_iMax)
+INT32 Random::GetInt(INT32 p_iMin, INT32 p_iMax)
 {
 	ASSERT(p_iMin < p_iMax, "Argument error. Min=" << p_iMin << " Max=" << p_iMax);
 	return Math::Lerp(p_iMin, p_iMax, GetNormalized());

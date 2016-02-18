@@ -20,7 +20,7 @@ std::string FPSTrackerSubModule::GetName() const
 
 void FPSTrackerSubModule::Update(const Duration& p_Duration)
 {
-	int l_iFPS = static_cast<int>(std::round(1.0f / (p_Duration.Get(Duration::Precision::MicroSecond) / 1000000.0f)));
+	INT32 l_iFPS = static_cast<INT32>(std::round(1.0f / (p_Duration.Get(Duration::Precision::MicroSecond) / 1000000.0f)));
 	m_iMin = std::min(l_iFPS, m_iMin);
 	m_iMax = std::max(l_iFPS, m_iMax);
 

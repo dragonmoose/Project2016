@@ -37,6 +37,7 @@ public:
 	EntityPtr_t GetParent() const;
 	bool HasParent() const;
 	bool HasChild(EntityPtr_t p_Entity) const;
+	bool IsChildOf(EntityPtr_t p_Entity) const;
 	void AddToScene(SceneManager* p_pSceneManager);
 
 	void Initialize();
@@ -46,7 +47,7 @@ public:
 
 	const glm::mat4x4& GetFrameWorldMatrix();
 
-	void DebugPrint(unsigned int p_uiDepth) const;
+	void DebugPrint(UINT32 p_uiDepth) const;
 
 private:
 	void DetachChild(EntityPtr_t p_Entity);
