@@ -24,10 +24,21 @@ void Random::Initialize(unsigned int p_uiSeed)
 	LOG_IF(p_uiSeed != 0, "Random number generator initialized from custom value. Seed=" << l_uiSeed, "core", Info);
 }
 
-float Random::Get(float p_fMin, float p_fMax)
+float Random::GetFloat(float p_fMin, float p_fMax)
 {
-	ASSERT(p_fMin < p_fMax, "Parameter error. Min=" << p_fMin << " Max=" << p_fMax);
+	ASSERT(p_fMin < p_fMax, "Argument error. Min=" << p_fMin << " Max=" << p_fMax);
 	return Math::Lerp(p_fMin, p_fMax, GetNormalized());
+}
+
+int Random::GetInt(int p_iMin, int p_iMax)
+{
+	ASSERT(p_iMin < p_iMax, "Argument error. Min=" << p_iMin << " Max=" << p_iMax);
+	return Math::Lerp(p_iMin, p_iMax, GetNormalized());
+}
+
+bool Random::GetBool()
+{
+	return GetNormalized() >= 0.5f ? true : false;
 }
 
 float Random::GetNormalized()

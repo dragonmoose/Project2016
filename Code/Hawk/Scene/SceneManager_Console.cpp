@@ -73,6 +73,7 @@ void SceneManager::CmdClear()
 
 void SceneManager::CmdAddTestEntities()
 {
+	
 	Entity::EntityPtr_t l_Test1 = std::make_shared<Entity>();
 	Entity::EntityPtr_t l_Test2 = std::make_shared<Entity>("Named1");
 	Entity::EntityPtr_t l_Test3 = std::make_shared<Entity>("Named2");

@@ -29,7 +29,7 @@ void Util_Console::GetRand(float p_uiMin, float p_uiMax, unsigned int p_uiCount)
 	std::cout << "\n";
 	for (unsigned int i = 0; i < p_uiCount; i++)
 	{
-		std::cout << Random::Get(p_uiMin, p_uiMax) << " ";
+		std::cout << Random::GetFloat(p_uiMin, p_uiMax) << " ";
 
 		if (l_uiCurrCol == sc_uiMaxCols)
 		{
