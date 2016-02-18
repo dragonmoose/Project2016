@@ -122,6 +122,15 @@
     <ClCompile Include="Gfx\Vulkan\VulkanAPI.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\SceneManager_Console.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Random.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Util_Console.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -304,6 +313,15 @@
     </ClInclude>
     <ClInclude Include="Gfx\Vulkan\VulkanAPI.h">
       <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Random.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Math.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Util_Console.h">
+      <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

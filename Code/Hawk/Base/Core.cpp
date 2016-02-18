@@ -7,6 +7,8 @@
 #include "System/Time.h"
 #include "Threading/Thread.h"
 #include "Threading/ThreadInfoManager.h"
+#include "Util/Util_Console.h"
+#include "Util/Random.h"
 #include "Util/StringUtil.h"
 #include <boost/filesystem.hpp>
 #include <thread>
@@ -65,6 +67,8 @@ void Core::Initialize()
 	Config::Instance().SetFilename(m_Settings.m_ConfigFilename);
 	Config::Instance().Load(true);
 	LOG("Working directory set to: " << boost::filesystem::current_path(), "core", Info);
+
+	Random::Initialize(Config::Instance().Get<unsigned int>("dev.randSeed", 0));
 
 	AddModules();	
 	WindowManager::Initialize(m_EventRouter);
@@ -216,6 +220,7 @@ void Core::RegisterConsole()
 	m_ConsoleCommandManager->Register("module.remove", this, &Core::RemoveModule, m_DebugDispatcher.get(), "Removes the specified module.", "[moduleID]");
 	m_ConsoleCommandManager->Register("module.setPaused", this, &Core::SetPaused, m_DebugDispatcher.get(), "Pause/resume module.", "[mouleID] [0/1]");
 	m_ConsoleCommandManager->Register("module.list", this, &Core::CmdListModules, m_DebugDispatcher.get(), "Lists modules", "");
+	Util_Console::Register(m_ConsoleCommandManager.get(), m_DebugDispatcher);
 }
 
 void Core::CmdListModules()

@@ -161,7 +161,10 @@
     <ClInclude Include="Threading\ThreadInfoManager.h" />
     <ClInclude Include="Util\Algorithm.h" />
     <ClInclude Include="Util\FileUtil.h" />
+    <ClInclude Include="Util\Math.h" />
+    <ClInclude Include="Util\Random.h" />
     <ClInclude Include="Util\StringUtil.h" />
+    <ClInclude Include="Util\Util_Console.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base\Core.cpp" />
@@ -200,6 +203,7 @@
     </ClCompile>
     <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Scene\Entity.cpp" />
+    <ClCompile Include="Scene\SceneManager_Console.cpp" />
     <ClCompile Include="System\Config.cpp" />
     <ClCompile Include="System\Duration.cpp" />
     <ClCompile Include="System\Exception.cpp" />
@@ -209,7 +213,9 @@
     <ClCompile Include="Threading\Thread.cpp" />
     <ClCompile Include="Threading\ThreadInfoManager.cpp" />
     <ClCompile Include="Util\FileUtil.cpp" />
+    <ClCompile Include="Util\Random.cpp" />
     <ClCompile Include="Util\StringUtil.cpp" />
+    <ClCompile Include="Util\Util_Console.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
