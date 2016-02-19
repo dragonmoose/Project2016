@@ -26,19 +26,18 @@ public:
 	void CmdPrint();
 	void CmdRemoveEntity(EntityID_t p_EntityID);
 	void CmdReparentEntity(EntityID_t p_EntityID, EntityID_t p_NewParentID);
+	void CmdAncestorOf(EntityID_t p_EntityID1, EntityID_t p_EntityID2);
 	void CmdClear();
 	void CmdPopulate(INT32 p_iDepth, INT32 p_iLevelMax);
 
 private:
+	void CreateRoot();
+
 	Entity::EntityPtr_t m_Root;
 	Entity::EntityVec_t m_Entities;
 
 	using EntityIDMap_t = std::unordered_map<EntityID_t, Entity::EntityPtr_t>;
-	EntityIDMap_t m_EntityIDMap;
-
-	using EntityParentMap_t = std::unordered_map<EntityID_t, Entity::EntityPtr_t>;
-	EntityParentMap_t m_EntityParentMap;
-	
+	EntityIDMap_t m_EntityIDMap;	
 };
 
 }

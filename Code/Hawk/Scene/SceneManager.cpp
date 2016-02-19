@@ -6,9 +6,8 @@
 namespace Hawk {
 
 SceneManager::SceneManager()
-: m_Root(std::make_shared<Entity>("RootNode"))
 {
-	m_Root->AddToScene(this);
+	CreateRoot();
 }
 
 std::string SceneManager::GetName() const
@@ -52,7 +51,7 @@ void SceneManager::AddToScene(Entity::EntityPtr_t p_Entity)
 
 	m_Entities.push_back(p_Entity);
 	m_EntityIDMap[p_Entity->GetID()] = p_Entity;
-	m_EntityParentMap[p_Entity->GetID()] = p_Entity->GetParent();
+	LOGM("Entity added to scene: " << p_Entity->GetName(), Debug);
 }
 
 void SceneManager::RemoveFromScene(Entity::EntityPtr_t p_Entity)
@@ -62,7 +61,7 @@ void SceneManager::RemoveFromScene(Entity::EntityPtr_t p_Entity)
 
 	m_Entities.erase(l_Itr);
 	m_EntityIDMap.erase(p_Entity->GetID());
-	m_EntityParentMap.erase(p_Entity->GetID());
+	LOGM("Entity removed from scene: " << p_Entity->GetName(), Debug);
 }
 
 void SceneManager::Clear()
@@ -73,8 +72,18 @@ void SceneManager::Clear()
 	}
 	m_Entities.clear();
 	m_EntityIDMap.clear();
-	m_EntityParentMap.clear();
+	Entity::ResetIDCounter();
 	LOGM("Scene cleared", Info);
+
+	CreateRoot();
+}
+
+void SceneManager::CreateRoot()
+{
+	m_Root.reset();
+	ASSERT(!m_Root, "Root node should have zero ref count");
+	m_Root = std::make_shared<Entity>("RootNode");
+	m_Root->AddToScene(this);
 }
 
 }

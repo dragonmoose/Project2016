@@ -47,7 +47,8 @@ const std::string& Entity::GetName() const
 void Entity::AddChild(EntityPtr_t p_Entity)
 {
 	ASSERT(std::find(m_Children.begin(), m_Children.end(), p_Entity) == m_Children.end(), "Cannot add entity to itself");
-	//ASSERT_THREAD("scene");
+	ASSERT(!p_Entity->IsAncestorOf(shared_from_this()), "Cannot add ancestor entity as child");
+
 	bool l_bHadParent = p_Entity->HasParent();
 	if (p_Entity->HasParent())
 	{
@@ -80,15 +81,30 @@ bool Entity::HasParent() const
 	return m_Parent != nullptr;
 }
 
-bool Entity::HasChild(EntityPtr_t p_Entity) const
+bool Entity::HasChild(EntityID_t p_ID) const
 {
-	return std::find(m_Children.begin(), m_Children.end(), p_Entity) != m_Children.end();
+	return std::find_if(m_Children.begin(), m_Children.end(), [p_ID](const EntityPtr_t& p_Entity) { return p_ID == p_Entity->GetID(); }) != m_Children.end();
 }
 
-bool Entity::IsChildOf(EntityPtr_t p_Entity) const
+bool Entity::IsChildOf(EntityID_t p_ID) const
 {
-	return m_Parent == p_Entity;
+	return HasParent() ? m_Parent->GetID() == p_ID : false;
 }
+
+bool Entity::IsAncestorOf(EntityPtr_t p_Entity) const
+{
+	ASSERT(p_Entity, "Entity cannot be null");
+	if (p_Entity->IsChildOf(m_ID))
+	{
+		return true;
+	}
+	else if (p_Entity->HasParent())
+	{
+		return IsAncestorOf(p_Entity->GetParent());
+	}
+	return false;
+}
+
 
 void Entity::AddToScene(SceneManager* p_pSceneManager)
 {
@@ -145,6 +161,10 @@ void Entity::DebugPrint(UINT32 p_uiDepth) const
 	{
 		l_Child->DebugPrint(l_uiChildDepth);
 	}
+}
+void Entity::ResetIDCounter()
+{
+	s_NextID = 1;
 }
 
 void Entity::DetachChild(EntityPtr_t p_Entity)

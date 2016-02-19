@@ -36,8 +36,9 @@ public:
 	void RemoveChild(EntityPtr_t p_Entity);
 	EntityPtr_t GetParent() const;
 	bool HasParent() const;
-	bool HasChild(EntityPtr_t p_Entity) const;
-	bool IsChildOf(EntityPtr_t p_Entity) const;
+	bool HasChild(EntityID_t p_ID) const;
+	bool IsChildOf(EntityID_t p_ID) const;
+	bool IsAncestorOf(EntityPtr_t p_Entity) const;
 	void AddToScene(SceneManager* p_pSceneManager);
 
 	void Initialize();
@@ -48,6 +49,7 @@ public:
 	const glm::mat4x4& GetFrameWorldMatrix();
 
 	void DebugPrint(UINT32 p_uiDepth) const;
+	static void ResetIDCounter();
 
 private:
 	void DetachChild(EntityPtr_t p_Entity);
