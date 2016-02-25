@@ -160,8 +160,8 @@ void Core::Run()
 		{
 			l_Module->_Update(l_Delta);
 		}
-		Thread::Sleep();
 		m_PrevFrameStartTime = l_CurrTime;
+		Thread::Sleep();
 	}
 	StopModules();
 }
