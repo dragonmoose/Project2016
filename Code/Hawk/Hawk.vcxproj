@@ -139,6 +139,7 @@
     <ClInclude Include="Gfx\DebugEvents.h" />
     <ClInclude Include="Gfx\FPSTrackerSubModule.h" />
     <ClInclude Include="Gfx\IRenderingAPI.h" />
+    <ClInclude Include="Gfx\RenderableComponent.h" />
     <ClInclude Include="Gfx\RenderingModule.h" />
     <ClInclude Include="Gfx\Vulkan\VulkanAPI.h" />
     <ClInclude Include="Input\InputEvents.h" />
@@ -192,6 +193,7 @@
     <ClCompile Include="Gfx\D3D12\Util.cpp" />
     <ClCompile Include="Gfx\DebugTextSubModule.cpp" />
     <ClCompile Include="Gfx\FPSTrackerSubModule.cpp" />
+    <ClCompile Include="Gfx\RenderableComponent.cpp" />
     <ClCompile Include="Gfx\RenderingModule.cpp" />
     <ClCompile Include="Gfx\Vulkan\VulkanAPI.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />

@@ -131,6 +131,9 @@
     <ClCompile Include="Util\Util_Console.cpp">
       <Filter>Util</Filter>
     </ClCompile>
+    <ClCompile Include="Gfx\RenderableComponent.cpp">
+      <Filter>Gfx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -322,6 +325,9 @@
     </ClInclude>
     <ClInclude Include="Util\Util_Console.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\RenderableComponent.h">
+      <Filter>Gfx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
