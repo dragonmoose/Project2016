@@ -24,6 +24,12 @@ RenderingModule::RenderingModule()
 	AddSubModule(m_DebugTextSubModule);
 }
 
+RenderingModule::~RenderingModule()
+{
+	WindowManager::RegisterWindowManipulatedCallback(WindowManager::WindowManipulatedCallback_t());
+	WindowManager::RegisterWindowSizeChanged(WindowManager::WindowSizeChangedCallback_t());
+}
+
 std::string RenderingModule::GetName() const
 {
 	return "RenderingModule";
@@ -36,12 +42,13 @@ void RenderingModule::Initialize()
 		SetFixedTimeStep(Config::Instance().Get("gfx.fixedFPS", 60), Module::FixedTimeStepDecl::FramesPerSecond);
 	}
 	m_API->Initialize();
+
+	WindowManager::RegisterWindowManipulatedCallback(std::bind(&RenderingModule::OnWindowManipulated, this));
+	WindowManager::RegisterWindowSizeChanged(std::bind(&RenderingModule::OnWindowSizeChanged, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 }
 
 void RenderingModule::RegisterEvents(EventManager& p_EventManager)
 {
-	p_EventManager.Register<WindowSizeChangedEvent>(std::bind(&RenderingModule::OnWindowSizeChanged, this, std::placeholders::_1));
-	p_EventManager.Register<WindowManipulatedEvent>([&](const WindowManipulatedEvent&) { m_bWindowTransition = true; });
 }
 
 #ifdef HAWK_DEBUG
@@ -60,18 +67,23 @@ void RenderingModule::Update(const Duration& p_Duration)
 	}
 }
 
+void RenderingModule::OnWindowManipulated()
+{
+	m_bWindowTransition = true;
+}
+
+void RenderingModule::OnWindowSizeChanged(UINT32 p_uiWidth, UINT32 p_uiHeight, bool p_bMinimized)
+{
+	LOGM("Window size changed event received. Width=" << p_uiWidth << " Height=" << p_uiHeight << " Minimized=" << p_bMinimized, Info);
+	m_bWindowMinimized = p_bMinimized;
+	m_API->OnWindowSizeChanged(p_uiWidth, p_uiHeight);
+	m_bWindowTransition = false;
+}
+
 void RenderingModule::SetFullscreenState(bool p_bState)
 {
 	m_bWindowTransition = true;
 	m_API->SetFullscreenState(p_bState);
-}
-
-void RenderingModule::OnWindowSizeChanged(const WindowSizeChangedEvent& p_Event)
-{
-	LOGM("Window size changed event received. Width=" << p_Event.m_uiWidth << " Height=" << p_Event.m_uiHeight << " Minimized=" << p_Event.m_bMinimized, Info);
-	m_bWindowMinimized = p_Event.m_bMinimized;
-	m_API->OnWindowSizeChanged(p_Event.m_uiWidth, p_Event.m_uiHeight);
-	m_bWindowTransition = false;
 }
 
 bool RenderingModule::ShouldRender() const

@@ -10,7 +10,7 @@
 
 namespace Hawk {
 
-class Thread final
+class HAWK_DLL_EXPORT Thread final
 {
 public:
 	using UpdateFunc_t = std::function<void(void)>;
@@ -33,6 +33,7 @@ public:
 	static void Sleep();
 
 	static const std::string sc_MainThreadName;
+	static const ThreadID sc_MainThreadID;
 
 private:
 	void Run();

@@ -31,11 +31,22 @@ public:
 	template<class Module_t, class... Args_t>
 	ModuleID AddModule(ThreadID p_ThreadID, Args_t&&... p_Args)
 	{
+		ModuleID l_ModuleID = ModuleID_Invalid;
 		THROW_IF(p_ThreadID == ThreadID_Invalid, "Invalid thread id");
 
-		ModuleThread* l_ModuleThread = nullptr;
-		THROW_IF_NOT(TryGetModuleThread(p_ThreadID, &l_ModuleThread), "No thread with ID " << p_ThreadID << " exists");
-		return l_ModuleThread->Add<Module_t>(std::forward<Args_t>(p_Args)...);
+		if (p_ThreadID == Thread::sc_MainThreadID)
+		{
+			std::unique_ptr<Module> l_Module = std::make_unique<Module_t>(std::forward<Args_t>(p_Args)...);
+			l_ModuleID = l_Module->GetID();
+			m_CoreModules.push_back(std::move(l_Module));
+		}
+		else
+		{
+			ModuleThread* l_ModuleThread = nullptr;
+			THROW_IF_NOT(TryGetModuleThread(p_ThreadID, &l_ModuleThread), "No thread with ID " << p_ThreadID << " exists");
+			l_ModuleID = l_ModuleThread->Add<Module_t>(std::forward<Args_t>(p_Args)...);
+		}
+		return l_ModuleID;
 	}
 
 	void RemoveModule(ModuleID p_ID);
@@ -44,6 +55,7 @@ public:
 
 private:
 	using ModuleThreads_t = std::vector<std::unique_ptr<ModuleThread>>;
+	using CoreModules_t = std::vector<std::unique_ptr<Module>>;
 
 	void AddModules();
 	void InitializeModules();
@@ -60,14 +72,17 @@ private:
 #endif
 
 	ModuleThreads_t m_ModuleThreads;
+	CoreModules_t m_CoreModules;
 
 	std::shared_ptr<EventRouter> m_EventRouter;
 	static std::atomic_bool m_bFatalSignal;
 	CoreSettings m_Settings;
+	std::shared_ptr<Dispatcher> m_Dispatcher;
+
+	Time m_PrevFrameStartTime;
 
 #ifdef HAWK_DEBUG
 	std::shared_ptr<ConsoleCommandManager> m_ConsoleCommandManager;
-	std::shared_ptr<Dispatcher> m_DebugDispatcher;
 #endif
 
 };

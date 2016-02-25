@@ -10,13 +10,17 @@ namespace Hawk {
 namespace WindowManager
 {
 	LRESULT CALLBACK WindowProc(HWND p_hWindow, UINT p_Message, WPARAM p_wParam, LPARAM p_lParam);
-	void SendWindowSizeChanged(bool p_bMinimized);
+	void CallWindowSizeChanged(bool p_bMinimized);
+	void CallWindowManipulated();
 
 	const char* n_WindowName = "HawkWindowClass";
 	std::unique_ptr<InputSystem> n_InputSystem;
 	HWND n_hWindow = nullptr;
 	std::unique_ptr<EventManager> n_EventManager;
 	bool n_bWindowManipulated = false;
+
+	WindowSizeChangedCallback_t n_WindowSizeChangedCallback;
+	WindowManipulatedCallback_t n_WindowManipulatedCallback;
 }
 
 void WindowManager::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
@@ -83,6 +87,16 @@ bool WindowManager::Update()
 	return l_Msg.message != WM_QUIT;
 }
 
+void WindowManager::RegisterWindowSizeChanged(WindowSizeChangedCallback_t p_Callback)
+{
+	n_WindowSizeChangedCallback = p_Callback;
+}
+
+void WindowManager::RegisterWindowManipulatedCallback(WindowManipulatedCallback_t p_Callback)
+{
+	n_WindowManipulatedCallback = p_Callback;
+}
+
 LRESULT CALLBACK WindowManager::WindowProc(HWND p_hWindow, UINT p_Message, WPARAM p_wParam, LPARAM p_lParam)
 {
 	switch (p_Message)
@@ -99,15 +113,15 @@ LRESULT CALLBACK WindowManager::WindowProc(HWND p_hWindow, UINT p_Message, WPARA
 		case WM_SIZE:
 			if (!n_bWindowManipulated)
 			{
-				SendWindowSizeChanged(p_wParam == SIZE_MINIMIZED);
+				CallWindowSizeChanged(p_wParam == SIZE_MINIMIZED);
 			}
 			return 0;
 		case WM_ENTERSIZEMOVE:
-			n_EventManager->Send(WindowManipulatedEvent());
+			CallWindowManipulated();
 			n_bWindowManipulated = true;
 			return 0;
 		case WM_EXITSIZEMOVE:
-			SendWindowSizeChanged(p_wParam == SIZE_MINIMIZED);
+			CallWindowSizeChanged(p_wParam == SIZE_MINIMIZED);
 			n_bWindowManipulated = false;
 			return 0;
 		default:
@@ -116,13 +130,22 @@ LRESULT CALLBACK WindowManager::WindowProc(HWND p_hWindow, UINT p_Message, WPARA
 	return DefWindowProc(p_hWindow, p_Message, p_wParam, p_lParam);
 }
 
-void WindowManager::SendWindowSizeChanged(bool p_bMinimized)
+void WindowManager::CallWindowSizeChanged(bool p_bMinimized)
 {
-	RECT l_Rect;
-	GetClientRect(n_hWindow, &l_Rect);
+	if (n_WindowSizeChangedCallback)
 	{
-		WindowSizeChangedEvent l_Ev(l_Rect.right - l_Rect.left, l_Rect.bottom - l_Rect.top, p_bMinimized);
-		n_EventManager->Send(l_Ev);
+		RECT l_Rect;
+		GetClientRect(n_hWindow, &l_Rect);
+		n_WindowSizeChangedCallback(l_Rect.right - l_Rect.left, l_Rect.bottom - l_Rect.top, p_bMinimized);
+	}
+}
+
+void WindowManager::CallWindowManipulated()
+{
+	LOG("Start window manipulation", "window", Debug)
+	if (n_WindowManipulatedCallback)
+	{
+		n_WindowManipulatedCallback();
 	}
 }
 }

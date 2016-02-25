@@ -51,6 +51,8 @@ public:
 	ModuleThread(const ModuleThread&) = delete;
 	ModuleThread& operator=(const ModuleThread&) = delete;
 
+	static const Duration sc_MaxFrameDuration;
+
 private:
 	using Modules_t = std::vector<std::unique_ptr<Module>>;
 
@@ -64,7 +66,6 @@ private:
 	Time m_PrevFrameStartTime;
 	Thread m_Thread;
 	mutable Mutex m_Mutex;
-	static const Duration sc_MaxFrameDuration;
 
 #ifdef HAWK_DEBUG
 	std::shared_ptr<ConsoleCommandManager> m_ConsoleCommandManager;

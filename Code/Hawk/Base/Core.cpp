@@ -60,13 +60,13 @@ void Core::Initialize()
 		ThreadInfoManager::RegisterThread(Thread::sc_MainThreadName, std::this_thread::get_id());
 		LOG("Logger awakened...", "core", Info);
 		
-		m_DebugDispatcher = std::make_shared<Dispatcher>();
-		m_ConsoleCommandManager = std::make_shared<ConsoleCommandManager>(m_DebugDispatcher);
+		m_Dispatcher = std::make_shared<Dispatcher>();
+		m_ConsoleCommandManager = std::make_shared<ConsoleCommandManager>(m_Dispatcher);
 		m_ConsoleCommandManager->Start();
 		RegisterConsole();
 	}
 
-	ProfilerManager::Initialize(m_ConsoleCommandManager.get(), m_DebugDispatcher.get());
+	ProfilerManager::Initialize(m_ConsoleCommandManager.get(), m_Dispatcher.get());
 #endif
 	LOG("Working directory set to: " << boost::filesystem::current_path(), "core", Info);
 
@@ -80,6 +80,7 @@ void Core::Initialize()
 
 ThreadID Core::CreateModuleThread(const std::string& p_Name)
 {
+	THROW_IF(StringUtil::AreEqual(p_Name, Thread::sc_MainThreadName), "Cannot create a module thread with the same name as the core thread");
 	THROW_IF(ModuleThreadExists(p_Name), "A thread has already been created with name: " << p_Name);
 
 	std::unique_ptr<ModuleThread> l_ModuleThread = std::make_unique<ModuleThread>(p_Name);
@@ -97,6 +98,14 @@ void Core::OpenWindow(HINSTANCE p_hInstance, const std::string& p_Name)
 
 void Core::RemoveModule(ModuleID p_ID)
 {
+	auto l_Itr = std::find_if(m_CoreModules.begin(), m_CoreModules.end(), [p_ID](const std::unique_ptr<Module>& p_Module) { return p_Module->GetID() == p_ID; });
+	if (l_Itr != m_CoreModules.end())
+	{
+		m_CoreModules.erase(l_Itr);
+		LOG("Removed core module with ID=" << p_ID, "core", Debug);
+		return;
+	}
+
 	for (auto& l_ModuleThread : m_ModuleThreads)
 	{
 		if (l_ModuleThread->TryRemove(p_ID))
@@ -127,18 +136,32 @@ void Core::Run()
 	InitializeModules();
 	StartModules();
 
+	m_PrevFrameStartTime.SetToNow();
+
 	while (!Logger::FatalFlagSet())
 	{
+		Profiler l_Profiler("CoreThreadUpdate");
+		l_Profiler.Start();
+
+		Time l_CurrTime;
+		l_CurrTime.SetToNow();
+		Duration l_Delta(l_CurrTime - m_PrevFrameStartTime);
+		l_Delta = std::min(l_Delta, ModuleThread::sc_MaxFrameDuration);
+
 		Config::Instance().Update();
 		if (!WindowManager::Update())
 		{
 			LOG("MainWindow signalled WM_QUIT", "core", Info);
 			break;
 		}
-#ifdef HAWK_DEBUG
-		m_DebugDispatcher->Execute();
-#endif
+		m_Dispatcher->Execute();
+
+		for (auto& l_Module : m_CoreModules)
+		{
+			l_Module->_Update(l_Delta);
+		}
 		Thread::Sleep();
+		m_PrevFrameStartTime = l_CurrTime;
 	}
 	StopModules();
 }
@@ -147,13 +170,21 @@ void Core::AddModules()
 {
 	if (m_Settings.m_bRenderingModule)
 	{
-		AddModule<Gfx::RenderingModule>(CreateModuleThread("gfx"));
+		AddModule<Gfx::RenderingModule>(Thread::sc_MainThreadID);
 	}
 	AddModule<SceneManager>(CreateModuleThread("scene"));
 }
 
 void Core::InitializeModules()
 {
+	for (auto& l_Module : m_CoreModules)
+	{
+		l_Module->_Initialize(std::make_unique<EventManager>(m_EventRouter), m_Dispatcher);
+#if HAWK_DEBUG
+		l_Module->_InitializeConsole(m_ConsoleCommandManager);
+#endif
+	}
+
 	for (auto& l_Manager : m_ModuleThreads)
 	{
 #ifdef HAWK_DEBUG
@@ -206,6 +237,14 @@ bool Core::TryGetModuleThread(ThreadID p_ThreadID, ModuleThread** p_ModuleThread
 
 bool Core::TryGetModule(ModuleID p_ID, Module** p_Module) const
 {
+	for (const auto& l_Module : m_CoreModules)
+	{
+		if (l_Module->GetID() == p_ID)
+		{
+			*p_Module = l_Module.get();
+			return true;
+		}
+	}
 	for (const auto& l_ModuleThread : m_ModuleThreads)
 	{
 		if (l_ModuleThread->TryGetModule(p_ID, p_Module))
@@ -219,15 +258,26 @@ bool Core::TryGetModule(ModuleID p_ID, Module** p_Module) const
 #ifdef HAWK_DEBUG
 void Core::RegisterConsole()
 {
-	m_ConsoleCommandManager->Register("module.remove", this, &Core::RemoveModule, m_DebugDispatcher.get(), "Removes the specified module.", "[moduleID]");
-	m_ConsoleCommandManager->Register("module.setPaused", this, &Core::SetPaused, m_DebugDispatcher.get(), "Pause/resume module.", "[mouleID] [0/1]");
-	m_ConsoleCommandManager->Register("module.list", this, &Core::CmdListModules, m_DebugDispatcher.get(), "Lists modules", "");
-	Util_Console::Register(m_ConsoleCommandManager.get(), m_DebugDispatcher);
+	m_ConsoleCommandManager->Register("module.remove", this, &Core::RemoveModule, m_Dispatcher.get(), "Removes the specified module.", "[moduleID]");
+	m_ConsoleCommandManager->Register("module.setPaused", this, &Core::SetPaused, m_Dispatcher.get(), "Pause/resume module.", "[mouleID] [0/1]");
+	m_ConsoleCommandManager->Register("module.list", this, &Core::CmdListModules, m_Dispatcher.get(), "Lists modules", "");
+	Util_Console::Register(m_ConsoleCommandManager.get(), m_Dispatcher);
 }
 
 void Core::CmdListModules()
 {
 	CONSOLE_WRITE_SCOPE();
+
+	if (!m_CoreModules.empty())
+	{
+		std::cout << "[" << Thread::sc_MainThreadName << " #" << Thread::sc_MainThreadID << "]\n";
+		for (const auto& l_Module : m_CoreModules)
+		{
+			l_Module->DebugPrint();
+		}
+		std::cout << "\n";
+	}
+
 	for (const auto& l_ModuleThread : m_ModuleThreads)
 	{
 		l_ModuleThread->DebugPrint();

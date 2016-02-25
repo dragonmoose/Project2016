@@ -13,10 +13,11 @@ namespace Gfx {
 class IRenderingAPI;
 class DebugTextSubModule;
 
-class RenderingModule : public Module
+class RenderingModule final : public Module
 {
 public:
 	RenderingModule();
+	~RenderingModule();
 
 	std::string GetName() const override;
 
@@ -33,8 +34,10 @@ public:
 	RenderingModule& operator=(const RenderingModule&) = delete;
 
 private:
+	void OnWindowManipulated();
+	void OnWindowSizeChanged(UINT32 p_uiWidth, UINT32 p_uiHeight, bool p_bMinimized);
+
 	void SetFullscreenState(bool p_bState);
-	void OnWindowSizeChanged(const WindowSizeChangedEvent& p_Event);
 	bool ShouldRender() const;
 
 	std::shared_ptr<IRenderingAPI> m_API;
