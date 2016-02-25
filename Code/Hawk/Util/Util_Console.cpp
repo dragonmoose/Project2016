@@ -10,11 +10,13 @@ namespace Util_Console
 	void GetRand(float p_uiMin, float p_uiMax, UINT32 p_uiCount);
 }
 
+#ifdef HAWK_DEBUG
 void Util_Console::Register(ConsoleCommandManager* p_pManager, std::shared_ptr<Dispatcher> p_Dispatcher)
 {
 	p_pManager->Register("test.setRandSeed", &Util_Console::SetRandSeed, p_Dispatcher.get(), "Sets the random number generator seed", "[seed]");
 	p_pManager->Register("test.getRand", &Util_Console::GetRand, p_Dispatcher.get(), "Gets random numbers", "[min] [max] [count]");
 }
+#endif
 
 void Util_Console::SetRandSeed(UINT32 p_uiSeed)
 {

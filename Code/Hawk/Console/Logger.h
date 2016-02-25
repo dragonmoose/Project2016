@@ -77,6 +77,7 @@ namespace Logger
 
 #define LOG_EXCEPTION(e, tag, level)			
 #define LOGM_EXCEPTION(e, level)			
+#define LOG_EXCEPTION_CONSOLE(e)
 
 #define LOG_STD_EXCEPTION(e, tag, level)
 #define LOGM_STD_EXCEPTION(e, level)
