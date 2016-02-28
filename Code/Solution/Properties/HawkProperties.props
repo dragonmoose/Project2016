@@ -7,7 +7,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <PreprocessorDefinitions>HAWK_ENGINE;HAWK_RENDERER_D3D12</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HAWK_ENGINE;HAWK_RENDERER_VULKAN</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup />

@@ -4,8 +4,10 @@
 #include "FPSTrackerSubModule.h"
 #include "Base/WindowManager.h"
 #include "Debug/Assert.h"
-#ifdef HAWK_RENDERER_D3D12
+#if defined(HAWK_RENDERER_D3D12)
 #include "D3D12/D3D12API.h"
+#elif defined(HAWK_RENDERER_VULKAN)
+#include "Vulkan/VulkanAPI.h"
 #endif
 #include <functional>
 
@@ -16,9 +18,13 @@ RenderingModule::RenderingModule()
 : m_bWindowTransition(false)
 , m_bWindowMinimized(false)
 {
-#ifdef HAWK_RENDERER_D3D12
+#if defined(HAWK_RENDERER_D3D12)
 	m_API = std::make_shared<D3D12::D3D12API>();
+#elif defined(HAWK_RENDERER_VULKAN)
+	m_API = std::make_shared<Vulkan::VulkanAPI>();
 #endif
+	ASSERT(m_API, "No API");
+
 	m_DebugTextSubModule = std::make_shared<DebugTextSubModule>(m_API);
 	AddSubModule(std::make_shared<FPSTrackerSubModule>(m_DebugTextSubModule));
 	AddSubModule(m_DebugTextSubModule);

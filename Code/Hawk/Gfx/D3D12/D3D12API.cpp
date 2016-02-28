@@ -1,12 +1,10 @@
 #include "pch.h"
 
-#ifdef HAWK_RENDERER_D3D12
 #pragma comment(lib, "d3d12")
 #pragma comment(lib, "dxgi")
 #pragma comment(lib, "d3d11")
 #pragma comment(lib, "d2d1")
 #pragma comment(lib, "dwrite")
-#endif
 
 #include "D3D12API.h"
 #include "BaseFactory.h"
