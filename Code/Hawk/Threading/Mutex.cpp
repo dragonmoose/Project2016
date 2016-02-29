@@ -40,12 +40,20 @@ void Mutex::unlock()
 
 void Mutex::_Lock()
 {
+#ifdef HAWK_MUTEX_IMPL_SPINLOCK
+	while (m_Flag.test_and_set(std::memory_order_acquire));
+#else
 	m_Mutex.lock();
+#endif
 }
 
 void Mutex::_Unlock()
 {
+#ifdef HAWK_MUTEX_IMPL_SPINLOCK
+	m_Flag.clear(std::memory_order_release);
+#else
 	m_Mutex.unlock();
+#endif
 }
 
 #ifdef HAWK_DEBUG

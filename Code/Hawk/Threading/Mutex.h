@@ -5,6 +5,8 @@
 #include <atomic>
 #endif
 
+//#define HAWK_MUTEX_IMPL_SPINLOCK 1
+
 namespace Hawk {
 
 class Mutex;
@@ -25,7 +27,11 @@ private:
 	void _Lock();
 	void _Unlock();
 
+#ifdef HAWK_MUTEX_IMPL_SPINLOCK
+	std::atomic_flag m_Flag = ATOMIC_FLAG_INIT;
+#else
 	std::mutex m_Mutex;
+#endif
 
 #ifdef HAWK_DEBUG
 	void LockAndProfile();
