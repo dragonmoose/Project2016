@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "WindowManager.h"
 #include "SystemEvents.h"
-#include "Debug/Assert.h"
 #include "Input/InputSystem.h"
 #include <memory>
 

@@ -1,4 +1,5 @@
 #pragma once
+#include <vulkan/vulkan.h>
 #include "System/Exception.h"
 
 #define VK_THROW_IF_ERR(p, msg)	THROW_IF(p < 0, msg)

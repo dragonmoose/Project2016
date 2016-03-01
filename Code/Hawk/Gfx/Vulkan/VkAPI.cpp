@@ -1,7 +1,7 @@
 #include "pch.h"
 
 #ifdef HAWK_RENDERER_VULKAN
-//#pragma comment(lib, "d3d12")
+#pragma comment(lib, "d3d12")
 #endif
 
 #include "VkAPI.h"

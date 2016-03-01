@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "Module.h"
 #include "SubModule.h"
-#include "Debug/Assert.h"
 #include "Debug/Profiler.h"
 #include "System/Duration.h"
 #include "System/Exception.h"

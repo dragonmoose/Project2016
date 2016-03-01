@@ -158,7 +158,9 @@
     <ClInclude Include="System\Exception.h" />
     <ClInclude Include="System\Time.h" />
     <ClInclude Include="System\Types.h" />
+    <ClInclude Include="System\Constants.h" />
     <ClInclude Include="System\Version.h" />
+    <ClInclude Include="System\Version.h\Header.h" />
     <ClInclude Include="Threading\Dispatcher.h" />
     <ClInclude Include="Threading\Mutex.h" />
     <ClInclude Include="Threading\Thread.h" />
@@ -212,9 +214,11 @@
     <ClCompile Include="Scene\Entity.cpp" />
     <ClCompile Include="Scene\SceneManager_Console.cpp" />
     <ClCompile Include="System\Config.cpp" />
+    <ClCompile Include="System\Constants.cpp" />
     <ClCompile Include="System\Duration.cpp" />
     <ClCompile Include="System\Exception.cpp" />
     <ClCompile Include="System\Time.cpp" />
+    <ClCompile Include="System\Version.cpp" />
     <ClCompile Include="Threading\Dispatcher.cpp" />
     <ClCompile Include="Threading\Mutex.cpp" />
     <ClCompile Include="Threading\Thread.cpp" />

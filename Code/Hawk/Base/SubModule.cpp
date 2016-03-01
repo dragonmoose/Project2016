@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "SubModule.h"
 #include "Module.h"
-#include "Debug/Assert.h"
 
 namespace Hawk {
 

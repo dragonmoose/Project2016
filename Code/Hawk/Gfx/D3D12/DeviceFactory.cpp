@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "DeviceFactory.h"
-#include "Debug/Assert.h"
 #include "Util/StringUtil.h"
 #include <boost/lexical_cast.hpp>
 

@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "ConsoleHistory.h"
-#include "Debug/Assert.h"
 #include <boost/filesystem.hpp>
 #include <fstream>
 

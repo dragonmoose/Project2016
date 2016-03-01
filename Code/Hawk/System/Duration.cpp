@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Duration.h"
-#include "Debug/Assert.h"
 #include <iomanip>
 
 namespace Hawk {

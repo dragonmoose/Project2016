@@ -9,9 +9,11 @@
 #include "Console/ConsoleAPI.h"
 #include "Console/Logger.h"
 #include "Debug/Profiler.h"
+#include "Debug/Assert.h"
 #include "System/Config.h"
 #include "System/Exception.h"
 #include "System/Types.h"
+#include "System/Constants.h"
 #include <string>
 #include <sstream>
 #include <iostream>

@@ -1,6 +1,5 @@
 #pragma once
 #include "Dispatcher.h"
-#include "Debug/Assert.h"
 #include "System/Types.h"
 #include <atomic>
 #include <thread>

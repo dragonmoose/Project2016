@@ -1,4 +1,5 @@
 #pragma once
+#include "VkSystem.h"
 
 namespace Hawk {
 namespace Gfx {
@@ -10,6 +11,9 @@ public:
 	~VkInstance();
 	VkInstance(const VkInstance&) = delete;
 	VkInstance& operator=(const VkInstance&) = delete;
+
+private:
+	::VkInstance m_Handle;
 };
 
 }

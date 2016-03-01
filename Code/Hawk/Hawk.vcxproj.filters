@@ -140,6 +140,12 @@
     <ClCompile Include="Gfx\Vulkan\VkAPI.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="System\Constants.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Version.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -183,9 +189,6 @@
       <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="System\Exception.h">
-      <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Version.h">
       <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="System\DllExport.h">
@@ -343,6 +346,15 @@
     </ClInclude>
     <ClInclude Include="Gfx\Vulkan\VkAPI.h">
       <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Constants.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Version.h\Header.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Version.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

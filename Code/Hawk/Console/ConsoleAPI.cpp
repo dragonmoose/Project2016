@@ -2,7 +2,6 @@
 #include "ConsoleAPI.h"
 #include "System/Exception.h"
 #include "Threading/Mutex.h"
-#include "System/Version.h"
 #include <consoleapi.h>
 
 namespace Hawk {
@@ -23,7 +22,7 @@ namespace ConsoleAPI
 void ConsoleAPI::SetTitle()
 {
 	std::ostringstream l_TitleStream;
-	l_TitleStream << "Hawk Engine Console " << Hawk::Version::c_EngineVersion << " [" << __DATE__ << "]";
+	l_TitleStream << "Hawk Engine Console " << Hawk::Constants::c_EngineVersion.GetString() << " [" << __DATE__ << "]";
 	THROW_IF_NOT(::SetConsoleTitle(l_TitleStream.str().c_str()), "Failed to set console title");
 }
 

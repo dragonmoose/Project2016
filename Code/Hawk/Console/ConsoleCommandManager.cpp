@@ -31,6 +31,9 @@ ConsoleCommandManager::ConsoleCommandManager(std::shared_ptr<Dispatcher>& p_Disp
 , m_History(std::make_unique<ConsoleHistory>(c_uiMaxHistoryRecords))
 , m_Thread("Console", std::bind(&ConsoleCommandManager::RunInputLoop, this))
 {
+	std::ostringstream l_Stream;
+	l_Stream << Constants::c_EngineName << " " << Constants::c_EngineVersion.GetString() << ">";
+	m_Prompt = l_Stream.str();
 }
 
 void ConsoleCommandManager::Start()
@@ -93,7 +96,7 @@ void ConsoleCommandManager::RunInputLoop()
 					else if (l_cChr == Key_Return)
 					{
 						std::stringstream l_CmdLine;
-						l_CmdLine << "Hawk " << Version::c_EngineVersion << ">" << m_CurrLine;
+						l_CmdLine << m_Prompt << m_CurrLine;
 						ConsoleAPI::BeginWrite();
 						ConsoleAPI::WriteLine(l_CmdLine.str(), ConsoleAPI::Color::White, ConsoleAPI::Color::None);
 						ConsoleAPI::EndWrite();
@@ -130,7 +133,7 @@ void ConsoleCommandManager::RunInputLoop()
 			}
 		}
 		std::stringstream l_CmdLineStream;
-		l_CmdLineStream << "\rHawk " << Version::c_EngineVersion << ">" << m_CurrLine << "\r";
+		l_CmdLineStream << "\r" << m_Prompt << m_CurrLine << "\r";
 		std::string l_Line = l_CmdLineStream.str();
 		ConsoleAPI::BeginWrite();
 		ConsoleAPI::Write(l_Line, ConsoleAPI::Color::White, ConsoleAPI::Color::None);
@@ -172,6 +175,7 @@ void ConsoleCommandManager::Register()
 	Register("log.tag", this, &ConsoleCommandManager::CmdSetLogTag, m_Dispatcher.get(), "Sets the tag filter", "[filter]", false);
 	Register("console.history", this, &ConsoleCommandManager::CmdPrintHistory, m_Dispatcher.get(), "Prints the console history", "");
 	Register("console.clearHistory", this, &ConsoleCommandManager::CmdClearHistory, m_Dispatcher.get(), "Clears the console history", "");
+	Register("about", this, &ConsoleCommandManager::CmdAbout, m_Dispatcher.get(), "Displays engine info", "");
 }
 
 void ConsoleCommandManager::CmdQuit()
@@ -263,6 +267,12 @@ void ConsoleCommandManager::CmdClearHistory()
 {
 	m_History->Clear();
 	std::cout << "History cleared.\n\n";
+}
+
+void ConsoleCommandManager::CmdAbout()
+{
+	CONSOLE_WRITE_SCOPE();
+	std::cout << "\nVersion number: " << Constants::c_EngineVersion.GetValue() << "\n\n";
 }
 
 std::string ConsoleCommandManager::GetNextCommand(const std::string& p_Filter, const std::string& p_Current) const

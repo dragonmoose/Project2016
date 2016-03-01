@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "Profiler.h"
 #include "ProfilerManager.h"
-#include "Assert.h"
 #include "System/Duration.h"
 
 namespace Hawk {

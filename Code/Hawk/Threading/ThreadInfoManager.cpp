@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "ThreadInfoManager.h"
 #include "Mutex.h"
-#include "Debug/Assert.h"
 
 namespace Hawk {
 namespace ThreadInfoManager

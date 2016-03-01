@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Entity.h"
-#include "Debug/Assert.h"
 #include "SceneManager.h"
 
 namespace Hawk {

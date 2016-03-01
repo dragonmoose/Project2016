@@ -3,7 +3,6 @@
 #include "DebugTextSubModule.h"
 #include "FPSTrackerSubModule.h"
 #include "Base/WindowManager.h"
-#include "Debug/Assert.h"
 #if defined(HAWK_RENDERER_D3D12)
 #include "D3D12/D3D12API.h"
 #elif defined(HAWK_RENDERER_VULKAN)

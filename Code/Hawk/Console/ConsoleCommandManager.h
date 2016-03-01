@@ -86,6 +86,7 @@ private:
 	void CmdSetLogTag(const std::string& p_Filter);
 	void CmdPrintHistory();
 	void CmdClearHistory();
+	void CmdAbout();
 
 	std::string GetNextCommand(const std::string& p_Command, const std::string& p_Current) const;
 	void TryCallFunction(const CF::IConsoleFunction& p_Function, ConsoleInputParser& p_Command) const;
@@ -101,6 +102,7 @@ private:
 	FunctionMap_t m_Functions;
 
 	std::unique_ptr<ConsoleHistory> m_History;
+	std::string m_Prompt;
 };
 }
 #endif

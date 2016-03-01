@@ -8,6 +8,7 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <PreprocessorDefinitions>HAWK_ENGINE;HAWK_RENDERER_VULKAN</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(CodeDir);$(BoostDir);$(GLMDir);$(VulkanDir)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup />
