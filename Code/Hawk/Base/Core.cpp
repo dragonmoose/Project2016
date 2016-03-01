@@ -34,7 +34,7 @@ Core::~Core()
 			LOG("Core exit due to critical error (see above)", "core", Fatal);
 		}
 
-		INT32 l_iExitWaitTimeSec = Config::Instance().Get("dev.shutdownDelaySec", 30);
+		int32_t l_iExitWaitTimeSec = Config::Instance().Get("dev.shutdownDelaySec", 30);
 		if (l_iExitWaitTimeSec > 0)
 		{
 			LOG("Waiting " << l_iExitWaitTimeSec << " seconds before shutting down console...", "core", Info);
@@ -78,13 +78,13 @@ void Core::Initialize()
 	LOG("***** Hawk core initialized *****", "core", Info);
 }
 
-ThreadID Core::CreateModuleThread(const std::string& p_Name)
+ThreadID_t Core::CreateModuleThread(const std::string& p_Name)
 {
 	THROW_IF(StringUtil::AreEqual(p_Name, Thread::sc_MainThreadName), "Cannot create a module thread with the same name as the core thread");
 	THROW_IF(ModuleThreadExists(p_Name), "A thread has already been created with name: " << p_Name);
 
 	std::unique_ptr<ModuleThread> l_ModuleThread = std::make_unique<ModuleThread>(p_Name);
-	ThreadID l_ThreadID = l_ModuleThread->GetThreadID();
+	ThreadID_t l_ThreadID = l_ModuleThread->GetThreadID();
 	m_ModuleThreads.push_back(std::move(l_ModuleThread));
 
 	LOG("Thread created. Name=" << p_Name << " ID=" << l_ThreadID, "core", Debug);
@@ -96,7 +96,7 @@ void Core::OpenWindow(HINSTANCE p_hInstance, const std::string& p_Name)
 	WindowManager::Open(p_hInstance, p_Name);
 }
 
-void Core::RemoveModule(ModuleID p_ID)
+void Core::RemoveModule(ModuleID_t p_ID)
 {
 	auto l_Itr = std::find_if(m_CoreModules.begin(), m_CoreModules.end(), [p_ID](const std::unique_ptr<Module>& p_Module) { return p_Module->GetID() == p_ID; });
 	if (l_Itr != m_CoreModules.end())
@@ -117,7 +117,7 @@ void Core::RemoveModule(ModuleID p_ID)
 	LOG("Failed to remove module with ID=" << p_ID << " (not found)", "core", Error);
 }
 
-void Core::SetPaused(ModuleID p_ID, bool p_bPaused)
+void Core::SetPaused(ModuleID_t p_ID, bool p_bPaused)
 {
 	Module* l_Module = nullptr;
 	if (TryGetModule(p_ID, &l_Module))
@@ -220,7 +220,7 @@ bool Core::ModuleThreadExists(const std::string& p_Name) const
 	return l_Itr != m_ModuleThreads.cend();
 }
 
-bool Core::TryGetModuleThread(ThreadID p_ThreadID, ModuleThread** p_ModuleThread) const
+bool Core::TryGetModuleThread(ThreadID_t p_ThreadID, ModuleThread** p_ModuleThread) const
 {
 	auto l_Itr = std::find_if(m_ModuleThreads.cbegin(), m_ModuleThreads.cend(), [p_ThreadID](const std::unique_ptr<ModuleThread>& p_ModuleThread)
 	{
@@ -235,7 +235,7 @@ bool Core::TryGetModuleThread(ThreadID p_ThreadID, ModuleThread** p_ModuleThread
 	return false;
 }
 
-bool Core::TryGetModule(ModuleID p_ID, Module** p_Module) const
+bool Core::TryGetModule(ModuleID_t p_ID, Module** p_Module) const
 {
 	for (const auto& l_Module : m_CoreModules)
 	{

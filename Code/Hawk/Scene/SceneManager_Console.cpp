@@ -95,12 +95,12 @@ namespace
 		return l_Entity;
 	}
 
-	void AddEntities(Entity::EntityPtr_t p_Parent, INT32 p_iDepth, INT32 p_iLevelMax)
+	void AddEntities(Entity::EntityPtr_t p_Parent, int32_t p_iDepth, int32_t p_iLevelMax)
 	{
 		if (p_iDepth >= 0)
 		{
-			INT32 l_iNumNodes = Random::GetInt(1, p_iLevelMax);
-			for (INT32 i = 0; i < l_iNumNodes; i++)
+			int32_t l_iNumNodes = Random::GetInt(1, p_iLevelMax);
+			for (int32_t i = 0; i < l_iNumNodes; i++)
 			{
 				AddEntities(AddEntity(p_Parent), p_iDepth - 1, p_iLevelMax);
 			}
@@ -115,7 +115,7 @@ void SceneManager::CmdClear()
 	std::cout << "Scene cleared.\n";
 }
 
-void SceneManager::CmdPopulate(INT32 p_iDepth, INT32 p_iLevelMax)
+void SceneManager::CmdPopulate(int32_t p_iDepth, int32_t p_iLevelMax)
 {
 	try
 	{

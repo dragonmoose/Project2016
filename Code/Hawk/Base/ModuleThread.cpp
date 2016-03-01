@@ -18,7 +18,7 @@ ModuleThread::ModuleThread(const std::string& p_Name)
 	m_Thread.RegisterFrameEnd(std::bind(&ModuleThread::OnFrameEnd, this));
 }
 
-bool ModuleThread::TryRemove(ModuleID p_ID)
+bool ModuleThread::TryRemove(ModuleID_t p_ID)
 {
 	MutexScope_t l_MutexScope(m_Mutex);
 	Modules_t::const_iterator l_Itr = FindByID(p_ID);
@@ -30,7 +30,7 @@ bool ModuleThread::TryRemove(ModuleID p_ID)
 	return false;
 }
 
-bool ModuleThread::TryGetModule(ModuleID p_ID, Module** p_Module) const
+bool ModuleThread::TryGetModule(ModuleID_t p_ID, Module** p_Module) const
 {
 	MutexScope_t l_MutexScope(m_Mutex);
 	Modules_t::const_iterator l_Itr = FindByID(p_ID);
@@ -58,7 +58,7 @@ const std::string& ModuleThread::GetName() const
 	return m_Thread.GetName();
 }
 
-ThreadID ModuleThread::GetThreadID() const
+ThreadID_t ModuleThread::GetThreadID() const
 {
 	return m_Thread.GetID();
 }
@@ -116,7 +116,7 @@ void ModuleThread::OnFrameEnd()
 	m_PrevFrameStartTime = m_CurrFrameStartTime;
 }
 
-ModuleThread::Modules_t::const_iterator ModuleThread::FindByID(ModuleID p_ID) const
+ModuleThread::Modules_t::const_iterator ModuleThread::FindByID(ModuleID_t p_ID) const
 {
 	return std::find_if(m_Modules.begin(), m_Modules.end(), [p_ID](const std::unique_ptr<Module>& p_Module)
 	{

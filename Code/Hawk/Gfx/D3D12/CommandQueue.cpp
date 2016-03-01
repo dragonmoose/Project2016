@@ -46,7 +46,7 @@ CommandQueueComPtr_t& CommandQueue::GetD3DObject()
 
 void CommandQueue::WaitForGPU()
 {
-	const UINT64 l_uiValue = m_uiNextValue;
+	const uint64_t l_uiValue = m_uiNextValue;
 	THROW_IF_COMERR(m_Object->Signal(m_Fence.Get(), l_uiValue), "Failed to update fence. Value=" << l_uiValue);
 	m_uiNextValue++;
 

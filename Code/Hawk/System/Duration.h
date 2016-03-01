@@ -27,12 +27,12 @@ public:
 	};
 
 	Duration();
-	Duration(INT32 p_iValue, Precision p_Precision);
+	Duration(int32_t p_iValue, Precision p_Precision);
 	std::string ToString(Format p_Format = Format::HourMinSecMS) const;
 	void SetToZero();
 	bool IsZero() const;
 
-	INT64 Get(Precision p_Precision) const;
+	int64_t Get(Precision p_Precision) const;
 
 	bool operator==(const Duration& p_rhs) const;
 	bool operator!=(const Duration& p_rhs) const;

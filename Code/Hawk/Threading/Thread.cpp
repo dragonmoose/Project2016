@@ -6,7 +6,7 @@
 namespace Hawk {
 
 const std::string Thread::sc_MainThreadName("Thread_Main");
-const ThreadID Thread::sc_MainThreadID = 1;
+const ThreadID_t Thread::sc_MainThreadID = 1;
 std::atomic_uint Thread::s_uiNextThreadID = 2;
 
 Thread::Thread(const std::string& p_Name, UpdateFunc_t p_UpdateFunc)
@@ -47,7 +47,7 @@ const std::string& Thread::GetName() const
 	return m_Name;
 }
 
-ThreadID Thread::GetID() const
+ThreadID_t Thread::GetID() const
 {
 	return m_ID;
 }

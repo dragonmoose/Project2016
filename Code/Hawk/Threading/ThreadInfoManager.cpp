@@ -6,7 +6,7 @@
 namespace Hawk {
 namespace ThreadInfoManager
 {
-	std::string CreateLogText(const std::string& p_Name, std::thread::id p_SysThreadID, ThreadID p_ID);
+	std::string CreateLogText(const std::string& p_Name, std::thread::id p_SysThreadID, ThreadID_t p_ID);
 	
 	using LogTextMap_t = std::unordered_map<std::thread::id, std::string>;
 	LogTextMap_t n_LogTextMap;
@@ -19,7 +19,7 @@ namespace ThreadInfoManager
 	const std::string c_NotAvailable("N/A");
 }
 
-std::string ThreadInfoManager::CreateLogText(const std::string& p_Name, std::thread::id p_SysThreadID, ThreadID p_ID)
+std::string ThreadInfoManager::CreateLogText(const std::string& p_Name, std::thread::id p_SysThreadID, ThreadID_t p_ID)
 {
 	std::ostringstream l_Stream;
 	l_Stream << p_Name;
@@ -32,7 +32,7 @@ std::string ThreadInfoManager::CreateLogText(const std::string& p_Name, std::thr
 	return l_Stream.str();
 }
 
-void ThreadInfoManager::RegisterThread(const std::string& p_Name, std::thread::id p_SysThreadID, ThreadID p_ID)
+void ThreadInfoManager::RegisterThread(const std::string& p_Name, std::thread::id p_SysThreadID, ThreadID_t p_ID)
 {
 	ASSERT(p_SysThreadID != std::thread::id(), "Invalid system thread id");
 	{

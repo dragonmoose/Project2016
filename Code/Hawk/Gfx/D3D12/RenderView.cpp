@@ -52,7 +52,7 @@ void RenderView::SetFullscreenState(bool p_bState)
 
 void RenderView::OnWindowSizeChanged(UINT32 p_uiWidth, UINT32 p_uiHeight)
 {
-	for (INT32 i = 0; i < c_uiNumBackBuffers; i++)
+	for (int32_t i = 0; i < c_uiNumBackBuffers; i++)
 	{
 		m_Buffers[i].Reset();
 	}

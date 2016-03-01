@@ -26,12 +26,12 @@ public:
 	void Initialize();
 	void OpenWindow(HINSTANCE p_hInstance, const std::string& p_Name);
 
-	ThreadID CreateModuleThread(const std::string& p_Name);
+	ThreadID_t CreateModuleThread(const std::string& p_Name);
 
 	template<class Module_t, class... Args_t>
-	ModuleID AddModule(ThreadID p_ThreadID, Args_t&&... p_Args)
+	ModuleID_t AddModule(ThreadID_t p_ThreadID, Args_t&&... p_Args)
 	{
-		ModuleID l_ModuleID = ModuleID_Invalid;
+		ModuleID_t l_ModuleID = ModuleID_Invalid;
 		THROW_IF(p_ThreadID == ThreadID_Invalid, "Invalid thread id");
 
 		if (p_ThreadID == Thread::sc_MainThreadID)
@@ -49,8 +49,8 @@ public:
 		return l_ModuleID;
 	}
 
-	void RemoveModule(ModuleID p_ID);
-	void SetPaused(ModuleID p_ID, bool p_bPaused);
+	void RemoveModule(ModuleID_t p_ID);
+	void SetPaused(ModuleID_t p_ID, bool p_bPaused);
 	void Run();
 
 private:
@@ -63,8 +63,8 @@ private:
 	void StopModules();
 
 	bool ModuleThreadExists(const std::string& p_Name) const;
-	bool TryGetModuleThread(ThreadID p_ThreadID, ModuleThread** p_ModuleThread) const;
-	bool TryGetModule(ModuleID p_ID, Module** p_Module) const;
+	bool TryGetModuleThread(ThreadID_t p_ThreadID, ModuleThread** p_ModuleThread) const;
+	bool TryGetModule(ModuleID_t p_ID, Module** p_Module) const;
 
 #ifdef HAWK_DEBUG
 	void RegisterConsole();

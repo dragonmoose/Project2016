@@ -49,7 +49,7 @@ void DeviceFactory::CreateWARPDevice(IDXGIFactory4* p_Factory, DeviceComPtr_t& p
 
 void DeviceFactory::GetPrimaryAdapter(IDXGIFactory4* p_pFactory, DXGIAdapterComPtr_t& p_Adapter)
 {
-	INT32 l_iAdapterNo = 0;
+	int32_t l_iAdapterNo = 0;
 	Microsoft::WRL::ComPtr<IDXGIAdapter1> l_Adapter;
 	while (p_pFactory->EnumAdapters1(l_iAdapterNo, &l_Adapter) != DXGI_ERROR_NOT_FOUND)
 	{
@@ -71,7 +71,7 @@ void DeviceFactory::GetPrimaryAdapter(IDXGIFactory4* p_pFactory, DXGIAdapterComP
 
 void DeviceFactory::GetHWAdapters(IDXGIFactory4* p_pFactory, HWAdapters_t& p_HWAdapters)
 {
-	INT32 l_iAdapterNo = 0;
+	int32_t l_iAdapterNo = 0;
 	Microsoft::WRL::ComPtr<IDXGIAdapter1> l_Adapter;
 	while (p_pFactory->EnumAdapters1(l_iAdapterNo, &l_Adapter) != DXGI_ERROR_NOT_FOUND)
 	{

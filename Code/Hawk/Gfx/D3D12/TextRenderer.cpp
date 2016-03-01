@@ -80,7 +80,7 @@ void TextRenderer::CreateBackBufferResources()
 
 	D3D11_RESOURCE_FLAGS l_ResourceFlags = { D3D11_BIND_RENDER_TARGET };
 
-	for (INT32 i = 0; i < c_uiNumBackBuffers; i++)
+	for (int32_t i = 0; i < c_uiNumBackBuffers; i++)
 	{
 		THROW_IF_COMERR(m_D3D11On12Device->CreateWrappedResource(m_RenderView->GetBackBuffers()[i].Get(), &l_ResourceFlags, D3D12_RESOURCE_STATE_RENDER_TARGET,
 			D3D12_RESOURCE_STATE_PRESENT, IID_PPV_ARGS(&m_WrappedBackBuffers[i])), "Failed to create wrapped back buffer");

@@ -26,7 +26,7 @@ namespace Hawk
 		Module& operator=(const Module&) = delete;
 
 		virtual std::string GetName() const = 0;
-		ModuleID GetID() const;
+		ModuleID_t GetID() const;
 
 		void _Initialize(std::unique_ptr<EventManager> p_EventManager, std::shared_ptr<Dispatcher>& p_Dispatcher);
 		virtual void Initialize();
@@ -88,7 +88,7 @@ namespace Hawk
 		std::atomic_bool m_bPaused;
 
 		static std::atomic_uint s_uiNextModuleID;
-		ModuleID m_ID;
+		ModuleID_t m_ID;
 		Duration m_TimePerFrame;
 		Duration m_AccumulatedTime;
 

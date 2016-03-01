@@ -28,7 +28,7 @@ public:
 	void CmdReparentEntity(EntityID_t p_EntityID, EntityID_t p_NewParentID);
 	void CmdAncestorOf(EntityID_t p_EntityID1, EntityID_t p_EntityID2);
 	void CmdClear();
-	void CmdPopulate(INT32 p_iDepth, INT32 p_iLevelMax);
+	void CmdPopulate(int32_t p_iDepth, int32_t p_iLevelMax);
 
 private:
 	void CreateRoot();

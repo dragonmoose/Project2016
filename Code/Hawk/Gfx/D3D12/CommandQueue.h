@@ -24,7 +24,7 @@ public:
 
 private:
 	FenceComPtr_t m_Fence;
-	UINT64 m_uiNextValue;
+	uint64_t m_uiNextValue;
 	HANDLE m_Event;
 	CommandQueueComPtr_t m_Object;
 	std::vector<ID3D12CommandList*> m_CommandLists;

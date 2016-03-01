@@ -3,12 +3,11 @@
 
 namespace Hawk {
 namespace Gfx {
-namespace Vulkan {
 
-class VulkanAPI final : public IRenderingAPI
+class VkAPI final : public IRenderingAPI
 {
 public:
-	VulkanAPI() = default;
+	VkAPI() = default;
 
 	void Initialize() override;
 	void Render() override;
@@ -24,6 +23,5 @@ private:
 	static const std::string& GetLogDesc();
 };
 
-}
 }
 }

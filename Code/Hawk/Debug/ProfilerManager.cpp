@@ -45,8 +45,8 @@ namespace ProfilerManager
 	void Pause();
 	void Resume();
 	void Clear();
-	void Print(const std::string& p_SortMode, INT32 p_iMax, const std::string& p_Filter);
-	ViewDataVec_t GetViewDataVec(const std::string& p_SortMode, INT32 p_iMax, const std::string& p_Filter);
+	void Print(const std::string& p_SortMode, int32_t p_iMax, const std::string& p_Filter);
+	ViewDataVec_t GetViewDataVec(const std::string& p_SortMode, int32_t p_iMax, const std::string& p_Filter);
 }
 
 void ProfilerManager::Initialize(ConsoleCommandManager* p_ConsoleManager, Dispatcher* p_Dispatcher)
@@ -119,7 +119,7 @@ void ProfilerManager::Clear()
 	std::cout << "Cleared all profiling data.\n\n";
 }
 
-void ProfilerManager::Print(const std::string& p_SortMode, INT32 p_iMax, const std::string& p_Filter)
+void ProfilerManager::Print(const std::string& p_SortMode, int32_t p_iMax, const std::string& p_Filter)
 {
 	CONSOLE_WRITE_SCOPE();
 	ViewDataVec_t l_DataVec = GetViewDataVec(p_SortMode, p_iMax, p_Filter);
@@ -130,8 +130,8 @@ void ProfilerManager::Print(const std::string& p_SortMode, INT32 p_iMax, const s
 		return;
 	}
 
-	static const INT32 w1 = 40;
-	static const INT32 w2 = 20;
+	static const int32_t w1 = 40;
+	static const int32_t w2 = 20;
 
 	std::cout << "\n" << std::left << std::setw(w1) << "Name" << std::setw(w2) << "Peak time (s)" << std::setw(w2) << "Avg time (s)" << std::setw(w2) << "Total time (s)" << "Count\n";
 	std::cout << "---------------------------------------------------------------------------------------------------------\n";
@@ -149,7 +149,7 @@ void ProfilerManager::Print(const std::string& p_SortMode, INT32 p_iMax, const s
 	std::cout << "\n";
 }
 
-ProfilerManager::ViewDataVec_t ProfilerManager::GetViewDataVec(const std::string& p_SortMode, INT32 p_iMax, const std::string& p_Filter)
+ProfilerManager::ViewDataVec_t ProfilerManager::GetViewDataVec(const std::string& p_SortMode, int32_t p_iMax, const std::string& p_Filter)
 {
 	MutexScope_t l_MutexScope(n_Mutex);
 	ViewDataVec_t l_DataVec;
@@ -186,7 +186,7 @@ ProfilerManager::ViewDataVec_t ProfilerManager::GetViewDataVec(const std::string
 		hwk::erase_if(l_DataVec, [&p_Filter](const ViewData& p_Data) { return !StringUtil::Contains(p_Data.m_Name, p_Filter); });
 	}
 
-	INT32 l_iMax = p_iMax > 0 ? p_iMax : 10;
+	int32_t l_iMax = p_iMax > 0 ? p_iMax : 10;
 	if (l_iMax < l_DataVec.size())
 	{
 		l_DataVec.resize(l_iMax);

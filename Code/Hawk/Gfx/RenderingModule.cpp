@@ -7,7 +7,7 @@
 #if defined(HAWK_RENDERER_D3D12)
 #include "D3D12/D3D12API.h"
 #elif defined(HAWK_RENDERER_VULKAN)
-#include "Vulkan/VulkanAPI.h"
+#include "Vulkan/VkAPI.h"
 #endif
 #include <functional>
 
@@ -21,7 +21,7 @@ RenderingModule::RenderingModule()
 #if defined(HAWK_RENDERER_D3D12)
 	m_API = std::make_shared<D3D12::D3D12API>();
 #elif defined(HAWK_RENDERER_VULKAN)
-	m_API = std::make_shared<Vulkan::VulkanAPI>();
+	m_API = std::make_shared<VkAPI>();
 #endif
 	ASSERT(m_API, "No API");
 

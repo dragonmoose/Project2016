@@ -21,12 +21,12 @@ private:
 	void Reset();
 
 	std::shared_ptr<DebugTextSubModule> m_DebugTextSubModule;
-	INT32 m_iMin;
-	INT32 m_iMax;
+	int32_t m_iMin;
+	int32_t m_iMax;
 	
-	static const INT32 sc_iNumSamples = 100;
-	INT32 m_iCurrSampleIndex;
-	std::vector<INT32> m_Samples;
+	static const int32_t sc_iNumSamples = 100;
+	int32_t m_iCurrSampleIndex;
+	std::vector<int32_t> m_Samples;
 };
 
 }}
