@@ -62,6 +62,7 @@ void Core::Initialize()
 	ValidateSettings();
 	CoreInfo::_InitApp(m_Settings.m_AppName, m_Settings.m_AppVersion);
 
+	m_Dispatcher = std::make_shared<Dispatcher>();
 	m_EventRouter = std::make_shared<EventRouter>();
 	boost::filesystem::current_path(boost::filesystem::current_path().parent_path());
 
@@ -75,7 +76,6 @@ void Core::Initialize()
 		ThreadInfoManager::RegisterThread(Thread::sc_MainThreadName, std::this_thread::get_id());
 		LOG("Logger awakened...", "core", Info);
 		
-		m_Dispatcher = std::make_shared<Dispatcher>();
 		m_ConsoleCommandManager = std::make_shared<ConsoleCommandManager>(m_Dispatcher);
 		m_ConsoleCommandManager->Start();
 		RegisterConsole();
@@ -148,6 +148,7 @@ void Core::SetPaused(ModuleID_t p_ID, bool p_bPaused)
 
 void Core::Run()
 {
+	THROW_IF_NOT(m_bInitialized, "Initialize not called before Run()");
 	WindowManager::Open(m_Settings.m_hInstance, m_Settings.m_AppName);
 	InitializeModules();
 	StartModules();
