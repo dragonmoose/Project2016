@@ -57,6 +57,7 @@ private:
 	using ModuleThreads_t = std::vector<std::unique_ptr<ModuleThread>>;
 	using CoreModules_t = std::vector<std::unique_ptr<Module>>;
 
+	void ValidateSettings();
 	void AddModules();
 	void InitializeModules();
 	void StartModules();
@@ -78,6 +79,7 @@ private:
 	static std::atomic_bool m_bFatalSignal;
 	CoreSettings m_Settings;
 	std::shared_ptr<Dispatcher> m_Dispatcher;
+	bool m_bInitialized;
 
 	Time m_PrevFrameStartTime;
 

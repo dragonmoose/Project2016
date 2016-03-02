@@ -18,6 +18,7 @@ namespace Hawk {
 
 Core::Core(const CoreSettings& p_Settings)
 : m_Settings(p_Settings)
+, m_bInitialized(false)
 {
 }
 
@@ -26,7 +27,10 @@ Core::~Core()
 #ifdef HAWK_DEBUG
 	if (m_Settings.m_bConsole)
 	{
-		m_ConsoleCommandManager->Stop();
+		if (m_ConsoleCommandManager)
+		{
+			m_ConsoleCommandManager->Stop();
+		}
 
 		LOG("************* Core exit *************", "core", Info);
 		if (Logger::FatalFlagSet())
@@ -34,19 +38,30 @@ Core::~Core()
 			LOG("Core exit due to critical error (see above)", "core", Fatal);
 		}
 
-		int32_t l_iExitWaitTimeSec = Config::Instance().Get("dev.shutdownDelaySec", 30);
-		if (l_iExitWaitTimeSec > 0)
+		if (ConsoleAPI::Initialized())
 		{
-			LOG("Waiting " << l_iExitWaitTimeSec << " seconds before shutting down console...", "core", Info);
-			std::this_thread::sleep_for(std::chrono::seconds(l_iExitWaitTimeSec));
+			int32_t l_iExitWaitTimeSec = Config::Instance().Get("dev.shutdownDelaySec", 30);
+			if (l_iExitWaitTimeSec > 0)
+			{
+				LOG("Waiting " << l_iExitWaitTimeSec << " seconds before shutting down console...", "core", Info);
+				std::this_thread::sleep_for(std::chrono::seconds(l_iExitWaitTimeSec));
+			}
 		}
 		ConsoleAPI::Stop();
+
+		if (!m_bInitialized)
+		{
+			OutputDebugString("Exception during Core init");
+		}
 	}
 #endif
 }
 
 void Core::Initialize()
 {
+	ValidateSettings();
+	CoreInfo::_InitApp(m_Settings.m_AppName, m_Settings.m_AppVersion);
+
 	m_EventRouter = std::make_shared<EventRouter>();
 	boost::filesystem::current_path(boost::filesystem::current_path().parent_path());
 
@@ -76,6 +91,7 @@ void Core::Initialize()
 	WindowManager::Initialize(m_EventRouter);
 
 	LOG("***** Hawk core initialized *****", "core", Info);
+	m_bInitialized = true;
 }
 
 ThreadID_t Core::CreateModuleThread(const std::string& p_Name)
@@ -132,7 +148,7 @@ void Core::SetPaused(ModuleID_t p_ID, bool p_bPaused)
 
 void Core::Run()
 {
-	WindowManager::Open(m_Settings.m_hInstance, m_Settings.m_WindowName);
+	WindowManager::Open(m_Settings.m_hInstance, m_Settings.m_AppName);
 	InitializeModules();
 	StartModules();
 
@@ -164,6 +180,13 @@ void Core::Run()
 		Thread::Sleep();
 	}
 	StopModules();
+}
+
+void Core::ValidateSettings()
+{
+	THROW_IF(m_Settings.m_AppName.empty(), "No application name specified");
+	THROW_IF_NOT(m_Settings.m_AppVersion.IsValid(), "Invalid application version");
+	THROW_IF_NOT(m_Settings.m_hInstance, "hInstance null");
 }
 
 void Core::AddModules()

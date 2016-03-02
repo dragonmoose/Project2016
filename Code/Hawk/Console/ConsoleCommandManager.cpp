@@ -32,7 +32,7 @@ ConsoleCommandManager::ConsoleCommandManager(std::shared_ptr<Dispatcher>& p_Disp
 , m_Thread("Console", std::bind(&ConsoleCommandManager::RunInputLoop, this))
 {
 	std::ostringstream l_Stream;
-	l_Stream << Constants::c_EngineName << " " << Constants::c_EngineVersion.GetString() << ">";
+	l_Stream << CoreInfo::GetEngineName() << " " << CoreInfo::GetEngineVersion().GetString() << ">";
 	m_Prompt = l_Stream.str();
 }
 
@@ -272,7 +272,13 @@ void ConsoleCommandManager::CmdClearHistory()
 void ConsoleCommandManager::CmdAbout()
 {
 	CONSOLE_WRITE_SCOPE();
-	std::cout << "\nVersion number: " << Constants::c_EngineVersion.GetValue() << "\n\n";
+	std::cout << "Engine name:\t\t" << CoreInfo::GetEngineName() << "\n";
+	std::cout << "Engine version:\t\t" << CoreInfo::GetEngineVersion().GetString() << "\n";
+	std::cout << "Engine version ID:\t\t" << CoreInfo::GetEngineVersion().GetID() << "\n";
+
+	std::cout << "\nApp name:\t\t" << CoreInfo::GetAppName() << "\n";
+	std::cout << "App version:\t\t" << CoreInfo::GetAppVersion().GetString() << "\n";
+	std::cout << "App version ID:\t\t" << CoreInfo::GetAppVersion().GetID() << "\n";
 }
 
 std::string ConsoleCommandManager::GetNextCommand(const std::string& p_Filter, const std::string& p_Current) const

@@ -13,7 +13,7 @@
 #include "System/Config.h"
 #include "System/Exception.h"
 #include "System/Types.h"
-#include "System/Constants.h"
+#include "System/CoreInfo.h"
 #include <string>
 #include <sstream>
 #include <iostream>

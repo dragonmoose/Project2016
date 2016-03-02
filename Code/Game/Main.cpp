@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Hawk/Base/Core.h"
+#include "Hawk/System/Version.h"
 #include "TestModule.h"
 #include "TestModule2.h"
 #include <map>
@@ -9,7 +10,8 @@ int WINAPI WinMain(HINSTANCE p_hInstance, HINSTANCE p_hPrevInstance, LPSTR p_lpC
 {
 	Hawk::CoreSettings l_Settings;
 	l_Settings.m_hInstance = p_hInstance;
-	l_Settings.m_WindowName = "TestAppWindow";
+	l_Settings.m_AppName = "TestApp";
+	l_Settings.m_AppVersion = Hawk::Version(1, 0, 0);
 	Hawk::Core l_Core(l_Settings);
 	try
 	{

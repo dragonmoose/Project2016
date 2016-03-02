@@ -22,7 +22,9 @@ namespace ConsoleAPI
 void ConsoleAPI::SetTitle()
 {
 	std::ostringstream l_TitleStream;
-	l_TitleStream << "Hawk Engine Console " << Hawk::Constants::c_EngineVersion.GetString() << " [" << __DATE__ << "]";
+	l_TitleStream << Hawk::CoreInfo::GetAppName() << " " << Hawk::CoreInfo::GetAppVersion().GetString()
+		<< " (" << Hawk::CoreInfo::GetEngineName() << " " << Hawk::CoreInfo::GetEngineVersion().GetString() << ")"
+		<< " [" << __DATE__ << "]";
 	THROW_IF_NOT(::SetConsoleTitle(l_TitleStream.str().c_str()), "Failed to set console title");
 }
 
