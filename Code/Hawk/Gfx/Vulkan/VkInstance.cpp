@@ -19,7 +19,7 @@ VkInstance::VkInstance()
 VkInstance::~VkInstance()
 {
 	ASSERT(m_Handle, "Handle NULL");
-	//vkDestroyInstance(m_Handle, nullptr);
+	vkDestroyInstance(m_Handle, nullptr);
 }
 
 }
