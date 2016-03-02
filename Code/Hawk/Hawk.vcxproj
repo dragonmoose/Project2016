@@ -203,6 +203,7 @@
     <ClCompile Include="Gfx\Vulkan\VkAPI.cpp" />
     <ClCompile Include="Gfx\Vulkan\VkFactory.cpp" />
     <ClCompile Include="Gfx\Vulkan\VkInstance.cpp" />
+    <ClCompile Include="Gfx\Vulkan\VkSystem.cpp" />
     <ClCompile Include="Gfx\Vulkan\VkUtil.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
     <ClCompile Include="pch.cpp">

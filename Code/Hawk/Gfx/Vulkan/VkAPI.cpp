@@ -1,18 +1,17 @@
 #include "pch.h"
-#include "VkUtil.h"
-
-#ifdef HAWK_RENDERER_VULKAN
-#pragma comment(lib, "d3d12")
-#endif
-
 #include "VkAPI.h"
+#include "VkSystem.h"
+#include "VkInstance.h"
+#include "VkUtil.h"
 
 namespace Hawk {
 namespace Gfx {
 
 void VkAPI::Initialize()
 {
+	VkSystem::Initialize();
 	VkUtil::Initialize();
+	VkInstance l_Instance;
 	//SetFullscreenState(Config::Instance().Get("gfx.fullscreen", false));
 	LOG("Vulkan API initialized", "vulkan", Info);
 }

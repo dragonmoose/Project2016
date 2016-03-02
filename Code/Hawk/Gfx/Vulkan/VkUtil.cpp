@@ -1,63 +1,64 @@
 #include "pch.h"
 #include "VkUtil.h"
+#include "VkSystem.h"
 #include <unordered_map>
+#include <algorithm>
 
 namespace Hawk {
 namespace Gfx {
 namespace VkUtil
 {
-	using ResultMap_t = std::unordered_map<VkResult, std::string>;
-	ResultMap_t n_ResultMap;
-	const std::string n_DefaultResult("N/A");
+	void PopulateInstanceLayers();
+
+	struct LayerInfo
+	{
+		LayerInfo(const std::string& p_Name, const std::string& p_Desc)
+			: m_Name(p_Name)
+			, m_Desc(p_Desc) {}
+
+		std::string m_Name;
+		std::string m_Desc;
+	};
+	using LayerInfoVec_t = std::vector<LayerInfo>;
+	LayerInfoVec_t n_InstanceLayers;
 	bool n_bInitialized = false;
-
-	void PopulateResultMap();
 }
-
-#define ADD_VK_RESULT(r) n_ResultMap[VK_##r] = #r 
 
 void VkUtil::Initialize()
 {
-	ASSERT(!n_bInitialized, "Already initialized");
-	PopulateResultMap();
+	ASSERT(!n_bInitialized, "VkUtil already initialized");
+	PopulateInstanceLayers();
 	n_bInitialized = true;
 }
 
-const std::string& VkUtil::ResultToString(VkResult p_Result)
+bool VkUtil::IsInstanceLayerAvailable(const std::string& p_Name)
 {
-	auto& l_Itr = n_ResultMap.find(p_Result);
-	if (l_Itr != n_ResultMap.end())
-	{
-		return l_Itr->second;
-	}
-	return n_DefaultResult;
+	ASSERT(n_bInitialized, "VkUtil not initialized");
+	return std::find_if(n_InstanceLayers.begin(), n_InstanceLayers.end(),
+		[p_Name](const LayerInfo& p_Info) { return p_Name == p_Info.m_Name; }) != n_InstanceLayers.end();
 }
 
-void VkUtil::PopulateResultMap()
+void VkUtil::PopulateInstanceLayers()
 {
-	ADD_VK_RESULT(SUCCESS);
-	ADD_VK_RESULT(NOT_READY);
-	ADD_VK_RESULT(TIMEOUT);
-	ADD_VK_RESULT(EVENT_SET);
-	ADD_VK_RESULT(EVENT_RESET);
-	ADD_VK_RESULT(INCOMPLETE);
-	ADD_VK_RESULT(ERROR_OUT_OF_HOST_MEMORY);
-	ADD_VK_RESULT(ERROR_OUT_OF_DEVICE_MEMORY);
-	ADD_VK_RESULT(ERROR_INITIALIZATION_FAILED);
-	ADD_VK_RESULT(ERROR_DEVICE_LOST);
-	ADD_VK_RESULT(ERROR_MEMORY_MAP_FAILED);
-	ADD_VK_RESULT(ERROR_LAYER_NOT_PRESENT);
-	ADD_VK_RESULT(ERROR_EXTENSION_NOT_PRESENT);
-	ADD_VK_RESULT(ERROR_FEATURE_NOT_PRESENT);
-	ADD_VK_RESULT(ERROR_INCOMPATIBLE_DRIVER);
-	ADD_VK_RESULT(ERROR_TOO_MANY_OBJECTS);
-	ADD_VK_RESULT(ERROR_FORMAT_NOT_SUPPORTED);
-	ADD_VK_RESULT(ERROR_SURFACE_LOST_KHR);
-	ADD_VK_RESULT(ERROR_NATIVE_WINDOW_IN_USE_KHR);
-	ADD_VK_RESULT(SUBOPTIMAL_KHR);
-	ADD_VK_RESULT(ERROR_OUT_OF_DATE_KHR);
-	ADD_VK_RESULT(ERROR_INCOMPATIBLE_DISPLAY_KHR);
-	ADD_VK_RESULT(ERROR_VALIDATION_FAILED_EXT);
+	uint32_t l_uiCount = 0;
+	VK_THROW_IF_NOT_SUCCESS(vkEnumerateInstanceLayerProperties(&l_uiCount, nullptr), "Failed to get instance layer count");
+	
+	std::vector<VkLayerProperties> l_Layers;
+	l_Layers.resize(l_uiCount);
+	VK_THROW_IF_NOT_SUCCESS(vkEnumerateInstanceLayerProperties(&l_uiCount, l_Layers.data()), "Failed to get instance layers");
+
+	for (const auto& l_Layer : l_Layers)
+	{
+		if (l_Layer.specVersion <= VK_API_VERSION)
+		{
+			n_InstanceLayers.emplace_back(l_Layer.layerName, l_Layer.description);
+			LOG("Added instance layer. Name=" << l_Layer.layerName << " Desc=" << l_Layer.description, "vulkan", Debug);
+		}
+		else
+		{
+			LOG("Removing layer not supported by API. Name" << l_Layer.layerName << " RequiredAPI=" << l_Layer.specVersion << " CurrAPI=" << VK_API_VERSION, "vulkan", Debug);
+		}
+	}
 }
 
 }

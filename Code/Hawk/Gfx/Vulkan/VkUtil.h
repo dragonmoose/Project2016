@@ -1,13 +1,14 @@
 #pragma once
 #include <vulkan/vulkan.h>
 #include <string>
+#include <vector>
 
 namespace Hawk {
 namespace Gfx {
 namespace VkUtil
 {
 	void Initialize();
-	const std::string& ResultToString(VkResult p_Result);
+	bool IsInstanceLayerAvailable(const std::string& p_Name);
 }
 
 }

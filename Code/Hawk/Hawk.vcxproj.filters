@@ -149,6 +149,9 @@
     <ClCompile Include="Gfx\Vulkan\VkUtil.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\VkSystem.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
