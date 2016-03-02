@@ -145,6 +145,7 @@
     <ClInclude Include="Gfx\Vulkan\VkFactory.h" />
     <ClInclude Include="Gfx\Vulkan\VkInstance.h" />
     <ClInclude Include="Gfx\Vulkan\VkSystem.h" />
+    <ClInclude Include="Gfx\Vulkan\VkUtil.h" />
     <ClInclude Include="Input\InputEvents.h" />
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Input\KeyCodes.h" />
@@ -202,6 +203,7 @@
     <ClCompile Include="Gfx\Vulkan\VkAPI.cpp" />
     <ClCompile Include="Gfx\Vulkan\VkFactory.cpp" />
     <ClCompile Include="Gfx\Vulkan\VkInstance.cpp" />
+    <ClCompile Include="Gfx\Vulkan\VkUtil.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

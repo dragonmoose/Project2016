@@ -146,6 +146,9 @@
     <ClCompile Include="System\CoreInfo.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\VkUtil.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -352,6 +355,9 @@
     </ClInclude>
     <ClInclude Include="System\CoreInfo.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\VkUtil.h">
+      <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

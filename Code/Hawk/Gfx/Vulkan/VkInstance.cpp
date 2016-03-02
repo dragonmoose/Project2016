@@ -14,6 +14,8 @@ VkInstance::VkInstance()
 	l_AppInfo.pEngineName = CoreInfo::GetEngineName();
 	l_AppInfo.engineVersion = CoreInfo::GetEngineVersion().GetID();
 	l_AppInfo.apiVersion = VK_API_VERSION;
+
+	//VK_THROW_IF_ERR(vkCreateInstance()
 }
 
 VkInstance::~VkInstance()

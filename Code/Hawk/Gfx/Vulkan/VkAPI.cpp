@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "VkUtil.h"
 
 #ifdef HAWK_RENDERER_VULKAN
 #pragma comment(lib, "d3d12")
@@ -11,7 +12,9 @@ namespace Gfx {
 
 void VkAPI::Initialize()
 {
+	VkUtil::Initialize();
 	//SetFullscreenState(Config::Instance().Get("gfx.fullscreen", false));
+	LOG("Vulkan API initialized", "vulkan", Info);
 }
 
 void VkAPI::Render()
