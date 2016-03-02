@@ -3,6 +3,7 @@
 
 namespace Hawk {
 
-const EngineInfo Constants::c_EngineInfo("Hawk", 1, 0, 0);
+const char* Constants::c_EngineName("Hawk");
+const Version Constants::c_EngineVersion(1, 0, 0);
 
 }
