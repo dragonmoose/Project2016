@@ -159,7 +159,7 @@
     <ClInclude Include="System\Time.h" />
     <ClInclude Include="System\Types.h" />
     <ClInclude Include="System\Constants.h" />
-    <ClInclude Include="System\Version.h" />
+    <ClInclude Include="System\EngineInfo.h" />
     <ClInclude Include="System\Version.h\Header.h" />
     <ClInclude Include="Threading\Dispatcher.h" />
     <ClInclude Include="Threading\Mutex.h" />
@@ -218,7 +218,7 @@
     <ClCompile Include="System\Duration.cpp" />
     <ClCompile Include="System\Exception.cpp" />
     <ClCompile Include="System\Time.cpp" />
-    <ClCompile Include="System\Version.cpp" />
+    <ClCompile Include="System\EngineInfo.cpp" />
     <ClCompile Include="Threading\Dispatcher.cpp" />
     <ClCompile Include="Threading\Mutex.cpp" />
     <ClCompile Include="Threading\Thread.cpp" />

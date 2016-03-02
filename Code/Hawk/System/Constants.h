@@ -1,11 +1,10 @@
 #pragma once
 #include <cstdint>
-#include "Version.h"
+#include "EngineInfo.h"
 
 namespace Hawk {
 namespace Constants
 {
-	extern const char* c_EngineName;
-	extern const Version c_EngineVersion;
+	extern const EngineInfo c_EngineInfo;
 }
 }

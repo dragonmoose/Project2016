@@ -2,7 +2,6 @@
 #ifdef HAWK_DEBUG
 #include "ConsoleCommandManager.h"
 #include "ConsoleInputParser.h"
-#include "System/Version.h"
 #include "Util/Algorithm.h"
 #include "Util/StringUtil.h"
 #include "Threading/ThreadInfoManager.h"
@@ -31,9 +30,7 @@ ConsoleCommandManager::ConsoleCommandManager(std::shared_ptr<Dispatcher>& p_Disp
 , m_History(std::make_unique<ConsoleHistory>(c_uiMaxHistoryRecords))
 , m_Thread("Console", std::bind(&ConsoleCommandManager::RunInputLoop, this))
 {
-	std::ostringstream l_Stream;
-	l_Stream << Constants::c_EngineName << " " << Constants::c_EngineVersion.GetString() << ">";
-	m_Prompt = l_Stream.str();
+	m_Prompt = Constants::c_EngineInfo.GetNameAndVersion() + ">";
 }
 
 void ConsoleCommandManager::Start()
@@ -272,7 +269,7 @@ void ConsoleCommandManager::CmdClearHistory()
 void ConsoleCommandManager::CmdAbout()
 {
 	CONSOLE_WRITE_SCOPE();
-	std::cout << "\nVersion number: " << Constants::c_EngineVersion.GetValue() << "\n\n";
+	std::cout << "\nVersion ID: " << Constants::c_EngineInfo.GetVersionID() << "\n\n";
 }
 
 std::string ConsoleCommandManager::GetNextCommand(const std::string& p_Filter, const std::string& p_Current) const

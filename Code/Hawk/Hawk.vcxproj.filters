@@ -143,7 +143,7 @@
     <ClCompile Include="System\Constants.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="System\Version.cpp">
+    <ClCompile Include="System\EngineInfo.cpp">
       <Filter>System</Filter>
     </ClCompile>
   </ItemGroup>
@@ -353,7 +353,7 @@
     <ClInclude Include="System\Version.h\Header.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="System\Version.h">
+    <ClInclude Include="System\EngineInfo.h">
       <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
