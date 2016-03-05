@@ -16,9 +16,9 @@ private:
 	{
 		struct
 		{
-			uint16_t m_uiMajor;
-			uint8_t m_uiMinor;
 			uint8_t m_uiPatch;
+			uint8_t m_uiMinor;
+			uint16_t m_uiMajor;
 		} m_Parts;
 		uint32_t m_ID;
 	} m_Value;

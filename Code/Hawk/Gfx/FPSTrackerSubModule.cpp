@@ -37,9 +37,9 @@ void FPSTrackerSubModule::Update(const Duration& p_Duration)
 }
 
 #ifdef HAWK_DEBUG
-void FPSTrackerSubModule::InitializeConsole()
+void FPSTrackerSubModule::InitializeConsole(ScopedConsoleCommands* p_Console)
 {
-	RegisterConsole("fps.reset", this, &FPSTrackerSubModule::Reset, "Resets min/max values", "");
+	p_Console->Register("fps.reset", this, &FPSTrackerSubModule::Reset, "Resets min/max values", "");
 }
 #endif
 

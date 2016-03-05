@@ -7,6 +7,7 @@ namespace Hawk
 {
 	class Duration;
 	class EventManager;
+	class ScopedConsoleCommands;
 
 	class HAWK_DLL_EXPORT SubModule
 	{
@@ -24,7 +25,7 @@ namespace Hawk
 		virtual void Initialize();
 
 #ifdef HAWK_DEBUG
-		virtual void InitializeConsole();
+		virtual void InitializeConsole(ScopedConsoleCommands* p_Console);
 		const std::string& GetLogDesc() const;
 #endif
 
@@ -36,22 +37,6 @@ namespace Hawk
 		void SendEvent(const T& p_Event)
 		{
 			m_pParentModule->SendEvent<T>(p_Event);
-		}
-
-		template<class Object_t, class... Args_t>
-		void RegisterConsole(const std::string& p_Name, Object_t* p_Object, void(Object_t::*p_Func)(Args_t...), const std::string& p_Desc, const std::string& p_ArgsDesc, bool p_bRequireArgs = true)
-		{
-#ifdef HAWK_DEBUG
-			m_pParentModule->RegisterConsole(p_Name, p_Object, p_Func, p_Desc, p_ArgsDesc, p_bRequireArgs);
-#endif
-		}
-
-		template<class... Args_t>
-		void RegisterConsole(const std::string& p_Name, void(*p_Func)(Args_t...), const std::string& p_Desc, const std::string& p_ArgsDesc, bool p_bRequireArgs = true)
-		{
-#ifdef HAWK_DEBUG
-			m_pParentModule->RegisterConsole(p_Name, p_Func, p_Desc, p_ArgsDesc, p_bRequireArgs);
-#endif
 		}
 
 	private:

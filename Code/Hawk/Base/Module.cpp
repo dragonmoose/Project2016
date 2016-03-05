@@ -4,6 +4,9 @@
 #include "Debug/Profiler.h"
 #include "System/Duration.h"
 #include "System/Exception.h"
+#ifdef HAWK_DEBUG
+#include "Console/ScopedConsoleCommands.h"
+#endif
 #include <typeinfo>
 
 namespace Hawk {
@@ -19,12 +22,6 @@ Module::Module()
 
 Module::~Module()
 {
-#ifdef HAWK_DEBUG
-	for (const std::string& l_Command : m_RegisteredConsoleCommands)
-	{
-		m_ConsoleCommandManager->Unregister(l_Command);
-	}
-#endif
 }
 
 ModuleID_t Module::GetID() const
@@ -71,16 +68,16 @@ void Module::Initialize()
 #ifdef HAWK_DEBUG
 void Module::_InitializeConsole(std::shared_ptr<ConsoleCommandManager>& p_ConsoleCommandManager)
 {
-	m_ConsoleCommandManager = p_ConsoleCommandManager;
+	m_Console = std::make_unique<ScopedConsoleCommands>(p_ConsoleCommandManager, m_Dispatcher);
 
-	InitializeConsole();
+	InitializeConsole(m_Console.get());
 	for (auto& l_SubModule : m_SubModules)
 	{
-		l_SubModule->InitializeConsole();
+		l_SubModule->InitializeConsole(m_Console.get());
 	}
 }
 
-void Module::InitializeConsole()
+void Module::InitializeConsole(ScopedConsoleCommands* p_Console)
 {
 }
 

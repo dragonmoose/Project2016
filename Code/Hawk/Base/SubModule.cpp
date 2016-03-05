@@ -28,7 +28,7 @@ void SubModule::Initialize()
 }
 
 #ifdef HAWK_DEBUG
-void SubModule::InitializeConsole()
+void SubModule::InitializeConsole(ScopedConsoleCommands* p_Console)
 {
 }
 

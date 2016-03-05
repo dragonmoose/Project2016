@@ -152,6 +152,9 @@
     <ClCompile Include="Gfx\Vulkan\VkSystem.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="Console\ScopedConsoleCommands.cpp">
+      <Filter>Console</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -361,6 +364,9 @@
     </ClInclude>
     <ClInclude Include="Gfx\Vulkan\VkUtil.h">
       <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Console\ScopedConsoleCommands.h">
+      <Filter>Console</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

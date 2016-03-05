@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Base/SubModule.h"
 #include <memory>
 
@@ -17,7 +16,7 @@ public:
 
 	void RegisterEvents(EventManager& p_EventManager) override;
 #ifdef HAWK_DEBUG
-	void InitializeConsole() override;
+	void InitializeConsole(ScopedConsoleCommands* p_Console) override;
 #endif
 	void Update(const Duration& p_Duration) override;
 

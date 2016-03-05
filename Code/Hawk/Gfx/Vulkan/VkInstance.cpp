@@ -87,7 +87,7 @@ void VkInstance::GetExtensions(std::vector<const char*>& p_Extensions) const
 
 	for (const auto& l_Layer : p_Extensions)
 	{
-		//THROW_IF_NOT(VkUtil::IsInstanceLayerAvailable(l_Layer), "Instance layer not available. Name=" << l_Layer);
+		THROW_IF_NOT(VkUtil::IsInstanceExtensionAvailable(l_Layer), "Instance layer not available. Name=" << l_Layer);
 	}
 }
 

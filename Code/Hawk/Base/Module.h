@@ -5,7 +5,7 @@
 #include "System/Duration.h"
 #include "System/Types.h"
 #ifdef HAWK_DEBUG
-#include "Console/ConsoleCommandManager.h"
+#include "Console/ScopedConsoleCommands.h"
 #endif
 #include <atomic>
 #include <string>
@@ -15,6 +15,7 @@ namespace Hawk
 {
 	class Duration;
 	class SubModule;
+	class ConsoleCommandManager;
 
 	class HAWK_DLL_EXPORT Module
 	{
@@ -33,7 +34,7 @@ namespace Hawk
 
 #ifdef HAWK_DEBUG
 		void _InitializeConsole(std::shared_ptr<ConsoleCommandManager>& p_ConsoleCommandManager);
-		virtual void InitializeConsole();
+		virtual void InitializeConsole(ScopedConsoleCommands* p_Console);
 		const std::string& GetLogDesc() const;
 		void DebugPrint() const;
 #endif
@@ -50,24 +51,6 @@ namespace Hawk
 		void SendEvent(const T& p_Event)
 		{
 			m_EventManager->Send<T>(p_Event);
-		}
-
-		template<class Object_t, class... Args_t>
-		void RegisterConsole(const std::string& p_Name, Object_t* p_Object, void(Object_t::*p_Func)(Args_t...), const std::string& p_Desc, const std::string& p_ArgsDesc, bool p_bRequireArgs = true)
-		{
-#ifdef HAWK_DEBUG
-			m_ConsoleCommandManager->Register(p_Name, p_Object, p_Func, m_Dispatcher.get(), p_Desc, p_ArgsDesc, p_bRequireArgs);
-			m_RegisteredConsoleCommands.push_back(p_Name);
-#endif
-		}
-
-		template<class... Args_t>
-		void RegisterConsole(const std::string& p_Name, void(*p_Func)(Args_t...), const std::string& p_Desc, const std::string& p_ArgsDesc, bool p_bRequireArgs = true)
-		{
-#ifdef HAWK_DEBUG
-			m_ConsoleCommandManager->Register(p_Name, p_Func, m_Dispatcher.get(), p_Desc, p_ArgsDesc, p_bRequireArgs);
-			m_RegisteredConsoleCommands.push_back(p_Name);
-#endif
 		}
 
 	protected:
@@ -97,9 +80,8 @@ namespace Hawk
 		bool m_bInitialized;
 
 #ifdef HAWK_DEBUG
-		std::shared_ptr<ConsoleCommandManager> m_ConsoleCommandManager;
-		std::vector<std::string> m_RegisteredConsoleCommands;
 		std::string m_LogDesc;
+		std::unique_ptr<ScopedConsoleCommands> m_Console;
 #endif
 	};
 }

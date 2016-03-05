@@ -31,9 +31,9 @@ void DebugTextSubModule::RegisterEvents(EventManager& p_EventManager)
 }
 
 #ifdef HAWK_DEBUG
-void DebugTextSubModule::InitializeConsole()
+void DebugTextSubModule::InitializeConsole(ScopedConsoleCommands* p_Console)
 {
-	RegisterConsole("rstat.list", this, &DebugTextSubModule::CmdList, "Lists categories and variables", "");
+	p_Console->Register("rstat.list", this, &DebugTextSubModule::CmdList, "Lists categories and variables", "");
 }
 #endif
 

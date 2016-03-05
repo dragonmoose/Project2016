@@ -14,7 +14,7 @@ public:
 	void Update(const Duration& p_Duration);
 
 #ifdef HAWK_DEBUG
-	void InitializeConsole() override;
+	void InitializeConsole(ScopedConsoleCommands* p_Console) override;
 #endif
 
 private:

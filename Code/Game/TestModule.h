@@ -51,11 +51,13 @@ public:
 		SendEvent(l_Ev4);
 	}
 
-	void InitializeConsole()
+#ifdef HAWK_DEBUG
+	void InitializeConsole(Hawk::ScopedConsoleCommands* p_Console)
 	{
-		RegisterConsole("test.cmd", this, &TestModule::TestConsoleCmd, "Test command", "[Text] [num1] [num2]");
-		RegisterConsole("test.rem", this, &TestModule::TestConsoleCmd2, "Sends test event", "[Text]");
+		p_Console->Register("test.cmd", this, &TestModule::TestConsoleCmd, "Test command", "[Text] [num1] [num2]");
+		p_Console->Register("test.rem", this, &TestModule::TestConsoleCmd2, "Sends test event", "[Text]");
 	}
+#endif
 
 	void RegisterEvents(Hawk::EventManager& p_EventManager) override
 	{

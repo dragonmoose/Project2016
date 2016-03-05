@@ -5,14 +5,14 @@
 namespace Hawk {
 
 #ifdef HAWK_DEBUG
-void SceneManager::InitializeConsole()
+void SceneManager::InitializeConsole(ScopedConsoleCommands* p_Console)
 {
-	RegisterConsole("scene.print", this, &SceneManager::CmdPrint, "Output scene manager tree to console", "");
-	RegisterConsole("entity.remove", this, &SceneManager::CmdRemoveEntity, "Removes entity", "[entityID] [parentID]");
-	RegisterConsole("entity.reparent", this, &SceneManager::CmdReparentEntity, "Reparents entity", "[entityID] [newParentID]");
-	RegisterConsole("entity.ascenstorOf", this, &SceneManager::CmdAncestorOf, "Checks if first entity is ancestor of second entity", "[entityID] [entityID]");
-	RegisterConsole("scene.clear", this, &SceneManager::CmdClear, "Clears the scene", "");
-	RegisterConsole("scene.populate", this, &SceneManager::CmdPopulate, "Adds test entity hierarchy", "[maxDepth] [max entities per depth level]");
+	p_Console->Register("scene.print", this, &SceneManager::CmdPrint, "Output scene manager tree to console", "");
+	p_Console->Register("entity.remove", this, &SceneManager::CmdRemoveEntity, "Removes entity", "[entityID] [parentID]");
+	p_Console->Register("entity.reparent", this, &SceneManager::CmdReparentEntity, "Reparents entity", "[entityID] [newParentID]");
+	p_Console->Register("entity.ascenstorOf", this, &SceneManager::CmdAncestorOf, "Checks if first entity is ancestor of second entity", "[entityID] [entityID]");
+	p_Console->Register("scene.clear", this, &SceneManager::CmdClear, "Clears the scene", "");
+	p_Console->Register("scene.populate", this, &SceneManager::CmdPopulate, "Adds test entity hierarchy", "[maxDepth] [max entities per depth level]");
 }
 #endif
 

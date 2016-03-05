@@ -9,6 +9,7 @@ namespace Gfx {
 namespace VkUtil
 {
 	void PopulateInstanceLayers();
+	void PopulateInstanceExtensions();
 
 	struct LayerInfo
 	{
@@ -38,6 +39,11 @@ bool VkUtil::IsInstanceLayerAvailable(const std::string& p_Name)
 		[p_Name](const LayerInfo& p_Info) { return p_Name == p_Info.m_Name; }) != n_InstanceLayers.end();
 }
 
+bool VkUtil::IsInstanceExtensionAvailable(const std::string& p_Name)
+{
+	return true;
+}
+
 void VkUtil::PopulateInstanceLayers()
 {
 	uint32_t l_uiCount = 0;
@@ -59,6 +65,29 @@ void VkUtil::PopulateInstanceLayers()
 			LOG("Removing layer not supported by API. Name" << l_Layer.layerName << " RequiredAPI=" << l_Layer.specVersion << " CurrAPI=" << VK_API_VERSION, "vulkan", Debug);
 		}
 	}
+}
+
+void VkUtil::PopulateInstanceExtensions()
+{
+	/*uint32_t l_uiCount = 0;
+	VK_THROW_IF_NOT_SUCCESS(vkEnumerateInstanceExtensionProperties(&l_uiCount, nullptr), "Failed to get instance layer count");
+
+	std::vector<VkLayerProperties> l_Layers;
+	l_Layers.resize(l_uiCount);
+	VK_THROW_IF_NOT_SUCCESS(vkEnumerateInstanceLayerProperties(&l_uiCount, l_Layers.data()), "Failed to get instance layers");
+
+	for (const auto& l_Layer : l_Layers)
+	{
+		if (l_Layer.specVersion <= VK_API_VERSION)
+		{
+			n_InstanceLayers.emplace_back(l_Layer.layerName, l_Layer.description);
+			LOG("Added instance layer. Name=" << l_Layer.layerName << " Desc=" << l_Layer.description, "vulkan", Debug);
+		}
+		else
+		{
+			LOG("Removing layer not supported by API. Name" << l_Layer.layerName << " RequiredAPI=" << l_Layer.specVersion << " CurrAPI=" << VK_API_VERSION, "vulkan", Debug);
+		}
+	}*/
 }
 
 }

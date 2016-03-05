@@ -13,7 +13,7 @@ public:
 	Entity* GetRoot();
 
 #ifdef HAWK_DEBUG
-	void InitializeConsole() override;
+	void InitializeConsole(ScopedConsoleCommands* p_Console) override;
 #endif
 
 	void Initialize() override;
