@@ -3,6 +3,7 @@
 #include "VkSystem.h"
 #include <unordered_map>
 #include <algorithm>
+#include <iomanip>
 
 namespace Hawk {
 namespace Gfx {
@@ -58,7 +59,6 @@ void VkUtil::PopulateInstanceLayers()
 		if (l_Layer.specVersion <= VK_API_VERSION)
 		{
 			n_InstanceLayers.emplace_back(l_Layer.layerName, l_Layer.description);
-			LOG("Added instance layer. Name=" << l_Layer.layerName << " Desc=" << l_Layer.description, "vulkan", Debug);
 		}
 		else
 		{
@@ -89,6 +89,18 @@ void VkUtil::PopulateInstanceExtensions()
 		}
 	}*/
 }
+
+void VkUtil::PrintAvailableInstanceLayers()
+{
+	CONSOLE_WRITE_SCOPE();
+	std::cout << "\n";
+	for (const auto& l_Layer : n_InstanceLayers)
+	{
+		std::cout << std::left << std::setw(35) << l_Layer.m_Name << "(" << l_Layer.m_Desc << ")\n";
+	}
+	std::cout << "\n";
+}
+
 
 }
 }

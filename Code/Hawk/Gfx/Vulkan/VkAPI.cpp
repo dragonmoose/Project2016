@@ -3,6 +3,7 @@
 #include "VkSystem.h"
 #include "VkInstance.h"
 #include "VkUtil.h"
+#include "Console/ScopedConsoleCommands.h"
 
 namespace Hawk {
 namespace Gfx {
@@ -33,6 +34,11 @@ void VkAPI::SetDebugText(const std::string& p_Text)
 }
 
 #ifdef HAWK_DEBUG
+void VkAPI::InitializeConsole(ScopedConsoleCommands* p_Console)
+{
+	p_Console->Register("vk.availableInstanceLayers", &VkUtil::PrintAvailableInstanceLayers, "Lists the available Vulkan instance layers", "");
+}
+
 void VkAPI::CmdListDevices()
 {
 }

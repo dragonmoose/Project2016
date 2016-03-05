@@ -1,8 +1,10 @@
 #pragma once
-
 #include "System/Exception.h"
 
 namespace Hawk {
+
+class ScopedConsoleCommands;
+
 namespace Gfx {
 
 class IRenderingAPI
@@ -20,6 +22,7 @@ public:
 	virtual void SetDebugText(const std::string& p_Text) = 0;
 
 #ifdef HAWK_DEBUG
+	virtual void InitializeConsole(ScopedConsoleCommands* p_Console) { CmdNotImplemented(); }
 	virtual void CmdListDevices() { CmdNotImplemented(); }
 #endif
 

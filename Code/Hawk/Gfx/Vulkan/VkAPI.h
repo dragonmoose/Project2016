@@ -16,6 +16,7 @@ public:
 	void SetDebugText(const std::string& p_Text) override;
 
 #ifdef HAWK_DEBUG
+	void InitializeConsole(ScopedConsoleCommands* p_Console) override;
 	void CmdListDevices() override;
 #endif
 

@@ -10,6 +10,8 @@ namespace VkUtil
 	void Initialize();
 	bool IsInstanceLayerAvailable(const std::string& p_Name);
 	bool IsInstanceExtensionAvailable(const std::string& p_Name);
+
+	void PrintAvailableInstanceLayers();
 }
 
 }
