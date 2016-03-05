@@ -9,7 +9,7 @@
 		{											\
 		}											\
 		else										\
-		{	LOG(msg, "assert", Fatal);				\
+		{	FATAL(msg, "assert");					\
 			__debugbreak();							\
 		}
 	#define ASSERT_THREAD(p)		ASSERT(Hawk::ThreadInfoManager::IsThread(p), "Not on thread: " << p);

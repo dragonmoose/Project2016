@@ -13,21 +13,19 @@ public:
 	std::string GetName() const override { return "TestModule2"; }
 	void RegisterEvents(Hawk::EventManager& p_EventManager)
 	{
-		p_EventManager.Register<TestEvent>([this](const TestEvent& p_Event)
+		p_EventManager.Register<TestEvent>([this](const TestEvent&)
 		{
-			LOGM("Receives event submitted by self", Debug);
+			//LOGM("Receives event submitted by self", Debug);
 		}
 		);
 
-		p_EventManager.Register<TestEvent2>([this](const TestEvent2& p_Event)
+		p_EventManager.Register<TestEvent2>([this](const TestEvent2& /*p_Event*/)
 		{
-			LOGM("Value=" << p_Event.m_iValue, Debug);
 		}
 		);
 
-		p_EventManager.Register<TestEvent3>([this](const TestEvent3& p_Event)
+		p_EventManager.Register<TestEvent3>([this](const TestEvent3& /*p_Event*/)
 		{
-			LOGM("Event received. Msg=" << p_Event.m_Str, Info);
 		}
 		);
 	}

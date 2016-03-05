@@ -29,7 +29,7 @@ ModuleID_t Module::GetID() const
 	return m_ID;
 }
 
-void Module::_Initialize(std::unique_ptr<EventManager> p_EventManager, std::shared_ptr<Dispatcher>& p_Dispatcher)
+void Module::_Initialize(std::unique_ptr<EventManager> p_EventManager, std::shared_ptr<Dispatcher> p_Dispatcher)
 {
 	try
 	{
@@ -53,11 +53,11 @@ void Module::_Initialize(std::unique_ptr<EventManager> p_EventManager, std::shar
 	}
 	catch (Exception& e)
 	{
-		LOGM_EXCEPTION(e, Fatal);
+		FATALM_EXCEPTION(e);
 	}
 	catch (std::exception& e)
 	{
-		LOGM_STD_EXCEPTION(e, Fatal);
+		FATALM_STD_EXCEPTION(e);
 	}
 }
 
@@ -77,7 +77,7 @@ void Module::_InitializeConsole(std::shared_ptr<ConsoleCommandManager>& p_Consol
 	}
 }
 
-void Module::InitializeConsole(ScopedConsoleCommands* p_Console)
+void Module::InitializeConsole(ScopedConsoleCommands* /*p_Console*/)
 {
 }
 
@@ -101,7 +101,7 @@ void Module::DebugPrint() const
 }
 #endif
 
-void Module::RegisterEvents(EventManager& p_EventManager)
+void Module::RegisterEvents(EventManager& /*p_EventManager*/)
 {
 }
 
@@ -161,7 +161,7 @@ void Module::_Update(const Duration& p_Duration)
 	}
 }
 
-void Module::Update(const Duration& p_Duration)
+void Module::Update(const Duration& /*p_Duration*/)
 {
 }
 

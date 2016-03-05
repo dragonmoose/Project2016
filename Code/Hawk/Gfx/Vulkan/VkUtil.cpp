@@ -40,7 +40,7 @@ bool VkUtil::IsInstanceLayerAvailable(const std::string& p_Name)
 		[p_Name](const LayerInfo& p_Info) { return p_Name == p_Info.m_Name; }) != n_InstanceLayers.end();
 }
 
-bool VkUtil::IsInstanceExtensionAvailable(const std::string& p_Name)
+bool VkUtil::IsInstanceExtensionAvailable(const std::string& /*p_Name*/)
 {
 	return true;
 }

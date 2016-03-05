@@ -9,7 +9,7 @@ Duration::Duration()
 	SetToZero();
 }
 
-Duration::Duration(int32_t p_iValue, Precision p_Precision)
+Duration::Duration(int64_t p_iValue, Precision p_Precision)
 {
 	switch (p_Precision)
 	{
@@ -118,7 +118,7 @@ Duration& Duration::operator+=(const Duration& p_rhs)
 	return *this;
 }
 
-Duration Duration::operator/(UINT32 p_uiDenominator) const
+Duration Duration::operator/(uint32_t p_uiDenominator) const
 {
 	return Duration((m_Duration / p_uiDenominator).count(), Precision::NanoSecond);
 }

@@ -2,8 +2,11 @@
 #include "Component.h"
 #include "Threading/Mutex.h"
 #include "System/Types.h"
+#pragma warning (push)
+#pragma warning (disable:4201)	// disable nonstandard extension for glm (nameless struct/union)
 #include <glm/vec3.hpp>
 #include <glm/gtx/quaternion.hpp>
+#pragma warning (pop)
 #include <memory>
 #include <string>
 

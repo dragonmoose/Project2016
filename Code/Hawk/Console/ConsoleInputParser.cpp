@@ -15,7 +15,7 @@ ConsoleInputParser::ConsoleInputParser(const std::string& p_Input)
 	const int32_t l_iNumTokens = std::distance(l_Tokenizer.begin(), l_Tokenizer.end());
 	THROW_IF_NOT(l_iNumTokens > 0, "Invalid number of input tokens for console command. Num=" << l_iNumTokens);
 
-	auto& l_Itr = l_Tokenizer.begin();
+	auto l_Itr = l_Tokenizer.begin();
 	m_Command = StringUtil::ToLower(*l_Itr);
 	l_Itr++;
 

@@ -37,7 +37,7 @@ void DebugTextSubModule::InitializeConsole(ScopedConsoleCommands* p_Console)
 }
 #endif
 
-void DebugTextSubModule::Update(const Duration& p_Duration)
+void DebugTextSubModule::Update(const Duration& /*p_Duration*/)
 {
 	std::string l_Text;
 	const std::string l_ActiveCategory = Config::Instance().Get<std::string>("gfx.rstat", "gfx");

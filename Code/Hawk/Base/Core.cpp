@@ -35,7 +35,7 @@ Core::~Core()
 		LOG("************* Core exit *************", "core", Info);
 		if (Logger::FatalFlagSet())
 		{
-			LOG("Core exit due to critical error (see above)", "core", Fatal);
+			FATAL("Core exit due to critical error (see above)", "core");
 		}
 
 		if (ConsoleAPI::Initialized())

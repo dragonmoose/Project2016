@@ -21,15 +21,15 @@ void VkAPI::Render()
 {
 }
 
-void VkAPI::SetFullscreenState(bool p_bState)
+void VkAPI::SetFullscreenState(bool /*p_bState*/)
 {
 }
 
-void VkAPI::OnWindowSizeChanged(UINT32 p_uiWidth, UINT32 p_uiHeight)
+void VkAPI::OnWindowSizeChanged(UINT32 /*p_uiWidth*/, UINT32 /*p_uiHeight*/)
 {
 }
 
-void VkAPI::SetDebugText(const std::string& p_Text)
+void VkAPI::SetDebugText(const std::string& /*p_Text*/)
 {
 }
 

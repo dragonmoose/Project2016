@@ -92,7 +92,7 @@ Logger::Level Logger::StringToLevel(const std::string& p_Level)
 	else if (l_Level == "info") { return Level::Info; }
 	else if (l_Level == "warning") { return Level::Warning; }
 	else if (l_Level == "error") { return Level::Error; }
-	else if (l_Level == "fatal") { return Level::Fatal; }
+	else if (l_Level == "fatal") { return Level::_Fatal; }
 	else { return Level::Info; }
 }
 
@@ -123,7 +123,7 @@ void Logger::GetLevelColors(Level p_Level, ConsoleAPI::Color& p_Color, ConsoleAP
 		p_Color = ConsoleAPI::Color::BrightRed;
 		p_BgColor = ConsoleAPI::Color::None;
 	}
-	else if (p_Level == Level::Fatal)
+	else if (p_Level == Level::_Fatal)
 	{
 		p_Color = ConsoleAPI::Color::BrightWhite;
 		p_BgColor = ConsoleAPI::Color::BrightRed;

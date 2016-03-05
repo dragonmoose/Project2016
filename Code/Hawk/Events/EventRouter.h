@@ -32,7 +32,7 @@ public:
 		EventQueuesMap_t::iterator l_Itr = m_EventQueues.find(l_TypeIndex);
 		if (l_Itr != m_EventQueues.end())
 		{
-			for (auto& l_Itr2 = l_Itr->second.begin(); l_Itr2 != l_Itr->second.end(); )
+			for (auto l_Itr2 = l_Itr->second.begin(); l_Itr2 != l_Itr->second.end(); )
 			{
 				std::shared_ptr<EventQueue> l_EventQueue = l_Itr2->lock();
 				if (l_EventQueue)

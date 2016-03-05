@@ -6,7 +6,7 @@
 #include <map>
 #include <boost/lexical_cast.hpp>
 
-int WINAPI WinMain(HINSTANCE p_hInstance, HINSTANCE p_hPrevInstance, LPSTR p_lpCmdLine, int p_nCmdShow)
+int WINAPI WinMain(HINSTANCE p_hInstance, HINSTANCE /*p_hPrevInstance*/, LPSTR /*p_lpCmdLine*/, int /*p_nCmdShow*/)
 {
 	Hawk::CoreSettings l_Settings;
 	l_Settings.m_hInstance = p_hInstance;
@@ -26,6 +26,6 @@ int WINAPI WinMain(HINSTANCE p_hInstance, HINSTANCE p_hPrevInstance, LPSTR p_lpC
 	}
 	catch (Hawk::Exception& e)
 	{
-		LOG_EXCEPTION(e, "game", Fatal);
+		FATAL_EXCEPTION(e, "game");
 	}
 }

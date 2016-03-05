@@ -27,7 +27,7 @@ public:
 	};
 
 	Duration();
-	Duration(int32_t p_iValue, Precision p_Precision);
+	Duration(int64_t p_iValue, Precision p_Precision);
 	std::string ToString(Format p_Format = Format::HourMinSecMS) const;
 	void SetToZero();
 	bool IsZero() const;
@@ -42,7 +42,7 @@ public:
 	bool operator>=(const Duration& p_rhs) const;
 
 	Duration& operator+=(const Duration& p_rhs);
-	Duration operator/(UINT32 p_iDenominator) const;
+	Duration operator/(uint32_t p_uiDenominator) const;
 	Duration operator-(const Duration& p_rhs) const;
 
 	friend class Time;

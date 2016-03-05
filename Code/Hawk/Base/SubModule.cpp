@@ -28,7 +28,7 @@ void SubModule::Initialize()
 }
 
 #ifdef HAWK_DEBUG
-void SubModule::InitializeConsole(ScopedConsoleCommands* p_Console)
+void SubModule::InitializeConsole(ScopedConsoleCommands* /*p_Console*/)
 {
 }
 
@@ -38,11 +38,11 @@ const std::string& SubModule::GetLogDesc() const
 }
 #endif
 
-void SubModule::RegisterEvents(EventManager& p_EventManager)
+void SubModule::RegisterEvents(EventManager& /*p_EventManager*/)
 {
 }
 
-void SubModule::Update(const Duration& p_Duration)
+void SubModule::Update(const Duration& /*p_Duration*/)
 {
 }
 

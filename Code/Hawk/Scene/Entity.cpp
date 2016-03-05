@@ -48,7 +48,6 @@ void Entity::AddChild(EntityPtr_t p_Entity)
 	ASSERT(std::find(m_Children.begin(), m_Children.end(), p_Entity) == m_Children.end(), "Cannot add entity to itself");
 	ASSERT(!p_Entity->IsAncestorOf(shared_from_this()), "Cannot add ancestor entity as child");
 
-	bool l_bHadParent = p_Entity->HasParent();
 	if (p_Entity->HasParent())
 	{
 		p_Entity->m_Parent->DetachChild(p_Entity);

@@ -10,12 +10,16 @@ namespace Hawk {
 std::atomic_uint Mutex::m_uiCounter(0);
 #endif
 
+#ifdef HAWK_DEBUG
 Mutex::Mutex(const std::string& p_DebugName)
 {
-#ifdef HAWK_DEBUG
 	m_DebugName += "Mutex_" + std::to_string(m_uiCounter++) + (!p_DebugName.empty() ? " [" + p_DebugName + "]" : "");
-#endif
 }
+#else
+Mutex::Mutex(const std::string&)
+{
+}
+#endif
 
 void Mutex::lock()
 {

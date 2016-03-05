@@ -64,6 +64,8 @@ Target LexicalCast_Default(Source p_Value)
 	}
 }
 
+#pragma warning (push)
+#pragma warning (disable:4100) // Compiler flags p_Args as being unreferenced, although it isn't
 template<class TypeList_t, class Func, class Object_t, std::size_t... Index>
 void DispatchMemberFunction(
 	Func p_Func,
@@ -86,6 +88,7 @@ void DispatchMemberFunction(
 		);
 	}
 }
+#pragma warning (pop)
 
 template<class Object_t, class... Args_t>
 class MemberConsoleFunction final : public IConsoleFunction
@@ -110,6 +113,8 @@ private:
 	Object_t* m_Object;
 };
 
+#pragma warning (push)
+#pragma warning (disable:4100) // Compiler flags p_Args as being unreferenced, although it isn't
 template<class TypeList_t, class Func, std::size_t... Index>
 void DispatchFreeFunction(
 	Func p_Func,
@@ -131,6 +136,7 @@ void DispatchFreeFunction(
 		);
 	}
 }
+#pragma warning (pop)
 
 template<class... Args_t>
 class FreeConsoleFunction final : public IConsoleFunction

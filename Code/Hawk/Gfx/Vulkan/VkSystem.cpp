@@ -26,7 +26,7 @@ void VkSystem::Initialize()
 const std::string& VkSystem::ResultToString(VkResult p_Result)
 {
 	ASSERT(n_bInitialized, "VkSystem not initialized");
-	auto& l_Itr = n_ResultMap.find(p_Result);
+	auto l_Itr = n_ResultMap.find(p_Result);
 	if (l_Itr != n_ResultMap.end())
 	{
 		return l_Itr->second;

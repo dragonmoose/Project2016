@@ -44,7 +44,7 @@ void RenderingModule::Initialize()
 {
 	if (Config::Instance().Get("gfx.setFixedFPS", false))
 	{
-		SetFixedTimeStep(Config::Instance().Get("gfx.fixedFPS", 60), Module::FixedTimeStepDecl::FramesPerSecond);
+		SetFixedTimeStep(Config::Instance().Get("gfx.fixedFPS", 60.0f), Module::FixedTimeStepDecl::FramesPerSecond);
 	}
 	m_API->Initialize();
 
@@ -52,7 +52,7 @@ void RenderingModule::Initialize()
 	WindowManager::RegisterWindowSizeChanged(std::bind(&RenderingModule::OnWindowSizeChanged, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 }
 
-void RenderingModule::RegisterEvents(EventManager& p_EventManager)
+void RenderingModule::RegisterEvents(EventManager& /*p_EventManager*/)
 {
 }
 
@@ -65,7 +65,7 @@ void RenderingModule::InitializeConsole(ScopedConsoleCommands* p_Console)
 }
 #endif
 
-void RenderingModule::Update(const Duration& p_Duration)
+void RenderingModule::Update(const Duration& /*p_Duration*/)
 {
 	if (ShouldRender())
 	{

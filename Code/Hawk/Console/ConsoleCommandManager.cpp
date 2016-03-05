@@ -142,7 +142,7 @@ void ConsoleCommandManager::RunInputLoop()
 	}
 	catch (Exception& e)
 	{
-		LOG_EXCEPTION(e, "console", Fatal);
+		FATAL_EXCEPTION(e, "console");
 	}
 }
 
@@ -350,7 +350,7 @@ void ConsoleCommandManager::TryCallFunction(const CF::IConsoleFunction& p_Functi
 		{
 			p_Function._Call(p_Command.GetArgs());
 		}
-		catch (boost::bad_lexical_cast& e)
+		catch (boost::bad_lexical_cast&)
 		{
 			std::cout << "Failed to convert arguments to function parameter types.\n\n";
 		}

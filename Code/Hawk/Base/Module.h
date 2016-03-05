@@ -29,7 +29,7 @@ namespace Hawk
 		virtual std::string GetName() const = 0;
 		ModuleID_t GetID() const;
 
-		void _Initialize(std::unique_ptr<EventManager> p_EventManager, std::shared_ptr<Dispatcher>& p_Dispatcher);
+		void _Initialize(std::unique_ptr<EventManager> p_EventManager, std::shared_ptr<Dispatcher> p_Dispatcher);
 		virtual void Initialize();
 
 #ifdef HAWK_DEBUG

@@ -60,11 +60,11 @@ bool Config::Load(bool p_bForce)
 	}
 	catch (boost::property_tree::ini_parser_error& e)
 	{
-		LOG_STD_EXCEPTION(e, "config", Fatal);
+		FATAL_STD_EXCEPTION(e, "config");
 	}
 	catch (Exception& e)
 	{
-		LOG_EXCEPTION(e, "config", Fatal);
+		FATAL_EXCEPTION(e, "config");
 	}
 	return false;
 }

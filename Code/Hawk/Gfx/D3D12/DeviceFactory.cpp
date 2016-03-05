@@ -125,7 +125,7 @@ void DeviceFactory::GetSpecificAdapter(const std::string& p_Luid, const HWAdapte
 		l_Luid.LowPart = boost::lexical_cast<DWORD>(p_Luid.substr(l_Pos + 1));
 		LOG("Parsed Luid=" << l_Luid.HighPart << ":" << l_Luid.LowPart, "d3d", Debug);
 	}
-	catch (boost::bad_lexical_cast& e)
+	catch (boost::bad_lexical_cast&)
 	{
 		THROW("Failed to cast from Luid=" << p_Luid);
 	}

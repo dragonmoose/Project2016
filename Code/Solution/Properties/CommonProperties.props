@@ -23,7 +23,7 @@
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(CodeDir);$(BoostDir);$(GLMDir)</AdditionalIncludeDirectories>
-      <WarningLevel>Level1</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
     </ClCompile>

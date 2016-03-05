@@ -150,9 +150,10 @@ void ConsoleAPI::Start()
 {
 	THROW_IF_NOT(AllocConsole(), "Failed to allocate console");
 
-	freopen("CONIN$", "r", stdin);			// Redirect streams to console device
-	freopen("CONOUT$", "w", stdout);
-	freopen("CONOUT$", "w", stderr);
+	::FILE *l_File;
+	freopen_s(&l_File, "CONIN$", "r", stdin);			// Redirect streams to console device
+	freopen_s(&l_File, "CONOUT$", "w", stdout);
+	freopen_s(&l_File, "CONOUT$", "w", stderr);
 	std::cout.sync_with_stdio(true);		// c++ and c streams use the same buffer and thus can be mixed freely (and thread-safe)
 
 	n_hOut = GetStdHandle(STD_OUTPUT_HANDLE);

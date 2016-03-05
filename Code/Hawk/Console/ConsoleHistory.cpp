@@ -94,9 +94,8 @@ void ConsoleHistory::Load()
 		}
 		if (m_Cmds.size() > m_uiMaxSize)
 		{
-			UINT32 l_uiSize = m_Cmds.size();
 			m_Cmds.erase(m_Cmds.begin() + (m_uiMaxSize - 1), m_Cmds.end() - 1);
-			LOG("History file contained " << l_uiSize << " commands, was truncated to " << m_Cmds.size(), "console", Warning);
+			LOG("History file contained " << m_Cmds.size() << " commands, was truncated to " << m_Cmds.size(), "console", Warning);
 		}
 		LOG("Read " << m_Cmds.size() << " commands from " << c_Filename, "console", Debug);
 	}

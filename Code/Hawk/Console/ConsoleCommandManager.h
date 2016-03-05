@@ -46,7 +46,7 @@ public:
 		}
 		catch (Exception& e)
 		{
-			LOG_EXCEPTION(e, "console", Fatal);
+			FATAL_EXCEPTION(e, "console");
 		}
 	}
 
@@ -65,7 +65,7 @@ public:
 		}
 		catch (Exception& e)
 		{
-			LOG_EXCEPTION(e, "console", Fatal);
+			FATAL_EXCEPTION(e, "console");
 		}
 	}
 
