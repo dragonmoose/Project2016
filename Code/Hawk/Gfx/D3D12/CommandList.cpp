@@ -23,7 +23,8 @@ GfxCommandListComPtr_t& CommandList::GetD3DObject()
 void CommandList::BeginRecord()
 {
 	THROW_IF_COMERR(m_CommandList->Reset(m_Allocator.Get(), m_State.Get()), "Failed to reset command list");
-	m_CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_RenderView->GetCurrBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+	D3D12_RESOURCE_BARRIER l_Barrier(CD3DX12_RESOURCE_BARRIER::Transition(m_RenderView->GetCurrBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+	m_CommandList->ResourceBarrier(1, &l_Barrier);
 }
 
 void CommandList::EndRecord()
