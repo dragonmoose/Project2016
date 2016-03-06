@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ConsoleHistory.h"
+#include "Util/StringUtil.h"
 #include <boost/filesystem.hpp>
 #include <fstream>
 
@@ -53,7 +54,7 @@ const std::string& ConsoleHistory::GetCurrRecord() const
 void ConsoleHistory::Add(const std::string& p_Cmd)
 {
 	ASSERT(m_Cmds.size() <= m_uiMaxSize, "MaxSize exceeded");
-	if (m_Cmds.empty() || p_Cmd != m_Cmds.front())
+	if (m_Cmds.empty() || !StringUtil::AreEqual(p_Cmd, m_Cmds.front()))
 	{
 		m_Cmds.push_front(p_Cmd);
 	}

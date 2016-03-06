@@ -17,10 +17,10 @@ namespace
 	const char Key_Backspace = 8;
 	const char Key_Tab = 9;
 
-	const UINT32 c_uiMaxHistoryRecords = 30;
+	const UINT32 c_uiMaxHistoryRecords = 100;
 	const std::array<std::string, 5> c_HistoryExcludedCmds = { "-", "quit", "help", "cls", "console.history" };
 
-	bool SaveToHistory(const std::string& p_Cmd)
+	bool ShouldSaveCommand(const std::string& p_Cmd)
 	{
 		return std::find(c_HistoryExcludedCmds.cbegin(), c_HistoryExcludedCmds.cend(), p_Cmd) == c_HistoryExcludedCmds.end();
 	}
@@ -91,7 +91,7 @@ void ConsoleCommandManager::RunInputLoop()
 					else if (l_cChr == Key_Tab)
 					{
 						ConsoleAPI::ClearCurrLine();
-						m_CurrLine = GetNextCommand(m_CurrTypedLine, m_CurrLine);
+						m_CurrLine = GetNextAutoCompletedCmd(m_CurrTypedLine, m_CurrLine);
 					}
 					else if (l_cChr == Key_Return)
 					{
@@ -115,7 +115,7 @@ void ConsoleCommandManager::RunInputLoop()
 							{
 								std::cout << "Unknown command: " << l_ParsedInput.GetCommand() << "\n\n";
 							}
-							if (SaveToHistory(l_ParsedInput.GetCommand()))
+							if (ShouldSaveCommand(l_ParsedInput.GetCommand()))
 							{
 								m_History->Add(m_CurrLine);
 							}
@@ -192,7 +192,7 @@ void ConsoleCommandManager::CmdListCommands(const std::string& p_Filter)
 	{
 		if (p_Filter.empty() || StringUtil::Contains(l_Cmd.first, p_Filter))
 		{
-			std::cout << std::setw(35) << std::left << l_Cmd.first << l_Cmd.second->GetDesc();
+			std::cout << std::setw(35) << std::left << l_Cmd.second->GetName() << l_Cmd.second->GetDesc();
 			if (!l_Cmd.second->GetArgsDesc().empty())
 			{
 				std::cout << " Args: " << l_Cmd.second->GetArgsDesc();
@@ -281,17 +281,17 @@ void ConsoleCommandManager::CmdAbout()
 	std::cout << "App version ID:\t\t" << CoreInfo::GetAppVersion().GetID() << "\n";
 }
 
-std::string ConsoleCommandManager::GetNextCommand(const std::string& p_Filter, const std::string& p_Current) const
+std::string ConsoleCommandManager::GetNextAutoCompletedCmd(const std::string& p_Filter, const std::string& p_Current) const
 {
 	if (p_Filter.empty())
 	{
 		if (p_Current.empty())
 		{
-			return m_Functions.cbegin()->first;
+			return m_Functions.cbegin()->second->GetName();
 		}
 		else
 		{
-			auto l_Itr = m_Functions.find(p_Current);
+			auto l_Itr = m_Functions.find(StringUtil::ToLower(p_Current));
 			if (l_Itr == m_Functions.cend())
 			{
 				return p_Current;
@@ -300,9 +300,9 @@ std::string ConsoleCommandManager::GetNextCommand(const std::string& p_Filter, c
 			l_Itr++;
 			if (l_Itr == m_Functions.cend())
 			{
-				return m_Functions.cbegin()->first;
+				return m_Functions.cbegin()->second->GetName();
 			}
-			return l_Itr->first;
+			return l_Itr->second->GetName();
 		}
 	}
 	else
@@ -314,21 +314,21 @@ std::string ConsoleCommandManager::GetNextCommand(const std::string& p_Filter, c
 		{
 			return StringUtil::StartsWith(p_Value.first, l_Filter);
 		});
+
 		if (!l_Matches.empty())
 		{
-			const std::string l_Current = StringUtil::ToLower(p_Current);
-			auto l_Itr = std::find(l_Matches.cbegin(), l_Matches.cend(), l_Current);
+			auto l_Itr = std::find(l_Matches.cbegin(), l_Matches.cend(), StringUtil::ToLower(p_Current));
 			if (l_Itr == l_Matches.cend())
 			{
-				return *l_Matches.cbegin();
+				return m_Functions.find(*l_Matches.cbegin())->second->GetName();
 			}
 
 			l_Itr++;
 			if (l_Itr == l_Matches.cend())
 			{
-				return *l_Matches.cbegin();
+				return m_Functions.find(*l_Matches.cbegin())->second->GetName();
 			}
-			return *l_Itr;
+			return m_Functions.find(*l_Itr)->second->GetName();
 		}
 		return p_Current;
 	}

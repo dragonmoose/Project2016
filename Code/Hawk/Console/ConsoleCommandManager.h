@@ -41,7 +41,7 @@ public:
 			const std::string l_Name = StringUtil::ToLower(p_Name);
 
 			MutexScope_t l_MutexScope(m_Mutex);
-			bool l_bInserted = m_Functions.insert(FunctionMap_t::value_type(l_Name, std::make_unique<CF::MemberConsoleFunction<Object_t, Args_t...>>(p_Object, p_Func, p_Dispatcher, l_Name, p_Desc, p_ArgsDesc, p_bRequireArgs))).second;
+			bool l_bInserted = m_Functions.insert(FunctionMap_t::value_type(l_Name, std::make_unique<CF::MemberConsoleFunction<Object_t, Args_t...>>(p_Object, p_Func, p_Dispatcher, p_Name, p_Desc, p_ArgsDesc, p_bRequireArgs))).second;
 			THROW_IF_NOT(l_bInserted, "Failed to register member console function (already registered?): " << p_Name);
 		}
 		catch (Exception& e)
@@ -60,7 +60,7 @@ public:
 			const std::string l_Name = StringUtil::ToLower(p_Name);
 
 			MutexScope_t l_MutexScope(m_Mutex);
-			bool l_bInserted = m_Functions.insert(FunctionMap_t::value_type(l_Name, std::make_unique<CF::FreeConsoleFunction<Args_t...>>(p_Func, p_Dispatcher, l_Name, p_Desc, p_ArgsDesc, p_bRequireArgs))).second;
+			bool l_bInserted = m_Functions.insert(FunctionMap_t::value_type(l_Name, std::make_unique<CF::FreeConsoleFunction<Args_t...>>(p_Func, p_Dispatcher, p_Name, p_Desc, p_ArgsDesc, p_bRequireArgs))).second;
 			THROW_IF_NOT(l_bInserted, "Failed to register free console function (already registered?): " << p_Name);
 		}
 		catch (Exception& e)
@@ -88,7 +88,7 @@ private:
 	void CmdClearHistory();
 	void CmdAbout();
 
-	std::string GetNextCommand(const std::string& p_Command, const std::string& p_Current) const;
+	std::string GetNextAutoCompletedCmd(const std::string& p_Command, const std::string& p_Current) const;
 	void TryCallFunction(const CF::IConsoleFunction& p_Function, ConsoleInputParser& p_Command) const;
 
 	Thread m_Thread;
