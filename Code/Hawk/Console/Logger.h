@@ -83,27 +83,27 @@ namespace Logger
 #define LOG(msg, tag, level)
 #define LOGM(msg, level)
 
-#define FATAL(msg, tag)
-#define FATALM(msg)
+#define FATAL(msg, tag) Hawk::Logger::SetFatalFlag();
+#define FATALM(msg) Hawk::Logger::SetFatalFlag();
 
 #define LOG_IF(p, msg, tag, level)
 #define LOGM_IF(p, msg, level)
 
-#define FATAL_IF(p, msg, tag)
-#define FATALM_IF(p, msg)
+#define FATAL_IF(p, msg, tag) Hawk::Logger::SetFatalFlag();
+#define FATALM_IF(p, msg) Hawk::Logger::SetFatalFlag();
 
 #define LOG_EXCEPTION(e, tag, level)			
 #define LOGM_EXCEPTION(e, level)
 
-#define FATAL_EXCEPTION(e, tag)			
-#define FATALM_EXCEPTION(e)
+#define FATAL_EXCEPTION(e, tag) Hawk::Logger::SetFatalFlag();
+#define FATALM_EXCEPTION(e) Hawk::Logger::SetFatalFlag();
 
 #define LOG_EXCEPTION_CONSOLE(e)
 
 #define LOG_STD_EXCEPTION(e, tag, level)
 #define LOGM_STD_EXCEPTION(e, level)
 
-#define FATAL_STD_EXCEPTION(e, tag)
-#define FATALM_STD_EXCEPTION(e)
+#define FATAL_STD_EXCEPTION(e, tag) Hawk::Logger::SetFatalFlag();
+#define FATALM_STD_EXCEPTION(e) Hawk::Logger::SetFatalFlag();
 
 #endif
