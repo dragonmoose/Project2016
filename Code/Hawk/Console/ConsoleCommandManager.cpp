@@ -20,7 +20,7 @@ namespace
 	const UINT32 c_uiMaxHistoryRecords = 100;
 	const std::array<std::string, 5> c_HistoryExcludedCmds = { "-", "quit", "help", "cls", "console.history" };
 
-	bool ShouldSaveCommand(const std::string& p_Cmd)
+	bool IncludeInHistory(const std::string& p_Cmd)
 	{
 		return std::find(c_HistoryExcludedCmds.cbegin(), c_HistoryExcludedCmds.cend(), p_Cmd) == c_HistoryExcludedCmds.end();
 	}
@@ -115,7 +115,7 @@ void ConsoleCommandManager::RunInputLoop()
 							{
 								std::cout << "Unknown command: " << l_ParsedInput.GetCommand() << "\n\n";
 							}
-							if (ShouldSaveCommand(l_ParsedInput.GetCommand()))
+							if (IncludeInHistory(l_ParsedInput.GetCommand()))
 							{
 								m_History->Add(m_CurrLine);
 							}
