@@ -2,7 +2,7 @@
 #include "VkAPI.h"
 #include "VkSystem.h"
 #include "VkInstance.h"
-#include "VkUtil.h"
+#include "VkInstanceUtil.h"
 #include "Console/ScopedConsoleCommands.h"
 
 namespace Hawk {
@@ -11,7 +11,6 @@ namespace Gfx {
 void VkAPI::Initialize()
 {
 	VkSystem::Initialize();
-	VkUtil::Initialize();
 	VkInstance l_Instance;
 	//SetFullscreenState(Config::Instance().Get("gfx.fullscreen", false));
 	LOG("Vulkan API initialized", "vulkan", Info);
@@ -36,7 +35,8 @@ void VkAPI::SetDebugText(const std::string& /*p_Text*/)
 #ifdef HAWK_DEBUG
 void VkAPI::InitializeConsole(ScopedConsoleCommands* p_Console)
 {
-	p_Console->Register("vk.availableInstanceLayers", &VkUtil::PrintAvailableInstanceLayers, "Lists the available Vulkan instance layers", "");
+	p_Console->Register("vk.availableInstanceLayers", &VkInstanceUtil::CmdPrintAvailableLayers, "Lists the available Vulkan instance layers", "");
+	p_Console->Register("vk.availableInstanceExtensions", &VkInstanceUtil::CmdPrintAvailableExtensions, "Lists the available Vulkan instance extensions", "");
 }
 
 void VkAPI::CmdListDevices()

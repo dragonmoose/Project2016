@@ -1,17 +1,12 @@
 #pragma once
-#include <vulkan/vulkan.h>
+#include <stdint.h>
 #include <string>
-#include <vector>
 
 namespace Hawk {
 namespace Gfx {
 namespace VkUtil
 {
-	void Initialize();
-	bool IsInstanceLayerAvailable(const std::string& p_Name);
-	bool IsInstanceExtensionAvailable(const std::string& p_Name);
-
-	void PrintAvailableInstanceLayers();
+	std::string SpecVersionToString(uint32_t p_uiVersion);
 }
 
 }

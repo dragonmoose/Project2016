@@ -142,11 +142,12 @@
     <ClInclude Include="Gfx\IRenderingAPI.h" />
     <ClInclude Include="Gfx\RenderableComponent.h" />
     <ClInclude Include="Gfx\RenderingModule.h" />
+    <ClInclude Include="Gfx\Vulkan\VkUtil.h" />
     <ClInclude Include="Gfx\Vulkan\VkAPI.h" />
     <ClInclude Include="Gfx\Vulkan\VkFactory.h" />
     <ClInclude Include="Gfx\Vulkan\VkInstance.h" />
     <ClInclude Include="Gfx\Vulkan\VkSystem.h" />
-    <ClInclude Include="Gfx\Vulkan\VkUtil.h" />
+    <ClInclude Include="Gfx\Vulkan\VkInstanceUtil.h" />
     <ClInclude Include="Input\InputEvents.h" />
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Input\KeyCodes.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="Gfx\Vulkan\VkFactory.cpp" />
     <ClCompile Include="Gfx\Vulkan\VkInstance.cpp" />
     <ClCompile Include="Gfx\Vulkan\VkSystem.cpp" />
+    <ClCompile Include="Gfx\Vulkan\VkInstanceUtil.cpp" />
     <ClCompile Include="Gfx\Vulkan\VkUtil.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
     <ClCompile Include="pch.cpp">

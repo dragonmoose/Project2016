@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "VkInstance.h"
-#include "VkUtil.h"
+#include "VkInstanceUtil.h"
 #include "VkSystem.h"
 #include <array>
 
@@ -74,7 +74,7 @@ void VkInstance::GetLayers(std::vector<const char*>& p_Layers) const
 
 	for (const auto& l_Layer : p_Layers)
 	{
-		THROW_IF_NOT(VkUtil::IsInstanceLayerAvailable(l_Layer), "Instance layer not available. Name=" << l_Layer);
+		THROW_IF_NOT(VkInstanceUtil::IsLayerAvailable(l_Layer), "Instance layer not available. Name=" << l_Layer);
 	}
 }
 
@@ -85,9 +85,9 @@ void VkInstance::GetExtensions(std::vector<const char*>& p_Extensions) const
 	std::copy(n_EnabledDebugExtensions.begin(), n_EnabledDebugExtensions.end(), std::back_inserter(p_Extensions));
 #endif
 
-	for (const auto& l_Layer : p_Extensions)
+	for (const auto& l_Extension : p_Extensions)
 	{
-		THROW_IF_NOT(VkUtil::IsInstanceExtensionAvailable(l_Layer), "Instance layer not available. Name=" << l_Layer);
+		THROW_IF_NOT(VkInstanceUtil::IsExtensionAvailable(l_Extension), "Global instance extension not available. Name=" << l_Extension);
 	}
 }
 
