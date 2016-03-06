@@ -21,7 +21,7 @@ namespace VkInstanceUtil
 bool VkInstanceUtil::IsLayerAvailable(const std::string& p_Name)
 {
 	LayerProperties_t l_Layers;
-	GetLayers(l_Layers, true);
+	GetLayers(l_Layers, false);
 	return std::find_if(l_Layers.begin(), l_Layers.end(),
 		[p_Name](const VkLayerProperties& p_Layer) { return p_Name == p_Layer.layerName && VkSystem::GetAPIVersion() >= p_Layer.specVersion; }) != l_Layers.end();
 }

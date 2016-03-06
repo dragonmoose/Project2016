@@ -74,7 +74,7 @@ void VkInstance::GetLayers(std::vector<const char*>& p_Layers) const
 
 	for (const auto& l_Layer : p_Layers)
 	{
-	//	THROW_IF_NOT(VkInstanceUtil::IsLayerAvailable(l_Layer), "Instance layer not available. Name=" << l_Layer);
+		THROW_IF_NOT(VkInstanceUtil::IsLayerAvailable(l_Layer), "Instance layer not available. Name=" << l_Layer);
 	}
 }
 
