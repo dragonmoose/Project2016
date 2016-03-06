@@ -40,7 +40,7 @@ VkInstance::VkInstance()
 	l_AppInfo.applicationVersion = CoreInfo::GetAppVersion().GetID();
 	l_AppInfo.pEngineName = CoreInfo::GetEngineName();
 	l_AppInfo.engineVersion = CoreInfo::GetEngineVersion().GetID();
-	l_AppInfo.apiVersion = VK_API_VERSION;
+	l_AppInfo.apiVersion = VkSystem::GetAPIVersion();
 
 	VkInstanceCreateInfo l_Info = {};
 	l_Info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -74,7 +74,7 @@ void VkInstance::GetLayers(std::vector<const char*>& p_Layers) const
 
 	for (const auto& l_Layer : p_Layers)
 	{
-		THROW_IF_NOT(VkInstanceUtil::IsLayerAvailable(l_Layer), "Instance layer not available. Name=" << l_Layer);
+	//	THROW_IF_NOT(VkInstanceUtil::IsLayerAvailable(l_Layer), "Instance layer not available. Name=" << l_Layer);
 	}
 }
 

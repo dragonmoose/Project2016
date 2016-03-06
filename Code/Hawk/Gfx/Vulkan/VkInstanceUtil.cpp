@@ -2,6 +2,7 @@
 #include "VkInstanceUtil.h"
 #include "VkSystem.h"
 #include "VkUtil.h"
+#include "Util/Algorithm.h"
 #include <unordered_map>
 #include <algorithm>
 #include <iomanip>
@@ -13,36 +14,42 @@ namespace VkInstanceUtil
 	using LayerProperties_t = std::vector<VkLayerProperties>;
 	using ExtensionProperties_t = std::vector<VkExtensionProperties>;
 
-	void GetLayers(LayerProperties_t& p_Layers);
+	void GetLayers(LayerProperties_t& p_Layers, bool p_bKeepUnsupported);
 	void GetExtensions(ExtensionProperties_t& p_Extensions, const std::string& p_LayerName = std::string());
 }
 
 bool VkInstanceUtil::IsLayerAvailable(const std::string& p_Name)
 {
 	LayerProperties_t l_Layers;
-	GetLayers(l_Layers);
+	GetLayers(l_Layers, true);
 	return std::find_if(l_Layers.begin(), l_Layers.end(),
-		[p_Name](const VkLayerProperties& p_Layer) { return p_Name == p_Layer.layerName; }) != l_Layers.end();
+		[p_Name](const VkLayerProperties& p_Layer) { return p_Name == p_Layer.layerName && VkSystem::GetAPIVersion() >= p_Layer.specVersion; }) != l_Layers.end();
 }
 
 bool VkInstanceUtil::IsExtensionAvailable(const std::string& p_Name, const std::string& p_LayerName)
 {
+	if (!p_LayerName.empty() && !IsLayerAvailable(p_LayerName)) return false;
+
 	ExtensionProperties_t l_Extensions;
 	GetExtensions(l_Extensions, p_LayerName);
 	return std::find_if(l_Extensions.begin(), l_Extensions.end(),
 		[p_Name](const VkExtensionProperties& p_Extension) { return p_Name == p_Extension.extensionName; }) != l_Extensions.end();
 }
 
-
-void VkInstanceUtil::CmdPrintAvailableLayers()
+void VkInstanceUtil::CmdPrintLayers(bool p_bKeepUnsupported)
 {
 	LayerProperties_t l_Layers;
-	GetLayers(l_Layers);
+	GetLayers(l_Layers, p_bKeepUnsupported);
 
 	CONSOLE_WRITE_SCOPE();
 	std::cout << "\n";
 	for (const auto& l_Layer : l_Layers)
 	{
+		if (l_Layer.specVersion > VkSystem::GetAPIVersion())
+		{
+			std::cout << "## N/A - requires API " << VkUtil::SpecVersionToString(l_Layer.specVersion) << " ## ";
+		}
+
 		std::cout << l_Layer.layerName << " (" << l_Layer.description << ")" <<
 			" SpecVersion: " << VkUtil::SpecVersionToString(l_Layer.specVersion) <<
 			" ImplementationVersion: " << l_Layer.implementationVersion << "\n";
@@ -50,7 +57,7 @@ void VkInstanceUtil::CmdPrintAvailableLayers()
 	std::cout << "\n";
 }
 
-void VkInstanceUtil::CmdPrintAvailableExtensions()
+void VkInstanceUtil::CmdPrintExtensions(bool p_bKeepUnsupported)
 {
 	CONSOLE_WRITE_SCOPE();
 
@@ -64,7 +71,7 @@ void VkInstanceUtil::CmdPrintAvailableExtensions()
 	std::cout << "\n-Layer extensions------------------------\n";
 
 	LayerProperties_t l_Layers;
-	GetLayers(l_Layers);
+	GetLayers(l_Layers, p_bKeepUnsupported);
 
 	for (const auto& l_Layer : l_Layers)
 	{
@@ -72,6 +79,10 @@ void VkInstanceUtil::CmdPrintAvailableExtensions()
 		GetExtensions(l_Extensions, l_Layer.layerName);
 		if (!l_Extensions.empty())
 		{
+			if (l_Layer.specVersion > VkSystem::GetAPIVersion())
+			{
+				std::cout << "## N/A - requires API " << VkUtil::SpecVersionToString(l_Layer.specVersion) << " ## ";
+			}
 			std::cout << l_Layer.layerName << ":\n";
 			for (const auto& l_Extension : l_Extensions)
 			{
@@ -83,13 +94,18 @@ void VkInstanceUtil::CmdPrintAvailableExtensions()
 	std::cout << "\n";
 }
 
-void VkInstanceUtil::GetLayers(LayerProperties_t& p_Layers)
+void VkInstanceUtil::GetLayers(LayerProperties_t& p_Layers, bool p_bKeepUnsupported)
 {
 	uint32_t l_uiCount = 0;
 	VK_THROW_IF_NOT_SUCCESS(vkEnumerateInstanceLayerProperties(&l_uiCount, nullptr), "Failed to get instance layer count");
 
 	p_Layers.resize(l_uiCount);
 	VK_THROW_IF_NOT_SUCCESS(vkEnumerateInstanceLayerProperties(&l_uiCount, p_Layers.data()), "Failed to get instance layers");
+
+	if (!p_bKeepUnsupported)
+	{
+		hwk::erase_if(p_Layers, [](const VkLayerProperties& p_Layer) { return p_Layer.specVersion > VkSystem::GetAPIVersion(); });
+	}
 }
 
 void VkInstanceUtil::GetExtensions(ExtensionProperties_t& p_Extensions, const std::string& p_LayerName)

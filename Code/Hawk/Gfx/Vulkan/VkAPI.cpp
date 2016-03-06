@@ -35,8 +35,8 @@ void VkAPI::SetDebugText(const std::string& /*p_Text*/)
 #ifdef HAWK_DEBUG
 void VkAPI::InitializeConsole(ScopedConsoleCommands* p_Console)
 {
-	p_Console->Register("vk.availableInstanceLayers", &VkInstanceUtil::CmdPrintAvailableLayers, "Lists the available Vulkan instance layers", "");
-	p_Console->Register("vk.availableInstanceExtensions", &VkInstanceUtil::CmdPrintAvailableExtensions, "Lists the available Vulkan instance extensions", "");
+	p_Console->Register("vk.printInstanceLayers", &VkInstanceUtil::CmdPrintLayers, "Lists Vulkan instance layers", "KeepUnsupported [0|1]", false);
+	p_Console->Register("vk.printInstanceExtensions", &VkInstanceUtil::CmdPrintExtensions, "Lists Vulkan instance extensions", "KeepUnsupported [0|1]", false);
 }
 
 void VkAPI::CmdListDevices()

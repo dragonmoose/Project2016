@@ -219,7 +219,6 @@ void ConsoleCommandManager::CmdReloadConfig()
 	{
 		std::cout << "Failed to parse config file.\n\n";
 	}
-
 }
 
 void ConsoleCommandManager::CmdToggleLog()

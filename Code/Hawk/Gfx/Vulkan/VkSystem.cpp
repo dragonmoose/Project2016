@@ -10,6 +10,7 @@ namespace VkSystem
 	ResultMap_t n_ResultMap;
 	const std::string n_DefaultResult("N/A");
 	bool n_bInitialized = false;
+	uint32_t n_uiAPIVersion = VK_MAKE_VERSION(1, 0, 3);
 
 	void PopulateResultMap();
 }
@@ -22,6 +23,12 @@ void VkSystem::Initialize()
 	PopulateResultMap();
 	n_bInitialized = true;
 }
+
+uint32_t VkSystem::GetAPIVersion()
+{
+	return n_uiAPIVersion;
+}
+
 
 const std::string& VkSystem::ResultToString(VkResult p_Result)
 {
