@@ -7,7 +7,8 @@ namespace Gfx {
 class VlkDevice final
 {
 public:
-	VlkDevice();
+	VlkDevice(VkInstance p_Instance);
+	VlkDevice(VkInstance p_Instance, uint32_t p_uiDeviceID);
 	~VlkDevice();
 	VlkDevice(const VlkDevice&) = delete;
 	VlkDevice& operator=(const VlkDevice&) = delete;
