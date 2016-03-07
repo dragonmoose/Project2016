@@ -1,16 +1,16 @@
 #pragma once
-#include "VkSystem.h"
+#include "VlkSystem.h"
 
 namespace Hawk {
 namespace Gfx {
 
-class VkInstanceWrapper final
+class VlkInstance final
 {
 public:
-	VkInstanceWrapper();
-	~VkInstanceWrapper();
-	VkInstanceWrapper(const VkInstance&) = delete;
-	VkInstanceWrapper& operator=(const VkInstance&) = delete;
+	VlkInstance();
+	~VlkInstance();
+	VlkInstance(const VlkInstance&) = delete;
+	VlkInstance& operator=(const VlkInstance&) = delete;
 
 private:
 	void GetLayers(std::vector<const char*>& p_Layers) const;

@@ -4,7 +4,7 @@
 
 namespace Hawk {
 namespace Gfx {
-namespace VkSystem
+namespace VlkSystem
 {
 	void Initialize();
 	uint32_t GetAPIVersion();
@@ -13,6 +13,6 @@ namespace VkSystem
 }
 }
 
-#define VK_THROW(p, msg) THROW(msg << " [VkResult: " << Hawk::Gfx::VkSystem::ResultToString(p) << "]")
+#define VK_THROW(p, msg) THROW(msg << " [VkResult: " << Hawk::Gfx::VlkSystem::ResultToString(p) << "]")
 #define VK_THROW_IF_ERR(p, msg)	if ((p < 0)) VK_THROW(p, msg)
 #define VK_THROW_IF_NOT_SUCCESS(p, msg) if ((p != 0)) VK_THROW(p, msg)

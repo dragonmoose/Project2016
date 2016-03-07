@@ -4,10 +4,10 @@
 namespace Hawk {
 namespace Gfx {
 
-class VkAPI final : public IRenderingAPI
+class VlkAPI final : public IRenderingAPI
 {
 public:
-	VkAPI() = default;
+	VlkAPI() = default;
 
 	void Initialize() override;
 	void Render() override;

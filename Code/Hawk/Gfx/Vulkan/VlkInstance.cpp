@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "VkInstanceWrapper.h"
-#include "VkInstanceUtil.h"
-#include "VkSystem.h"
+#include "VlkInstance.h"
+#include "VlkInstanceUtil.h"
+#include "VlkSystem.h"
 #include <array>
 #include <functional>
 
@@ -28,7 +28,7 @@ namespace
 #endif
 }
 
-VkInstanceWrapper::VkInstanceWrapper()
+VlkInstance::VlkInstance()
 : m_Handle(nullptr)
 {
 	std::vector<const char*> l_EnabledLayers = {};
@@ -44,7 +44,7 @@ VkInstanceWrapper::VkInstanceWrapper()
 	l_AppInfo.applicationVersion = CoreInfo::GetAppVersion().GetID();
 	l_AppInfo.pEngineName = CoreInfo::GetEngineName();
 	l_AppInfo.engineVersion = CoreInfo::GetEngineVersion().GetID();
-	l_AppInfo.apiVersion = VkSystem::GetAPIVersion();
+	l_AppInfo.apiVersion = VlkSystem::GetAPIVersion();
 
 	VkInstanceCreateInfo l_Info = {};
 	l_Info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -59,7 +59,7 @@ VkInstanceWrapper::VkInstanceWrapper()
 	l_Info.ppEnabledExtensionNames = l_EnabledExtensions.data();
 
 	VK_THROW_IF_NOT_SUCCESS(vkCreateInstance(&l_Info, nullptr, &m_Handle), "Failed to create vulkan instance");
-	LOG("VkInstance created", "vulkan", Debug);
+	LOG("VlkInstance created", "vulkan", Debug);
 
 #ifdef HAWK_DEBUG
 	RetrieveDebugCallbacks();
@@ -67,17 +67,17 @@ VkInstanceWrapper::VkInstanceWrapper()
 #endif
 }
 
-VkInstanceWrapper::~VkInstanceWrapper()
+VlkInstance::~VlkInstance()
 {
 	ASSERT(m_Handle, "Handle NULL");
 #ifdef HAWK_DEBUG
 	DestroyDebugReportCallback();
 #endif
 	vkDestroyInstance(m_Handle, nullptr);
-	LOG("VkInstance destroyed", "vulkan", Debug);
+	LOG("VlkInstance destroyed", "vulkan", Debug);
 }
 
-void VkInstanceWrapper::GetLayers(std::vector<const char*>& p_Layers) const
+void VlkInstance::GetLayers(std::vector<const char*>& p_Layers) const
 {
 	std::copy(n_EnabledLayers.begin(), n_EnabledLayers.end(), std::back_inserter(p_Layers));
 #ifdef HAWK_DEBUG
@@ -86,11 +86,11 @@ void VkInstanceWrapper::GetLayers(std::vector<const char*>& p_Layers) const
 
 	for (const auto& l_Layer : p_Layers)
 	{
-		THROW_IF_NOT(VkInstanceUtil::IsLayerAvailable(l_Layer), "Instance layer not available. Name=" << l_Layer);
+		THROW_IF_NOT(VlkInstanceUtil::IsLayerAvailable(l_Layer), "Instance layer not available. Name=" << l_Layer);
 	}
 }
 
-void VkInstanceWrapper::GetExtensions(std::vector<const char*>& p_Extensions) const
+void VlkInstance::GetExtensions(std::vector<const char*>& p_Extensions) const
 {
 	std::copy(n_EnabledExtensions.begin(), n_EnabledExtensions.end(), std::back_inserter(p_Extensions));
 #ifdef HAWK_DEBUG
@@ -99,12 +99,12 @@ void VkInstanceWrapper::GetExtensions(std::vector<const char*>& p_Extensions) co
 
 	for (const auto& l_Extension : p_Extensions)
 	{
-		THROW_IF_NOT(VkInstanceUtil::IsExtensionAvailable(l_Extension), "Global instance extension not available. Name=" << l_Extension);
+		THROW_IF_NOT(VlkInstanceUtil::IsExtensionAvailable(l_Extension), "Global instance extension not available. Name=" << l_Extension);
 	}
 }
 
 #ifdef HAWK_DEBUG
-void VkInstanceWrapper::RetrieveDebugCallbacks()
+void VlkInstance::RetrieveDebugCallbacks()
 {
 	m_CreateDebugReport = (PFN_vkCreateDebugReportCallbackEXT)vkGetInstanceProcAddr(m_Handle, "vkCreateDebugReportCallbackEXT");
 	THROW_IF_NOT(m_CreateDebugReport, "Failed to create CreateDebugReport vulkan extension");
@@ -139,11 +139,11 @@ namespace
 		{
 			LOG(l_Msg.str(), "vkdbg", Error);
 		}
-		return false; // returning false here will yield the same behavior as without validation layers
+		return false; // Returning false here will yield the same behavior as without validation layers
 	}
 }
 
-void VkInstanceWrapper::CreateDebugReportCallback()
+void VlkInstance::CreateDebugReportCallback()
 {
 	VkDebugReportCallbackCreateInfoEXT l_Info = {};
 	l_Info.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT;
@@ -152,10 +152,9 @@ void VkInstanceWrapper::CreateDebugReportCallback()
 	l_Info.pfnCallback = OnDebugReport;
 	l_Info.pUserData = nullptr;
 	m_CreateDebugReport(m_Handle, &l_Info, nullptr, &m_DebugReportHandle);
-
 }
 
-void VkInstanceWrapper::DestroyDebugReportCallback()
+void VlkInstance::DestroyDebugReportCallback()
 {
 	m_DestroyDebugReport(m_Handle, m_DebugReportHandle, nullptr);
 }

@@ -131,31 +131,31 @@
     <ClCompile Include="Gfx\RenderableComponent.cpp">
       <Filter>Gfx</Filter>
     </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\VkFactory.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\VkAPI.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="System\Version.cpp">
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="System\CoreInfo.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\VkSystem.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="Console\ScopedConsoleCommands.cpp">
       <Filter>Console</Filter>
     </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\VkInstanceUtil.cpp">
+    <ClCompile Include="Gfx\Vulkan\VlkUtil.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\VkUtil.cpp">
+    <ClCompile Include="Gfx\Vulkan\VlkAPI.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\VkInstanceWrapper.cpp">
+    <ClCompile Include="Gfx\Vulkan\VlkFactory.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\VlkInstance.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\VlkSystem.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\VlkInstanceUtil.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
@@ -347,15 +347,6 @@
     <ClInclude Include="Gfx\RenderableComponent.h">
       <Filter>Gfx</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VkSystem.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VkFactory.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VkAPI.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="System\Version.h">
       <Filter>System</Filter>
     </ClInclude>
@@ -365,13 +356,22 @@
     <ClInclude Include="Console\ScopedConsoleCommands.h">
       <Filter>Console</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VkInstanceUtil.h">
+    <ClInclude Include="Gfx\Vulkan\VlkUtil.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VkUtil.h">
+    <ClInclude Include="Gfx\Vulkan\VlkAPI.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VkInstanceWrapper.h">
+    <ClInclude Include="Gfx\Vulkan\VlkFactory.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\VlkInstance.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\VlkSystem.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\VlkInstanceUtil.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>

@@ -4,7 +4,7 @@
 
 namespace Hawk {
 namespace Gfx {
-namespace VkUtil
+namespace VlkUtil
 {
 	std::string SpecVersionToString(uint32_t p_uiVersion);
 }

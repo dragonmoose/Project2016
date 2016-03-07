@@ -1,10 +1,10 @@
 #include "pch.h"
-#include "VkSystem.h"
+#include "VlkSystem.h"
 #include <unordered_map>
 
 namespace Hawk {
 namespace Gfx {
-namespace VkSystem
+namespace VlkSystem
 {
 	using ResultMap_t = std::unordered_map<VkResult, std::string>;
 	ResultMap_t n_ResultMap;
@@ -17,22 +17,22 @@ namespace VkSystem
 
 #define ADD_VK_RESULT(r) n_ResultMap[VK_##r] = #r 
 
-void VkSystem::Initialize()
+void VlkSystem::Initialize()
 {
-	ASSERT(!n_bInitialized, "VkSystem already initialized");
+	ASSERT(!n_bInitialized, "VlkSystem already initialized");
 	PopulateResultMap();
 	n_bInitialized = true;
 }
 
-uint32_t VkSystem::GetAPIVersion()
+uint32_t VlkSystem::GetAPIVersion()
 {
 	return n_uiAPIVersion;
 }
 
 
-const std::string& VkSystem::ResultToString(VkResult p_Result)
+const std::string& VlkSystem::ResultToString(VkResult p_Result)
 {
-	ASSERT(n_bInitialized, "VkSystem not initialized");
+	ASSERT(n_bInitialized, "VlkSystem not initialized");
 	auto l_Itr = n_ResultMap.find(p_Result);
 	if (l_Itr != n_ResultMap.end())
 	{
@@ -41,7 +41,7 @@ const std::string& VkSystem::ResultToString(VkResult p_Result)
 	return n_DefaultResult;
 }
 
-void VkSystem::PopulateResultMap()
+void VlkSystem::PopulateResultMap()
 {
 	ADD_VK_RESULT(SUCCESS);
 	ADD_VK_RESULT(NOT_READY);

@@ -1,11 +1,11 @@
 #include "pch.h"
-#include "VkUtil.h"
+#include "VlkUtil.h"
 #include <vulkan/vulkan.h>
 
 namespace Hawk {
 namespace Gfx {
 
-std::string VkUtil::SpecVersionToString(uint32_t p_uiVersion)
+std::string VlkUtil::SpecVersionToString(uint32_t p_uiVersion)
 {
 	std::ostringstream l_Stream;
 	l_Stream << VK_VERSION_MAJOR(p_uiVersion) << "."

@@ -2,7 +2,7 @@
 
 namespace Hawk {
 namespace Gfx {
-namespace VkFactory
+namespace VlkFactory
 {
 	
 }
