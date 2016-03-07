@@ -145,7 +145,7 @@
     <ClInclude Include="Gfx\Vulkan\VkUtil.h" />
     <ClInclude Include="Gfx\Vulkan\VkAPI.h" />
     <ClInclude Include="Gfx\Vulkan\VkFactory.h" />
-    <ClInclude Include="Gfx\Vulkan\VkInstance.h" />
+    <ClInclude Include="Gfx\Vulkan\VkInstanceWrapper.h" />
     <ClInclude Include="Gfx\Vulkan\VkSystem.h" />
     <ClInclude Include="Gfx\Vulkan\VkInstanceUtil.h" />
     <ClInclude Include="Input\InputEvents.h" />
@@ -205,7 +205,7 @@
     <ClCompile Include="Gfx\RenderingModule.cpp" />
     <ClCompile Include="Gfx\Vulkan\VkAPI.cpp" />
     <ClCompile Include="Gfx\Vulkan\VkFactory.cpp" />
-    <ClCompile Include="Gfx\Vulkan\VkInstance.cpp" />
+    <ClCompile Include="Gfx\Vulkan\VkInstanceWrapper.cpp" />
     <ClCompile Include="Gfx\Vulkan\VkSystem.cpp" />
     <ClCompile Include="Gfx\Vulkan\VkInstanceUtil.cpp" />
     <ClCompile Include="Gfx\Vulkan\VkUtil.cpp" />

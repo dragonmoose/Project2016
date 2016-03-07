@@ -131,9 +131,6 @@
     <ClCompile Include="Gfx\RenderableComponent.cpp">
       <Filter>Gfx</Filter>
     </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\VkInstance.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="Gfx\Vulkan\VkFactory.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
@@ -156,6 +153,9 @@
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Gfx\Vulkan\VkUtil.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\VkInstanceWrapper.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
@@ -347,9 +347,6 @@
     <ClInclude Include="Gfx\RenderableComponent.h">
       <Filter>Gfx</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VkInstance.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="Gfx\Vulkan\VkSystem.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
@@ -372,6 +369,9 @@
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Gfx\Vulkan\VkUtil.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\VkInstanceWrapper.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>

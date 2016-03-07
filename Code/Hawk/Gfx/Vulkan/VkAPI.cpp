@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "VkAPI.h"
 #include "VkSystem.h"
-#include "VkInstance.h"
+#include "VkInstanceWrapper.h"
 #include "VkInstanceUtil.h"
 #include "Console/ScopedConsoleCommands.h"
 
@@ -11,7 +11,7 @@ namespace Gfx {
 void VkAPI::Initialize()
 {
 	VkSystem::Initialize();
-	VkInstance l_Instance;
+	VkInstanceWrapper l_Instance;
 	//SetFullscreenState(Config::Instance().Get("gfx.fullscreen", false));
 	LOG("Vulkan API initialized", "vulkan", Info);
 }
