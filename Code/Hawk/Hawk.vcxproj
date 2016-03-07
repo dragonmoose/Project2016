@@ -142,6 +142,7 @@
     <ClInclude Include="Gfx\IRenderingAPI.h" />
     <ClInclude Include="Gfx\RenderableComponent.h" />
     <ClInclude Include="Gfx\RenderingModule.h" />
+    <ClInclude Include="Gfx\Vulkan\VlkDevice.h" />
     <ClInclude Include="Gfx\Vulkan\VlkUtil.h" />
     <ClInclude Include="Gfx\Vulkan\VlkAPI.h" />
     <ClInclude Include="Gfx\Vulkan\VlkFactory.h" />
@@ -204,6 +205,7 @@
     <ClCompile Include="Gfx\RenderableComponent.cpp" />
     <ClCompile Include="Gfx\RenderingModule.cpp" />
     <ClCompile Include="Gfx\Vulkan\VlkAPI.cpp" />
+    <ClCompile Include="Gfx\Vulkan\VlkDevice.cpp" />
     <ClCompile Include="Gfx\Vulkan\VlkFactory.cpp" />
     <ClCompile Include="Gfx\Vulkan\VlkInstance.cpp" />
     <ClCompile Include="Gfx\Vulkan\VlkSystem.cpp" />

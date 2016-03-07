@@ -77,6 +77,11 @@ VlkInstance::~VlkInstance()
 	LOG("VlkInstance destroyed", "vulkan", Debug);
 }
 
+VkInstance VlkInstance::GetHandle() const
+{
+	return m_Handle;
+}
+
 void VlkInstance::GetLayers(std::vector<const char*>& p_Layers) const
 {
 	std::copy(n_EnabledLayers.begin(), n_EnabledLayers.end(), std::back_inserter(p_Layers));

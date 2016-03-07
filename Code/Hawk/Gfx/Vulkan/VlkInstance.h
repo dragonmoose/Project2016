@@ -12,6 +12,8 @@ public:
 	VlkInstance(const VlkInstance&) = delete;
 	VlkInstance& operator=(const VlkInstance&) = delete;
 
+	VkInstance GetHandle() const;
+
 private:
 	void GetLayers(std::vector<const char*>& p_Layers) const;
 	void GetExtensions(std::vector<const char*>& p_Extensions) const;
