@@ -233,6 +233,7 @@ void Core::StopModules()
 		l_Manager->Stop();
 		l_Manager.reset();
 	}
+	m_CoreModules.clear();
 }
 
 bool Core::ModuleThreadExists(const std::string& p_Name) const

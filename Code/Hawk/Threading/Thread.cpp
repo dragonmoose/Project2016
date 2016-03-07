@@ -39,7 +39,7 @@ void Thread::Stop()
 {
 	m_bStopSignal = true;
 	m_Thread.join();
-	LOG("*** Thread stopped ***", GetName(), Debug);
+	LOG("*** Thread [" << GetName() << "] stopped ***", GetName(), Debug);
 }
 
 const std::string& Thread::GetName() const

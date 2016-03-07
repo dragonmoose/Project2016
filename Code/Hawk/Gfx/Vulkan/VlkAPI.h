@@ -1,5 +1,7 @@
 #pragma once
 #include "Gfx/IRenderingAPI.h"
+#include "VlkInstance.h"
+#include <memory>
 
 namespace Hawk {
 namespace Gfx {
@@ -22,6 +24,8 @@ public:
 
 private:
 	static const std::string& GetLogDesc();
+
+	std::unique_ptr<VlkInstance> m_Instance;
 };
 
 }

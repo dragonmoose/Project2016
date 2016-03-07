@@ -22,6 +22,7 @@ Module::Module()
 
 Module::~Module()
 {
+	LOGM("Module destroyed", Debug)
 }
 
 ModuleID_t Module::GetID() const

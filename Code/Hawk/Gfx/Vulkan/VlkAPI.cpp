@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "VlkAPI.h"
 #include "VlkSystem.h"
-#include "VlkInstance.h"
 #include "VlkInstanceUtil.h"
 #include "Console/ScopedConsoleCommands.h"
 
@@ -11,7 +10,7 @@ namespace Gfx {
 void VlkAPI::Initialize()
 {
 	VlkSystem::Initialize();
-	VlkInstance l_Instance;
+	m_Instance = std::make_unique<VlkInstance>();
 	//SetFullscreenState(Config::Instance().Get("gfx.fullscreen", false));
 	LOG("Vulkan API initialized", "vulkan", Info);
 }
