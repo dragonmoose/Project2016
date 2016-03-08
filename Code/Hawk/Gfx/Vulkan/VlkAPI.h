@@ -11,6 +11,7 @@ class VlkAPI final : public IRenderingAPI
 {
 public:
 	VlkAPI() = default;
+	~VlkAPI();
 
 	void Initialize() override;
 	void Render() override;
