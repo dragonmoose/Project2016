@@ -70,3 +70,9 @@ void VlkSystem::PopulateResultMap()
 
 }
 }
+
+std::ostream& operator<<(std::ostream& os, VkExtent3D p_Extent)
+{
+	os << "(w:" << p_Extent.width << " h:" << p_Extent.height << " d:" << p_Extent.depth << ")";
+	return os;
+}

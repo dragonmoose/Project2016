@@ -9,6 +9,12 @@ namespace Gfx {
 VlkDevice::VlkDevice(VkInstance p_Instance)
 : m_Instance(p_Instance)
 {
+	Devices_t l_Devices;
+	GetDevices(l_Devices);
+
+	THROW_IF(l_Devices.empty(), "No Vulkan compatible devices found");
+
+	CreateDevice(l_Devices[0]);
 	LOG("Created auto-selected vulkan device", "vulkan", Info);
 }
 
@@ -31,21 +37,41 @@ void VlkDevice::CmdPrintDevices()
 	CONSOLE_WRITE_SCOPE();
 	for (const auto l_Device : l_Devices)
 	{
-		VkPhysicalDeviceProperties l_Prop;
-		GetDeviceProperties(l_Device, l_Prop);
+		VkPhysicalDeviceProperties l_Props;
+		GetDeviceProperties(l_Device, l_Props);
 
-		static const uint8_t w = 30;
-		std::cout << "\n-" << l_Prop.deviceName << "---------------------------------------------------------------\n";
-		std::cout << std::left << std::setw(w) << "DeviceID:" << l_Prop.deviceID << "\n";
-		std::cout << std::left << std::setw(w) << "DeviceType:" << DeviceTypeToString(l_Prop.deviceType) << "\n";
-		std::cout << std::left << std::setw(w) << "VendorID:" << l_Prop.vendorID << "\n";
-		std::cout << std::left << std::setw(w) << "DriverVersion:" << l_Prop.driverVersion << "\n";
-		std::cout << std::left << std::setw(w) << "Supported API-version:" << VlkUtil::SpecVersionToString(l_Prop.apiVersion) << "\n";
-		//std::cout << std::left << std::setw(w) << "Limits:";
-		std::cout << std::left << std::setw(w) << "PipelineCacheUUID:" << PipelineCacheUUIDToString(l_Prop.pipelineCacheUUID) << "\n";
-		//std::cout << std::left << std::setw(w) << "SparseProperties:";
+		static const uint8_t w = 34;
+		std::cout << "\n-" << l_Props.deviceName << "-------------------------------------------------------------------------------------\n";
+		std::cout << std::left << std::setw(w) << "DeviceID:" << l_Props.deviceID << "\n";
+		std::cout << std::left << std::setw(w) << "DeviceType:" << DeviceTypeToString(l_Props.deviceType) << "\n";
+		std::cout << std::left << std::setw(w) << "VendorID:" << l_Props.vendorID << "\n";
+		std::cout << std::left << std::setw(w) << "DriverVersion:" << l_Props.driverVersion << "\n";
+		std::cout << std::left << std::setw(w) << "Supported API-version:" << VlkUtil::SpecVersionToString(l_Props.apiVersion) << "\n";
+		std::cout << std::left << std::setw(w) << "Limits:" << "[Not implemented]\n";
+		std::cout << std::left << std::setw(w) << "PipelineCacheUUID:" << PipelineCacheUUIDToString(l_Props.pipelineCacheUUID) << "\n";
+		std::cout << std::left << std::setw(w) << "SparseProperties:" << "[Not implemented]\n\n";
+
+		QueueFamilyProperties_t l_QPropsVec;
+		GetQueueFamilyProperties(l_Device, l_QPropsVec);
+
+		uint32_t l_uiNum = 1;
+		for (const auto l_QProps : l_QPropsVec)
+		{
+			std::cout << "Queue Family " << l_uiNum << ":\n";
+			std::cout << std::left << std::setw(w) << "   Flags:" << QueueFlagsToString(l_QProps.queueFlags) << "\n";
+			std::cout << std::left << std::setw(w) << "   Num queues:" << l_QProps.queueCount << "\n";
+			std::cout << std::left << std::setw(w) << "   TimestampValidBits:" << TimestampValidBitsToString(l_QProps.timestampValidBits) << "\n";
+			std::cout << std::left << std::setw(w) << "   MinImageTransferGranularity:" << l_QProps.minImageTransferGranularity << "\n\n";
+			l_uiNum++;
+		}
 	}
 }
+
+void VlkDevice::CreateDevice(VkPhysicalDevice p_Device)
+{
+
+}
+
 
 void VlkDevice::GetDevices(Devices_t& p_Devices) const
 {
@@ -59,6 +85,15 @@ void VlkDevice::GetDevices(Devices_t& p_Devices) const
 void VlkDevice::GetDeviceProperties(const VkPhysicalDevice p_Device, VkPhysicalDeviceProperties& p_Properties) const
 {
 	vkGetPhysicalDeviceProperties(p_Device, &p_Properties);
+}
+
+void VlkDevice::GetQueueFamilyProperties(const VkPhysicalDevice p_Device, QueueFamilyProperties_t& p_Properties) const
+{
+	uint32_t l_uiCount;
+	vkGetPhysicalDeviceQueueFamilyProperties(p_Device, &l_uiCount, nullptr);
+
+	p_Properties.resize(l_uiCount);
+	vkGetPhysicalDeviceQueueFamilyProperties(p_Device, &l_uiCount, p_Properties.data());
 }
 
 std::string VlkDevice::PipelineCacheUUIDToString(const uint8_t* p_UUID) const
@@ -93,5 +128,45 @@ std::string VlkDevice::DeviceTypeToString(VkPhysicalDeviceType p_Type) const
 			THROW("DeviceType out of bounds: " << p_Type);
 	}
 }
+
+std::string VlkDevice::QueueFlagsToString(VkQueueFlags p_Flags)
+{
+	std::ostringstream l_Stream;
+	if (p_Flags & VK_QUEUE_GRAPHICS_BIT)
+	{
+		l_Stream << "Graphics;";
+	}
+	if (p_Flags & VK_QUEUE_COMPUTE_BIT)
+	{
+		l_Stream << "Compute;";
+	}
+	if (p_Flags & VK_QUEUE_TRANSFER_BIT)
+	{
+		l_Stream << "Transfer;";
+	}
+	if (p_Flags & VK_QUEUE_SPARSE_BINDING_BIT)
+	{
+		l_Stream << "SparseBinding";
+	}
+	return l_Stream.str();
+}
+
+std::string VlkDevice::TimestampValidBitsToString(uint32_t p_Bits)
+{
+	if (p_Bits == 0)
+	{
+		return "No timestamp support";
+	}
+
+	std::ostringstream l_Stream;
+	l_Stream << p_Bits;
+	if (p_Bits < 32 || p_Bits > 64)
+	{
+		l_Stream << " [Invalid bit count!]";
+	}
+	return l_Stream.str();
+}
+
+
 }
 }

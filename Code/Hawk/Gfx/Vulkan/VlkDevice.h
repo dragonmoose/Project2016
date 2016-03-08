@@ -18,11 +18,16 @@ public:
 
 private:
 	using Devices_t = std::vector<VkPhysicalDevice>;
+	using QueueFamilyProperties_t = std::vector<VkQueueFamilyProperties>;
 
+	void CreateDevice(VkPhysicalDevice p_Device);
 	void GetDevices(Devices_t& p_Devices) const;
 	void GetDeviceProperties(const VkPhysicalDevice p_Device, VkPhysicalDeviceProperties& p_Properties) const;
+	void GetQueueFamilyProperties(const VkPhysicalDevice p_Device, QueueFamilyProperties_t& p_Properties) const;
 	std::string PipelineCacheUUIDToString(const uint8_t* p_UUID) const;
 	std::string DeviceTypeToString(VkPhysicalDeviceType p_Type) const;
+	std::string QueueFlagsToString(VkQueueFlags p_Flags);
+	std::string TimestampValidBitsToString(uint32_t p_Bits);
 
 	VkInstance m_Instance;
 
