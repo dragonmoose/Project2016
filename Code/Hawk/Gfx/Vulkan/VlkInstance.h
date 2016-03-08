@@ -12,7 +12,7 @@ public:
 	VlkInstance(const VlkInstance&) = delete;
 	VlkInstance& operator=(const VlkInstance&) = delete;
 
-	VkInstance GetHandle() const;
+	VkInstance GetRawInstance() const;
 
 private:
 	void GetLayers(std::vector<const char*>& p_Layers) const;
@@ -27,7 +27,7 @@ private:
 	PFN_vkDestroyDebugReportCallbackEXT m_DestroyDebugReport;
 	VkDebugReportCallbackEXT m_DebugReportHandle;
 #endif
-	VkInstance m_Handle;
+	VkInstance m_Instance;
 };
 
 }

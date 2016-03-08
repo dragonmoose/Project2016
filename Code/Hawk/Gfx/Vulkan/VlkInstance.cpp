@@ -29,7 +29,7 @@ namespace
 }
 
 VlkInstance::VlkInstance()
-: m_Handle(nullptr)
+: m_Instance(nullptr)
 {
 	std::vector<const char*> l_EnabledLayers = {};
 	GetLayers(l_EnabledLayers);
@@ -58,7 +58,7 @@ VlkInstance::VlkInstance()
 	l_Info.enabledExtensionCount = l_EnabledExtensions.size();
 	l_Info.ppEnabledExtensionNames = l_EnabledExtensions.data();
 
-	VK_THROW_IF_NOT_SUCCESS(vkCreateInstance(&l_Info, nullptr, &m_Handle), "Failed to create vulkan instance");
+	VK_THROW_IF_NOT_SUCCESS(vkCreateInstance(&l_Info, nullptr, &m_Instance), "Failed to create vulkan instance");
 	LOG("VlkInstance created", "vulkan", Debug);
 
 #ifdef HAWK_DEBUG
@@ -69,17 +69,17 @@ VlkInstance::VlkInstance()
 
 VlkInstance::~VlkInstance()
 {
-	ASSERT(m_Handle, "Handle NULL");
+	ASSERT(m_Instance, "Handle NULL");
 #ifdef HAWK_DEBUG
 	DestroyDebugReportCallback();
 #endif
-	vkDestroyInstance(m_Handle, nullptr);
+	vkDestroyInstance(m_Instance, nullptr);
 	LOG("VlkInstance destroyed", "vulkan", Debug);
 }
 
-VkInstance VlkInstance::GetHandle() const
+VkInstance VlkInstance::GetRawInstance() const
 {
-	return m_Handle;
+	return m_Instance;
 }
 
 void VlkInstance::GetLayers(std::vector<const char*>& p_Layers) const
@@ -111,10 +111,10 @@ void VlkInstance::GetExtensions(std::vector<const char*>& p_Extensions) const
 #ifdef HAWK_DEBUG
 void VlkInstance::RetrieveDebugCallbacks()
 {
-	m_CreateDebugReport = (PFN_vkCreateDebugReportCallbackEXT)vkGetInstanceProcAddr(m_Handle, "vkCreateDebugReportCallbackEXT");
+	m_CreateDebugReport = (PFN_vkCreateDebugReportCallbackEXT)vkGetInstanceProcAddr(m_Instance, "vkCreateDebugReportCallbackEXT");
 	THROW_IF_NOT(m_CreateDebugReport, "Failed to create CreateDebugReport vulkan extension");
 
-	m_DestroyDebugReport = (PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr(m_Handle, "vkDestroyDebugReportCallbackEXT");
+	m_DestroyDebugReport = (PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr(m_Instance, "vkDestroyDebugReportCallbackEXT");
 	THROW_IF_NOT(m_DestroyDebugReport, "Failed to create DestroyDebugReport vulkan extension");
 }
 
@@ -156,12 +156,12 @@ void VlkInstance::CreateDebugReportCallback()
 	l_Info.flags = c_ReportFlags;
 	l_Info.pfnCallback = OnDebugReport;
 	l_Info.pUserData = nullptr;
-	m_CreateDebugReport(m_Handle, &l_Info, nullptr, &m_DebugReportHandle);
+	m_CreateDebugReport(m_Instance, &l_Info, nullptr, &m_DebugReportHandle);
 }
 
 void VlkInstance::DestroyDebugReportCallback()
 {
-	m_DestroyDebugReport(m_Handle, m_DebugReportHandle, nullptr);
+	m_DestroyDebugReport(m_Instance, m_DebugReportHandle, nullptr);
 }
 #endif
 

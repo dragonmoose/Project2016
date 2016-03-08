@@ -57,11 +57,11 @@ void VlkAPI::CreateDevice()
 	uint32_t l_uiDeviceID;
 	if (Config::Instance().TryGet<uint32_t>("vulkan.deviceID", 0, l_uiDeviceID))
 	{
-		m_Device = std::make_unique<VlkDevice>(m_Instance->GetHandle(), l_uiDeviceID);
+		m_Device = std::make_unique<VlkDevice>(m_Instance->GetRawInstance(), l_uiDeviceID);
 	}
 	else
 	{
-		m_Device = std::make_unique<VlkDevice>(m_Instance->GetHandle());
+		m_Device = std::make_unique<VlkDevice>(m_Instance->GetRawInstance());
 	}
 }
 

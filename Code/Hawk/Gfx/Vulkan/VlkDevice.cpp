@@ -8,6 +8,7 @@ namespace Gfx {
 
 VlkDevice::VlkDevice(VkInstance p_Instance)
 : m_Instance(p_Instance)
+, m_Device(nullptr)
 {
 	Devices_t l_Devices;
 	GetDevices(l_Devices);
@@ -20,6 +21,7 @@ VlkDevice::VlkDevice(VkInstance p_Instance)
 
 VlkDevice::VlkDevice(VkInstance p_Instance, uint32_t p_uiDeviceID)
 : m_Instance(p_Instance)
+, m_Device(nullptr)
 {
 	VkPhysicalDevice l_Device = GetByDeviceID(p_uiDeviceID);
 	CreateDevice(l_Device);
@@ -28,6 +30,8 @@ VlkDevice::VlkDevice(VkInstance p_Instance, uint32_t p_uiDeviceID)
 
 VlkDevice::~VlkDevice()
 {
+	ASSERT(m_Device, "Device null");
+	vkDestroyDevice(m_Device, nullptr);
 	LOG("Vulkan device destroyed", "vulkan", Debug);
 }
 
@@ -71,10 +75,12 @@ void VlkDevice::CmdPrintDevices()
 
 void VlkDevice::CreateDevice(VkPhysicalDevice p_Device)
 {
-	//VkDeviceCreateInfo l_Info = {};
-	//VK_THROW_IF_NOT_SUCCESS(vkCreateDevice(p_Device, &l_Info, nullptr, &m_Handle), "Failed to create device");
+	/*VkDeviceCreateInfo l_Info = {};
+	l_Info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+	l_Info.pNext = nullptr; // must be null or pointer to an extension-specific structure
+	l_Info.flags = 0;		// Reserved for future use
+	VK_THROW_IF_NOT_SUCCESS(vkCreateDevice(p_Device, &l_Info, nullptr, &m_Device), "Failed to create device");*/
 }
-
 
 void VlkDevice::GetDevices(Devices_t& p_Devices) const
 {

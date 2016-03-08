@@ -31,7 +31,7 @@ private:
 	std::string TimestampValidBitsToString(uint32_t p_Bits);
 
 	VkInstance m_Instance;
-	VkDevice m_Handle;
+	VkDevice m_Device;
 
 #ifdef HAWK_DEBUG
 #endif
