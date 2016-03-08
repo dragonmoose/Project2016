@@ -24,12 +24,14 @@ private:
 	void GetDevices(Devices_t& p_Devices) const;
 	void GetDeviceProperties(const VkPhysicalDevice p_Device, VkPhysicalDeviceProperties& p_Properties) const;
 	void GetQueueFamilyProperties(const VkPhysicalDevice p_Device, QueueFamilyProperties_t& p_Properties) const;
+	VkPhysicalDevice GetByDeviceID(uint32_t p_uiDeviceID) const;
 	std::string PipelineCacheUUIDToString(const uint8_t* p_UUID) const;
 	std::string DeviceTypeToString(VkPhysicalDeviceType p_Type) const;
 	std::string QueueFlagsToString(VkQueueFlags p_Flags);
 	std::string TimestampValidBitsToString(uint32_t p_Bits);
 
 	VkInstance m_Instance;
+	VkDevice m_Handle;
 
 #ifdef HAWK_DEBUG
 #endif

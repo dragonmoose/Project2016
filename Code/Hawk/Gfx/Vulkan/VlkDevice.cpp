@@ -21,6 +21,8 @@ VlkDevice::VlkDevice(VkInstance p_Instance)
 VlkDevice::VlkDevice(VkInstance p_Instance, uint32_t p_uiDeviceID)
 : m_Instance(p_Instance)
 {
+	VkPhysicalDevice l_Device = GetByDeviceID(p_uiDeviceID);
+	CreateDevice(l_Device);
 	LOG("Created vulkan device with ID=" << p_uiDeviceID, "vulkan", Info);
 }
 
@@ -69,7 +71,8 @@ void VlkDevice::CmdPrintDevices()
 
 void VlkDevice::CreateDevice(VkPhysicalDevice p_Device)
 {
-
+	//VkDeviceCreateInfo l_Info = {};
+	//VK_THROW_IF_NOT_SUCCESS(vkCreateDevice(p_Device, &l_Info, nullptr, &m_Handle), "Failed to create device");
 }
 
 
@@ -95,6 +98,24 @@ void VlkDevice::GetQueueFamilyProperties(const VkPhysicalDevice p_Device, QueueF
 	p_Properties.resize(l_uiCount);
 	vkGetPhysicalDeviceQueueFamilyProperties(p_Device, &l_uiCount, p_Properties.data());
 }
+
+VkPhysicalDevice VlkDevice::GetByDeviceID(uint32_t p_uiDeviceID) const
+{
+	Devices_t l_Devices;
+	GetDevices(l_Devices);
+
+	for (const auto l_Device : l_Devices)
+	{
+		VkPhysicalDeviceProperties l_Props;
+		GetDeviceProperties(l_Device, l_Props);
+		if (l_Props.deviceID == p_uiDeviceID)
+		{
+			return l_Device;
+		}
+	}
+	THROW("Failed to find device with ID=" << p_uiDeviceID);
+}
+
 
 std::string VlkDevice::PipelineCacheUUIDToString(const uint8_t* p_UUID) const
 {
@@ -166,7 +187,6 @@ std::string VlkDevice::TimestampValidBitsToString(uint32_t p_Bits)
 	}
 	return l_Stream.str();
 }
-
 
 }
 }
