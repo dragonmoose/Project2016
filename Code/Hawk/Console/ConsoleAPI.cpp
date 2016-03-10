@@ -185,6 +185,11 @@ void ConsoleAPI::EndWrite()
 	n_Mutex.unlock();
 }
 
+void ConsoleAPI::SetTextColor(Color p_Color, Color p_BgColor)
+{
+	THROW_IF_NOT(::SetConsoleTextAttribute(n_hOut, GetColorAttr(p_Color, p_BgColor)), "Failed to set text attribute");
+}
+
 void ConsoleAPI::WriteLine(const std::string& p_Text, Color p_Color, Color p_BgColor)
 {
 	std::string l_Text(p_Text);
@@ -194,7 +199,7 @@ void ConsoleAPI::WriteLine(const std::string& p_Text, Color p_Color, Color p_BgC
 
 void ConsoleAPI::Write(const std::string& p_Text, Color p_Color, Color p_BgColor)
 {
-	THROW_IF_NOT(::SetConsoleTextAttribute(n_hOut, GetColorAttr(p_Color, p_BgColor)), "Failed to set text attribute");
+	SetTextColor(p_Color, p_BgColor);
 	THROW_IF_NOT(::WriteConsole(n_hOut, p_Text.c_str(), p_Text.length(), LPDWORD(), nullptr), "Failed to write to console");
 }
 

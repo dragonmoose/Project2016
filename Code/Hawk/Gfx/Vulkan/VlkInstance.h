@@ -26,8 +26,8 @@ private:
 	static void GetAllLayers(LayerProperties_t& p_Layers, bool p_bKeepUnsupported);
 	static void GetAllExtensions(ExtensionProperties_t& p_Extensions, const std::string& p_LayerName = std::string());
 
-	void GetLayersToCreate(std::vector<const char*>& p_Layers) const;
-	void GetExtensionsToCreate(std::vector<const char*>& p_Extensions) const;
+	static void GetLayersToCreate(std::vector<const char*>& p_Layers);
+	static void GetExtensionsToCreate(std::vector<const char*>& p_Extensions);
 
 #ifdef HAWK_DEBUG
 	void RetrieveDebugCallbacks();

@@ -56,6 +56,8 @@ void Logger::Log(const std::string& p_Msg, const std::string& p_Tag, const std::
 	ConsoleAPI::Color l_BgColor;
 	GetLevelColors(p_Level, l_Color, l_BgColor);
 	ConsoleAPI::WriteLine(l_Stream.str(), l_Color, l_BgColor);
+
+	ConsoleAPI::SetTextColor(ConsoleAPI::Color::White, ConsoleAPI::Color::None);
 }
 
 bool Logger::IsValidLogLevelString(const std::string& p_Level)

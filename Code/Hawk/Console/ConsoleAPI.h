@@ -27,6 +27,7 @@ namespace ConsoleAPI
 	void Start();
 	void BeginWrite();
 	void EndWrite();
+	void SetTextColor(Color p_Color, Color p_BgColor);
 	void WriteLine(const std::string& p_Text, Color p_Color, Color p_BgColor);
 	void Write(const std::string& p_Text, Color p_Color, Color p_BgColor);
 	bool HasNextChar();

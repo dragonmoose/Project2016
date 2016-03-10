@@ -1,10 +1,26 @@
 #include "pch.h"
 #include "VlkDevice.h"
 #include "VlkUtil.h"
+#include "Util/Algorithm.h"
 #include <iomanip>
 
 namespace Hawk {
 namespace Gfx {
+
+namespace
+{
+	std::vector<const char*> n_EnabledLayers = {};
+	std::vector<const char*> n_EnabledExtensions = {};
+
+#ifdef HAWK_DEBUG
+	std::vector<const char*> n_EnabledDebugLayers = {
+		"VK_LAYER_LUNARG_api_dump",
+		"VK_LAYER_LUNARG_device_limits",
+	};
+
+	std::vector<const char*> n_EnabledDebugExtensions = {};
+#endif
+}
 
 VlkDevice::VlkDevice(VkInstance p_Instance)
 : m_Instance(p_Instance)
@@ -42,6 +58,7 @@ void VlkDevice::CmdPrintDevices()
 	GetDevices(l_Devices);
 
 	CONSOLE_WRITE_SCOPE();
+	uint32_t l_uiIndex = 0;
 	for (const auto l_Device : l_Devices)
 	{
 		VkPhysicalDeviceProperties l_Props;
@@ -49,6 +66,7 @@ void VlkDevice::CmdPrintDevices()
 
 		static const uint8_t w = 34;
 		std::cout << "\n-" << l_Props.deviceName << "-------------------------------------------------------------------------------------\n";
+		std::cout << std::left << std::setw(w) << "Index:" << l_uiIndex << "\n";
 		std::cout << std::left << std::setw(w) << "DeviceID:" << l_Props.deviceID << "\n";
 		std::cout << std::left << std::setw(w) << "DeviceType:" << DeviceTypeToString(l_Props.deviceType) << "\n";
 		std::cout << std::left << std::setw(w) << "VendorID:" << l_Props.vendorID << "\n";
@@ -71,10 +89,149 @@ void VlkDevice::CmdPrintDevices()
 			std::cout << std::left << std::setw(w) << "   MinImageTransferGranularity:" << l_QProps.minImageTransferGranularity << "\n\n";
 			l_uiFamilyIndex++;
 		}
+		l_uiIndex++;
 	}
 }
 
-VlkDevice::QueueCreateInfoVec_t VlkDevice::GetQueueCreateInfo(VkPhysicalDevice p_Device) const
+void VlkDevice::CmdPrintLayers(uint32_t p_uiDeviceIndex, bool p_bKeepUnsupported)
+{
+	Devices_t l_Devices;
+	GetDevices(l_Devices);
+
+	THROW_IF_NOT(p_uiDeviceIndex < l_Devices.size(), "Invalid device index");
+
+	LayerProperties_t l_Layers;
+	GetAllLayers(l_Devices[p_uiDeviceIndex], l_Layers, p_bKeepUnsupported);
+
+	CONSOLE_WRITE_SCOPE();
+	std::cout << "\n";
+	for (const auto& l_Layer : l_Layers)
+	{
+		if (l_Layer.specVersion > VlkSystem::GetAPIVersion())
+		{
+			std::cout << "!Requires API " << VlkUtil::SpecVersionToString(l_Layer.specVersion) << "!";
+		}
+
+		std::cout << l_Layer.layerName << " (" << l_Layer.description << ")" <<
+			" SpecVersion: " << VlkUtil::SpecVersionToString(l_Layer.specVersion) <<
+			" ImplementationVersion: " << l_Layer.implementationVersion << "\n";
+	}
+	std::cout << "\n";
+}
+
+void VlkDevice::CmdPrintExtensions(uint32_t p_uiDeviceIndex, bool p_bKeepUnsupported)
+{
+	Devices_t l_Devices;
+	GetDevices(l_Devices);
+
+	THROW_IF_NOT(p_uiDeviceIndex < l_Devices.size(), "Invalid device index");
+	VkPhysicalDevice l_Device = l_Devices[p_uiDeviceIndex];
+
+	ExtensionProperties_t l_Extensions;
+	GetAllExtensions(l_Device, l_Extensions);
+
+	CONSOLE_WRITE_SCOPE();
+	std::cout << "\n-Global extensions-----------------------\n";
+	for (const auto& l_Extension : l_Extensions)
+	{
+		std::cout << l_Extension.extensionName << " Version: " << l_Extension.specVersion << "\n";
+	}
+	std::cout << "\n-Layer extensions------------------------\n";
+
+	LayerProperties_t l_Layers;
+	GetAllLayers(l_Device, l_Layers, p_bKeepUnsupported);
+
+	for (const auto& l_Layer : l_Layers)
+	{
+		l_Extensions.clear();
+		GetAllExtensions(l_Device, l_Extensions, l_Layer.layerName);
+		if (!l_Extensions.empty())
+		{
+			if (l_Layer.specVersion > VlkSystem::GetAPIVersion())
+			{
+				std::cout << "## N/A - requires API " << VlkUtil::SpecVersionToString(l_Layer.specVersion) << " ## ";
+			}
+			std::cout << l_Layer.layerName << ":\n";
+			for (const auto& l_Extension : l_Extensions)
+			{
+				std::cout << "\t" << l_Extension.extensionName << " Version: " << l_Extension.specVersion << "\n";
+			}
+			std::cout << "\n";
+		}
+	}
+	std::cout << "\n";
+}
+
+bool VlkDevice::IsLayerAvailable(VkPhysicalDevice p_Device, const std::string& p_Name)
+{
+	LayerProperties_t l_Layers;
+	GetAllLayers(p_Device, l_Layers, false);
+	return std::find_if(l_Layers.begin(), l_Layers.end(),
+		[p_Name](const VkLayerProperties& p_Layer) { return p_Name == p_Layer.layerName && VlkSystem::GetAPIVersion() >= p_Layer.specVersion; }) != l_Layers.end();
+}
+
+bool VlkDevice::IsExtensionAvailable(VkPhysicalDevice p_Device, const std::string& p_Name, const std::string& p_LayerName)
+{
+	if (!p_LayerName.empty() && !IsLayerAvailable(p_Device, p_LayerName)) return false;
+
+	ExtensionProperties_t l_Extensions;
+	GetAllExtensions(p_Device, l_Extensions, p_LayerName);
+	return std::find_if(l_Extensions.begin(), l_Extensions.end(),
+		[p_Name](const VkExtensionProperties& p_Extension) { return p_Name == p_Extension.extensionName; }) != l_Extensions.end();
+}
+
+void VlkDevice::GetAllLayers(VkPhysicalDevice p_Device, LayerProperties_t& p_Layers, bool p_bKeepUnsupported)
+{
+	uint32_t l_uiCount = 0;
+	VK_THROW_IF_NOT_SUCCESS(vkEnumerateDeviceLayerProperties(p_Device, &l_uiCount, nullptr), "Failed to get device layer count");
+
+	p_Layers.resize(l_uiCount);
+	VK_THROW_IF_NOT_SUCCESS(vkEnumerateDeviceLayerProperties(p_Device, &l_uiCount, p_Layers.data()), "Failed to get device layers");
+
+	if (!p_bKeepUnsupported)
+	{
+		hwk::erase_if(p_Layers, [](const VkLayerProperties& p_Layer) { return p_Layer.specVersion > VlkSystem::GetAPIVersion(); });
+	}
+}
+
+void VlkDevice::GetAllExtensions(VkPhysicalDevice p_Device, ExtensionProperties_t& p_Extensions, const std::string& p_LayerName)
+{
+	uint32_t l_uiCount = 0;
+	const char* l_LayerName = !p_LayerName.empty() ? p_LayerName.c_str() : nullptr;
+
+	VK_THROW_IF_NOT_SUCCESS(vkEnumerateDeviceExtensionProperties(p_Device, l_LayerName, &l_uiCount, nullptr), "Failed to get device extension count. Layer=" << p_LayerName);
+
+	p_Extensions.resize(l_uiCount);
+	VK_THROW_IF_NOT_SUCCESS(vkEnumerateDeviceExtensionProperties(p_Device, l_LayerName, &l_uiCount, p_Extensions.data()), "Failed to get device extensions. Layer=" << p_LayerName);
+}
+
+void VlkDevice::GetLayersToCreate(VkPhysicalDevice p_Device, std::vector<const char*>& p_Layers)
+{
+	std::copy(n_EnabledLayers.begin(), n_EnabledLayers.end(), std::back_inserter(p_Layers));
+#ifdef HAWK_DEBUG
+	std::copy(n_EnabledDebugLayers.begin(), n_EnabledDebugLayers.end(), std::back_inserter(p_Layers));
+#endif
+
+	for (const auto& l_Layer : p_Layers)
+	{
+		THROW_IF_NOT(IsLayerAvailable(p_Device, l_Layer), "Device layer not available. Name=" << l_Layer);
+	}
+}
+
+void VlkDevice::GetExtensionsToCreate(VkPhysicalDevice p_Device, std::vector<const char*>& p_Extensions)
+{
+	std::copy(n_EnabledExtensions.begin(), n_EnabledExtensions.end(), std::back_inserter(p_Extensions));
+#ifdef HAWK_DEBUG
+	std::copy(n_EnabledDebugExtensions.begin(), n_EnabledDebugExtensions.end(), std::back_inserter(p_Extensions));
+#endif
+
+	for (const auto& l_Extension : p_Extensions)
+	{
+		THROW_IF_NOT(IsExtensionAvailable(p_Device, l_Extension), "Global device extension not available. Name=" << l_Extension);
+	}
+}
+
+VlkDevice::QueueCreateInfoVec_t VlkDevice::GetQueueCreateInfo(VkPhysicalDevice p_Device)
 {
 	static const uint32_t sc_uiNumGfxQueues = 1;
 	QueueCreateInfoVec_t l_Vec;
@@ -96,10 +253,17 @@ VlkDevice::QueueCreateInfoVec_t VlkDevice::GetQueueCreateInfo(VkPhysicalDevice p
 	return l_Vec;
 }
 
-
 void VlkDevice::CreateDevice(VkPhysicalDevice p_Device, const QueueCreateInfoVec_t& p_QueueCreateInfoVec)
 {
 	ValidateQueueCreateInfoVec(p_QueueCreateInfoVec);
+	VkPhysicalDeviceFeatures l_Features = {};
+	GetFeatures(l_Features);
+
+	std::vector<const char*> l_EnabledLayers = {};
+	GetLayersToCreate(p_Device, l_EnabledLayers);
+
+	std::vector<const char*> l_EnabledExtensions = {};
+	GetExtensionsToCreate(p_Device, l_EnabledExtensions);
 
 	VkDeviceCreateInfo l_Info = {};
 	l_Info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -107,10 +271,15 @@ void VlkDevice::CreateDevice(VkPhysicalDevice p_Device, const QueueCreateInfoVec
 	l_Info.flags = 0;		// Reserved for future use
 	l_Info.queueCreateInfoCount = p_QueueCreateInfoVec.size();
 	l_Info.pQueueCreateInfos = p_QueueCreateInfoVec.data();
+	l_Info.enabledLayerCount = l_EnabledLayers.size();
+	l_Info.ppEnabledLayerNames = l_EnabledLayers.data();
+	l_Info.enabledExtensionCount = l_EnabledExtensions.size();
+	l_Info.ppEnabledExtensionNames = l_EnabledExtensions.data();
+	l_Info.pEnabledFeatures = &l_Features;
 	VK_THROW_IF_NOT_SUCCESS(vkCreateDevice(p_Device, &l_Info, nullptr, &m_Device), "Failed to create device");
 }
 
-void VlkDevice::ValidateQueueCreateInfoVec(const QueueCreateInfoVec_t& p_QueueCreateInfoVec) const
+void VlkDevice::ValidateQueueCreateInfoVec(const QueueCreateInfoVec_t& p_QueueCreateInfoVec)
 {
 	THROW_IF(p_QueueCreateInfoVec.empty(), "At least one queue needs to be specified when creating device");
 	for (uint32_t i = 0; i < p_QueueCreateInfoVec.size(); i++)
@@ -131,12 +300,12 @@ void VlkDevice::GetDevices(Devices_t& p_Devices) const
 	VK_THROW_IF_NOT_SUCCESS(vkEnumeratePhysicalDevices(m_Instance, &l_uiCount, p_Devices.data()), "Failed to get physical devices");
 }
 
-void VlkDevice::GetDeviceProperties(const VkPhysicalDevice p_Device, VkPhysicalDeviceProperties& p_Properties) const
+void VlkDevice::GetDeviceProperties(const VkPhysicalDevice p_Device, VkPhysicalDeviceProperties& p_Properties)
 {
 	vkGetPhysicalDeviceProperties(p_Device, &p_Properties);
 }
 
-void VlkDevice::GetQueueFamilyProperties(const VkPhysicalDevice p_Device, QueueFamilyProperties_t& p_Properties) const
+void VlkDevice::GetQueueFamilyProperties(const VkPhysicalDevice p_Device, QueueFamilyProperties_t& p_Properties)
 {
 	uint32_t l_uiCount;
 	vkGetPhysicalDeviceQueueFamilyProperties(p_Device, &l_uiCount, nullptr);
@@ -145,7 +314,7 @@ void VlkDevice::GetQueueFamilyProperties(const VkPhysicalDevice p_Device, QueueF
 	vkGetPhysicalDeviceQueueFamilyProperties(p_Device, &l_uiCount, p_Properties.data());
 }
 
-void VlkDevice::FindMatchingQueueFamily(const VkPhysicalDevice p_Device, VkQueueFlags p_Flags, uint32_t p_uiCount, uint32_t& p_uiIndex) const
+void VlkDevice::FindMatchingQueueFamily(const VkPhysicalDevice p_Device, VkQueueFlags p_Flags, uint32_t p_uiCount, uint32_t& p_uiIndex)
 {
 	QueueFamilyProperties_t l_PropsVec;
 	GetQueueFamilyProperties(p_Device, l_PropsVec);
@@ -164,6 +333,9 @@ void VlkDevice::FindMatchingQueueFamily(const VkPhysicalDevice p_Device, VkQueue
 	THROW("Failed to find queue family with the following requirements. Flags: " << QueueFlagsToString(p_Flags) << " Count: " << p_uiCount);
 }
 
+void VlkDevice::GetFeatures(VkPhysicalDeviceFeatures& /*p_Features*/)
+{
+}
 
 VkPhysicalDevice VlkDevice::GetByDeviceID(uint32_t p_uiDeviceID) const
 {
@@ -183,7 +355,7 @@ VkPhysicalDevice VlkDevice::GetByDeviceID(uint32_t p_uiDeviceID) const
 }
 
 
-std::string VlkDevice::PipelineCacheUUIDToString(const uint8_t* p_UUID) const
+std::string VlkDevice::PipelineCacheUUIDToString(const uint8_t* p_UUID)
 {
 	std::ostringstream l_Stream;
 	for (int i = 0; i < VK_UUID_SIZE; i++)
@@ -197,7 +369,7 @@ std::string VlkDevice::PipelineCacheUUIDToString(const uint8_t* p_UUID) const
 	return l_Stream.str();
 }
 
-std::string VlkDevice::DeviceTypeToString(VkPhysicalDeviceType p_Type) const
+std::string VlkDevice::DeviceTypeToString(VkPhysicalDeviceType p_Type)
 {
 	switch (p_Type)
 	{
@@ -216,7 +388,7 @@ std::string VlkDevice::DeviceTypeToString(VkPhysicalDeviceType p_Type) const
 	}
 }
 
-std::string VlkDevice::QueueFlagsToString(VkQueueFlags p_Flags) const
+std::string VlkDevice::QueueFlagsToString(VkQueueFlags p_Flags)
 {
 	std::ostringstream l_Stream;
 	if (p_Flags & VK_QUEUE_GRAPHICS_BIT)
@@ -238,7 +410,7 @@ std::string VlkDevice::QueueFlagsToString(VkQueueFlags p_Flags) const
 	return l_Stream.str();
 }
 
-std::string VlkDevice::TimestampValidBitsToString(uint32_t p_Bits) const
+std::string VlkDevice::TimestampValidBitsToString(uint32_t p_Bits)
 {
 	if (p_Bits == 0)
 	{

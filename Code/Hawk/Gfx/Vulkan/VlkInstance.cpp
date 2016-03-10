@@ -94,7 +94,7 @@ void VlkInstance::CmdPrintLayers(bool p_bKeepUnsupported)
 	{
 		if (l_Layer.specVersion > VlkSystem::GetAPIVersion())
 		{
-			std::cout << "## N/A - requires API " << VlkUtil::SpecVersionToString(l_Layer.specVersion) << " ## ";
+			std::cout << "!Requires API " << VlkUtil::SpecVersionToString(l_Layer.specVersion) << "!";
 		}
 
 		std::cout << l_Layer.layerName << " (" << l_Layer.description << ")" <<
@@ -184,7 +184,7 @@ void VlkInstance::GetAllExtensions(ExtensionProperties_t& p_Extensions, const st
 	VK_THROW_IF_NOT_SUCCESS(vkEnumerateInstanceExtensionProperties(l_LayerName, &l_uiCount, p_Extensions.data()), "Failed to get instance extensions. Layer=" << p_LayerName);
 }
 
-void VlkInstance::GetLayersToCreate(std::vector<const char*>& p_Layers) const
+void VlkInstance::GetLayersToCreate(std::vector<const char*>& p_Layers)
 {
 	std::copy(n_EnabledLayers.begin(), n_EnabledLayers.end(), std::back_inserter(p_Layers));
 #ifdef HAWK_DEBUG
@@ -197,7 +197,7 @@ void VlkInstance::GetLayersToCreate(std::vector<const char*>& p_Layers) const
 	}
 }
 
-void VlkInstance::GetExtensionsToCreate(std::vector<const char*>& p_Extensions) const
+void VlkInstance::GetExtensionsToCreate(std::vector<const char*>& p_Extensions)
 {
 	std::copy(n_EnabledExtensions.begin(), n_EnabledExtensions.end(), std::back_inserter(p_Extensions));
 #ifdef HAWK_DEBUG

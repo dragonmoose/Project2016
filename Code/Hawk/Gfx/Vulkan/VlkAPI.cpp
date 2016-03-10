@@ -41,9 +41,11 @@ void VlkAPI::SetDebugText(const std::string& /*p_Text*/)
 #ifdef HAWK_DEBUG
 void VlkAPI::InitializeConsole(ScopedConsoleCommands* p_Console)
 {
-	p_Console->Register("vk.printInstanceLayers", &VlkInstance::CmdPrintLayers, "Lists Vulkan instance layers", "KeepUnsupported [0|1]", false);
-	p_Console->Register("vk.printInstanceExtensions", &VlkInstance::CmdPrintExtensions, "Lists Vulkan instance extensions", "KeepUnsupported [0|1]", false);
+	p_Console->Register("vk.printInstanceLayers", &VlkInstance::CmdPrintLayers, "Lists Vulkan instance layers", "KeepUnsupported [0|1]");
+	p_Console->Register("vk.printInstanceExtensions", &VlkInstance::CmdPrintExtensions, "Lists Vulkan instance extensions", "KeepUnsupported [0|1]");
 	p_Console->Register("vk.printDevices", m_Device.get(), &VlkDevice::CmdPrintDevices, "Lists all available devices", "");
+	p_Console->Register("vk.printDeviceLayers", m_Device.get(), &VlkDevice::CmdPrintLayers, "Lists Vulkan device layers", "[DeviceIndex] [KeepUnsupported 0|1]");
+	p_Console->Register("vk.printDeviceExtensions", m_Device.get(), &VlkDevice::CmdPrintExtensions, "Lists Vulkan device extensions", "[DeviceIndex] [KeepUnsupported 0|1]");
 }
 
 void VlkAPI::CmdListDevices()
