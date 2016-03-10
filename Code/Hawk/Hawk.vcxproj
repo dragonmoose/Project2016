@@ -148,7 +148,6 @@
     <ClInclude Include="Gfx\Vulkan\VlkFactory.h" />
     <ClInclude Include="Gfx\Vulkan\VlkInstance.h" />
     <ClInclude Include="Gfx\Vulkan\VlkSystem.h" />
-    <ClInclude Include="Gfx\Vulkan\VlkInstanceUtil.h" />
     <ClInclude Include="Input\InputEvents.h" />
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Input\KeyCodes.h" />
@@ -209,7 +208,6 @@
     <ClCompile Include="Gfx\Vulkan\VlkFactory.cpp" />
     <ClCompile Include="Gfx\Vulkan\VlkInstance.cpp" />
     <ClCompile Include="Gfx\Vulkan\VlkSystem.cpp" />
-    <ClCompile Include="Gfx\Vulkan\VlkInstanceUtil.cpp" />
     <ClCompile Include="Gfx\Vulkan\VlkUtil.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
     <ClCompile Include="pch.cpp">

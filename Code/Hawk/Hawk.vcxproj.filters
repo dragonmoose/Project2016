@@ -155,9 +155,6 @@
     <ClCompile Include="Gfx\Vulkan\VlkSystem.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\VlkInstanceUtil.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="Gfx\Vulkan\VlkDevice.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
@@ -372,9 +369,6 @@
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Gfx\Vulkan\VlkSystem.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VlkInstanceUtil.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Gfx\Vulkan\VlkDevice.h">
