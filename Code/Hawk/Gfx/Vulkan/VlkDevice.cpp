@@ -56,7 +56,7 @@ void VlkDevice::WaitUntilIdle()
 	}
 	else
 	{
-		VK_THROW_IF_ERR(l_Result, "Failed to wait until device idle");
+		VK_THROW_IF_ERR(l_Result, "Failed to wait for device to become idle");
 	}
 }
 
@@ -340,7 +340,6 @@ VkPhysicalDevice VlkDevice::GetDeviceByID(uint32_t p_uiDeviceID) const
 	THROW("Failed to find device with ID=" << p_uiDeviceID);
 }
 
-
 void VlkDevice::OnDeviceLost()
 {
 	try
@@ -349,10 +348,9 @@ void VlkDevice::OnDeviceLost()
 	}
 	catch (Exception& e)
 	{
-		FATAL_EXCEPTION(e, "vulkan");
+		FATAL("Failed to recrete device after lost state. Msg: " << e.what(), "vulkan");
 	}
 }
-
 
 void VlkDevice::GetDeviceProperties(const VkPhysicalDevice p_Device, VkPhysicalDeviceProperties& p_Properties)
 {
