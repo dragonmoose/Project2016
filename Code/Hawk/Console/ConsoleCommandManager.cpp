@@ -176,6 +176,7 @@ void ConsoleCommandManager::Register()
 	Register("console.history", this, &ConsoleCommandManager::CmdPrintHistory, m_Dispatcher.get(), "Prints the console history", "");
 	Register("console.clearHistory", this, &ConsoleCommandManager::CmdClearHistory, m_Dispatcher.get(), "Clears the console history", "");
 	Register("about", this, &ConsoleCommandManager::CmdAbout, m_Dispatcher.get(), "Displays engine info", "");
+	Register("test.fatal", this, &ConsoleCommandManager::CmdTestFatal, m_Dispatcher.get(), "Signal fatal error along with the given message", "");
 }
 
 void ConsoleCommandManager::CmdQuit()
@@ -278,6 +279,11 @@ void ConsoleCommandManager::CmdAbout()
 	std::cout << "\nApp name:\t\t" << CoreInfo::GetAppName() << "\n";
 	std::cout << "App version:\t\t" << CoreInfo::GetAppVersion().GetString() << "\n";
 	std::cout << "App version ID:\t\t" << CoreInfo::GetAppVersion().GetID() << "\n";
+}
+
+void ConsoleCommandManager::CmdTestFatal()
+{
+	FATAL("Testing fatal signal", "Test");
 }
 
 std::string ConsoleCommandManager::GetNextAutoCompletedCmd(const std::string& p_Filter, const std::string& p_Current) const

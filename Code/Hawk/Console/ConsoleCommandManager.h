@@ -87,6 +87,7 @@ private:
 	void CmdPrintHistory();
 	void CmdClearHistory();
 	void CmdAbout();
+	void CmdTestFatal();
 
 	std::string GetNextAutoCompletedCmd(const std::string& p_Command, const std::string& p_Current) const;
 	void TryCallFunction(const CF::IConsoleFunction& p_Function, ConsoleInputParser& p_Command) const;

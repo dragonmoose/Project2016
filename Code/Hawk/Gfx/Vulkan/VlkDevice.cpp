@@ -25,24 +25,19 @@ namespace
 VlkDevice::VlkDevice(VkInstance p_Instance)
 : m_Instance(p_Instance)
 , m_Device(nullptr)
+, m_PhysicalDevice(nullptr)
 {
-	Devices_t l_Devices;
-	GetDevices(l_Devices);
-
-	THROW_IF(l_Devices.empty(), "No Vulkan compatible devices found");
-
-	VkPhysicalDevice l_PreferredDevice = l_Devices[0];
-	CreateDevice(l_PreferredDevice, GetQueueCreateInfo(l_PreferredDevice));
+	CreateDevice(GetDeviceByIndex(0));
 	LOG("Created auto-selected vulkan device", "vulkan", Info);
 }
 
 VlkDevice::VlkDevice(VkInstance p_Instance, uint32_t p_uiDeviceID)
 : m_Instance(p_Instance)
 , m_Device(nullptr)
+, m_PhysicalDevice(nullptr)
 {
-	VkPhysicalDevice l_Device = GetByDeviceID(p_uiDeviceID);
-	CreateDevice(l_Device, GetQueueCreateInfo(l_Device));
-	LOG("Created vulkan device with ID=" << p_uiDeviceID, "vulkan", Info);
+	CreateDevice(GetDeviceByID(p_uiDeviceID));
+	LOG("Created vulkan device from given ID=" << p_uiDeviceID, "vulkan", Info);
 }
 
 VlkDevice::~VlkDevice()
@@ -50,6 +45,19 @@ VlkDevice::~VlkDevice()
 	ASSERT(m_Device, "Device null");
 	vkDestroyDevice(m_Device, nullptr);
 	LOG("Vulkan device destroyed", "vulkan", Debug);
+}
+
+void VlkDevice::WaitUntilIdle()
+{
+	VkResult l_Result = vkDeviceWaitIdle(m_Device);
+	if (l_Result == VK_ERROR_DEVICE_LOST)
+	{
+		OnDeviceLost();
+	}
+	else
+	{
+		VK_THROW_IF_ERR(l_Result, "Failed to wait until device idle");
+	}
 }
 
 #ifdef HAWK_DEBUG
@@ -84,7 +92,7 @@ void VlkDevice::CmdPrintDevices()
 void VlkDevice::CmdPrintQueueFamilies(uint32_t p_uiDeviceIndex)
 {
 	QueueFamilyProperties_t l_QPropsVec;
-	GetQueueFamilyProperties(GetDevice(p_uiDeviceIndex), l_QPropsVec);
+	GetQueueFamilyProperties(GetDeviceByIndex(p_uiDeviceIndex), l_QPropsVec);
 
 	CONSOLE_WRITE_SCOPE();
 	uint32_t l_uiFamilyIndex = 0;
@@ -104,7 +112,7 @@ void VlkDevice::CmdPrintQueueFamilies(uint32_t p_uiDeviceIndex)
 void VlkDevice::CmdPrintLayers(uint32_t p_uiDeviceIndex, bool p_bKeepUnsupported)
 {
 	LayerProperties_t l_Layers;
-	GetAllLayers(GetDevice(p_uiDeviceIndex), l_Layers, p_bKeepUnsupported);
+	GetAllLayers(GetDeviceByIndex(p_uiDeviceIndex), l_Layers, p_bKeepUnsupported);
 
 	CONSOLE_WRITE_SCOPE();
 	std::cout << "\n";
@@ -124,7 +132,7 @@ void VlkDevice::CmdPrintLayers(uint32_t p_uiDeviceIndex, bool p_bKeepUnsupported
 
 void VlkDevice::CmdPrintExtensions(uint32_t p_uiDeviceIndex, bool p_bKeepUnsupported)
 {
-	VkPhysicalDevice l_Device = GetDevice(p_uiDeviceIndex);
+	VkPhysicalDevice l_Device = GetDeviceByIndex(p_uiDeviceIndex);
 
 	ExtensionProperties_t l_Extensions;
 	GetAllExtensions(l_Device, l_Extensions);
@@ -277,6 +285,12 @@ void VlkDevice::CreateDevice(VkPhysicalDevice p_Device, const QueueCreateInfoVec
 	l_Info.ppEnabledExtensionNames = l_EnabledExtensions.data();
 	l_Info.pEnabledFeatures = &l_Features;
 	VK_THROW_IF_NOT_SUCCESS(vkCreateDevice(p_Device, &l_Info, nullptr, &m_Device), "Failed to create device");
+	m_PhysicalDevice = p_Device;
+}
+
+void VlkDevice::CreateDevice(VkPhysicalDevice p_Device)
+{
+	CreateDevice(p_Device, GetQueueCreateInfo(p_Device));
 }
 
 void VlkDevice::ValidateQueueCreateInfoVec(const QueueCreateInfoVec_t& p_QueueCreateInfoVec)
@@ -300,7 +314,7 @@ void VlkDevice::GetDevices(Devices_t& p_Devices) const
 	VK_THROW_IF_NOT_SUCCESS(vkEnumeratePhysicalDevices(m_Instance, &l_uiCount, p_Devices.data()), "Failed to get physical devices");
 }
 
-VkPhysicalDevice VlkDevice::GetDevice(uint32_t p_uiIndex) const
+VkPhysicalDevice VlkDevice::GetDeviceByIndex(uint32_t p_uiIndex) const
 {
 	Devices_t l_Devices;
 	GetDevices(l_Devices);
@@ -308,6 +322,37 @@ VkPhysicalDevice VlkDevice::GetDevice(uint32_t p_uiIndex) const
 	THROW_IF_NOT(p_uiIndex < l_Devices.size(), "Invalid device index");
 	return l_Devices[p_uiIndex];
 }
+
+VkPhysicalDevice VlkDevice::GetDeviceByID(uint32_t p_uiDeviceID) const
+{
+	Devices_t l_Devices;
+	GetDevices(l_Devices);
+
+	for (const auto l_Device : l_Devices)
+	{
+		VkPhysicalDeviceProperties l_Props;
+		GetDeviceProperties(l_Device, l_Props);
+		if (l_Props.deviceID == p_uiDeviceID)
+		{
+			return l_Device;
+		}
+	}
+	THROW("Failed to find device with ID=" << p_uiDeviceID);
+}
+
+
+void VlkDevice::OnDeviceLost()
+{
+	try
+	{
+		CreateDevice(m_PhysicalDevice);
+	}
+	catch (Exception& e)
+	{
+		FATAL_EXCEPTION(e, "vulkan");
+	}
+}
+
 
 void VlkDevice::GetDeviceProperties(const VkPhysicalDevice p_Device, VkPhysicalDeviceProperties& p_Properties)
 {
@@ -345,24 +390,6 @@ void VlkDevice::FindMatchingQueueFamily(const VkPhysicalDevice p_Device, VkQueue
 void VlkDevice::GetFeatures(VkPhysicalDeviceFeatures& /*p_Features*/)
 {
 }
-
-VkPhysicalDevice VlkDevice::GetByDeviceID(uint32_t p_uiDeviceID) const
-{
-	Devices_t l_Devices;
-	GetDevices(l_Devices);
-
-	for (const auto l_Device : l_Devices)
-	{
-		VkPhysicalDeviceProperties l_Props;
-		GetDeviceProperties(l_Device, l_Props);
-		if (l_Props.deviceID == p_uiDeviceID)
-		{
-			return l_Device;
-		}
-	}
-	THROW("Failed to find device with ID=" << p_uiDeviceID);
-}
-
 
 std::string VlkDevice::PipelineCacheUUIDToString(const uint8_t* p_UUID)
 {

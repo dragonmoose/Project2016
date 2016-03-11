@@ -26,8 +26,8 @@ namespace Hawk
 
 #ifdef HAWK_DEBUG
 		virtual void InitializeConsole(ScopedConsoleCommands* p_Console);
-		const std::string& GetLogDesc() const;
 #endif
+		const std::string& GetLogDesc() const;
 
 		virtual void RegisterEvents(EventManager& p_EventManager);
 		virtual void Update(const Duration& p_Duration);
@@ -41,9 +41,6 @@ namespace Hawk
 
 	private:
 		Module* m_pParentModule;
-
-#ifdef HAWK_DEBUG
 		std::string m_LogDesc;
-#endif
 	};
 }

@@ -35,9 +35,9 @@ namespace Hawk
 #ifdef HAWK_DEBUG
 		void _InitializeConsole(std::shared_ptr<ConsoleCommandManager>& p_ConsoleCommandManager);
 		virtual void InitializeConsole(ScopedConsoleCommands* p_Console);
-		const std::string& GetLogDesc() const;
 		void DebugPrint() const;
 #endif
+		const std::string& GetLogDesc() const;
 
 		virtual void RegisterEvents(EventManager& p_EventManager);
 
@@ -78,9 +78,9 @@ namespace Hawk
 		using SubModules_t = std::vector<std::shared_ptr<SubModule>>;
 		SubModules_t m_SubModules;
 		bool m_bInitialized;
+		std::string m_LogDesc;
 
 #ifdef HAWK_DEBUG
-		std::string m_LogDesc;
 		std::unique_ptr<ScopedConsoleCommands> m_Console;
 #endif
 	};

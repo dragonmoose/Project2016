@@ -34,9 +34,7 @@ void Module::_Initialize(std::unique_ptr<EventManager> p_EventManager, std::shar
 {
 	try
 	{
-#ifdef HAWK_DEBUG
 		m_LogDesc = GetName() + " #" + std::to_string(GetID());
-#endif
 
 		LOGM("Initializing module", Info);
 		m_Dispatcher = p_Dispatcher;
@@ -82,11 +80,6 @@ void Module::InitializeConsole(ScopedConsoleCommands* /*p_Console*/)
 {
 }
 
-const std::string& Module::GetLogDesc() const
-{
-	return m_LogDesc;
-}
-
 void Module::DebugPrint() const
 {
 	std::cout << "\t" << GetLogDesc() << "\n";
@@ -101,6 +94,11 @@ void Module::DebugPrint() const
 	}
 }
 #endif
+
+const std::string& Module::GetLogDesc() const
+{
+	return m_LogDesc;
+}
 
 void Module::RegisterEvents(EventManager& /*p_EventManager*/)
 {

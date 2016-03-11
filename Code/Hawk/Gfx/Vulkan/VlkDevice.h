@@ -14,6 +14,8 @@ public:
 	VlkDevice(const VlkDevice&) = delete;
 	VlkDevice& operator=(const VlkDevice&) = delete;
 
+	void WaitUntilIdle();
+
 #ifdef HAWK_DEBUG
 	void CmdPrintDevices();
 	void CmdPrintQueueFamilies(uint32_t p_uiDeviceIndex);
@@ -38,14 +40,18 @@ private:
 
 	static QueueCreateInfoVec_t GetQueueCreateInfo(VkPhysicalDevice p_Device);
 	void CreateDevice(VkPhysicalDevice p_Device, const QueueCreateInfoVec_t& p_QueueCreateInfoVec);
+	void CreateDevice(VkPhysicalDevice p_Device);
 	static void ValidateQueueCreateInfoVec(const QueueCreateInfoVec_t& p_QueueCreateInfoVec);
+
 	void GetDevices(Devices_t& p_Devices) const;
-	VkPhysicalDevice GetDevice(uint32_t p_uiIndex) const;
+	VkPhysicalDevice GetDeviceByIndex(uint32_t p_uiIndex) const;
+	VkPhysicalDevice GetDeviceByID(uint32_t p_uiDeviceID) const;
+	void OnDeviceLost();
+
 	static void GetDeviceProperties(const VkPhysicalDevice p_Device, VkPhysicalDeviceProperties& p_Properties);
 	static void GetQueueFamilyProperties(const VkPhysicalDevice p_Device, QueueFamilyProperties_t& p_Properties);
 	static void FindMatchingQueueFamily(const VkPhysicalDevice p_Device, VkQueueFlags p_Flags, uint32_t p_uiCount, uint32_t& p_uiIndex);
 	static void GetFeatures(VkPhysicalDeviceFeatures& p_Features);
-	VkPhysicalDevice GetByDeviceID(uint32_t p_uiDeviceID) const;
 
 	static std::string PipelineCacheUUIDToString(const uint8_t* p_UUID);
 	static std::string DeviceTypeToString(VkPhysicalDeviceType p_Type);
@@ -54,6 +60,7 @@ private:
 
 	VkInstance m_Instance;
 	VkDevice m_Device;
+	VkPhysicalDevice m_PhysicalDevice;
 };
 
 }

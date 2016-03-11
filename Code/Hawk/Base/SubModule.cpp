@@ -17,9 +17,7 @@ void SubModule::SetParentModule(Module* p_pModule)
 void SubModule::_Initialize()
 {
 	ASSERT(m_pParentModule, "Parent module not set");
-#ifdef HAWK_DEBUG
 	m_LogDesc = m_pParentModule->GetLogDesc() + ":" + GetName();
-#endif
 	Initialize();
 }
 
@@ -31,12 +29,12 @@ void SubModule::Initialize()
 void SubModule::InitializeConsole(ScopedConsoleCommands* /*p_Console*/)
 {
 }
+#endif
 
 const std::string& SubModule::GetLogDesc() const
 {
 	return m_LogDesc;
 }
-#endif
 
 void SubModule::RegisterEvents(EventManager& /*p_EventManager*/)
 {
