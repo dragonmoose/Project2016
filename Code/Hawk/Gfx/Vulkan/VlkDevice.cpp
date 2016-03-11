@@ -52,6 +52,7 @@ VlkDevice::~VlkDevice()
 	LOG("Vulkan device destroyed", "vulkan", Debug);
 }
 
+#ifdef HAWK_DEBUG
 void VlkDevice::CmdPrintDevices()
 {
 	Devices_t l_Devices;
@@ -64,8 +65,9 @@ void VlkDevice::CmdPrintDevices()
 		VkPhysicalDeviceProperties l_Props;
 		GetDeviceProperties(l_Device, l_Props);
 
-		static const uint8_t w = 34;
 		std::cout << "\n-" << l_Props.deviceName << "-------------------------------------------------------------------------------------\n";
+
+		static const uint8_t w = 34;
 		std::cout << std::left << std::setw(w) << "Index:" << l_uiIndex << "\n";
 		std::cout << std::left << std::setw(w) << "DeviceID:" << l_Props.deviceID << "\n";
 		std::cout << std::left << std::setw(w) << "DeviceType:" << DeviceTypeToString(l_Props.deviceType) << "\n";
@@ -75,33 +77,34 @@ void VlkDevice::CmdPrintDevices()
 		std::cout << std::left << std::setw(w) << "Limits:" << "[Not implemented]\n";
 		std::cout << std::left << std::setw(w) << "PipelineCacheUUID:" << PipelineCacheUUIDToString(l_Props.pipelineCacheUUID) << "\n";
 		std::cout << std::left << std::setw(w) << "SparseProperties:" << "[Not implemented]\n\n";
-
-		QueueFamilyProperties_t l_QPropsVec;
-		GetQueueFamilyProperties(l_Device, l_QPropsVec);
-
-		uint32_t l_uiFamilyIndex = 0;
-		for (const auto l_QProps : l_QPropsVec)
-		{
-			std::cout << "Queue Family " << l_uiFamilyIndex << ":\n";
-			std::cout << std::left << std::setw(w) << "   Flags:" << QueueFlagsToString(l_QProps.queueFlags) << "\n";
-			std::cout << std::left << std::setw(w) << "   Num queues:" << l_QProps.queueCount << "\n";
-			std::cout << std::left << std::setw(w) << "   TimestampValidBits:" << TimestampValidBitsToString(l_QProps.timestampValidBits) << "\n";
-			std::cout << std::left << std::setw(w) << "   MinImageTransferGranularity:" << l_QProps.minImageTransferGranularity << "\n\n";
-			l_uiFamilyIndex++;
-		}
 		l_uiIndex++;
+	}
+}
+
+void VlkDevice::CmdPrintQueueFamilies(uint32_t p_uiDeviceIndex)
+{
+	QueueFamilyProperties_t l_QPropsVec;
+	GetQueueFamilyProperties(GetDevice(p_uiDeviceIndex), l_QPropsVec);
+
+	CONSOLE_WRITE_SCOPE();
+	uint32_t l_uiFamilyIndex = 0;
+	for (const auto l_QProps : l_QPropsVec)
+	{
+		std::cout << "\n-Queue Family " << l_uiFamilyIndex << "-------------------------------------------------------------------------------------\n";
+
+		static const uint8_t w = 34;
+		std::cout << std::left << std::setw(w) << "Flags:" << QueueFlagsToString(l_QProps.queueFlags) << "\n";
+		std::cout << std::left << std::setw(w) << "Num queues:" << l_QProps.queueCount << "\n";
+		std::cout << std::left << std::setw(w) << "TimestampValidBits:" << TimestampValidBitsToString(l_QProps.timestampValidBits) << "\n";
+		std::cout << std::left << std::setw(w) << "MinImageTransferGranularity:" << l_QProps.minImageTransferGranularity << "\n\n";
+		l_uiFamilyIndex++;
 	}
 }
 
 void VlkDevice::CmdPrintLayers(uint32_t p_uiDeviceIndex, bool p_bKeepUnsupported)
 {
-	Devices_t l_Devices;
-	GetDevices(l_Devices);
-
-	THROW_IF_NOT(p_uiDeviceIndex < l_Devices.size(), "Invalid device index");
-
 	LayerProperties_t l_Layers;
-	GetAllLayers(l_Devices[p_uiDeviceIndex], l_Layers, p_bKeepUnsupported);
+	GetAllLayers(GetDevice(p_uiDeviceIndex), l_Layers, p_bKeepUnsupported);
 
 	CONSOLE_WRITE_SCOPE();
 	std::cout << "\n";
@@ -121,11 +124,7 @@ void VlkDevice::CmdPrintLayers(uint32_t p_uiDeviceIndex, bool p_bKeepUnsupported
 
 void VlkDevice::CmdPrintExtensions(uint32_t p_uiDeviceIndex, bool p_bKeepUnsupported)
 {
-	Devices_t l_Devices;
-	GetDevices(l_Devices);
-
-	THROW_IF_NOT(p_uiDeviceIndex < l_Devices.size(), "Invalid device index");
-	VkPhysicalDevice l_Device = l_Devices[p_uiDeviceIndex];
+	VkPhysicalDevice l_Device = GetDevice(p_uiDeviceIndex);
 
 	ExtensionProperties_t l_Extensions;
 	GetAllExtensions(l_Device, l_Extensions);
@@ -161,6 +160,7 @@ void VlkDevice::CmdPrintExtensions(uint32_t p_uiDeviceIndex, bool p_bKeepUnsuppo
 	}
 	std::cout << "\n";
 }
+#endif
 
 bool VlkDevice::IsLayerAvailable(VkPhysicalDevice p_Device, const std::string& p_Name)
 {
@@ -298,6 +298,15 @@ void VlkDevice::GetDevices(Devices_t& p_Devices) const
 
 	p_Devices.resize(l_uiCount);
 	VK_THROW_IF_NOT_SUCCESS(vkEnumeratePhysicalDevices(m_Instance, &l_uiCount, p_Devices.data()), "Failed to get physical devices");
+}
+
+VkPhysicalDevice VlkDevice::GetDevice(uint32_t p_uiIndex) const
+{
+	Devices_t l_Devices;
+	GetDevices(l_Devices);
+
+	THROW_IF_NOT(p_uiIndex < l_Devices.size(), "Invalid device index");
+	return l_Devices[p_uiIndex];
 }
 
 void VlkDevice::GetDeviceProperties(const VkPhysicalDevice p_Device, VkPhysicalDeviceProperties& p_Properties)

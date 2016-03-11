@@ -14,9 +14,12 @@ public:
 	VlkDevice(const VlkDevice&) = delete;
 	VlkDevice& operator=(const VlkDevice&) = delete;
 
+#ifdef HAWK_DEBUG
 	void CmdPrintDevices();
+	void CmdPrintQueueFamilies(uint32_t p_uiDeviceIndex);
 	void CmdPrintLayers(uint32_t p_uiDeviceIndex, bool p_bKeepUnsupported);
 	void CmdPrintExtensions(uint32_t p_uiDeviceIndex, bool p_bKeepUnsupported);
+#endif
 
 private:
 	using Devices_t = std::vector<VkPhysicalDevice>;
@@ -37,6 +40,7 @@ private:
 	void CreateDevice(VkPhysicalDevice p_Device, const QueueCreateInfoVec_t& p_QueueCreateInfoVec);
 	static void ValidateQueueCreateInfoVec(const QueueCreateInfoVec_t& p_QueueCreateInfoVec);
 	void GetDevices(Devices_t& p_Devices) const;
+	VkPhysicalDevice GetDevice(uint32_t p_uiIndex) const;
 	static void GetDeviceProperties(const VkPhysicalDevice p_Device, VkPhysicalDeviceProperties& p_Properties);
 	static void GetQueueFamilyProperties(const VkPhysicalDevice p_Device, QueueFamilyProperties_t& p_Properties);
 	static void FindMatchingQueueFamily(const VkPhysicalDevice p_Device, VkQueueFlags p_Flags, uint32_t p_uiCount, uint32_t& p_uiIndex);
@@ -50,9 +54,6 @@ private:
 
 	VkInstance m_Instance;
 	VkDevice m_Device;
-
-#ifdef HAWK_DEBUG
-#endif
 };
 
 }
