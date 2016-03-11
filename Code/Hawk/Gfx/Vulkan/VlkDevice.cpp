@@ -43,6 +43,11 @@ VlkDevice::VlkDevice(VkInstance p_Instance, uint32_t p_uiDeviceID)
 VlkDevice::~VlkDevice()
 {
 	ASSERT(m_Device, "Device null");
+	VkResult l_Result = vkDeviceWaitIdle(m_Device);
+	LOG_IF(l_Result != VK_SUCCESS, "Failed to wait for device to become idle. Error: " << VlkSystem::ResultToString(l_Result), "vulkan", Error);
+
+	// TODO: Destroy resources
+	
 	vkDestroyDevice(m_Device, nullptr);
 	LOG("Vulkan device destroyed", "vulkan", Debug);
 }
