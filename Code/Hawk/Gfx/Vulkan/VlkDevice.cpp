@@ -2,6 +2,7 @@
 #include "VlkDevice.h"
 #include "VlkUtil.h"
 #include "Util/Algorithm.h"
+#include "System/StreamOperators.h"
 #include <iomanip>
 
 namespace Hawk {
@@ -22,22 +23,15 @@ namespace
 #endif
 }
 
-VlkDevice::VlkDevice(VkInstance p_Instance)
-: m_Instance(p_Instance)
+VlkDevice::VlkDevice(const VlkDeviceCreateInfo& p_CreateInfo)
+: m_Instance(p_CreateInfo.GetInstance())
 , m_Device(nullptr)
-, m_PhysicalDevice(nullptr)
+, m_QueueRequestMap(p_CreateInfo.GetQueueRequestMap())
 {
-	CreateDevice(GetDeviceByIndex(0));
-	LOG("Created auto-selected vulkan device", "vulkan", Info);
-}
-
-VlkDevice::VlkDevice(VkInstance p_Instance, uint32_t p_uiDeviceID)
-: m_Instance(p_Instance)
-, m_Device(nullptr)
-, m_PhysicalDevice(nullptr)
-{
-	CreateDevice(GetDeviceByID(p_uiDeviceID));
-	LOG("Created vulkan device from given ID=" << p_uiDeviceID, "vulkan", Info);
+	ASSERT(p_CreateInfo.IsFinalized(), "CreateInfo not finalized");
+	m_PhysicalDevice = p_CreateInfo.UseDeviceID() ? GetDeviceByID(p_CreateInfo.GetDeviceID()) : GetDeviceByIndex(0);
+	Initialize();
+	Validate();
 }
 
 VlkDevice::~VlkDevice()
@@ -46,9 +40,7 @@ VlkDevice::~VlkDevice()
 	VkResult l_Result = vkDeviceWaitIdle(m_Device);
 	LOG_IF(l_Result != VK_SUCCESS, "Failed to wait for device to become idle. Error: " << VlkSystem::ResultToString(l_Result), "vulkan", Error);
 
-	// TODO: Destroy resources
-	
-	vkDestroyDevice(m_Device, nullptr);
+	vkDestroyDevice(m_Device, nullptr); // Will also destroy all queues created on device
 	LOG("Vulkan device destroyed", "vulkan", Debug);
 }
 
@@ -244,70 +236,92 @@ void VlkDevice::GetExtensionsToCreate(VkPhysicalDevice p_Device, std::vector<con
 	}
 }
 
-VlkDevice::QueueCreateInfoVec_t VlkDevice::GetQueueCreateInfo(VkPhysicalDevice p_Device)
+void VlkDevice::CreateDevice(const QueueFamilyCreateInfos_t& p_QueueFamilyCreateInfos)
 {
-	static const uint32_t sc_uiNumGfxQueues = 1;
-	QueueCreateInfoVec_t l_Vec;
-
-	uint32_t l_uiGfxQueueIndex;
-	FindMatchingQueueFamily(p_Device, VK_QUEUE_GRAPHICS_BIT, sc_uiNumGfxQueues, l_uiGfxQueueIndex);
-
-	VkDeviceQueueCreateInfo l_Info;
-	l_Info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-	l_Info.pNext = nullptr; // null or pointer to extension-specific structure
-	l_Info.flags = 0; // reserved for future use
-	l_Info.queueFamilyIndex = l_uiGfxQueueIndex;
-	l_Info.queueCount = sc_uiNumGfxQueues;
-
-	float l_Priorities[1] = {1.0f};
-	l_Info.pQueuePriorities = l_Priorities;
-	l_Vec.push_back(l_Info);
-
-	return l_Vec;
-}
-
-void VlkDevice::CreateDevice(VkPhysicalDevice p_Device, const QueueCreateInfoVec_t& p_QueueCreateInfoVec)
-{
-	ValidateQueueCreateInfoVec(p_QueueCreateInfoVec);
+	ValidateQueueFamilyCreateInfos(p_QueueFamilyCreateInfos);
 	VkPhysicalDeviceFeatures l_Features = {};
 	GetFeatures(l_Features);
 
 	std::vector<const char*> l_EnabledLayers = {};
-	GetLayersToCreate(p_Device, l_EnabledLayers);
+	GetLayersToCreate(m_PhysicalDevice, l_EnabledLayers);
 
 	std::vector<const char*> l_EnabledExtensions = {};
-	GetExtensionsToCreate(p_Device, l_EnabledExtensions);
+	GetExtensionsToCreate(m_PhysicalDevice, l_EnabledExtensions);
 
 	VkDeviceCreateInfo l_Info = {};
 	l_Info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 	l_Info.pNext = nullptr; // must be null or pointer to an extension-specific structure
 	l_Info.flags = 0;		// Reserved for future use
-	l_Info.queueCreateInfoCount = p_QueueCreateInfoVec.size();
-	l_Info.pQueueCreateInfos = p_QueueCreateInfoVec.data();
+	l_Info.queueCreateInfoCount = p_QueueFamilyCreateInfos.size();
+	l_Info.pQueueCreateInfos = p_QueueFamilyCreateInfos.data();
 	l_Info.enabledLayerCount = l_EnabledLayers.size();
 	l_Info.ppEnabledLayerNames = l_EnabledLayers.data();
 	l_Info.enabledExtensionCount = l_EnabledExtensions.size();
 	l_Info.ppEnabledExtensionNames = l_EnabledExtensions.data();
 	l_Info.pEnabledFeatures = &l_Features;
-	VK_THROW_IF_NOT_SUCCESS(vkCreateDevice(p_Device, &l_Info, nullptr, &m_Device), "Failed to create device");
-	m_PhysicalDevice = p_Device;
+	VK_THROW_IF_NOT_SUCCESS(vkCreateDevice(m_PhysicalDevice, &l_Info, nullptr, &m_Device), "Failed to create device");
 }
 
-void VlkDevice::CreateDevice(VkPhysicalDevice p_Device)
+void VlkDevice::ExtractQueues(const QueueCreateInfoMap_t& p_Map)
 {
-	CreateDevice(p_Device, GetQueueCreateInfo(p_Device));
-}
-
-void VlkDevice::ValidateQueueCreateInfoVec(const QueueCreateInfoVec_t& p_QueueCreateInfoVec)
-{
-	THROW_IF(p_QueueCreateInfoVec.empty(), "At least one queue needs to be specified when creating device");
-	for (uint32_t i = 0; i < p_QueueCreateInfoVec.size(); i++)
+	ASSERT(m_Device, "Device not created");
+	for (const auto& l_Entry : p_Map)
 	{
-		for (uint32_t j = i + 1; j < p_QueueCreateInfoVec.size(); j++)
+		VlkQueueType l_Type = l_Entry.first;
+		for (const auto& l_Info : l_Entry.second)
 		{
-			THROW_IF(p_QueueCreateInfoVec[i].queueFamilyIndex == p_QueueCreateInfoVec[j].queueFamilyIndex, "Duplicate queue family index when creating device");
+			VkQueue l_Queue = nullptr;
+			vkGetDeviceQueue(m_Device, l_Info.m_uiFamilyIndex, l_Info.m_uiQueueIndex, &l_Queue);
+			THROW_IF_NOT(l_Queue, "Failed to get handle to queue. QueueType=" << (int)l_Type << " FamilyIndex=" << l_Info.m_uiFamilyIndex << " QueueIndex=" << l_Info.m_uiQueueIndex);
+			
+			m_Queues[l_Type].push_back(l_Queue);
+			LOG("Added queue of type: " << (int)l_Type << " TypeIndex=" << l_Info.m_uiTypeIndex << " QueueIndex=" << l_Info.m_uiQueueIndex, "vulkan", Debug);
 		}
 	}
+}
+
+void VlkDevice::Initialize()
+{
+	THROW_IF_NOT(m_PhysicalDevice, "PhysicalDevice is null");
+
+	QueueFamilyCreateInfos_t l_QueueFamilyCreateInfos;
+	QueueCreateInfoMap_t l_QueueCreateInfoMap;
+	GetQueueCreateData(l_QueueFamilyCreateInfos, l_QueueCreateInfoMap);
+
+	CreateDevice(l_QueueFamilyCreateInfos);
+	ExtractQueues(l_QueueCreateInfoMap);
+}
+
+void VlkDevice::Validate()
+{
+	THROW_IF_NOT(m_PhysicalDevice, "Physical device null");
+	THROW_IF_NOT(m_Device, "Device null");
+	for (const auto& l_Entry : m_QueueRequestMap)
+	{
+		auto l_Itr = m_Queues.find(l_Entry.first);
+		THROW_IF(l_Itr == m_Queues.end(), "Queue type should be available: " << (int)l_Entry.first);
+		THROW_IF_NOT(l_Itr->second.size() == l_Entry.second.size(), "Queue count mismatch for queue type: " << (int)l_Entry.first);
+	}
+}
+
+void VlkDevice::ValidateQueueFamilyCreateInfos(const QueueFamilyCreateInfos_t& p_QueueFamilyCreateInfos)
+{
+	THROW_IF(p_QueueFamilyCreateInfos.empty(), "At least one queue needs to be specified when creating device");
+	for (uint32_t i = 0; i < p_QueueFamilyCreateInfos.size(); i++)
+	{
+		for (uint32_t j = i + 1; j < p_QueueFamilyCreateInfos.size(); j++)
+		{
+			THROW_IF(p_QueueFamilyCreateInfos[i].queueFamilyIndex == p_QueueFamilyCreateInfos[j].queueFamilyIndex, "Duplicate queue family index when creating device");
+		}
+	}
+}
+
+VkQueue VlkDevice::GetQueue(VlkQueueType p_Type, uint32_t p_uiIndex) const
+{
+	const auto& l_Itr = m_Queues.find(p_Type);
+	THROW_IF(l_Itr == m_Queues.end(), "Queues of type " << (int)p_Type << " not available");
+	THROW_IF_NOT(p_uiIndex < l_Itr->second.size(), "Invalid queue index " << p_uiIndex << " for queue type " << (int)p_Type);
+	return l_Itr->second[p_uiIndex];
 }
 
 void VlkDevice::GetDevices(Devices_t& p_Devices) const
@@ -349,11 +363,11 @@ void VlkDevice::OnDeviceLost()
 {
 	try
 	{
-		CreateDevice(m_PhysicalDevice);
+		// TODO: Recreate device
 	}
-	catch (Exception& e)
+	catch (Exception&)
 	{
-		FATAL("Failed to recrete device after lost state. Msg: " << e.what(), "vulkan");
+		//FATAL("Failed to recrete device after lost state. Msg: " << e.what(), "vulkan");
 	}
 }
 
@@ -369,25 +383,116 @@ void VlkDevice::GetQueueFamilyProperties(const VkPhysicalDevice p_Device, QueueF
 
 	p_Properties.resize(l_uiCount);
 	vkGetPhysicalDeviceQueueFamilyProperties(p_Device, &l_uiCount, p_Properties.data());
+
+	/*{
+		VkQueueFamilyProperties l_Props;
+		l_Props.queueFlags = VK_QUEUE_GRAPHICS_BIT;
+		l_Props.queueCount = 2;
+		p_Properties.push_back(l_Props);
+	}
+	{
+		VkQueueFamilyProperties l_Props;
+		l_Props.queueFlags = VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT;
+		l_Props.queueCount = 2;
+		p_Properties.push_back(l_Props);
+	}
+	{
+		VkQueueFamilyProperties l_Props;
+		l_Props.queueFlags = VK_QUEUE_TRANSFER_BIT;
+		l_Props.queueCount = 1;
+		p_Properties.push_back(l_Props);
+	}
+	{
+		VkQueueFamilyProperties l_Props;
+		l_Props.queueFlags = VK_QUEUE_TRANSFER_BIT;
+		l_Props.queueCount = 1;
+		p_Properties.push_back(l_Props);
+	}*/
 }
 
-void VlkDevice::FindMatchingQueueFamily(const VkPhysicalDevice p_Device, VkQueueFlags p_Flags, uint32_t p_uiCount, uint32_t& p_uiIndex)
+void VlkDevice::GetQueueCreateData(QueueFamilyCreateInfos_t& p_FamilyCreateInfos, QueueCreateInfoMap_t& p_QueueCreateMap)
 {
 	QueueFamilyProperties_t l_PropsVec;
-	GetQueueFamilyProperties(p_Device, l_PropsVec);
+	GetQueueFamilyProperties(m_PhysicalDevice, l_PropsVec);
 
-	for (uint32_t i = 0; i < l_PropsVec.size(); i++)
+	using FamilyNumQueuesLeft_t = std::unordered_map<uint32_t, uint32_t>;
+	FamilyNumQueuesLeft_t l_NumQueuesLeft;
+	for (uint32_t l_uiFamilyIndex = 0; l_uiFamilyIndex < l_PropsVec.size(); l_uiFamilyIndex++)
 	{
-		const VkQueueFamilyProperties& l_Props = l_PropsVec[i];
-		bool l_bHasFlags = (p_Flags & l_Props.queueFlags) == p_Flags;
-		bool l_bEnoughQueues = p_uiCount <= l_Props.queueCount;
-		if (l_bHasFlags && l_bEnoughQueues)
+		l_NumQueuesLeft[l_uiFamilyIndex] = l_PropsVec[l_uiFamilyIndex].queueCount;
+	}
+
+	for (const auto& l_Entry : m_QueueRequestMap)
+	{
+		VlkQueueType l_Type = l_Entry.first;
+		for (const auto& l_Desc : l_Entry.second)
 		{
-			p_uiIndex = i;
-			return;
+			bool l_bAdded = false;
+			for (uint32_t l_uiFamilyIndex = 0; l_uiFamilyIndex < l_PropsVec.size(); l_uiFamilyIndex++)
+			{
+				VkQueueFamilyProperties& l_Props = l_PropsVec[l_uiFamilyIndex];
+				uint32_t& l_uiNumQueuesLeft = l_NumQueuesLeft[l_uiFamilyIndex];
+				VkQueueFlags l_Flag = QueueTypeToFlag(l_Type);
+				bool l_bSupportsType = (l_Flag & l_Props.queueFlags) == l_Flag;
+				bool l_bQueuesLeft = l_uiNumQueuesLeft != 0;
+				if (l_bSupportsType && l_bQueuesLeft)
+				{
+					uint32_t l_uiQueueIndex = l_Props.queueCount - l_uiNumQueuesLeft;
+					p_QueueCreateMap[l_Type].emplace_back(l_uiFamilyIndex, l_Desc.m_uiIndex, l_uiQueueIndex, l_Desc.m_uiPrio);
+					l_uiNumQueuesLeft--;
+					l_bAdded = true;
+					break;
+				}
+			}
+			THROW_IF_NOT(l_bAdded, "Failed to add requested queue for creation");
 		}
 	}
-	THROW("Failed to find queue family with the following requirements. Flags: " << QueueFlagsToString(p_Flags) << " Count: " << p_uiCount);
+
+	struct FamilyInfo
+	{
+		uint32_t m_uiCount;
+		std::unordered_map<uint32_t, uint32_t> m_Prios;
+	};
+	using QueueFamilyMap_t = std::unordered_map<uint32_t, FamilyInfo>;
+	QueueFamilyMap_t l_Families;
+
+	for (const auto& l_Info : p_QueueCreateMap)
+	{
+		for (const auto& l_ExtractInfo : l_Info.second)
+		{
+			FamilyInfo& l_FamilyInfo = l_Families[l_ExtractInfo.m_uiFamilyIndex];
+			l_FamilyInfo.m_uiCount++;
+			l_FamilyInfo.m_Prios[l_ExtractInfo.m_uiQueueIndex] = l_ExtractInfo.m_uiPrio;
+		}
+	}
+
+	for (const auto& l_Family : l_Families)
+	{
+		const FamilyInfo& l_FamilyInfo = l_Family.second;
+		VkDeviceQueueCreateInfo l_CreateInfo;
+		l_CreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+		l_CreateInfo.pNext = nullptr; // null or pointer to extension-specific structure
+		l_CreateInfo.flags = 0; // reserved for future use
+		l_CreateInfo.queueFamilyIndex = l_Family.first;
+		l_CreateInfo.queueCount = l_FamilyInfo.m_uiCount;
+
+		std::vector<float> l_NormalizedPrios;
+		l_NormalizedPrios.resize(l_FamilyInfo.m_Prios.size());
+
+		float l_fSum = 0.0f;
+		for (const auto& l_Prio : l_FamilyInfo.m_Prios)
+		{
+			l_fSum += l_Prio.second;
+		}
+
+		for (uint32_t i = 0; i < l_FamilyInfo.m_Prios.size(); i++)
+		{
+			l_NormalizedPrios[i] = l_FamilyInfo.m_Prios.at(i) / l_fSum;
+		}
+		l_CreateInfo.pQueuePriorities = l_NormalizedPrios.data();
+		p_FamilyCreateInfos.push_back(l_CreateInfo);
+		LOG("Queue family registered for creation. FamilyIndex=" << l_CreateInfo.queueFamilyIndex << " QueueCount=" << l_CreateInfo.queueCount << " Prios: " << l_NormalizedPrios, "vulkan", Debug)
+	}
 }
 
 void VlkDevice::GetFeatures(VkPhysicalDeviceFeatures& /*p_Features*/)
@@ -463,6 +568,23 @@ std::string VlkDevice::TimestampValidBitsToString(uint32_t p_Bits)
 		l_Stream << " [Invalid bit count!]";
 	}
 	return l_Stream.str();
+}
+
+VkQueueFlags VlkDevice::QueueTypeToFlag(VlkQueueType p_Type)
+{
+	switch (p_Type)
+	{
+		case VlkQueueType::Graphics:
+			return VK_QUEUE_GRAPHICS_BIT;
+		case VlkQueueType::Compute:
+			return VK_QUEUE_COMPUTE_BIT;
+		case VlkQueueType::Transfer:
+			return VK_QUEUE_TRANSFER_BIT;
+		case VlkQueueType::SparseBinding:
+			return VK_QUEUE_SPARSE_BINDING_BIT;
+		default:
+			THROW("Invalid type: " << (int)p_Type);
+	}
 }
 
 }

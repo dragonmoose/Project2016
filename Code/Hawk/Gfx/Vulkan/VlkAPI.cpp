@@ -57,15 +57,21 @@ void VlkAPI::CmdListDevices()
 
 void VlkAPI::CreateDevice()
 {
+	VlkDeviceCreateInfo l_Info(m_Instance->GetRawInstance());
 	uint32_t l_uiDeviceID;
 	if (Config::Instance().TryGet<uint32_t>("vulkan.deviceID", 0, l_uiDeviceID))
 	{
-		m_Device = std::make_unique<VlkDevice>(m_Instance->GetRawInstance(), l_uiDeviceID);
+		
+		l_Info.SetDeviceID(l_uiDeviceID);
 	}
-	else
-	{
-		m_Device = std::make_unique<VlkDevice>(m_Instance->GetRawInstance());
-	}
+	l_Info.AddQueue(VlkQueueType::Graphics, 0, 100);
+	l_Info.AddQueue(VlkQueueType::Graphics, 1, 100);
+	l_Info.AddQueue(VlkQueueType::Graphics, 2, 150);
+	l_Info.AddQueue(VlkQueueType::Graphics, 3, 50);
+	l_Info.AddQueue(VlkQueueType::Compute, 1, 100);
+	l_Info.AddQueue(VlkQueueType::Compute, 0, 25);
+	l_Info.Finalize();
+	m_Device = std::make_unique<VlkDevice>(l_Info);
 }
 
 const std::string& VlkAPI::GetLogDesc()
