@@ -57,7 +57,7 @@ void VlkDeviceCreateInfo::Finalize()
 
 		for (uint32_t i = 0; i < l_Requests.size(); i++)
 		{
-			THROW_IF_NOT(l_Requests[i].m_uiIndex == i, "Invalid index for queue of type: " << (int)l_Entry.first << " Index=" << l_Requests[i].m_uiIndex << " Expected=" << i);
+			THROW_IF_NOT(l_Requests[i].m_uiIndex == i, "Invalid index for queue of type: " << l_Entry.first << " Index=" << l_Requests[i].m_uiIndex << " Expected=" << i);
 		}
 	}
 	m_bFinalized = true;

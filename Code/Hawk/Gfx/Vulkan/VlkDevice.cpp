@@ -57,6 +57,14 @@ void VlkDevice::WaitUntilIdle()
 	}
 }
 
+VkQueue VlkDevice::GetQueue(VlkQueueType p_Type, uint32_t p_uiIndex) const
+{
+	const auto& l_Itr = m_Queues.find(p_Type);
+	THROW_IF(l_Itr == m_Queues.end(), "Queues of type " << p_Type << " not available");
+	THROW_IF_NOT(p_uiIndex < l_Itr->second.size(), "Invalid queue index " << p_uiIndex << " for queue type " << p_Type);
+	return l_Itr->second[p_uiIndex];
+}
+
 #ifdef HAWK_DEBUG
 void VlkDevice::CmdPrintDevices()
 {
@@ -272,10 +280,10 @@ void VlkDevice::ExtractQueues(const QueueCreateInfoMap_t& p_Map)
 		{
 			VkQueue l_Queue = nullptr;
 			vkGetDeviceQueue(m_Device, l_Info.m_uiFamilyIndex, l_Info.m_uiQueueIndex, &l_Queue);
-			THROW_IF_NOT(l_Queue, "Failed to get handle to queue. QueueType=" << (int)l_Type << " FamilyIndex=" << l_Info.m_uiFamilyIndex << " QueueIndex=" << l_Info.m_uiQueueIndex);
+			THROW_IF_NOT(l_Queue, "Failed to get handle to queue. QueueType=" << l_Type << " FamilyIndex=" << l_Info.m_uiFamilyIndex << " QueueIndex=" << l_Info.m_uiQueueIndex);
 			
 			m_Queues[l_Type].push_back(l_Queue);
-			LOG("Added queue of type: " << (int)l_Type << " TypeIndex=" << l_Info.m_uiTypeIndex << " QueueIndex=" << l_Info.m_uiQueueIndex, "vulkan", Debug);
+			LOG("Added queue of type: " << l_Type << " TypeIndex=" << l_Info.m_uiTypeIndex << " QueueIndex=" << l_Info.m_uiQueueIndex, "vulkan", Debug);
 		}
 	}
 }
@@ -299,8 +307,8 @@ void VlkDevice::Validate()
 	for (const auto& l_Entry : m_QueueRequestMap)
 	{
 		auto l_Itr = m_Queues.find(l_Entry.first);
-		THROW_IF(l_Itr == m_Queues.end(), "Queue type should be available: " << (int)l_Entry.first);
-		THROW_IF_NOT(l_Itr->second.size() == l_Entry.second.size(), "Queue count mismatch for queue type: " << (int)l_Entry.first);
+		THROW_IF(l_Itr == m_Queues.end(), "Queue type should be available: " << l_Entry.first);
+		THROW_IF_NOT(l_Itr->second.size() == l_Entry.second.size(), "Queue count mismatch for queue type: " << l_Entry.first);
 	}
 }
 
@@ -314,14 +322,6 @@ void VlkDevice::ValidateQueueFamilyCreateInfos(const QueueFamilyCreateInfos_t& p
 			THROW_IF(p_QueueFamilyCreateInfos[i].queueFamilyIndex == p_QueueFamilyCreateInfos[j].queueFamilyIndex, "Duplicate queue family index when creating device");
 		}
 	}
-}
-
-VkQueue VlkDevice::GetQueue(VlkQueueType p_Type, uint32_t p_uiIndex) const
-{
-	const auto& l_Itr = m_Queues.find(p_Type);
-	THROW_IF(l_Itr == m_Queues.end(), "Queues of type " << (int)p_Type << " not available");
-	THROW_IF_NOT(p_uiIndex < l_Itr->second.size(), "Invalid queue index " << p_uiIndex << " for queue type " << (int)p_Type);
-	return l_Itr->second[p_uiIndex];
 }
 
 void VlkDevice::GetDevices(Devices_t& p_Devices) const

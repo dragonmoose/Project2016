@@ -1,4 +1,5 @@
 #pragma once
+#include "VlkTypes.h"
 #include "System/Exception.h"
 #include <vulkan/vulkan.h>
 
@@ -18,3 +19,4 @@ namespace VlkSystem
 #define VK_THROW_IF_NOT_SUCCESS(p, msg) if ((p != 0)) VK_THROW(p, msg)
 
 std::ostream& operator<<(std::ostream& os, VkExtent3D p_Extent);
+std::ostream& operator<<(std::ostream& os, Hawk::Gfx::VlkQueueType p_QueueType);

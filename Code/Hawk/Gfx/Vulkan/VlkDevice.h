@@ -16,6 +16,7 @@ public:
 	VlkDevice& operator=(const VlkDevice&) = delete;
 
 	void WaitUntilIdle();
+	VkQueue GetQueue(VlkQueueType p_Type, uint32_t p_uiIndex) const;
 
 #ifdef HAWK_DEBUG
 	void CmdPrintDevices();
@@ -60,7 +61,6 @@ private:
 	void Initialize();
 	void Validate();
 	static void ValidateQueueFamilyCreateInfos(const QueueFamilyCreateInfos_t& p_QueueFamilyCreateInfos);
-	VkQueue GetQueue(VlkQueueType p_Type, uint32_t p_uiIndex) const;
 
 	void GetDevices(Devices_t& p_Devices) const;
 	VkPhysicalDevice GetDeviceByIndex(uint32_t p_uiIndex) const;

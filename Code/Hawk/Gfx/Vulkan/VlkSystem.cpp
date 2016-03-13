@@ -76,3 +76,25 @@ std::ostream& operator<<(std::ostream& os, VkExtent3D p_Extent)
 	os << "(w:" << p_Extent.width << " h:" << p_Extent.height << " d:" << p_Extent.depth << ")";
 	return os;
 }
+
+std::ostream& operator<<(std::ostream& os, Hawk::Gfx::VlkQueueType p_QueueType)
+{
+	switch (p_QueueType)
+	{
+		case Hawk::Gfx::VlkQueueType::Graphics:
+			os << "'Graphics'";
+			break;
+		case Hawk::Gfx::VlkQueueType::Compute:
+			os << "'Compute'";
+			break;
+		case Hawk::Gfx::VlkQueueType::Transfer:
+			os << "'Transfer'";
+			break;
+		case Hawk::Gfx::VlkQueueType::SparseBinding:
+			os << "'SparseBinding'";
+			break;
+		default:
+			os << "[Invalid]";
+	}
+	return os;
+}
