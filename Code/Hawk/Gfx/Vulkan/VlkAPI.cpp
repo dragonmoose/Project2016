@@ -20,10 +20,16 @@ void VlkAPI::Initialize()
 	VlkSystem::Initialize();
 	CreateInstance();
 	CreatePhysicalDevice();
-	CreateWindowSurface();
-	CreateDevice();
+
+	VlkDeviceCreateInfo l_CreateInfo(m_PhysicalDevice);
+	SetupQueues(l_CreateInfo);
+	l_CreateInfo.Finalize();
+
+	CreateWindowSurface(l_CreateInfo);
+	CreateDevice(l_CreateInfo);
+
 	//SetFullscreenState(Config::Instance().Get("gfx.fullscreen", false));
-	LOG("Vulkan API initialized", "vulkan", Info);
+	LOG("Vulkan initialized", "vulkan", Info);
 }
 
 void VlkAPI::Render()
@@ -77,27 +83,28 @@ void VlkAPI::CreatePhysicalDevice()
 	}
 }
 
-void VlkAPI::CreateDevice()
+void VlkAPI::SetupQueues(VlkDeviceCreateInfo& p_CreateInfo)
+{
+	p_CreateInfo.AddQueue(VlkQueueType::Graphics, 0, 100);
+	p_CreateInfo.AddQueue(VlkQueueType::Graphics, 1, 100);
+	p_CreateInfo.AddQueue(VlkQueueType::Graphics, 2, 150);
+	p_CreateInfo.AddQueue(VlkQueueType::Graphics, 3, 50);
+	p_CreateInfo.AddQueue(VlkQueueType::Compute, 1, 100);
+	p_CreateInfo.AddQueue(VlkQueueType::Compute, 0, 25);
+}
+
+void VlkAPI::CreateDevice(const VlkDeviceCreateInfo& p_CreateInfo)
 {
 	ASSERT(m_Instance, "Instance null");
 	ASSERT(m_PhysicalDevice, "PhysicalDevice null");
 	ASSERT(m_Surface, "Surface null");
-
-	VlkDeviceCreateInfo l_Info(m_Instance, m_PhysicalDevice, m_Surface);
-	l_Info.AddQueue(VlkQueueType::Graphics, 0, 100);
-	l_Info.AddQueue(VlkQueueType::Graphics, 1, 100);
-	l_Info.AddQueue(VlkQueueType::Graphics, 2, 150);
-	l_Info.AddQueue(VlkQueueType::Graphics, 3, 50);
-	l_Info.AddQueue(VlkQueueType::Compute, 1, 100);
-	l_Info.AddQueue(VlkQueueType::Compute, 0, 25);
-	l_Info.Finalize();
-	m_Device = std::make_shared<VlkDevice>(l_Info);
+	m_Device = std::make_shared<VlkDevice>(p_CreateInfo);
 }
 
-void VlkAPI::CreateWindowSurface()
+void VlkAPI::CreateWindowSurface(const VlkDeviceCreateInfo& p_CreateInfo)
 {
 #ifdef VK_USE_PLATFORM_WIN32_KHR
-	m_Surface = std::make_shared<VlkSurface>(m_Instance->GetHandle(), WindowManager::GetHInstance(), WindowManager::GetHWND());
+	m_Surface = std::make_shared<VlkSurface>(m_Instance, WindowManager::GetHInstance(), WindowManager::GetHWND(), p_CreateInfo);
 #endif
 }
 

@@ -29,8 +29,9 @@ public:
 private:
 	void CreateInstance();
 	void CreatePhysicalDevice();
-	void CreateDevice();
-	void CreateWindowSurface();
+	void SetupQueues(VlkDeviceCreateInfo& p_CreateInfo);
+	void CreateDevice(const VlkDeviceCreateInfo& p_CreateInfo);
+	void CreateWindowSurface(const VlkDeviceCreateInfo& p_CreateInfo);
 	static const std::string& GetLogDesc();
 
 	std::shared_ptr<VlkInstance> m_Instance;
