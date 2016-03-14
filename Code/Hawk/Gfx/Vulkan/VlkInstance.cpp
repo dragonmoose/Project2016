@@ -75,7 +75,7 @@ VlkInstance::~VlkInstance()
 	LOG("VlkInstance destroyed", "vulkan", Debug);
 }
 
-VkInstance VlkInstance::GetRawInstance() const
+VkInstance VlkInstance::GetHandle() const
 {
 	return m_Instance;
 }

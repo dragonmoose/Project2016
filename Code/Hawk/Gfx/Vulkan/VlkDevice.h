@@ -1,6 +1,5 @@
 #pragma once
 #include "VlkSystem.h"
-#include "VlkTypes.h"
 #include "VlkDeviceCreateInfo.h"
 #include <vector>
 
@@ -18,13 +17,6 @@ public:
 	void WaitUntilIdle();
 	VkQueue GetQueue(VlkQueueType p_Type, uint32_t p_uiIndex) const;
 
-#ifdef HAWK_DEBUG
-	void CmdPrintDevices();
-	void CmdPrintQueueFamilies(uint32_t p_uiDeviceIndex);
-	void CmdPrintLayers(uint32_t p_uiDeviceIndex, bool p_bKeepUnsupported);
-	void CmdPrintExtensions(uint32_t p_uiDeviceIndex, bool p_bKeepUnsupported);
-#endif
-
 private:
 	struct QueueCreateInfo
 	{
@@ -41,50 +33,28 @@ private:
 	};
 	using QueueCreateInfoMap_t = std::unordered_map<VlkQueueType, std::vector<QueueCreateInfo>>;
 	using Queues_t = std::unordered_map<VlkQueueType, std::vector<VkQueue>>;
-
-	using Devices_t = std::vector<VkPhysicalDevice>;
-	using QueueFamilyProperties_t = std::vector<VkQueueFamilyProperties>;
 	using QueueFamilyCreateInfos_t = std::vector<VkDeviceQueueCreateInfo>;
-	using LayerProperties_t = std::vector<VkLayerProperties>;
-	using ExtensionProperties_t = std::vector<VkExtensionProperties>;
 
-	static bool IsLayerAvailable(VkPhysicalDevice p_Device, const std::string& p_Name);
-	static bool IsExtensionAvailable(VkPhysicalDevice p_Device, const std::string& p_Name, const std::string& p_LayerName = std::string());
-	static void GetAllLayers(VkPhysicalDevice p_Device, LayerProperties_t& p_Layers, bool p_bKeepUnsupported);
-	static void GetAllExtensions(VkPhysicalDevice p_Device, ExtensionProperties_t& p_Extensions, const std::string& p_LayerName = std::string());
-
-	static void GetLayersToCreate(VkPhysicalDevice p_Device, std::vector<const char*>& p_Layers);
-	static void GetExtensionsToCreate(VkPhysicalDevice p_Device, std::vector<const char*>& p_Extensions);
+	void GetLayersToCreate(std::vector<const char*>& p_Layers);
+	void GetExtensionsToCreate(std::vector<const char*>& p_Extensions);
 
 	void CreateDevice(const QueueFamilyCreateInfos_t& p_QueueFamilyCreateInfos);
 	void ExtractQueues(const QueueCreateInfoMap_t& p_Vec);
 	void Initialize();
 	void Validate();
-	static void ValidateQueueFamilyCreateInfos(const QueueFamilyCreateInfos_t& p_QueueFamilyCreateInfos);
-
-	void GetDevices(Devices_t& p_Devices) const;
-	VkPhysicalDevice GetDeviceByIndex(uint32_t p_uiIndex) const;
-	VkPhysicalDevice GetDeviceByID(uint32_t p_uiDeviceID) const;
+	void ValidateQueueFamilyCreateInfos(const QueueFamilyCreateInfos_t& p_QueueFamilyCreateInfos);
 	void OnDeviceLost();
 
-	static void GetDeviceProperties(const VkPhysicalDevice p_Device, VkPhysicalDeviceProperties& p_Properties);
-	static void GetQueueFamilyProperties(const VkPhysicalDevice p_Device, QueueFamilyProperties_t& p_Properties);
 	void GetQueueFamilyCreateInfos(const QueueCreateInfoMap_t& p_QueueCreateMap, QueueFamilyCreateInfos_t& p_FamilyCreateInfos);
 	void GetQueueCreateInfoMap(QueueCreateInfoMap_t& p_QueueCreateMap);
-	static void GetFeatures(VkPhysicalDeviceFeatures& p_Features);
+	void GetFeatures(VkPhysicalDeviceFeatures& p_Features);
 	void CheckWSISupport(const QueueCreateInfoMap_t& p_QueueCreateMap);
 
-
-	static std::string PipelineCacheUUIDToString(const uint8_t* p_UUID);
-	static std::string DeviceTypeToString(VkPhysicalDeviceType p_Type);
-	static std::string QueueFlagsToString(VkQueueFlags p_Flags);
-	static std::string TimestampValidBitsToString(uint32_t p_Bits);
-	static VkQueueFlags QueueTypeToFlag(VlkQueueType p_Type);
-
-	VkInstance m_Instance;
+	std::shared_ptr<VlkInstance> m_Instance;
+	std::shared_ptr<VlkPhysicalDevice> m_PhysicalDevice;
+	std::shared_ptr<VlkSurface> m_Surface;
 	VkDevice m_Device;
-	VkPhysicalDevice m_PhysicalDevice;
-	VkSurfaceKHR m_Surface;
+
 	Queues_t m_Queues;
 	VlkQueueRequestMap_t m_QueueRequestMap;
 };

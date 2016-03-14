@@ -12,7 +12,7 @@ public:
 	VlkInstance(const VlkInstance&) = delete;
 	VlkInstance& operator=(const VlkInstance&) = delete;
 
-	VkInstance GetRawInstance() const;
+	VkInstance GetHandle() const;
 
 	static void CmdPrintLayers(bool p_bKeepUnsupported);
 	static void CmdPrintExtensions(bool p_bKeepUnsupported);

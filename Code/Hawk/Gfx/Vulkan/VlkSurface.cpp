@@ -15,6 +15,7 @@ VlkSurface::VlkSurface(VkInstance p_Instance, HINSTANCE p_hInstance, HWND p_hWnd
 	l_Info.hwnd = p_hWnd;
 
 	VK_THROW_IF_NOT_SUCCESS(vkCreateWin32SurfaceKHR(p_Instance, &l_Info, nullptr, &m_Surface), "Failed to create win32 surface");
+	CheckCapabilities();
 }
 
 VlkSurface::~VlkSurface()
@@ -25,9 +26,14 @@ VlkSurface::~VlkSurface()
 	vkDestroySurfaceKHR(m_Instance, m_Surface, nullptr);
 }
 
-VkSurfaceKHR VlkSurface::GetRawSurface() const
+VkSurfaceKHR VlkSurface::GetHandle() const
 {
 	return m_Surface;
+}
+
+void VlkSurface::CheckCapabilities()
+{
+	//VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkSurfaceCapabilitiesKHR* pSurfaceCapabilities);
 }
 
 }

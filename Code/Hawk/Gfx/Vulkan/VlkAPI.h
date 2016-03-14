@@ -27,13 +27,16 @@ public:
 #endif
 
 private:
+	void CreateInstance();
+	void CreatePhysicalDevice();
 	void CreateDevice();
 	void CreateWindowSurface();
 	static const std::string& GetLogDesc();
 
-	std::unique_ptr<VlkInstance> m_Instance;
-	std::unique_ptr<VlkDevice> m_Device;
-	std::unique_ptr<VlkSurface> m_Surface;
+	std::shared_ptr<VlkInstance> m_Instance;
+	std::shared_ptr<VlkPhysicalDevice> m_PhysicalDevice;
+	std::shared_ptr<VlkDevice> m_Device;
+	std::shared_ptr<VlkSurface> m_Surface;
 };
 
 }

@@ -13,9 +13,11 @@ public:
 	~VlkSurface();
 	VlkSurface(const VlkSurface&) = delete;
 	VlkSurface& operator=(const VlkSurface&) = delete;
-	VkSurfaceKHR GetRawSurface() const;
+	VkSurfaceKHR GetHandle() const;
 
 private:
+	void CheckCapabilities();
+
 	VkSurfaceKHR m_Surface;
 	VkInstance m_Instance;
 

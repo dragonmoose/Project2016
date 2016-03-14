@@ -1,7 +1,11 @@
 #pragma once
 #include "VlkSystem.h"
 #include "VlkTypes.h"
+#include "VlkInstance.h"
+#include "VlkSurface.h"
+#include "VlkPhysicalDevice.h"
 #include <vector>
+#include <memory>
 
 namespace Hawk {
 namespace Gfx {
@@ -21,24 +25,21 @@ using VlkQueueRequestMap_t = std::unordered_map<VlkQueueType, VlkQueueRequests_t
 class VlkDeviceCreateInfo final
 {
 public:
-	VlkDeviceCreateInfo(VkInstance p_Instance, VkSurfaceKHR p_Surface);
+	VlkDeviceCreateInfo(std::shared_ptr<VlkInstance> p_Instance, std::shared_ptr<VlkPhysicalDevice> p_PhysicalDevice, std::shared_ptr<VlkSurface> p_Surface);
 
-	void SetDeviceID(uint32_t p_uiDeviceID);
 	void AddQueue(VlkQueueType p_Type, uint32_t p_uiIndex, uint32_t p_uiPrio);
 	const VlkQueueRequestMap_t& GetQueueRequestMap() const;
-	bool UseDeviceID() const;
-	uint32_t GetDeviceID() const;
-	VkInstance GetInstance() const;
-	VkSurfaceKHR GetSurface() const;
+	std::shared_ptr<VlkInstance> GetInstance() const;
+	std::shared_ptr<VlkPhysicalDevice> GetPhysicalDevice() const;
+	std::shared_ptr<VlkSurface> GetSurface() const;
 	void Finalize();
 	bool IsFinalized() const;
 
 private:
-	VkSurfaceKHR m_Surface;
 	VlkQueueRequestMap_t m_QueueRequestMap;
-	VkInstance m_Instance;
-	uint32_t m_uiDeviceID;
-	bool m_bUseDeviceID;
+	std::shared_ptr<VlkSurface> m_Surface;
+	std::shared_ptr<VlkInstance> m_Instance;
+	std::shared_ptr<VlkPhysicalDevice> m_PhysicalDevice;
 	bool m_bFinalized;
 };
 

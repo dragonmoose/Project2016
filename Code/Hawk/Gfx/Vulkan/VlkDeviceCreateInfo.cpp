@@ -4,19 +4,12 @@
 namespace Hawk {
 namespace Gfx {
 
-VlkDeviceCreateInfo::VlkDeviceCreateInfo(VkInstance p_Instance, VkSurfaceKHR p_Surface)
+VlkDeviceCreateInfo::VlkDeviceCreateInfo(std::shared_ptr<VlkInstance> p_Instance, std::shared_ptr<VlkPhysicalDevice> p_PhysicalDevice, std::shared_ptr<VlkSurface> p_Surface)
 : m_Instance(p_Instance)
+, m_PhysicalDevice(p_PhysicalDevice)
 , m_Surface(p_Surface)
-, m_uiDeviceID(0)
-, m_bUseDeviceID(false)
 , m_bFinalized(false)
 {
-}
-
-void VlkDeviceCreateInfo::SetDeviceID(uint32_t p_uiDeviceID)
-{
-	m_uiDeviceID = p_uiDeviceID;
-	m_bUseDeviceID = true;
 }
 
 void VlkDeviceCreateInfo::AddQueue(VlkQueueType p_Type, uint32_t p_uiIndex, uint32_t p_uiPrio)
@@ -30,21 +23,17 @@ const VlkQueueRequestMap_t& VlkDeviceCreateInfo::GetQueueRequestMap() const
 	return m_QueueRequestMap;
 }
 
-bool VlkDeviceCreateInfo::UseDeviceID() const
-{
-	return m_bUseDeviceID;
-}
-uint32_t VlkDeviceCreateInfo::GetDeviceID() const
-{
-	return m_uiDeviceID;
-}
-
-VkInstance VlkDeviceCreateInfo::GetInstance() const
+std::shared_ptr<VlkInstance> VlkDeviceCreateInfo::GetInstance() const
 {
 	return m_Instance;
 }
 
-VkSurfaceKHR VlkDeviceCreateInfo::GetSurface() const
+std::shared_ptr<VlkPhysicalDevice> VlkDeviceCreateInfo::GetPhysicalDevice() const
+{
+	return m_PhysicalDevice;
+}
+
+std::shared_ptr<VlkSurface> VlkDeviceCreateInfo::GetSurface() const
 {
 	return m_Surface;
 }
