@@ -520,9 +520,12 @@ void VlkDevice::CheckWSISupport(const QueueCreateInfoMap_t& p_QueueCreateMap)
 
 	for (uint32_t l_uiFamilyIndex : l_FamilyIndices)
 	{
-		VkBool32 l_bSupported = {};
-		VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfaceSupportKHR(m_PhysicalDevice, l_uiFamilyIndex, m_Surface, &l_bSupported), "Failed to check support for WSI");
-		THROW_IF_NOT(l_bSupported, "Queue family " << l_uiFamilyIndex << " for graphics does not support WSI");
+		VkBool32 l_bResult = {};
+		VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfaceSupportKHR(m_PhysicalDevice, l_uiFamilyIndex, m_Surface, &l_bResult), "Failed to check support for WSI");
+		THROW_IF_NOT(l_bResult, "WSI-check failed: Queue family " << l_uiFamilyIndex << " does not support the specified surface");
+
+		l_bResult = vkGetPhysicalDeviceWin32PresentationSupportKHR(m_PhysicalDevice, l_uiFamilyIndex);
+		THROW_IF_NOT(l_bResult, "WSI-check failed: Queue family " << l_uiFamilyIndex << " does not support presentation on Windows Desktop");
 	}
 }
 
