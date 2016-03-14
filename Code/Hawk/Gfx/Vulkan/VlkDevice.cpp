@@ -283,7 +283,7 @@ void VlkDevice::ExtractQueues(const QueueCreateInfoMap_t& p_Map)
 			THROW_IF_NOT(l_Queue, "Failed to get handle to queue. QueueType=" << l_Type << " FamilyIndex=" << l_Info.m_uiFamilyIndex << " QueueIndex=" << l_Info.m_uiQueueIndex);
 			
 			m_Queues[l_Type].push_back(l_Queue);
-			LOG("Added queue of type: " << l_Type << " TypeIndex=" << l_Info.m_uiTypeIndex << " QueueIndex=" << l_Info.m_uiQueueIndex, "vulkan", Debug);
+			LOG("Extracted queue of type from device: " << l_Type << " TypeIndex=" << l_Info.m_uiTypeIndex << " QueueIndex=" << l_Info.m_uiQueueIndex, "vulkan", Debug);
 		}
 	}
 }
@@ -292,9 +292,11 @@ void VlkDevice::Initialize()
 {
 	THROW_IF_NOT(m_PhysicalDevice, "PhysicalDevice is null");
 
-	QueueFamilyCreateInfos_t l_QueueFamilyCreateInfos;
 	QueueCreateInfoMap_t l_QueueCreateInfoMap;
-	GetQueueCreateData(l_QueueFamilyCreateInfos, l_QueueCreateInfoMap);
+	GetQueueCreateInfoMap(l_QueueCreateInfoMap);
+
+	QueueFamilyCreateInfos_t l_QueueFamilyCreateInfos;
+	GetQueueFamilyCreateInfos(l_QueueCreateInfoMap, l_QueueFamilyCreateInfos);
 
 	CreateDevice(l_QueueFamilyCreateInfos);
 	ExtractQueues(l_QueueCreateInfoMap);
@@ -384,7 +386,7 @@ void VlkDevice::GetQueueFamilyProperties(const VkPhysicalDevice p_Device, QueueF
 	p_Properties.resize(l_uiCount);
 	vkGetPhysicalDeviceQueueFamilyProperties(p_Device, &l_uiCount, p_Properties.data());
 
-	/*{
+	/*{	-------------------- test data --------------------
 		VkQueueFamilyProperties l_Props;
 		l_Props.queueFlags = VK_QUEUE_GRAPHICS_BIT;
 		l_Props.queueCount = 2;
@@ -410,44 +412,8 @@ void VlkDevice::GetQueueFamilyProperties(const VkPhysicalDevice p_Device, QueueF
 	}*/
 }
 
-void VlkDevice::GetQueueCreateData(QueueFamilyCreateInfos_t& p_FamilyCreateInfos, QueueCreateInfoMap_t& p_QueueCreateMap)
+void VlkDevice::GetQueueFamilyCreateInfos(const QueueCreateInfoMap_t& p_QueueCreateMap, QueueFamilyCreateInfos_t& p_FamilyCreateInfos)
 {
-	QueueFamilyProperties_t l_PropsVec;
-	GetQueueFamilyProperties(m_PhysicalDevice, l_PropsVec);
-
-	using FamilyNumQueuesLeft_t = std::unordered_map<uint32_t, uint32_t>;
-	FamilyNumQueuesLeft_t l_NumQueuesLeft;
-	for (uint32_t l_uiFamilyIndex = 0; l_uiFamilyIndex < l_PropsVec.size(); l_uiFamilyIndex++)
-	{
-		l_NumQueuesLeft[l_uiFamilyIndex] = l_PropsVec[l_uiFamilyIndex].queueCount;
-	}
-
-	for (const auto& l_Entry : m_QueueRequestMap)
-	{
-		VlkQueueType l_Type = l_Entry.first;
-		for (const auto& l_Desc : l_Entry.second)
-		{
-			bool l_bAdded = false;
-			for (uint32_t l_uiFamilyIndex = 0; l_uiFamilyIndex < l_PropsVec.size(); l_uiFamilyIndex++)
-			{
-				VkQueueFamilyProperties& l_Props = l_PropsVec[l_uiFamilyIndex];
-				uint32_t& l_uiNumQueuesLeft = l_NumQueuesLeft[l_uiFamilyIndex];
-				VkQueueFlags l_Flag = QueueTypeToFlag(l_Type);
-				bool l_bSupportsType = (l_Flag & l_Props.queueFlags) == l_Flag;
-				bool l_bQueuesLeft = l_uiNumQueuesLeft != 0;
-				if (l_bSupportsType && l_bQueuesLeft)
-				{
-					uint32_t l_uiQueueIndex = l_Props.queueCount - l_uiNumQueuesLeft;
-					p_QueueCreateMap[l_Type].emplace_back(l_uiFamilyIndex, l_Desc.m_uiIndex, l_uiQueueIndex, l_Desc.m_uiPrio);
-					l_uiNumQueuesLeft--;
-					l_bAdded = true;
-					break;
-				}
-			}
-			THROW_IF_NOT(l_bAdded, "Failed to add requested queue for creation");
-		}
-	}
-
 	struct FamilyInfo
 	{
 		uint32_t m_uiCount;
@@ -456,13 +422,13 @@ void VlkDevice::GetQueueCreateData(QueueFamilyCreateInfos_t& p_FamilyCreateInfos
 	using QueueFamilyMap_t = std::unordered_map<uint32_t, FamilyInfo>;
 	QueueFamilyMap_t l_Families;
 
-	for (const auto& l_Info : p_QueueCreateMap)
+	for (const auto& l_Entry : p_QueueCreateMap)
 	{
-		for (const auto& l_ExtractInfo : l_Info.second)
+		for (const auto& l_Info : l_Entry.second)
 		{
-			FamilyInfo& l_FamilyInfo = l_Families[l_ExtractInfo.m_uiFamilyIndex];
+			FamilyInfo& l_FamilyInfo = l_Families[l_Info.m_uiFamilyIndex];
 			l_FamilyInfo.m_uiCount++;
-			l_FamilyInfo.m_Prios[l_ExtractInfo.m_uiQueueIndex] = l_ExtractInfo.m_uiPrio;
+			l_FamilyInfo.m_Prios[l_Info.m_uiQueueIndex] = l_Info.m_uiPrio;
 		}
 	}
 
@@ -492,6 +458,45 @@ void VlkDevice::GetQueueCreateData(QueueFamilyCreateInfos_t& p_FamilyCreateInfos
 		l_CreateInfo.pQueuePriorities = l_NormalizedPrios.data();
 		p_FamilyCreateInfos.push_back(l_CreateInfo);
 		LOG("Queue family registered for creation. FamilyIndex=" << l_CreateInfo.queueFamilyIndex << " QueueCount=" << l_CreateInfo.queueCount << " Prios: " << l_NormalizedPrios, "vulkan", Debug)
+	}
+}
+
+void VlkDevice::GetQueueCreateInfoMap(QueueCreateInfoMap_t& p_QueueCreateMap)
+{
+	QueueFamilyProperties_t l_PropsVec;
+	GetQueueFamilyProperties(m_PhysicalDevice, l_PropsVec);
+
+	using FamilyNumQueuesLeft_t = std::unordered_map<uint32_t, uint32_t>;
+	FamilyNumQueuesLeft_t l_NumQueuesLeft;
+	for (uint32_t l_uiFamilyIndex = 0; l_uiFamilyIndex < l_PropsVec.size(); l_uiFamilyIndex++)
+	{
+		l_NumQueuesLeft[l_uiFamilyIndex] = l_PropsVec[l_uiFamilyIndex].queueCount;
+	}
+
+	for (const auto& l_Entry : m_QueueRequestMap)
+	{
+		VlkQueueType l_Type = l_Entry.first;
+		for (const auto& l_Request : l_Entry.second)
+		{
+			bool l_bAdded = false;
+			for (uint32_t l_uiFamilyIndex = 0; l_uiFamilyIndex < l_PropsVec.size(); l_uiFamilyIndex++)
+			{
+				VkQueueFamilyProperties& l_Props = l_PropsVec[l_uiFamilyIndex];
+				uint32_t& l_uiNumQueuesLeft = l_NumQueuesLeft[l_uiFamilyIndex];
+				VkQueueFlags l_Flag = QueueTypeToFlag(l_Type);
+				bool l_bSupportsType = (l_Flag & l_Props.queueFlags) == l_Flag;
+				bool l_bQueuesLeft = l_uiNumQueuesLeft != 0;
+				if (l_bSupportsType && l_bQueuesLeft)
+				{
+					uint32_t l_uiQueueIndex = l_Props.queueCount - l_uiNumQueuesLeft;
+					p_QueueCreateMap[l_Type].emplace_back(l_uiFamilyIndex, l_Request.m_uiIndex, l_uiQueueIndex, l_Request.m_uiPrio);
+					l_uiNumQueuesLeft--;
+					l_bAdded = true;
+					break;
+				}
+			}
+			THROW_IF_NOT(l_bAdded, "Failed to add requested queue for creation. QueueType=" << l_Type << " Index=" << l_Request.m_uiIndex);
+		}
 	}
 }
 

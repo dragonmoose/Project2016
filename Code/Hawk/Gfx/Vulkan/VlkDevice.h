@@ -69,7 +69,8 @@ private:
 
 	static void GetDeviceProperties(const VkPhysicalDevice p_Device, VkPhysicalDeviceProperties& p_Properties);
 	static void GetQueueFamilyProperties(const VkPhysicalDevice p_Device, QueueFamilyProperties_t& p_Properties);
-	void GetQueueCreateData(QueueFamilyCreateInfos_t& p_FamilyCreateInfos, QueueCreateInfoMap_t& p_QueueCreateMap);
+	void GetQueueFamilyCreateInfos(const QueueCreateInfoMap_t& p_QueueCreateMap, QueueFamilyCreateInfos_t& p_FamilyCreateInfos);
+	void GetQueueCreateInfoMap(QueueCreateInfoMap_t& p_QueueCreateMap);
 	static void GetFeatures(VkPhysicalDeviceFeatures& p_Features);
 
 	static std::string PipelineCacheUUIDToString(const uint8_t* p_UUID);
