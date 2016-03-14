@@ -54,31 +54,6 @@ void VlkPhysicalDevice::GetQueueFamilyProperties(const VkPhysicalDevice p_Device
 
 	p_Properties.resize(l_uiCount);
 	vkGetPhysicalDeviceQueueFamilyProperties(p_Device, &l_uiCount, p_Properties.data());
-
-	/*{	-------------------- test data --------------------
-	VkQueueFamilyProperties l_Props;
-	l_Props.queueFlags = VK_QUEUE_GRAPHICS_BIT;
-	l_Props.queueCount = 2;
-	p_Properties.push_back(l_Props);
-	}
-	{
-	VkQueueFamilyProperties l_Props;
-	l_Props.queueFlags = VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT;
-	l_Props.queueCount = 2;
-	p_Properties.push_back(l_Props);
-	}
-	{
-	VkQueueFamilyProperties l_Props;
-	l_Props.queueFlags = VK_QUEUE_TRANSFER_BIT;
-	l_Props.queueCount = 1;
-	p_Properties.push_back(l_Props);
-	}
-	{
-	VkQueueFamilyProperties l_Props;
-	l_Props.queueFlags = VK_QUEUE_TRANSFER_BIT;
-	l_Props.queueCount = 1;
-	p_Properties.push_back(l_Props);
-	}*/
 }
 
 #ifdef HAWK_DEBUG
