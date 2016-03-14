@@ -11,7 +11,8 @@ namespace WindowManager
 {
 	void Initialize(std::shared_ptr<EventRouter>& p_EventRouter);
 	void Open(HINSTANCE p_hInstance, const std::string& p_Name);
-	HWND GetHandle();
+	HWND GetHWND();
+	HINSTANCE GetHInstance();
 	bool Update();
 
 	using WindowManipulatedCallback_t = std::function<void(void)>;

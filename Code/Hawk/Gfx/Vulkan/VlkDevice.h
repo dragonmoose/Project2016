@@ -72,6 +72,8 @@ private:
 	void GetQueueFamilyCreateInfos(const QueueCreateInfoMap_t& p_QueueCreateMap, QueueFamilyCreateInfos_t& p_FamilyCreateInfos);
 	void GetQueueCreateInfoMap(QueueCreateInfoMap_t& p_QueueCreateMap);
 	static void GetFeatures(VkPhysicalDeviceFeatures& p_Features);
+	void CheckWSISupport(const QueueCreateInfoMap_t& p_QueueCreateMap);
+
 
 	static std::string PipelineCacheUUIDToString(const uint8_t* p_UUID);
 	static std::string DeviceTypeToString(VkPhysicalDeviceType p_Type);
@@ -82,6 +84,7 @@ private:
 	VkInstance m_Instance;
 	VkDevice m_Device;
 	VkPhysicalDevice m_PhysicalDevice;
+	VkSurfaceKHR m_Surface;
 	Queues_t m_Queues;
 	VlkQueueRequestMap_t m_QueueRequestMap;
 };

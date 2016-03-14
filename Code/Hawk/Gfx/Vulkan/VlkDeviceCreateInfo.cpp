@@ -4,8 +4,9 @@
 namespace Hawk {
 namespace Gfx {
 
-VlkDeviceCreateInfo::VlkDeviceCreateInfo(VkInstance p_Instance)
+VlkDeviceCreateInfo::VlkDeviceCreateInfo(VkInstance p_Instance, VkSurfaceKHR p_Surface)
 : m_Instance(p_Instance)
+, m_Surface(p_Surface)
 , m_uiDeviceID(0)
 , m_bUseDeviceID(false)
 , m_bFinalized(false)
@@ -43,10 +44,18 @@ VkInstance VlkDeviceCreateInfo::GetInstance() const
 	return m_Instance;
 }
 
+VkSurfaceKHR VlkDeviceCreateInfo::GetSurface() const
+{
+	return m_Surface;
+}
+
 void VlkDeviceCreateInfo::Finalize()
 {
 	ASSERT(!m_bFinalized, "Finalized has already been called");
+
 	THROW_IF_NOT(m_Instance, "Instance null");
+	THROW_IF_NOT(m_Surface, "Surface null");
+
 	for (auto& l_Entry : m_QueueRequestMap)
 	{
 		VlkQueueRequests_t& l_Requests = l_Entry.second;

@@ -2,6 +2,8 @@
 #include "VlkAPI.h"
 #include "VlkDevice.h"
 #include "VlkSystem.h"
+#include "VlkSurface.h"
+#include "Base/WindowManager.h"
 #include "Console/ScopedConsoleCommands.h"
 
 namespace Hawk {
@@ -9,6 +11,7 @@ namespace Gfx {
 
 VlkAPI::~VlkAPI()
 {
+	m_Surface.reset();
 	m_Device.reset();
 	m_Instance.reset();
 }
@@ -17,6 +20,7 @@ void VlkAPI::Initialize()
 {
 	VlkSystem::Initialize();
 	m_Instance = std::make_unique<VlkInstance>();
+	CreateWindowSurface();
 	CreateDevice();
 	//SetFullscreenState(Config::Instance().Get("gfx.fullscreen", false));
 	LOG("Vulkan API initialized", "vulkan", Info);
@@ -57,7 +61,8 @@ void VlkAPI::CmdListDevices()
 
 void VlkAPI::CreateDevice()
 {
-	VlkDeviceCreateInfo l_Info(m_Instance->GetRawInstance());
+	ASSERT(m_Surface, "Surface null");
+	VlkDeviceCreateInfo l_Info(m_Instance->GetRawInstance(), m_Surface->GetRawSurface());
 	uint32_t l_uiDeviceID;
 	if (Config::Instance().TryGet<uint32_t>("vulkan.deviceID", 0, l_uiDeviceID))
 	{
@@ -72,6 +77,13 @@ void VlkAPI::CreateDevice()
 	l_Info.AddQueue(VlkQueueType::Compute, 0, 25);
 	l_Info.Finalize();
 	m_Device = std::make_unique<VlkDevice>(l_Info);
+}
+
+void VlkAPI::CreateWindowSurface()
+{
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+	m_Surface = std::make_unique<VlkSurface>(m_Instance->GetRawInstance(), WindowManager::GetHInstance(), WindowManager::GetHWND());
+#endif
 }
 
 const std::string& VlkAPI::GetLogDesc()

@@ -25,8 +25,9 @@ namespace
 
 VlkDevice::VlkDevice(const VlkDeviceCreateInfo& p_CreateInfo)
 : m_Instance(p_CreateInfo.GetInstance())
-, m_Device(nullptr)
+, m_Device(VK_NULL_HANDLE)
 , m_QueueRequestMap(p_CreateInfo.GetQueueRequestMap())
+, m_Surface(p_CreateInfo.GetSurface())
 {
 	ASSERT(p_CreateInfo.IsFinalized(), "CreateInfo not finalized");
 	m_PhysicalDevice = p_CreateInfo.UseDeviceID() ? GetDeviceByID(p_CreateInfo.GetDeviceID()) : GetDeviceByIndex(0);
@@ -258,8 +259,6 @@ void VlkDevice::CreateDevice(const QueueFamilyCreateInfos_t& p_QueueFamilyCreate
 
 	VkDeviceCreateInfo l_Info = {};
 	l_Info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-	l_Info.pNext = nullptr; // must be null or pointer to an extension-specific structure
-	l_Info.flags = 0;		// Reserved for future use
 	l_Info.queueCreateInfoCount = p_QueueFamilyCreateInfos.size();
 	l_Info.pQueueCreateInfos = p_QueueFamilyCreateInfos.data();
 	l_Info.enabledLayerCount = l_EnabledLayers.size();
@@ -278,7 +277,7 @@ void VlkDevice::ExtractQueues(const QueueCreateInfoMap_t& p_Map)
 		VlkQueueType l_Type = l_Entry.first;
 		for (const auto& l_Info : l_Entry.second)
 		{
-			VkQueue l_Queue = nullptr;
+			VkQueue l_Queue = VK_NULL_HANDLE;
 			vkGetDeviceQueue(m_Device, l_Info.m_uiFamilyIndex, l_Info.m_uiQueueIndex, &l_Queue);
 			THROW_IF_NOT(l_Queue, "Failed to get handle to queue. QueueType=" << l_Type << " FamilyIndex=" << l_Info.m_uiFamilyIndex << " QueueIndex=" << l_Info.m_uiQueueIndex);
 			
@@ -294,6 +293,8 @@ void VlkDevice::Initialize()
 
 	QueueCreateInfoMap_t l_QueueCreateInfoMap;
 	GetQueueCreateInfoMap(l_QueueCreateInfoMap);
+
+	CheckWSISupport(l_QueueCreateInfoMap);
 
 	QueueFamilyCreateInfos_t l_QueueFamilyCreateInfos;
 	GetQueueFamilyCreateInfos(l_QueueCreateInfoMap, l_QueueFamilyCreateInfos);
@@ -437,8 +438,6 @@ void VlkDevice::GetQueueFamilyCreateInfos(const QueueCreateInfoMap_t& p_QueueCre
 		const FamilyInfo& l_FamilyInfo = l_Family.second;
 		VkDeviceQueueCreateInfo l_CreateInfo;
 		l_CreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-		l_CreateInfo.pNext = nullptr; // null or pointer to extension-specific structure
-		l_CreateInfo.flags = 0; // reserved for future use
 		l_CreateInfo.queueFamilyIndex = l_Family.first;
 		l_CreateInfo.queueCount = l_FamilyInfo.m_uiCount;
 
@@ -502,6 +501,29 @@ void VlkDevice::GetQueueCreateInfoMap(QueueCreateInfoMap_t& p_QueueCreateMap)
 
 void VlkDevice::GetFeatures(VkPhysicalDeviceFeatures& /*p_Features*/)
 {
+}
+
+void VlkDevice::CheckWSISupport(const QueueCreateInfoMap_t& p_QueueCreateMap)
+{
+	ASSERT(m_PhysicalDevice, "PhysicalDevice null");
+	ASSERT(m_Surface, "Surface null");
+
+	auto l_Itr = p_QueueCreateMap.find(VlkQueueType::Graphics);
+	ASSERT(l_Itr != p_QueueCreateMap.end(), "No queues requiring graphics found when checking for WSI support");
+	std::vector<uint32_t> l_FamilyIndices;
+	for (const auto& l_Info : l_Itr->second)
+	{
+		l_FamilyIndices.push_back(l_Info.m_uiFamilyIndex);
+	}
+	std::sort(l_FamilyIndices.begin(), l_FamilyIndices.end());
+	hwk::unique(l_FamilyIndices);
+
+	for (uint32_t l_uiFamilyIndex : l_FamilyIndices)
+	{
+		VkBool32 l_bSupported = {};
+		VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfaceSupportKHR(m_PhysicalDevice, l_uiFamilyIndex, m_Surface, &l_bSupported), "Failed to check support for WSI");
+		THROW_IF_NOT(l_bSupported, "Queue family " << l_uiFamilyIndex << " for graphics does not support WSI");
+	}
 }
 
 std::string VlkDevice::PipelineCacheUUIDToString(const uint8_t* p_UUID)

@@ -2,6 +2,8 @@
 #include "Gfx/IRenderingAPI.h"
 #include "VlkInstance.h"
 #include "VlkDevice.h"
+#include "VlkSystem.h"
+#include "VlkSurface.h"
 #include <memory>
 
 namespace Hawk {
@@ -26,10 +28,12 @@ public:
 
 private:
 	void CreateDevice();
+	void CreateWindowSurface();
 	static const std::string& GetLogDesc();
 
 	std::unique_ptr<VlkInstance> m_Instance;
 	std::unique_ptr<VlkDevice> m_Device;
+	std::unique_ptr<VlkSurface> m_Surface;
 };
 
 }

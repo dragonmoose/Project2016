@@ -30,7 +30,7 @@ namespace
 }
 
 VlkInstance::VlkInstance()
-: m_Instance(nullptr)
+: m_Instance(VK_NULL_HANDLE)
 {
 	std::vector<const char*> l_EnabledLayers = {};
 	GetLayersToCreate(l_EnabledLayers);
@@ -40,7 +40,6 @@ VlkInstance::VlkInstance()
 
 	VkApplicationInfo l_AppInfo = {};
 	l_AppInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-	l_AppInfo.pNext = nullptr; // must be null or pointer to an extension-specific structure
 	l_AppInfo.pApplicationName = CoreInfo::GetAppName();
 	l_AppInfo.applicationVersion = CoreInfo::GetAppVersion().GetID();
 	l_AppInfo.pEngineName = CoreInfo::GetEngineName();
@@ -49,8 +48,6 @@ VlkInstance::VlkInstance()
 
 	VkInstanceCreateInfo l_Info = {};
 	l_Info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-	l_Info.pNext = nullptr; // must be null or pointer to an extension-specific structure
-	l_Info.flags = 0;		// Reserved for future use
 	l_Info.pApplicationInfo = &l_AppInfo;
 
 	l_Info.enabledLayerCount = l_EnabledLayers.size();

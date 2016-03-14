@@ -21,7 +21,7 @@ using VlkQueueRequestMap_t = std::unordered_map<VlkQueueType, VlkQueueRequests_t
 class VlkDeviceCreateInfo final
 {
 public:
-	VlkDeviceCreateInfo(VkInstance p_Instance);
+	VlkDeviceCreateInfo(VkInstance p_Instance, VkSurfaceKHR p_Surface);
 
 	void SetDeviceID(uint32_t p_uiDeviceID);
 	void AddQueue(VlkQueueType p_Type, uint32_t p_uiIndex, uint32_t p_uiPrio);
@@ -29,10 +29,12 @@ public:
 	bool UseDeviceID() const;
 	uint32_t GetDeviceID() const;
 	VkInstance GetInstance() const;
+	VkSurfaceKHR GetSurface() const;
 	void Finalize();
 	bool IsFinalized() const;
 
 private:
+	VkSurfaceKHR m_Surface;
 	VlkQueueRequestMap_t m_QueueRequestMap;
 	VkInstance m_Instance;
 	uint32_t m_uiDeviceID;

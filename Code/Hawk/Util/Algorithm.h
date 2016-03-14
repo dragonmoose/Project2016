@@ -37,5 +37,11 @@ decltype(auto) contains(Range_t& p_Range, const T& p_Value)
 	return std::find(p_Range.cbegin(), p_Range.cend(), p_Value) != p_Range.cend();
 }
 
+template<class Range_t>
+void unique(Range_t& p_Range)
+{
+	p_Range.erase(std::unique(p_Range.begin(), p_Range.end()), p_Range.end());
+}
+
 }
 }

@@ -33,7 +33,7 @@ void BaseFactory::CreateSwapChain(IDXGIFactory4* p_Factory, ID3D12CommandQueue* 
 	l_Desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 
 	Microsoft::WRL::ComPtr<IDXGISwapChain1> l_SwapChain;
-	THROW_IF_COMERR(p_Factory->CreateSwapChainForHwnd(p_CommandQueue, WindowManager::GetHandle(), &l_Desc, nullptr, nullptr, &l_SwapChain), "Failed to create swap chain");
+	THROW_IF_COMERR(p_Factory->CreateSwapChainForHwnd(p_CommandQueue, WindowManager::GetHWND(), &l_Desc, nullptr, nullptr, &l_SwapChain), "Failed to create swap chain");
 	THROW_IF_COMERR(l_SwapChain.CopyTo<IDXGISwapChain3>(&p_SwapChain), "Failed to cast and copy to IDXGISwapChain3");
 }
 

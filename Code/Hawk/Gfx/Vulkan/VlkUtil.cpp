@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "VlkUtil.h"
-#include <vulkan/vulkan.h>
+#include "VlkSystem.h"
 
 namespace Hawk {
 namespace Gfx {

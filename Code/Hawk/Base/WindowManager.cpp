@@ -15,6 +15,7 @@ namespace WindowManager
 	const char* n_WindowName = "HawkWindowClass";
 	std::unique_ptr<InputSystem> n_InputSystem;
 	HWND n_hWindow = nullptr;
+	HINSTANCE n_hInstance = nullptr;
 	std::unique_ptr<EventManager> n_EventManager;
 	bool n_bWindowManipulated = false;
 
@@ -33,6 +34,8 @@ void WindowManager::Open(HINSTANCE p_hInstance, const std::string& p_Name)
 {
 	ASSERT(p_hInstance, "No hInstance set");
 	ASSERT(!p_Name.empty(), "No window name specified");
+
+	n_hInstance = p_hInstance;
 
 	WNDCLASSEX l_WC = { 0 };
 
@@ -69,10 +72,15 @@ void WindowManager::Open(HINSTANCE p_hInstance, const std::string& p_Name)
 	ShowWindow(n_hWindow, SW_SHOWNORMAL);
 }
 
-HWND WindowManager::GetHandle()
+HWND WindowManager::GetHWND()
 {
 	ASSERT(n_hWindow, "Window not created yet");
 	return n_hWindow;
+}
+
+HINSTANCE WindowManager::GetHInstance()
+{
+	return n_hInstance;
 }
 
 bool WindowManager::Update()

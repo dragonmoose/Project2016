@@ -1,6 +1,7 @@
 #pragma once
 #include "VlkTypes.h"
 #include "System/Exception.h"
+#define VK_USE_PLATFORM_WIN32_KHR
 #include <vulkan/vulkan.h>
 
 namespace Hawk {
