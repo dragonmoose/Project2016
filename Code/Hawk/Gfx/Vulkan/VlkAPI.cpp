@@ -12,9 +12,7 @@ namespace Gfx {
 
 VlkAPI::~VlkAPI()
 {
-	m_Surface.reset();
-	m_Device.reset();
-	m_Instance.reset();
+	LOG("VlkAPI destroyed", "vulkan", Debug);
 }
 
 void VlkAPI::Initialize()
