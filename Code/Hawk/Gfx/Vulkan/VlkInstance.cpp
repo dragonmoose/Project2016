@@ -56,7 +56,7 @@ VlkInstance::VlkInstance()
 	l_Info.enabledExtensionCount = l_EnabledExtensions.size();
 	l_Info.ppEnabledExtensionNames = l_EnabledExtensions.data();
 
-	VK_THROW_IF_NOT_SUCCESS(vkCreateInstance(&l_Info, nullptr, &m_Instance), "Failed to create vulkan instance");
+	VK_THROW_IF_NOT_SUCCESS(vkCreateInstance(&l_Info, nullptr, &m_Instance), "Failed to create vulkan instance for API-version: " << VlkUtil::SpecVersionToString(l_Info.pApplicationInfo->apiVersion));
 	LOG("VlkInstance created", "vulkan", Debug);
 
 #ifdef HAWK_DEBUG

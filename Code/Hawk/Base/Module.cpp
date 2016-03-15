@@ -52,11 +52,27 @@ void Module::_Initialize(std::unique_ptr<EventManager> p_EventManager, std::shar
 	}
 	catch (Exception& e)
 	{
-		FATALM_EXCEPTION(e);
+		if (Config::Instance().Get("dev.fatalOnModuleInitErrors", true))
+		{
+			FATALM_EXCEPTION(e);
+		}
+		else
+		{
+			LOGM("Bypassing fatal module init errors due to config setting. Exception: " << e.what(), Warning);
+			SetPaused(true);
+		}
 	}
 	catch (std::exception& e)
 	{
-		FATALM_STD_EXCEPTION(e);
+		if (Config::Instance().Get("dev.fatalOnModuleInitErrors", true))
+		{
+			FATALM_STD_EXCEPTION(e);
+		}
+		else
+		{
+			LOGM("Bypassing fatal module init errors due to config setting. Exception: " << e.what(), Warning);
+			SetPaused(true);
+		}
 	}
 }
 
