@@ -3,7 +3,7 @@
 #include "VlkInstance.h"
 #include "VlkDevice.h"
 #include "VlkSystem.h"
-#include "VlkSurface.h"
+#include "VlkWindowSurface.h"
 #include <memory>
 
 namespace Hawk {
@@ -37,7 +37,7 @@ private:
 	std::shared_ptr<VlkInstance> m_Instance;
 	std::shared_ptr<VlkPhysicalDevice> m_PhysicalDevice;
 	std::shared_ptr<VlkDevice> m_Device;
-	std::shared_ptr<VlkSurface> m_Surface;
+	std::shared_ptr<VlkWindowSurface> m_WindowSurface;
 };
 
 }

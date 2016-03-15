@@ -3,7 +3,7 @@
 #include "VlkDevice.h"
 #include "VlkPhysicalDevice.h"
 #include "VlkSystem.h"
-#include "VlkSurface.h"
+#include "VlkWindowSurface.h"
 #include "Base/WindowManager.h"
 #include "Console/ScopedConsoleCommands.h"
 
@@ -97,14 +97,14 @@ void VlkAPI::CreateDevice(const VlkDeviceCreateInfo& p_CreateInfo)
 {
 	ASSERT(m_Instance, "Instance null");
 	ASSERT(m_PhysicalDevice, "PhysicalDevice null");
-	ASSERT(m_Surface, "Surface null");
+	ASSERT(m_WindowSurface, "Surface null");
 	m_Device = std::make_shared<VlkDevice>(p_CreateInfo);
 }
 
 void VlkAPI::CreateWindowSurface(const VlkDeviceCreateInfo& p_CreateInfo)
 {
 #ifdef VK_USE_PLATFORM_WIN32_KHR
-	m_Surface = std::make_shared<VlkSurface>(m_Instance, WindowManager::GetHInstance(), WindowManager::GetHWND(), p_CreateInfo);
+	m_WindowSurface = std::make_shared<VlkWindowSurface>(m_Instance, WindowManager::GetHInstance(), WindowManager::GetHWND(), p_CreateInfo);
 #endif
 }
 

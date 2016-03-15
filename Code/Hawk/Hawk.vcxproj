@@ -144,7 +144,7 @@
     <ClInclude Include="Gfx\RenderingModule.h" />
     <ClInclude Include="Gfx\Vulkan\VlkConstants.h" />
     <ClInclude Include="Gfx\Vulkan\VlkPhysicalDevice.h" />
-    <ClInclude Include="Gfx\Vulkan\VlkSurface.h" />
+    <ClInclude Include="Gfx\Vulkan\VlkWindowSurface.h" />
     <ClInclude Include="Gfx\Vulkan\VlkDeviceCreateInfo.h" />
     <ClInclude Include="Gfx\Vulkan\VlkDevice.h" />
     <ClInclude Include="Gfx\Vulkan\VlkTypes.h" />
@@ -214,7 +214,7 @@
     <ClCompile Include="Gfx\Vulkan\VlkDevice.cpp" />
     <ClCompile Include="Gfx\Vulkan\VlkInstance.cpp" />
     <ClCompile Include="Gfx\Vulkan\VlkPhysicalDevice.cpp" />
-    <ClCompile Include="Gfx\Vulkan\VlkSurface.cpp" />
+    <ClCompile Include="Gfx\Vulkan\VlkWindowSurface.cpp" />
     <ClCompile Include="Gfx\Vulkan\VlkSystem.cpp" />
     <ClCompile Include="Gfx\Vulkan\VlkUtil.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />

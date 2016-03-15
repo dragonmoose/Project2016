@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "VlkSurface.h"
+#include "VlkWindowSurface.h"
 #include "VlkPhysicalDevice.h"
 #include "VlkConstants.h"
 #include "Util/Algorithm.h"
@@ -7,7 +7,7 @@
 namespace Hawk {
 namespace Gfx {
 
-VlkSurface::VlkSurface(std::shared_ptr<VlkInstance> p_Instance, HINSTANCE p_hInstance, HWND p_hWnd, const VlkDeviceCreateInfo& p_DeviceCreateInfo)
+VlkWindowSurface::VlkWindowSurface(std::shared_ptr<VlkInstance> p_Instance, HINSTANCE p_hInstance, HWND p_hWnd, const VlkDeviceCreateInfo& p_DeviceCreateInfo)
 : m_Surface(VK_NULL_HANDLE)
 , m_Instance(p_Instance)
 {
@@ -27,7 +27,7 @@ VlkSurface::VlkSurface(std::shared_ptr<VlkInstance> p_Instance, HINSTANCE p_hIns
 	CheckPresentationModes(l_PhysicalDevice);
 }
 
-VlkSurface::~VlkSurface()
+VlkWindowSurface::~VlkWindowSurface()
 {
 	// All VkSwapchainKHR must be destroyed prior to destroying surface
 	ASSERT(m_Instance, "Instance null");
@@ -36,12 +36,12 @@ VlkSurface::~VlkSurface()
 	LOG("Surface destroyed", "vulkan", Debug);
 }
 
-VkSurfaceKHR VlkSurface::GetHandle() const
+VkSurfaceKHR VlkWindowSurface::GetHandle() const
 {
 	return m_Surface;
 }
 
-void VlkSurface::CheckWSISupport(VkPhysicalDevice p_PhysicalDevice, const VlkDeviceCreateInfo::QueueCreateInfoMap_t& p_QueueCreateInfoMap) const
+void VlkWindowSurface::CheckWSISupport(VkPhysicalDevice p_PhysicalDevice, const VlkDeviceCreateInfo::QueueCreateInfoMap_t& p_QueueCreateInfoMap) const
 {
 	ASSERT(m_Surface, "Surface not created yet");
 
@@ -68,7 +68,7 @@ void VlkSurface::CheckWSISupport(VkPhysicalDevice p_PhysicalDevice, const VlkDev
 	}
 }
 
-void VlkSurface::CheckCapabilities(VkPhysicalDevice p_PhysicalDevice) const
+void VlkWindowSurface::CheckCapabilities(VkPhysicalDevice p_PhysicalDevice) const
 {
 	VkSurfaceCapabilitiesKHR l_Capabilities = {};
 	VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(p_PhysicalDevice, m_Surface, &l_Capabilities), "Failed to get surface capabilities");
@@ -77,7 +77,7 @@ void VlkSurface::CheckCapabilities(VkPhysicalDevice p_PhysicalDevice) const
 	THROW_IF_NOT(l_Capabilities.supportedUsageFlags & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, "Vulkan specification requires surfaces to support color attachment usage");
 }
 
-void VlkSurface::CheckColorFormats(VkPhysicalDevice p_PhysicalDevice) const
+void VlkWindowSurface::CheckColorFormats(VkPhysicalDevice p_PhysicalDevice) const
 {
 	std::vector<VkSurfaceFormatKHR> l_Formats;
 	uint32_t l_uiCount = 0;
@@ -89,7 +89,7 @@ void VlkSurface::CheckColorFormats(VkPhysicalDevice p_PhysicalDevice) const
 	THROW_IF(std::find_if(l_Formats.cbegin(), l_Formats.cend(), [](const VkSurfaceFormatKHR& p_Format) { return p_Format.format == VlkConstants::c_BackBufferFormat; }) == l_Formats.cend(), "Required backbuffer format not supported by surface");
 }
 
-void VlkSurface::CheckPresentationModes(VkPhysicalDevice p_PhysicalDevice) const
+void VlkWindowSurface::CheckPresentationModes(VkPhysicalDevice p_PhysicalDevice) const
 {
 	std::vector<VkPresentModeKHR> l_Modes;
 	uint32_t l_uiCount = 0;

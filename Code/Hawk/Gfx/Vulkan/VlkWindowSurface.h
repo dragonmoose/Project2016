@@ -6,15 +6,15 @@
 namespace Hawk {
 namespace Gfx {
 
-class VlkSurface final
+class VlkWindowSurface final
 {
 public:
 #ifdef VK_USE_PLATFORM_WIN32_KHR
-	VlkSurface(std::shared_ptr<VlkInstance> p_Instance, HINSTANCE p_hInstance, HWND p_hWnd, const VlkDeviceCreateInfo& p_DeviceCreateInfo);
+	VlkWindowSurface(std::shared_ptr<VlkInstance> p_Instance, HINSTANCE p_hInstance, HWND p_hWnd, const VlkDeviceCreateInfo& p_DeviceCreateInfo);
 #endif
-	~VlkSurface();
-	VlkSurface(const VlkSurface&) = delete;
-	VlkSurface& operator=(const VlkSurface&) = delete;
+	~VlkWindowSurface();
+	VlkWindowSurface(const VlkWindowSurface&) = delete;
+	VlkWindowSurface& operator=(const VlkWindowSurface&) = delete;
 	VkSurfaceKHR GetHandle() const;
 
 private:
