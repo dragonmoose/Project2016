@@ -16,6 +16,8 @@ public:
 
 	void WaitUntilIdle();
 	VkQueue GetQueue(VlkQueueType p_Type, uint32_t p_uiIndex) const;
+	std::shared_ptr<VlkPhysicalDevice> GetPhysicalDevice() const;
+	VkDevice GetHandle() const;
 
 private:
 	using Queues_t = std::unordered_map<VlkQueueType, std::vector<VkQueue>>;

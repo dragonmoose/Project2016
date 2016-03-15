@@ -4,6 +4,7 @@
 #include "VlkDevice.h"
 #include "VlkSystem.h"
 #include "VlkWindowSurface.h"
+#include "VlkSwapchain.h"
 #include <memory>
 
 namespace Hawk {
@@ -31,13 +32,14 @@ private:
 	void CreatePhysicalDevice();
 	void SetupQueues(VlkDeviceCreateInfo& p_CreateInfo);
 	void CreateDevice(const VlkDeviceCreateInfo& p_CreateInfo);
-	void CreateWindowSurface(const VlkDeviceCreateInfo& p_CreateInfo);
+	void CreateSwapchain(const VlkDeviceCreateInfo::QueueCreateInfoMap_t& p_QueueCreateInfoMap);
 	static const std::string& GetLogDesc();
 
 	std::shared_ptr<VlkInstance> m_Instance;
 	std::shared_ptr<VlkPhysicalDevice> m_PhysicalDevice;
 	std::shared_ptr<VlkDevice> m_Device;
 	std::shared_ptr<VlkWindowSurface> m_WindowSurface;
+	std::shared_ptr<VlkSwapchain> m_Swapchain;
 };
 
 }

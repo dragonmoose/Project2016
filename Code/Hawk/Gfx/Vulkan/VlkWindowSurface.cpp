@@ -3,33 +3,33 @@
 #include "VlkPhysicalDevice.h"
 #include "VlkConstants.h"
 #include "Util/Algorithm.h"
+#include "Base/WindowManager.h"
 
 namespace Hawk {
 namespace Gfx {
 
-VlkWindowSurface::VlkWindowSurface(std::shared_ptr<VlkInstance> p_Instance, HINSTANCE p_hInstance, HWND p_hWnd, const VlkDeviceCreateInfo& p_DeviceCreateInfo)
+VlkWindowSurface::VlkWindowSurface(std::shared_ptr<VlkInstance> p_Instance, VkPhysicalDevice p_PhysicalDevice, const VlkDeviceCreateInfo::QueueCreateInfoMap_t& p_QueueCreateInfoMap)
 : m_Surface(VK_NULL_HANDLE)
 , m_Instance(p_Instance)
 {
 	ASSERT(m_Instance, "Instance null");
 	VkWin32SurfaceCreateInfoKHR l_Info = {};
 	l_Info.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-	l_Info.hinstance = p_hInstance;
-	l_Info.hwnd = p_hWnd;
+	l_Info.hinstance = WindowManager::GetHInstance();
+	l_Info.hwnd = WindowManager::GetHWND();
 
 	VK_THROW_IF_NOT_SUCCESS(vkCreateWin32SurfaceKHR(p_Instance->GetHandle(), &l_Info, nullptr, &m_Surface), "Failed to create win32 surface");
 
-	VkPhysicalDevice l_PhysicalDevice = p_DeviceCreateInfo.GetPhysicalDevice()->GetHandle();
-
-	CheckWSISupport(l_PhysicalDevice, p_DeviceCreateInfo.GetQueueCreateInfoMap());
-	CheckCapabilities(l_PhysicalDevice);
-	CheckColorFormats(l_PhysicalDevice);
-	CheckPresentationModes(l_PhysicalDevice);
+	CheckWSISupport(p_PhysicalDevice, p_QueueCreateInfoMap);
+	CheckAndSetCapabilities(p_PhysicalDevice);
+	CheckColorFormats(p_PhysicalDevice);
+	CheckPresentationModes(p_PhysicalDevice);
+	LOG("Window surface created", "vulkan", Debug);
 }
 
 VlkWindowSurface::~VlkWindowSurface()
 {
-	// All VkSwapchainKHR must be destroyed prior to destroying surface
+	// All VkSwapchainKHR objects must be destroyed prior to destroying surface
 	ASSERT(m_Instance, "Instance null");
 	ASSERT(m_Surface, "No surface");
 	vkDestroySurfaceKHR(m_Instance->GetHandle(), m_Surface, nullptr);
@@ -40,6 +40,17 @@ VkSurfaceKHR VlkWindowSurface::GetHandle() const
 {
 	return m_Surface;
 }
+
+VkExtent2D VlkWindowSurface::GetInitialExtent() const
+{
+	return m_InitialExtent;
+}
+
+VkSurfaceTransformFlagBitsKHR VlkWindowSurface::GetInitialTransform() const
+{
+	return m_InitialTransform;
+}
+
 
 void VlkWindowSurface::CheckWSISupport(VkPhysicalDevice p_PhysicalDevice, const VlkDeviceCreateInfo::QueueCreateInfoMap_t& p_QueueCreateInfoMap) const
 {
@@ -68,13 +79,16 @@ void VlkWindowSurface::CheckWSISupport(VkPhysicalDevice p_PhysicalDevice, const 
 	}
 }
 
-void VlkWindowSurface::CheckCapabilities(VkPhysicalDevice p_PhysicalDevice) const
+void VlkWindowSurface::CheckAndSetCapabilities(VkPhysicalDevice p_PhysicalDevice)
 {
 	VkSurfaceCapabilitiesKHR l_Capabilities = {};
 	VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(p_PhysicalDevice, m_Surface, &l_Capabilities), "Failed to get surface capabilities");
 
 	THROW_IF_NOT(l_Capabilities.maxImageCount >= VlkConstants::c_uiNumBackBuffers, "Surface does not support the required number of backbuffers. Required=" << VlkConstants::c_uiNumBackBuffers);
 	THROW_IF_NOT(l_Capabilities.supportedUsageFlags & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, "Vulkan specification requires surfaces to support color attachment usage");
+
+	m_InitialExtent = l_Capabilities.currentExtent;
+	m_InitialTransform = l_Capabilities.currentTransform;
 }
 
 void VlkWindowSurface::CheckColorFormats(VkPhysicalDevice p_PhysicalDevice) const
@@ -86,7 +100,7 @@ void VlkWindowSurface::CheckColorFormats(VkPhysicalDevice p_PhysicalDevice) cons
 	l_Formats.resize(l_uiCount);
 	VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfaceFormatsKHR(p_PhysicalDevice, m_Surface, &l_uiCount, l_Formats.data()), "Failed to get formats");
 
-	THROW_IF(std::find_if(l_Formats.cbegin(), l_Formats.cend(), [](const VkSurfaceFormatKHR& p_Format) { return p_Format.format == VlkConstants::c_BackBufferFormat; }) == l_Formats.cend(), "Required backbuffer format not supported by surface");
+	THROW_IF(std::find_if(l_Formats.cbegin(), l_Formats.cend(), [](const VkSurfaceFormatKHR& p_Format) { return p_Format.format == VlkConstants::c_BackBufferFormat && p_Format.colorSpace == VlkConstants::c_BackBufferColorSpace; }) == l_Formats.cend(), "Required backbuffer format not supported by surface");
 }
 
 void VlkWindowSurface::CheckPresentationModes(VkPhysicalDevice p_PhysicalDevice) const

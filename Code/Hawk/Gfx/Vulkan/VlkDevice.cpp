@@ -30,6 +30,7 @@ VlkDevice::VlkDevice(const VlkDeviceCreateInfo& p_CreateInfo)
 	ASSERT(p_CreateInfo.IsFinalized(), "CreateInfo not finalized");
 	Initialize(p_CreateInfo);
 	Validate();
+	LOG("Vulkan device created", "vulkan", Debug);
 }
 
 VlkDevice::~VlkDevice()
@@ -61,6 +62,16 @@ VkQueue VlkDevice::GetQueue(VlkQueueType p_Type, uint32_t p_uiIndex) const
 	THROW_IF(l_Itr == m_Queues.end(), "Queues of type " << p_Type << " not available");
 	THROW_IF_NOT(p_uiIndex < l_Itr->second.size(), "Invalid queue index " << p_uiIndex << " for queue type " << p_Type);
 	return l_Itr->second[p_uiIndex];
+}
+
+std::shared_ptr<VlkPhysicalDevice> VlkDevice::GetPhysicalDevice() const
+{
+	return m_PhysicalDevice;
+}
+
+VkDevice VlkDevice::GetHandle() const
+{
+	return m_Device;
 }
 
 void VlkDevice::GetLayersToCreate(std::vector<const char*>& p_Layers)

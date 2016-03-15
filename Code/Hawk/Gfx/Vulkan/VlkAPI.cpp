@@ -4,7 +4,6 @@
 #include "VlkPhysicalDevice.h"
 #include "VlkSystem.h"
 #include "VlkWindowSurface.h"
-#include "Base/WindowManager.h"
 #include "Console/ScopedConsoleCommands.h"
 
 namespace Hawk {
@@ -25,8 +24,8 @@ void VlkAPI::Initialize()
 	SetupQueues(l_CreateInfo);
 	l_CreateInfo.Finalize();
 
-	CreateWindowSurface(l_CreateInfo);
 	CreateDevice(l_CreateInfo);
+	CreateSwapchain(l_CreateInfo.GetQueueCreateInfoMap());
 
 	//SetFullscreenState(Config::Instance().Get("gfx.fullscreen", false));
 	LOG("Vulkan initialized", "vulkan", Info);
@@ -97,15 +96,12 @@ void VlkAPI::CreateDevice(const VlkDeviceCreateInfo& p_CreateInfo)
 {
 	ASSERT(m_Instance, "Instance null");
 	ASSERT(m_PhysicalDevice, "PhysicalDevice null");
-	ASSERT(m_WindowSurface, "Surface null");
 	m_Device = std::make_shared<VlkDevice>(p_CreateInfo);
 }
 
-void VlkAPI::CreateWindowSurface(const VlkDeviceCreateInfo& p_CreateInfo)
+void VlkAPI::CreateSwapchain(const VlkDeviceCreateInfo::QueueCreateInfoMap_t& p_QueueCreateInfoMap)
 {
-#ifdef VK_USE_PLATFORM_WIN32_KHR
-	m_WindowSurface = std::make_shared<VlkWindowSurface>(m_Instance, WindowManager::GetHInstance(), WindowManager::GetHWND(), p_CreateInfo);
-#endif
+	m_Swapchain = std::make_shared<VlkSwapchain>(m_Instance, m_Device, p_QueueCreateInfoMap);
 }
 
 const std::string& VlkAPI::GetLogDesc()
