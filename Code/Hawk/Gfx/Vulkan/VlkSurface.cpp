@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "VlkSurface.h"
 #include "VlkPhysicalDevice.h"
+#include "VlkConstants.h"
 #include "Util/Algorithm.h"
 
 namespace Hawk {
@@ -17,8 +18,10 @@ VlkSurface::VlkSurface(std::shared_ptr<VlkInstance> p_Instance, HINSTANCE p_hIns
 	l_Info.hwnd = p_hWnd;
 
 	VK_THROW_IF_NOT_SUCCESS(vkCreateWin32SurfaceKHR(p_Instance->GetHandle(), &l_Info, nullptr, &m_Surface), "Failed to create win32 surface");
+
 	CheckWSISupport(p_DeviceCreateInfo);
-	CheckCapabilities();
+	CheckCapabilities(p_DeviceCreateInfo.GetPhysicalDevice()->GetHandle());
+	CheckColorFormats(p_DeviceCreateInfo.GetPhysicalDevice()->GetHandle());
 }
 
 VlkSurface::~VlkSurface()
@@ -63,9 +66,25 @@ void VlkSurface::CheckWSISupport(const VlkDeviceCreateInfo& p_DeviceCreateInfo) 
 	}
 }
 
-void VlkSurface::CheckCapabilities()
+void VlkSurface::CheckCapabilities(VkPhysicalDevice p_PhysicalDevice) const
 {
-	//VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkSurfaceCapabilitiesKHR* pSurfaceCapabilities);
+	VkSurfaceCapabilitiesKHR l_Capabilities = {};
+	VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(p_PhysicalDevice, m_Surface, &l_Capabilities), "Failed to get surface capabilities");
+
+	THROW_IF_NOT(l_Capabilities.maxImageCount >= VlkConstants::c_uiNumBackBuffers, "Surface does not support the required number of backbuffers. Required=" << VlkConstants::c_uiNumBackBuffers);
+	THROW_IF_NOT(l_Capabilities.supportedUsageFlags & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, "Vulkan requires surfaces to support color attachment usage");
+}
+
+void VlkSurface::CheckColorFormats(VkPhysicalDevice p_PhysicalDevice) const
+{
+	std::vector<VkSurfaceFormatKHR> l_Formats;
+	uint32_t l_uiCount = 0;
+	VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfaceFormatsKHR(p_PhysicalDevice, m_Surface, &l_uiCount, nullptr), "Failed to get format count");
+
+	l_Formats.resize(l_uiCount);
+	VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfaceFormatsKHR(p_PhysicalDevice, m_Surface, &l_uiCount, l_Formats.data()), "Failed to get formats");
+
+	THROW_IF(std::find_if(l_Formats.cbegin(), l_Formats.cend(), [](const VkSurfaceFormatKHR& p_Format) { return p_Format.format == VlkConstants::c_BackBufferFormat; }) == l_Formats.cend(), "Required backbuffer format not supported by surface");
 }
 
 }

@@ -18,7 +18,8 @@ public:
 	VkSurfaceKHR GetHandle() const;
 
 private:
-	void CheckCapabilities();
+	void CheckCapabilities(VkPhysicalDevice p_PhysicalDevice) const;
+	void CheckColorFormats(VkPhysicalDevice p_PhysicalDevice) const;
 	void CheckWSISupport(const VlkDeviceCreateInfo& p_DeviceCreateInfo) const;
 
 	VkSurfaceKHR m_Surface;
