@@ -8,13 +8,14 @@ namespace Gfx {
 class VlkSwapchain final
 {
 public:
-	VlkSwapchain(std::shared_ptr<VlkInstance> p_Instance, std::shared_ptr<VlkDevice> p_Device, const VlkDeviceCreateInfo::QueueCreateInfoMap_t& p_QueueCreateInfoMap);
+	VlkSwapchain(std::shared_ptr<VlkInstance> p_Instance, std::shared_ptr<VlkDevice> p_Device);
 	~VlkSwapchain();
 	VlkSwapchain(const VlkSwapchain&) = delete;
 	VlkSwapchain& operator=(const VlkSwapchain&) = delete;
+	void Present();
 
 private:
-	void CreateSurface(std::shared_ptr<VlkInstance> p_Instance, VkPhysicalDevice p_PhysicalDevice, const VlkDeviceCreateInfo::QueueCreateInfoMap_t& p_QueueCreateInfoMap);
+	void CreateSurface(std::shared_ptr<VlkInstance> p_Instance, VkPhysicalDevice p_PhysicalDevice);
 	void GetCreateInfo(VkSwapchainCreateInfoKHR& p_Info) const;
 
 	VkSwapchainKHR m_Swapchain;

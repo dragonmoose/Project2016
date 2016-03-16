@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "VlkWindowSurface.h"
 #include "VlkPhysicalDevice.h"
+#include "VlkQueue.h"
 #include "VlkConstants.h"
 #include "Util/Algorithm.h"
 #include "Base/WindowManager.h"
@@ -8,7 +9,7 @@
 namespace Hawk {
 namespace Gfx {
 
-VlkWindowSurface::VlkWindowSurface(std::shared_ptr<VlkInstance> p_Instance, VkPhysicalDevice p_PhysicalDevice, const VlkDeviceCreateInfo::QueueCreateInfoMap_t& p_QueueCreateInfoMap)
+VlkWindowSurface::VlkWindowSurface(std::shared_ptr<VlkInstance> p_Instance, VkPhysicalDevice p_PhysicalDevice, const VlkQueue* p_PresentationQueue)
 : m_Surface(VK_NULL_HANDLE)
 , m_Instance(p_Instance)
 {
@@ -20,7 +21,7 @@ VlkWindowSurface::VlkWindowSurface(std::shared_ptr<VlkInstance> p_Instance, VkPh
 
 	VK_THROW_IF_NOT_SUCCESS(vkCreateWin32SurfaceKHR(p_Instance->GetHandle(), &l_Info, nullptr, &m_Surface), "Failed to create win32 surface");
 
-	CheckWSISupport(p_PhysicalDevice, p_QueueCreateInfoMap);
+	CheckWSISupport(p_PhysicalDevice, p_PresentationQueue);
 	CheckAndSetCapabilities(p_PhysicalDevice);
 	CheckColorFormats(p_PhysicalDevice);
 	CheckPresentationModes(p_PhysicalDevice);
@@ -51,32 +52,20 @@ VkSurfaceTransformFlagBitsKHR VlkWindowSurface::GetInitialTransform() const
 	return m_InitialTransform;
 }
 
-
-void VlkWindowSurface::CheckWSISupport(VkPhysicalDevice p_PhysicalDevice, const VlkDeviceCreateInfo::QueueCreateInfoMap_t& p_QueueCreateInfoMap) const
+void VlkWindowSurface::CheckWSISupport(VkPhysicalDevice p_PhysicalDevice, const VlkQueue* p_PresentationQueue) const
 {
 	ASSERT(m_Surface, "Surface not created yet");
+	ASSERT(p_PresentationQueue, "PresentationQueue null");
 
-	auto l_Itr = p_QueueCreateInfoMap.find(VlkQueueType::Graphics);
-	ASSERT(l_Itr != p_QueueCreateInfoMap.end(), "No queues requiring graphics found when checking for WSI support");
+	VkBool32 l_bResult = {};
 
-	std::vector<uint32_t> l_FamilyIndices;
-	for (const auto& l_Info : l_Itr->second)
-	{
-		l_FamilyIndices.push_back(l_Info.m_uiFamilyIndex);
-	}
+	uint32_t l_uiFamilyIndex = p_PresentationQueue->GetFamilyIndex();
 
-	std::sort(l_FamilyIndices.begin(), l_FamilyIndices.end());
-	hwk::unique(l_FamilyIndices);
+	VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfaceSupportKHR(p_PhysicalDevice, l_uiFamilyIndex, m_Surface, &l_bResult), "Failed to check support for WSI");
+	THROW_IF_NOT(l_bResult, "WSI-check failed: Queue family " << l_uiFamilyIndex << " does not support the specified surface");
 
-	for (uint32_t l_uiFamilyIndex : l_FamilyIndices)
-	{
-		VkBool32 l_bResult = {};
-		VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfaceSupportKHR(p_PhysicalDevice, l_uiFamilyIndex, m_Surface, &l_bResult), "Failed to check support for WSI");
-		THROW_IF_NOT(l_bResult, "WSI-check failed: Queue family " << l_uiFamilyIndex << " does not support the specified surface");
-
-		l_bResult = vkGetPhysicalDeviceWin32PresentationSupportKHR(p_PhysicalDevice, l_uiFamilyIndex);
-		THROW_IF_NOT(l_bResult, "WSI-check failed: Queue family " << l_uiFamilyIndex << " does not support presentation on Windows Desktop");
-	}
+	l_bResult = vkGetPhysicalDeviceWin32PresentationSupportKHR(p_PhysicalDevice, l_uiFamilyIndex);
+	THROW_IF_NOT(l_bResult, "WSI-check failed: Queue family " << l_uiFamilyIndex << " does not support presentation on Windows Desktop");
 }
 
 void VlkWindowSurface::CheckAndSetCapabilities(VkPhysicalDevice p_PhysicalDevice)

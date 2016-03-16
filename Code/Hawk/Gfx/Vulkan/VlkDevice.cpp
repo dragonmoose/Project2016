@@ -56,12 +56,17 @@ void VlkDevice::WaitUntilIdle()
 	}
 }
 
-VkQueue VlkDevice::GetQueue(VlkQueueType p_Type, uint32_t p_uiIndex) const
+std::shared_ptr<VlkQueue> VlkDevice::GetQueue(VlkQueueType p_Type, uint32_t p_uiIndex) const
 {
 	const auto& l_Itr = m_Queues.find(p_Type);
 	THROW_IF(l_Itr == m_Queues.end(), "Queues of type " << p_Type << " not available");
 	THROW_IF_NOT(p_uiIndex < l_Itr->second.size(), "Invalid queue index " << p_uiIndex << " for queue type " << p_Type);
 	return l_Itr->second[p_uiIndex];
+}
+
+std::shared_ptr<VlkQueue> VlkDevice::GetPresentationQueue() const
+{
+	return GetQueue(VlkQueueType::GraphicsPresentation, 0);
 }
 
 std::shared_ptr<VlkPhysicalDevice> VlkDevice::GetPhysicalDevice() const
@@ -136,7 +141,7 @@ void VlkDevice::ExtractQueues(const VlkDeviceCreateInfo::QueueCreateInfoMap_t& p
 			vkGetDeviceQueue(m_Device, l_Info.m_uiFamilyIndex, l_Info.m_uiQueueIndex, &l_Queue);
 			THROW_IF_NOT(l_Queue, "Failed to get handle to queue. QueueType=" << l_Type << " FamilyIndex=" << l_Info.m_uiFamilyIndex << " QueueIndex=" << l_Info.m_uiQueueIndex);
 			
-			m_Queues[l_Type].push_back(l_Queue);
+			m_Queues[l_Type].emplace_back(std::make_shared<VlkQueue>(l_Queue, l_Type, l_Info.m_uiFamilyIndex));
 			LOG("Extracted queue of type from device: " << l_Type << " TypeIndex=" << l_Info.m_uiTypeIndex << " QueueIndex=" << l_Info.m_uiQueueIndex, "vulkan", Debug);
 		}
 	}

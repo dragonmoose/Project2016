@@ -5,11 +5,11 @@
 namespace Hawk {
 namespace Gfx {
 
-VlkSwapchain::VlkSwapchain(std::shared_ptr<VlkInstance> p_Instance, std::shared_ptr<VlkDevice> p_Device, const VlkDeviceCreateInfo::QueueCreateInfoMap_t& p_QueueCreateInfoMap)
+VlkSwapchain::VlkSwapchain(std::shared_ptr<VlkInstance> p_Instance, std::shared_ptr<VlkDevice> p_Device)
 : m_Device(p_Device)
 , m_Swapchain(VK_NULL_HANDLE)
 {
-	CreateSurface(p_Instance, p_Device->GetPhysicalDevice()->GetHandle(), p_QueueCreateInfoMap);
+	CreateSurface(p_Instance, p_Device->GetPhysicalDevice()->GetHandle());
 
 	VkSwapchainCreateInfoKHR l_Info = {};
 	GetCreateInfo(l_Info);
@@ -26,10 +26,15 @@ VlkSwapchain::~VlkSwapchain()
 	LOG("Swapchain destroyed", "vulkan", Debug);
 }
 
-void VlkSwapchain::CreateSurface(std::shared_ptr<VlkInstance> p_Instance, VkPhysicalDevice p_PhysicalDevice, const VlkDeviceCreateInfo::QueueCreateInfoMap_t& p_QueueCreateInfoMap)
+void VlkSwapchain::Present()
+{
+
+}
+
+void VlkSwapchain::CreateSurface(std::shared_ptr<VlkInstance> p_Instance, VkPhysicalDevice p_PhysicalDevice)
 {
 #ifdef VK_USE_PLATFORM_WIN32_KHR
-	m_Surface = std::make_unique<VlkWindowSurface>(p_Instance, p_PhysicalDevice, p_QueueCreateInfoMap);
+	m_Surface = std::make_unique<VlkWindowSurface>(p_Instance, p_PhysicalDevice, m_Device->GetPresentationQueue().get());
 #endif
 }
 

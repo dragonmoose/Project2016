@@ -43,6 +43,10 @@ bool VlkDeviceCreateInfo::IsFinalized() const
 
 void VlkDeviceCreateInfo::SortAndValidateQueueRequests()
 {
+	auto l_Itr = m_QueueRequestMap.find(VlkQueueType::GraphicsPresentation);
+	THROW_IF(l_Itr == m_QueueRequestMap.end(), "No queue added for graphics presentation");
+	THROW_IF_NOT(l_Itr->second.size() == 1, "There should be exactly one graphics presentation queue");
+
 	for (auto& l_Entry : m_QueueRequestMap)
 	{
 		QueueRequests_t& l_Requests = l_Entry.second;

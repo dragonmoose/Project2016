@@ -6,6 +6,7 @@ namespace Gfx {
 enum class VlkQueueType
 {
 	Graphics,
+	GraphicsPresentation,
 	Compute,
 	Transfer,
 	SparseBinding

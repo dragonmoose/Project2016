@@ -6,11 +6,13 @@
 namespace Hawk {
 namespace Gfx {
 
+class VlkQueue;
+
 class VlkWindowSurface final
 {
 public:
 #ifdef VK_USE_PLATFORM_WIN32_KHR
-	VlkWindowSurface(std::shared_ptr<VlkInstance> p_Instance, VkPhysicalDevice p_PhysicalDevice, const VlkDeviceCreateInfo::QueueCreateInfoMap_t& p_QueueCreateInfoMap);
+	VlkWindowSurface(std::shared_ptr<VlkInstance> p_Instance, VkPhysicalDevice p_PhysicalDevice, const VlkQueue* p_PresentationQueue);
 #endif
 	~VlkWindowSurface();
 	VlkWindowSurface(const VlkWindowSurface&) = delete;
@@ -20,7 +22,7 @@ public:
 	VkSurfaceTransformFlagBitsKHR GetInitialTransform() const;
 
 private:
-	void CheckWSISupport(VkPhysicalDevice p_PhysicalDevice, const VlkDeviceCreateInfo::QueueCreateInfoMap_t& p_QueueCreateInfoMap) const;
+	void CheckWSISupport(VkPhysicalDevice p_PhysicalDevice, const VlkQueue* p_PresentationQueue) const;
 	void CheckAndSetCapabilities(VkPhysicalDevice p_PhysicalDevice);
 	void CheckColorFormats(VkPhysicalDevice p_PhysicalDevice) const;
 	void CheckPresentationModes(VkPhysicalDevice p_PhysicalDevice) const;

@@ -32,7 +32,7 @@ private:
 	void CreatePhysicalDevice();
 	void SetupQueues(VlkDeviceCreateInfo& p_CreateInfo);
 	void CreateDevice(const VlkDeviceCreateInfo& p_CreateInfo);
-	void CreateSwapchain(const VlkDeviceCreateInfo::QueueCreateInfoMap_t& p_QueueCreateInfoMap);
+	void CreateSwapchain();
 	static const std::string& GetLogDesc();
 
 	std::shared_ptr<VlkInstance> m_Instance;

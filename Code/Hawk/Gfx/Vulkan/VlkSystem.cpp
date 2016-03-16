@@ -84,6 +84,9 @@ std::ostream& operator<<(std::ostream& os, Hawk::Gfx::VlkQueueType p_QueueType)
 		case Hawk::Gfx::VlkQueueType::Graphics:
 			os << "'Graphics'";
 			break;
+		case Hawk::Gfx::VlkQueueType::GraphicsPresentation:
+			os << "'GraphicsPresentation'";
+			break;
 		case Hawk::Gfx::VlkQueueType::Compute:
 			os << "'Compute'";
 			break;

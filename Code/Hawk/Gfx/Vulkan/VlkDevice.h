@@ -1,6 +1,7 @@
 #pragma once
 #include "VlkSystem.h"
 #include "VlkDeviceCreateInfo.h"
+#include "VlkQueue.h"
 #include <vector>
 
 namespace Hawk {
@@ -15,12 +16,13 @@ public:
 	VlkDevice& operator=(const VlkDevice&) = delete;
 
 	void WaitUntilIdle();
-	VkQueue GetQueue(VlkQueueType p_Type, uint32_t p_uiIndex) const;
+	std::shared_ptr<VlkQueue> GetQueue(VlkQueueType p_Type, uint32_t p_uiIndex) const;
+	std::shared_ptr<VlkQueue> GetPresentationQueue() const;
 	std::shared_ptr<VlkPhysicalDevice> GetPhysicalDevice() const;
 	VkDevice GetHandle() const;
 
 private:
-	using Queues_t = std::unordered_map<VlkQueueType, std::vector<VkQueue>>;
+	using Queues_t = std::unordered_map<VlkQueueType, std::vector<std::shared_ptr<VlkQueue>>>;
 	using QueueFamilyCreateInfos_t = std::vector<VkDeviceQueueCreateInfo>;
 
 	void GetLayersToCreate(std::vector<const char*>& p_Layers);

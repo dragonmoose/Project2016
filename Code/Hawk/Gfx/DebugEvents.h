@@ -4,6 +4,9 @@
 #include <string>
 
 namespace Hawk {
+
+class Shape;
+
 namespace Gfx {
 
 struct UpdateDebugTextEvent : public IEvent
@@ -26,6 +29,11 @@ struct RemoveDebugTextEvent : public IEvent
 
 	std::string m_Label;
 	std::string m_Category;
+};
+
+struct UpdateDebugGeometryEvent : public IEvent
+{
+	UpdateDebugGeometryEvent(const std::string& /*p_Name*/, const Shape& /*p_Shape*/) {};
 };
 
 }}

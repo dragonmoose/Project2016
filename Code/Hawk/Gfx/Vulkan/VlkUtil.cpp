@@ -90,6 +90,7 @@ VkQueueFlags VlkUtil::QueueTypeToFlag(VlkQueueType p_Type)
 	switch (p_Type)
 	{
 	case VlkQueueType::Graphics:
+	case VlkQueueType::GraphicsPresentation:
 		return VK_QUEUE_GRAPHICS_BIT;
 	case VlkQueueType::Compute:
 		return VK_QUEUE_COMPUTE_BIT;

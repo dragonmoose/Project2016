@@ -136,6 +136,7 @@
     <ClInclude Include="Gfx\D3D12\TextRenderer.h" />
     <ClInclude Include="Gfx\D3D12\Util.h" />
     <ClInclude Include="Gfx\D3D12\d3dx12.h" />
+    <ClInclude Include="Gfx\DebugGeometrySubModule.h" />
     <ClInclude Include="Gfx\DebugTextSubModule.h" />
     <ClInclude Include="Gfx\DebugEvents.h" />
     <ClInclude Include="Gfx\FPSTrackerSubModule.h" />
@@ -144,6 +145,7 @@
     <ClInclude Include="Gfx\RenderingModule.h" />
     <ClInclude Include="Gfx\Vulkan\VlkConstants.h" />
     <ClInclude Include="Gfx\Vulkan\VlkPhysicalDevice.h" />
+    <ClInclude Include="Gfx\Vulkan\VlkQueue.h" />
     <ClInclude Include="Gfx\Vulkan\VlkSwapchain.h" />
     <ClInclude Include="Gfx\Vulkan\VlkWindowSurface.h" />
     <ClInclude Include="Gfx\Vulkan\VlkDeviceCreateInfo.h" />
@@ -205,6 +207,7 @@
     <ClCompile Include="Gfx\D3D12\D3D12API.cpp" />
     <ClCompile Include="Gfx\D3D12\TextRenderer.cpp" />
     <ClCompile Include="Gfx\D3D12\Util.cpp" />
+    <ClCompile Include="Gfx\DebugGeometrySubModule.cpp" />
     <ClCompile Include="Gfx\DebugTextSubModule.cpp" />
     <ClCompile Include="Gfx\FPSTrackerSubModule.cpp" />
     <ClCompile Include="Gfx\RenderableComponent.cpp" />
@@ -215,6 +218,7 @@
     <ClCompile Include="Gfx\Vulkan\VlkDevice.cpp" />
     <ClCompile Include="Gfx\Vulkan\VlkInstance.cpp" />
     <ClCompile Include="Gfx\Vulkan\VlkPhysicalDevice.cpp" />
+    <ClCompile Include="Gfx\Vulkan\VlkQueue.cpp" />
     <ClCompile Include="Gfx\Vulkan\VlkSwapchain.cpp" />
     <ClCompile Include="Gfx\Vulkan\VlkWindowSurface.cpp" />
     <ClCompile Include="Gfx\Vulkan\VlkSystem.cpp" />

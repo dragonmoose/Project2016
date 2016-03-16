@@ -25,7 +25,7 @@ void VlkAPI::Initialize()
 	l_CreateInfo.Finalize();
 
 	CreateDevice(l_CreateInfo);
-	CreateSwapchain(l_CreateInfo.GetQueueCreateInfoMap());
+	CreateSwapchain();
 
 	//SetFullscreenState(Config::Instance().Get("gfx.fullscreen", false));
 	LOG("Vulkan initialized", "vulkan", Info);
@@ -84,10 +84,10 @@ void VlkAPI::CreatePhysicalDevice()
 
 void VlkAPI::SetupQueues(VlkDeviceCreateInfo& p_CreateInfo)
 {
+	p_CreateInfo.AddQueue(VlkQueueType::GraphicsPresentation, 0, 100);
 	p_CreateInfo.AddQueue(VlkQueueType::Graphics, 0, 100);
-	p_CreateInfo.AddQueue(VlkQueueType::Graphics, 1, 100);
-	p_CreateInfo.AddQueue(VlkQueueType::Graphics, 2, 150);
-	p_CreateInfo.AddQueue(VlkQueueType::Graphics, 3, 50);
+	p_CreateInfo.AddQueue(VlkQueueType::Graphics, 1, 150);
+	p_CreateInfo.AddQueue(VlkQueueType::Graphics, 2, 50);
 	p_CreateInfo.AddQueue(VlkQueueType::Compute, 1, 100);
 	p_CreateInfo.AddQueue(VlkQueueType::Compute, 0, 25);
 }
@@ -99,9 +99,9 @@ void VlkAPI::CreateDevice(const VlkDeviceCreateInfo& p_CreateInfo)
 	m_Device = std::make_shared<VlkDevice>(p_CreateInfo);
 }
 
-void VlkAPI::CreateSwapchain(const VlkDeviceCreateInfo::QueueCreateInfoMap_t& p_QueueCreateInfoMap)
+void VlkAPI::CreateSwapchain()
 {
-	m_Swapchain = std::make_shared<VlkSwapchain>(m_Instance, m_Device, p_QueueCreateInfoMap);
+	m_Swapchain = std::make_shared<VlkSwapchain>(m_Instance, m_Device);
 }
 
 const std::string& VlkAPI::GetLogDesc()
