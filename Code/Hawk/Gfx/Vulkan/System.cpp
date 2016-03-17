@@ -1,10 +1,11 @@
 #include "pch.h"
-#include "VlkSystem.h"
+#include "System.h"
 #include <unordered_map>
 
 namespace Hawk {
 namespace Gfx {
-namespace VlkSystem
+namespace Vulkan {
+namespace System
 {
 	using ResultMap = std::unordered_map<VkResult, std::string>;
 	ResultMap n_ResultMap;
@@ -17,22 +18,22 @@ namespace VlkSystem
 
 #define ADD_VK_RESULT(r) n_ResultMap[VK_##r] = #r 
 
-void VlkSystem::Initialize()
+void System::Initialize()
 {
-	ASSERT(!n_bInitialized, "VlkSystem already initialized");
+	ASSERT(!n_bInitialized, "System already initialized");
 	PopulateResultMap();
 	n_bInitialized = true;
 }
 
-uint32 VlkSystem::GetAPIVersion()
+uint32 System::GetAPIVersion()
 {
 	return n_uiAPIVersion;
 }
 
 
-const std::string& VlkSystem::ResultToString(VkResult p_Result)
+const std::string& System::ResultToString(VkResult p_Result)
 {
-	ASSERT(n_bInitialized, "VlkSystem not initialized");
+	ASSERT(n_bInitialized, "System not initialized");
 	auto l_Itr = n_ResultMap.find(p_Result);
 	if (l_Itr != n_ResultMap.end())
 	{
@@ -41,7 +42,7 @@ const std::string& VlkSystem::ResultToString(VkResult p_Result)
 	return n_DefaultResult;
 }
 
-void VlkSystem::PopulateResultMap()
+void System::PopulateResultMap()
 {
 	ADD_VK_RESULT(SUCCESS);
 	ADD_VK_RESULT(NOT_READY);
@@ -70,6 +71,7 @@ void VlkSystem::PopulateResultMap()
 
 }
 }
+}
 
 std::ostream& operator<<(std::ostream& os, VkExtent3D p_Extent)
 {
@@ -77,23 +79,23 @@ std::ostream& operator<<(std::ostream& os, VkExtent3D p_Extent)
 	return os;
 }
 
-std::ostream& operator<<(std::ostream& os, Hawk::Gfx::VlkQueueType p_QueueType)
+std::ostream& operator<<(std::ostream& os, Hawk::Gfx::Vulkan::QueueType p_QueueType)
 {
 	switch (p_QueueType)
 	{
-		case Hawk::Gfx::VlkQueueType::Graphics:
+		case Hawk::Gfx::Vulkan::QueueType::Graphics:
 			os << "'Graphics'";
 			break;
-		case Hawk::Gfx::VlkQueueType::GraphicsPresentation:
+		case Hawk::Gfx::Vulkan::QueueType::GraphicsPresentation:
 			os << "'GraphicsPresentation'";
 			break;
-		case Hawk::Gfx::VlkQueueType::Compute:
+		case Hawk::Gfx::Vulkan::QueueType::Compute:
 			os << "'Compute'";
 			break;
-		case Hawk::Gfx::VlkQueueType::Transfer:
+		case Hawk::Gfx::Vulkan::QueueType::Transfer:
 			os << "'Transfer'";
 			break;
-		case Hawk::Gfx::VlkQueueType::SparseBinding:
+		case Hawk::Gfx::Vulkan::QueueType::SparseBinding:
 			os << "'SparseBinding'";
 			break;
 		default:

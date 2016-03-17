@@ -1,20 +1,21 @@
 #pragma once
 #include "Gfx/IRenderingAPI.h"
-#include "VlkInstance.h"
-#include "VlkDevice.h"
-#include "VlkSystem.h"
-#include "VlkWindowSurface.h"
-#include "VlkSwapchain.h"
+#include "Instance.h"
+#include "Device.h"
+#include "System.h"
+#include "WindowSurface.h"
+#include "Swapchain.h"
 #include <memory>
 
 namespace Hawk {
 namespace Gfx {
+namespace Vulkan {
 
-class VlkAPI final : public IRenderingAPI
+class API final : public IRenderingAPI
 {
 public:
-	VlkAPI() = default;
-	~VlkAPI();
+	API() = default;
+	~API();
 
 	void Initialize() override;
 	void Render() override;
@@ -30,17 +31,18 @@ public:
 private:
 	void CreateInstance();
 	void CreatePhysicalDevice();
-	void SetupQueues(VlkDeviceCreateInfo& p_CreateInfo);
-	void CreateDevice(const VlkDeviceCreateInfo& p_CreateInfo);
+	void SetupQueues(DeviceCreateInfo& p_CreateInfo);
+	void CreateDevice(const DeviceCreateInfo& p_CreateInfo);
 	void CreateSwapchain();
 	static const std::string& GetLogDesc();
 
-	std::shared_ptr<VlkInstance> m_Instance;
-	std::shared_ptr<VlkPhysicalDevice> m_PhysicalDevice;
-	std::shared_ptr<VlkDevice> m_Device;
-	std::shared_ptr<VlkWindowSurface> m_WindowSurface;
-	std::shared_ptr<VlkSwapchain> m_Swapchain;
+	std::shared_ptr<Instance> m_Instance;
+	std::shared_ptr<PhysicalDevice> m_PhysicalDevice;
+	std::shared_ptr<Device> m_Device;
+	std::shared_ptr<WindowSurface> m_WindowSurface;
+	std::shared_ptr<Swapchain> m_Swapchain;
 };
 
+}
 }
 }

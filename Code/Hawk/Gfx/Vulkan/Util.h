@@ -1,19 +1,21 @@
 #pragma once
-#include "VlkSystem.h"
+#include "System.h"
 #include <stdint.h>
 #include <string>
 
 namespace Hawk {
 namespace Gfx {
-namespace VlkUtil
+namespace Vulkan {
+namespace Util
 {
 	std::string SpecVersionToString(uint32 p_uiVersion);
 	std::string PipelineCacheUUIDToString(const uint8* p_UUID);
 	std::string DeviceTypeToString(VkPhysicalDeviceType p_Type);
 	std::string QueueFlagsToString(VkQueueFlags p_Flags);
 	std::string TimestampValidBitsToString(uint32 p_Bits);
-	VkQueueFlags QueueTypeToFlag(VlkQueueType p_Type);
+	VkQueueFlags QueueTypeToFlag(QueueType p_Type);
 }
 
+}
 }
 }

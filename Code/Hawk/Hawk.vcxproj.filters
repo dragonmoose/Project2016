@@ -113,40 +113,40 @@
     <ClCompile Include="Console\ScopedConsoleCommands.cpp">
       <Filter>Console</Filter>
     </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\VlkUtil.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\VlkAPI.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\VlkInstance.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\VlkSystem.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\VlkDevice.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\VlkDeviceCreateInfo.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\VlkPhysicalDevice.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\VlkConstants.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\VlkWindowSurface.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\VlkSwapchain.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="Gfx\DebugGeometrySubModule.cpp">
       <Filter>Gfx</Filter>
     </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\VlkQueue.cpp">
+    <ClCompile Include="Gfx\Vulkan\API.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\Constants.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\Device.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\DeviceCreateInfo.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\Instance.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\PhysicalDevice.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\Queue.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\Swapchain.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\System.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\Util.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\WindowSurface.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
@@ -311,46 +311,46 @@
     <ClInclude Include="Console\ScopedConsoleCommands.h">
       <Filter>Console</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VlkUtil.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VlkAPI.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VlkInstance.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VlkSystem.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VlkDevice.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VlkTypes.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VlkDeviceCreateInfo.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="System\StreamOperators.h">
       <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VlkPhysicalDevice.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VlkConstants.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VlkWindowSurface.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VlkSwapchain.h">
-      <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Gfx\DebugGeometrySubModule.h">
       <Filter>Gfx</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VlkQueue.h">
+    <ClInclude Include="Gfx\Vulkan\API.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\Constants.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\Device.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\DeviceCreateInfo.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\Instance.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\PhysicalDevice.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\Queue.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\Swapchain.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\System.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\Types.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\Util.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\WindowSurface.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>

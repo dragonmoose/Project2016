@@ -1,16 +1,17 @@
 #pragma once
-#include "VlkSystem.h"
+#include "System.h"
 
 namespace Hawk {
 namespace Gfx {
+namespace Vulkan {
 
-class VlkInstance final
+class Instance final
 {
 public:
-	VlkInstance();
-	~VlkInstance();
-	VlkInstance(const VlkInstance&) = delete;
-	VlkInstance& operator=(const VlkInstance&) = delete;
+	Instance();
+	~Instance();
+	Instance(const Instance&) = delete;
+	Instance& operator=(const Instance&) = delete;
 
 	VkInstance GetHandle() const;
 
@@ -42,5 +43,6 @@ private:
 	VkInstance m_Instance;
 };
 
+}
 }
 }

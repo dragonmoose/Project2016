@@ -2,8 +2,9 @@
 
 namespace Hawk {
 namespace Gfx {
+namespace Vulkan {
 
-enum class VlkQueueType
+enum class QueueType
 {
 	Graphics,
 	GraphicsPresentation,
@@ -12,5 +13,6 @@ enum class VlkQueueType
 	SparseBinding
 };
 
+}
 }
 }

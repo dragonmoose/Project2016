@@ -1,19 +1,20 @@
 #pragma once
-#include "VlkSystem.h"
-#include "VlkTypes.h"
-#include "VlkPhysicalDevice.h"
+#include "System.h"
+#include "Types.h"
+#include "PhysicalDevice.h"
 #include <vector>
 #include <memory>
 
 namespace Hawk {
 namespace Gfx {
+namespace Vulkan {
 
-class VlkDeviceCreateInfo final
+class DeviceCreateInfo final
 {
 public:
-	VlkDeviceCreateInfo(std::shared_ptr<VlkPhysicalDevice> p_PhysicalDevice);
-	VlkDeviceCreateInfo(const VlkDeviceCreateInfo&) = delete;
-	VlkDeviceCreateInfo& operator=(const VlkDeviceCreateInfo&) = delete;
+	DeviceCreateInfo(std::shared_ptr<PhysicalDevice> p_PhysicalDevice);
+	DeviceCreateInfo(const DeviceCreateInfo&) = delete;
+	DeviceCreateInfo& operator=(const DeviceCreateInfo&) = delete;
 
 	struct QueueRequest
 	{
@@ -25,7 +26,7 @@ public:
 		uint32 m_uiPrio;
 	};
 	using QueueRequests = std::vector<QueueRequest>;
-	using QueueRequestMap = std::unordered_map<VlkQueueType, QueueRequests>;
+	using QueueRequestMap = std::unordered_map<QueueType, QueueRequests>;
 
 	struct QueueCreateInfo
 	{
@@ -40,11 +41,11 @@ public:
 		uint32 m_uiQueueIndex;
 		uint32 m_uiPrio;
 	};
-	using QueueCreateInfoMap = std::unordered_map<VlkQueueType, std::vector<QueueCreateInfo>>;
+	using QueueCreateInfoMap = std::unordered_map<QueueType, std::vector<QueueCreateInfo>>;
 
-	void AddQueue(VlkQueueType p_Type, uint32 p_uiIndex, uint32 p_uiPrio);
-	const VlkDeviceCreateInfo::QueueCreateInfoMap& GetQueueCreateInfoMap() const;
-	std::shared_ptr<VlkPhysicalDevice> GetPhysicalDevice() const;
+	void AddQueue(QueueType p_Type, uint32 p_uiIndex, uint32 p_uiPrio);
+	const DeviceCreateInfo::QueueCreateInfoMap& GetQueueCreateInfoMap() const;
+	std::shared_ptr<PhysicalDevice> GetPhysicalDevice() const;
 	void Finalize();
 	bool IsFinalized() const;
 	void SortAndValidateQueueRequests();
@@ -53,9 +54,10 @@ public:
 private:
 	QueueRequestMap m_QueueRequestMap;
 	QueueCreateInfoMap m_QueueCreateInfoMap;
-	std::shared_ptr<VlkPhysicalDevice> m_PhysicalDevice;
+	std::shared_ptr<PhysicalDevice> m_PhysicalDevice;
 	bool m_bFinalized;
 };
 
+}
 }
 }

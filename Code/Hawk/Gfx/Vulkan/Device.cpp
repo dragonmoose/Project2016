@@ -1,12 +1,13 @@
 #include "pch.h"
-#include "VlkDevice.h"
-#include "VlkPhysicalDevice.h"
-#include "VlkUtil.h"
+#include "Device.h"
+#include "PhysicalDevice.h"
+#include "Util.h"
 #include "Util/Algorithm.h"
 #include "System/StreamOperators.h"
 
 namespace Hawk {
 namespace Gfx {
+namespace Vulkan {
 
 namespace
 {
@@ -23,7 +24,7 @@ namespace
 #endif
 }
 
-VlkDevice::VlkDevice(const VlkDeviceCreateInfo& p_CreateInfo)
+Device::Device(const DeviceCreateInfo& p_CreateInfo)
 : m_Device(VK_NULL_HANDLE)
 , m_PhysicalDevice(p_CreateInfo.GetPhysicalDevice())
 {
@@ -33,17 +34,17 @@ VlkDevice::VlkDevice(const VlkDeviceCreateInfo& p_CreateInfo)
 	LOG("Vulkan device created", "vulkan", Debug);
 }
 
-VlkDevice::~VlkDevice()
+Device::~Device()
 {
 	ASSERT(m_Device, "Device null");
 	VkResult l_Result = vkDeviceWaitIdle(m_Device);
-	LOG_IF(l_Result != VK_SUCCESS, "Failed to wait for device to become idle. Error: " << VlkSystem::ResultToString(l_Result), "vulkan", Error);
+	LOG_IF(l_Result != VK_SUCCESS, "Failed to wait for device to become idle. Error: " << System::ResultToString(l_Result), "vulkan", Error);
 
 	vkDestroyDevice(m_Device, nullptr); // Will also destroy all queues created on device
 	LOG("Vulkan device destroyed", "vulkan", Debug);
 }
 
-void VlkDevice::WaitUntilIdle()
+void Device::WaitUntilIdle()
 {
 	VkResult l_Result = vkDeviceWaitIdle(m_Device);
 	if (l_Result == VK_ERROR_DEVICE_LOST)
@@ -56,7 +57,7 @@ void VlkDevice::WaitUntilIdle()
 	}
 }
 
-std::shared_ptr<VlkQueue> VlkDevice::GetQueue(VlkQueueType p_Type, uint32 p_uiIndex) const
+std::shared_ptr<Queue> Device::GetQueue(QueueType p_Type, uint32 p_uiIndex) const
 {
 	const auto& l_Itr = m_Queues.find(p_Type);
 	THROW_IF(l_Itr == m_Queues.end(), "Queues of type " << p_Type << " not available");
@@ -64,22 +65,22 @@ std::shared_ptr<VlkQueue> VlkDevice::GetQueue(VlkQueueType p_Type, uint32 p_uiIn
 	return l_Itr->second[p_uiIndex];
 }
 
-std::shared_ptr<VlkQueue> VlkDevice::GetPresentationQueue() const
+std::shared_ptr<Queue> Device::GetPresentationQueue() const
 {
-	return GetQueue(VlkQueueType::GraphicsPresentation, 0);
+	return GetQueue(QueueType::GraphicsPresentation, 0);
 }
 
-std::shared_ptr<VlkPhysicalDevice> VlkDevice::GetPhysicalDevice() const
+std::shared_ptr<PhysicalDevice> Device::GetPhysicalDevice() const
 {
 	return m_PhysicalDevice;
 }
 
-VkDevice VlkDevice::GetHandle() const
+VkDevice Device::GetHandle() const
 {
 	return m_Device;
 }
 
-void VlkDevice::GetLayersToCreate(std::vector<const char*>& p_Layers)
+void Device::GetLayersToCreate(std::vector<const char*>& p_Layers)
 {
 	std::copy(n_EnabledLayers.begin(), n_EnabledLayers.end(), std::back_inserter(p_Layers));
 #ifdef HAWK_DEBUG
@@ -88,11 +89,11 @@ void VlkDevice::GetLayersToCreate(std::vector<const char*>& p_Layers)
 
 	for (const auto& l_Layer : p_Layers)
 	{
-		THROW_IF_NOT(VlkPhysicalDevice::IsLayerAvailable(m_PhysicalDevice->GetHandle(), l_Layer), "Device layer not available. Name=" << l_Layer);
+		THROW_IF_NOT(PhysicalDevice::IsLayerAvailable(m_PhysicalDevice->GetHandle(), l_Layer), "Device layer not available. Name=" << l_Layer);
 	}
 }
 
-void VlkDevice::GetExtensionsToCreate(std::vector<const char*>& p_Extensions)
+void Device::GetExtensionsToCreate(std::vector<const char*>& p_Extensions)
 {
 	std::copy(n_EnabledExtensions.begin(), n_EnabledExtensions.end(), std::back_inserter(p_Extensions));
 #ifdef HAWK_DEBUG
@@ -101,11 +102,11 @@ void VlkDevice::GetExtensionsToCreate(std::vector<const char*>& p_Extensions)
 
 	for (const auto& l_Extension : p_Extensions)
 	{
-		THROW_IF_NOT(VlkPhysicalDevice::IsExtensionAvailable(m_PhysicalDevice->GetHandle(), l_Extension), "Global device extension not available. Name=" << l_Extension);
+		THROW_IF_NOT(PhysicalDevice::IsExtensionAvailable(m_PhysicalDevice->GetHandle(), l_Extension), "Global device extension not available. Name=" << l_Extension);
 	}
 }
 
-void VlkDevice::CreateDevice(const QueueFamilyCreateInfos& p_QueueFamilyCreateInfos)
+void Device::CreateDevice(const QueueFamilyCreateInfos& p_QueueFamilyCreateInfos)
 {
 	ValidateQueueFamilyCreateInfos(p_QueueFamilyCreateInfos);
 	VkPhysicalDeviceFeatures l_Features = {};
@@ -129,25 +130,25 @@ void VlkDevice::CreateDevice(const QueueFamilyCreateInfos& p_QueueFamilyCreateIn
 	VK_THROW_IF_NOT_SUCCESS(vkCreateDevice(m_PhysicalDevice->GetHandle(), &l_Info, nullptr, &m_Device), "Failed to create device");
 }
 
-void VlkDevice::ExtractQueues(const VlkDeviceCreateInfo::QueueCreateInfoMap& p_Map)
+void Device::ExtractQueues(const DeviceCreateInfo::QueueCreateInfoMap& p_Map)
 {
 	ASSERT(m_Device, "Device not created");
 	for (const auto& l_Entry : p_Map)
 	{
-		VlkQueueType l_Type = l_Entry.first;
+		QueueType l_Type = l_Entry.first;
 		for (const auto& l_Info : l_Entry.second)
 		{
 			VkQueue l_Queue = VK_NULL_HANDLE;
 			vkGetDeviceQueue(m_Device, l_Info.m_uiFamilyIndex, l_Info.m_uiQueueIndex, &l_Queue);
 			THROW_IF_NOT(l_Queue, "Failed to get handle to queue. QueueType=" << l_Type << " FamilyIndex=" << l_Info.m_uiFamilyIndex << " QueueIndex=" << l_Info.m_uiQueueIndex);
 			
-			m_Queues[l_Type].emplace_back(std::make_shared<VlkQueue>(l_Queue, l_Type, l_Info.m_uiFamilyIndex));
+			m_Queues[l_Type].emplace_back(std::make_shared<Queue>(l_Queue, l_Type, l_Info.m_uiFamilyIndex));
 			LOG("Extracted queue of type from device: " << l_Type << " TypeIndex=" << l_Info.m_uiTypeIndex << " QueueIndex=" << l_Info.m_uiQueueIndex, "vulkan", Debug);
 		}
 	}
 }
 
-void VlkDevice::Initialize(const VlkDeviceCreateInfo& p_CreateInfo)
+void Device::Initialize(const DeviceCreateInfo& p_CreateInfo)
 {
 	THROW_IF_NOT(p_CreateInfo.GetPhysicalDevice(), "PhysicalDevice is null");
 
@@ -158,7 +159,7 @@ void VlkDevice::Initialize(const VlkDeviceCreateInfo& p_CreateInfo)
 	ExtractQueues(p_CreateInfo.GetQueueCreateInfoMap());
 }
 
-void VlkDevice::Validate()
+void Device::Validate()
 {
 	THROW_IF_NOT(m_PhysicalDevice, "Physical device null");
 	THROW_IF_NOT(m_Device, "Device null");
@@ -170,7 +171,7 @@ void VlkDevice::Validate()
 	}
 }
 
-void VlkDevice::ValidateQueueFamilyCreateInfos(const QueueFamilyCreateInfos& p_QueueFamilyCreateInfos)
+void Device::ValidateQueueFamilyCreateInfos(const QueueFamilyCreateInfos& p_QueueFamilyCreateInfos)
 {
 	THROW_IF(p_QueueFamilyCreateInfos.empty(), "At least one queue needs to be specified when creating device");
 	for (uint32 i = 0; i < p_QueueFamilyCreateInfos.size(); i++)
@@ -182,7 +183,7 @@ void VlkDevice::ValidateQueueFamilyCreateInfos(const QueueFamilyCreateInfos& p_Q
 	}
 }
 
-void VlkDevice::OnDeviceLost()
+void Device::OnDeviceLost()
 {
 	try
 	{
@@ -194,7 +195,7 @@ void VlkDevice::OnDeviceLost()
 	}
 }
 
-void VlkDevice::GetQueueFamilyCreateInfos(const VlkDeviceCreateInfo::QueueCreateInfoMap& p_QueueCreateMap, QueueFamilyCreateInfos& p_FamilyCreateInfos)
+void Device::GetQueueFamilyCreateInfos(const DeviceCreateInfo::QueueCreateInfoMap& p_QueueCreateMap, QueueFamilyCreateInfos& p_FamilyCreateInfos)
 {
 	struct FamilyInfo
 	{
@@ -241,9 +242,10 @@ void VlkDevice::GetQueueFamilyCreateInfos(const VlkDeviceCreateInfo::QueueCreate
 	}
 }
 
-void VlkDevice::GetFeatures(VkPhysicalDeviceFeatures& /*p_Features*/)
+void Device::GetFeatures(VkPhysicalDeviceFeatures& /*p_Features*/)
 {
 }
 
+}
 }
 }

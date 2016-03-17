@@ -1,11 +1,12 @@
 #include "pch.h"
-#include "VlkUtil.h"
-#include "VlkSystem.h"
+#include "Util.h"
+#include "System.h"
 
 namespace Hawk {
 namespace Gfx {
+namespace Vulkan {
 
-std::string VlkUtil::SpecVersionToString(uint32 p_uiVersion)
+std::string Util::SpecVersionToString(uint32 p_uiVersion)
 {
 	std::ostringstream l_Stream;
 	l_Stream << VK_VERSION_MAJOR(p_uiVersion) << "."
@@ -14,7 +15,7 @@ std::string VlkUtil::SpecVersionToString(uint32 p_uiVersion)
 	return l_Stream.str();
 }
 
-std::string VlkUtil::PipelineCacheUUIDToString(const uint8* p_UUID)
+std::string Util::PipelineCacheUUIDToString(const uint8* p_UUID)
 {
 	std::ostringstream l_Stream;
 	for (int i = 0; i < VK_UUID_SIZE; i++)
@@ -28,7 +29,7 @@ std::string VlkUtil::PipelineCacheUUIDToString(const uint8* p_UUID)
 	return l_Stream.str();
 }
 
-std::string VlkUtil::DeviceTypeToString(VkPhysicalDeviceType p_Type)
+std::string Util::DeviceTypeToString(VkPhysicalDeviceType p_Type)
 {
 	switch (p_Type)
 	{
@@ -47,7 +48,7 @@ std::string VlkUtil::DeviceTypeToString(VkPhysicalDeviceType p_Type)
 	}
 }
 
-std::string VlkUtil::QueueFlagsToString(VkQueueFlags p_Flags)
+std::string Util::QueueFlagsToString(VkQueueFlags p_Flags)
 {
 	std::ostringstream l_Stream;
 	if (p_Flags & VK_QUEUE_GRAPHICS_BIT)
@@ -69,7 +70,7 @@ std::string VlkUtil::QueueFlagsToString(VkQueueFlags p_Flags)
 	return l_Stream.str();
 }
 
-std::string VlkUtil::TimestampValidBitsToString(uint32 p_Bits)
+std::string Util::TimestampValidBitsToString(uint32 p_Bits)
 {
 	if (p_Bits == 0)
 	{
@@ -85,23 +86,24 @@ std::string VlkUtil::TimestampValidBitsToString(uint32 p_Bits)
 	return l_Stream.str();
 }
 
-VkQueueFlags VlkUtil::QueueTypeToFlag(VlkQueueType p_Type)
+VkQueueFlags Util::QueueTypeToFlag(QueueType p_Type)
 {
 	switch (p_Type)
 	{
-	case VlkQueueType::Graphics:
-	case VlkQueueType::GraphicsPresentation:
+	case QueueType::Graphics:
+	case QueueType::GraphicsPresentation:
 		return VK_QUEUE_GRAPHICS_BIT;
-	case VlkQueueType::Compute:
+	case QueueType::Compute:
 		return VK_QUEUE_COMPUTE_BIT;
-	case VlkQueueType::Transfer:
+	case QueueType::Transfer:
 		return VK_QUEUE_TRANSFER_BIT;
-	case VlkQueueType::SparseBinding:
+	case QueueType::SparseBinding:
 		return VK_QUEUE_SPARSE_BINDING_BIT;
 	default:
 		THROW("Invalid type: " << (int)p_Type);
 	}
 }
 
+}
 }
 }

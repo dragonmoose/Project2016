@@ -1,13 +1,14 @@
 #include "pch.h"
-#include "VlkInstance.h"
-#include "VlkSystem.h"
-#include "VlkUtil.h"
+#include "Instance.h"
+#include "System.h"
+#include "Util.h"
 #include "Util/Algorithm.h"
 #include <array>
 #include <functional>
 
 namespace Hawk {
 namespace Gfx {
+namespace Vulkan {
 
 namespace
 {
@@ -29,7 +30,7 @@ namespace
 #endif
 }
 
-VlkInstance::VlkInstance()
+Instance::Instance()
 : m_Instance(VK_NULL_HANDLE)
 {
 	std::vector<const char*> l_EnabledLayers = {};
@@ -44,7 +45,7 @@ VlkInstance::VlkInstance()
 	l_AppInfo.applicationVersion = CoreInfo::GetAppVersion().GetID();
 	l_AppInfo.pEngineName = CoreInfo::GetEngineName();
 	l_AppInfo.engineVersion = CoreInfo::GetEngineVersion().GetID();
-	l_AppInfo.apiVersion = VlkSystem::GetAPIVersion();
+	l_AppInfo.apiVersion = System::GetAPIVersion();
 
 	VkInstanceCreateInfo l_Info = {};
 	l_Info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -56,8 +57,8 @@ VlkInstance::VlkInstance()
 	l_Info.enabledExtensionCount = l_EnabledExtensions.size();
 	l_Info.ppEnabledExtensionNames = l_EnabledExtensions.data();
 
-	VK_THROW_IF_NOT_SUCCESS(vkCreateInstance(&l_Info, nullptr, &m_Instance), "Failed to create vulkan instance for API-version: " << VlkUtil::SpecVersionToString(l_Info.pApplicationInfo->apiVersion));
-	LOG("VlkInstance created", "vulkan", Debug);
+	VK_THROW_IF_NOT_SUCCESS(vkCreateInstance(&l_Info, nullptr, &m_Instance), "Failed to create vulkan instance for API-version: " << Util::SpecVersionToString(l_Info.pApplicationInfo->apiVersion));
+	LOG("Instance created", "vulkan", Debug);
 
 #ifdef HAWK_DEBUG
 	RetrieveDebugCallbacks();
@@ -65,22 +66,22 @@ VlkInstance::VlkInstance()
 #endif
 }
 
-VlkInstance::~VlkInstance()
+Instance::~Instance()
 {
 	ASSERT(m_Instance, "Handle NULL");
 #ifdef HAWK_DEBUG
 	DestroyDebugReportCallback();
 #endif
 	vkDestroyInstance(m_Instance, nullptr);
-	LOG("VlkInstance destroyed", "vulkan", Debug);
+	LOG("Instance destroyed", "vulkan", Debug);
 }
 
-VkInstance VlkInstance::GetHandle() const
+VkInstance Instance::GetHandle() const
 {
 	return m_Instance;
 }
 
-void VlkInstance::CmdPrintLayers(bool p_bKeepUnsupported)
+void Instance::CmdPrintLayers(bool p_bKeepUnsupported)
 {
 	LayerProperties l_Layers;
 	GetAllLayers(l_Layers, p_bKeepUnsupported);
@@ -89,19 +90,19 @@ void VlkInstance::CmdPrintLayers(bool p_bKeepUnsupported)
 	std::cout << "\n";
 	for (const auto& l_Layer : l_Layers)
 	{
-		if (l_Layer.specVersion > VlkSystem::GetAPIVersion())
+		if (l_Layer.specVersion > System::GetAPIVersion())
 		{
-			std::cout << "!Requires API " << VlkUtil::SpecVersionToString(l_Layer.specVersion) << "!";
+			std::cout << "!Requires API " << Util::SpecVersionToString(l_Layer.specVersion) << "!";
 		}
 
 		std::cout << l_Layer.layerName << " (" << l_Layer.description << ")" <<
-			" SpecVersion: " << VlkUtil::SpecVersionToString(l_Layer.specVersion) <<
+			" SpecVersion: " << Util::SpecVersionToString(l_Layer.specVersion) <<
 			" ImplementationVersion: " << l_Layer.implementationVersion << "\n";
 	}
 	std::cout << "\n";
 }
 
-void VlkInstance::CmdPrintExtensions(bool p_bKeepUnsupported)
+void Instance::CmdPrintExtensions(bool p_bKeepUnsupported)
 {
 	CONSOLE_WRITE_SCOPE();
 
@@ -123,9 +124,9 @@ void VlkInstance::CmdPrintExtensions(bool p_bKeepUnsupported)
 		GetAllExtensions(l_Extensions, l_Layer.layerName);
 		if (!l_Extensions.empty())
 		{
-			if (l_Layer.specVersion > VlkSystem::GetAPIVersion())
+			if (l_Layer.specVersion > System::GetAPIVersion())
 			{
-				std::cout << "## N/A - requires API " << VlkUtil::SpecVersionToString(l_Layer.specVersion) << " ## ";
+				std::cout << "## N/A - requires API " << Util::SpecVersionToString(l_Layer.specVersion) << " ## ";
 			}
 			std::cout << l_Layer.layerName << ":\n";
 			for (const auto& l_Extension : l_Extensions)
@@ -138,15 +139,15 @@ void VlkInstance::CmdPrintExtensions(bool p_bKeepUnsupported)
 	std::cout << "\n";
 }
 
-bool VlkInstance::IsLayerAvailable(const std::string& p_Name)
+bool Instance::IsLayerAvailable(const std::string& p_Name)
 {
 	LayerProperties l_Layers;
 	GetAllLayers(l_Layers, false);
 	return std::find_if(l_Layers.begin(), l_Layers.end(),
-		[p_Name](const VkLayerProperties& p_Layer) { return p_Name == p_Layer.layerName && VlkSystem::GetAPIVersion() >= p_Layer.specVersion; }) != l_Layers.end();
+		[p_Name](const VkLayerProperties& p_Layer) { return p_Name == p_Layer.layerName && System::GetAPIVersion() >= p_Layer.specVersion; }) != l_Layers.end();
 }
 
-bool VlkInstance::IsExtensionAvailable(const std::string& p_Name, const std::string& p_LayerName)
+bool Instance::IsExtensionAvailable(const std::string& p_Name, const std::string& p_LayerName)
 {
 	if (!p_LayerName.empty() && !IsLayerAvailable(p_LayerName)) return false;
 
@@ -156,7 +157,7 @@ bool VlkInstance::IsExtensionAvailable(const std::string& p_Name, const std::str
 		[p_Name](const VkExtensionProperties& p_Extension) { return p_Name == p_Extension.extensionName; }) != l_Extensions.end();
 }
 
-void VlkInstance::GetAllLayers(LayerProperties& p_Layers, bool p_bKeepUnsupported)
+void Instance::GetAllLayers(LayerProperties& p_Layers, bool p_bKeepUnsupported)
 {
 	uint32 l_uiCount = 0;
 	VK_THROW_IF_NOT_SUCCESS(vkEnumerateInstanceLayerProperties(&l_uiCount, nullptr), "Failed to get instance layer count");
@@ -166,11 +167,11 @@ void VlkInstance::GetAllLayers(LayerProperties& p_Layers, bool p_bKeepUnsupporte
 
 	if (!p_bKeepUnsupported)
 	{
-		hwk::erase_if(p_Layers, [](const VkLayerProperties& p_Layer) { return p_Layer.specVersion > VlkSystem::GetAPIVersion(); });
+		hwk::erase_if(p_Layers, [](const VkLayerProperties& p_Layer) { return p_Layer.specVersion > System::GetAPIVersion(); });
 	}
 }
 
-void VlkInstance::GetAllExtensions(ExtensionProperties& p_Extensions, const std::string& p_LayerName)
+void Instance::GetAllExtensions(ExtensionProperties& p_Extensions, const std::string& p_LayerName)
 {
 	uint32 l_uiCount = 0;
 	const char* l_LayerName = !p_LayerName.empty() ? p_LayerName.c_str() : nullptr;
@@ -181,7 +182,7 @@ void VlkInstance::GetAllExtensions(ExtensionProperties& p_Extensions, const std:
 	VK_THROW_IF_NOT_SUCCESS(vkEnumerateInstanceExtensionProperties(l_LayerName, &l_uiCount, p_Extensions.data()), "Failed to get instance extensions. Layer=" << p_LayerName);
 }
 
-void VlkInstance::GetLayersToCreate(std::vector<const char*>& p_Layers)
+void Instance::GetLayersToCreate(std::vector<const char*>& p_Layers)
 {
 	std::copy(n_EnabledLayers.begin(), n_EnabledLayers.end(), std::back_inserter(p_Layers));
 #ifdef HAWK_DEBUG
@@ -194,7 +195,7 @@ void VlkInstance::GetLayersToCreate(std::vector<const char*>& p_Layers)
 	}
 }
 
-void VlkInstance::GetExtensionsToCreate(std::vector<const char*>& p_Extensions)
+void Instance::GetExtensionsToCreate(std::vector<const char*>& p_Extensions)
 {
 	std::copy(n_EnabledExtensions.begin(), n_EnabledExtensions.end(), std::back_inserter(p_Extensions));
 #ifdef HAWK_DEBUG
@@ -208,7 +209,7 @@ void VlkInstance::GetExtensionsToCreate(std::vector<const char*>& p_Extensions)
 }
 
 #ifdef HAWK_DEBUG
-void VlkInstance::RetrieveDebugCallbacks()
+void Instance::RetrieveDebugCallbacks()
 {
 	m_CreateDebugReport = (PFN_vkCreateDebugReportCallbackEXT)vkGetInstanceProcAddr(m_Instance, "vkCreateDebugReportCallbackEXT");
 	THROW_IF_NOT(m_CreateDebugReport, "Failed to create CreateDebugReport vulkan extension");
@@ -217,7 +218,7 @@ void VlkInstance::RetrieveDebugCallbacks()
 	THROW_IF_NOT(m_DestroyDebugReport, "Failed to create DestroyDebugReport vulkan extension");
 }
 
-VkBool32 VKAPI_CALL VlkInstance::OnDebugReport(VkDebugReportFlagsEXT p_Flags, VkDebugReportObjectTypeEXT p_ObjectType, uint64 p_uiObject, std::size_t p_Location, int32 p_iMessageCode, const char* p_pLayerPrefix, const char* p_pMessage, void* /*p_pUserData*/)
+VkBool32 VKAPI_CALL Instance::OnDebugReport(VkDebugReportFlagsEXT p_Flags, VkDebugReportObjectTypeEXT p_ObjectType, uint64 p_uiObject, std::size_t p_Location, int32 p_iMessageCode, const char* p_pLayerPrefix, const char* p_pMessage, void* /*p_pUserData*/)
 {
 	std::ostringstream l_Msg;
 	l_Msg << p_pLayerPrefix << ": '" << p_pMessage << "' [ObjType=" << p_ObjectType << " Obj=" << p_uiObject << " Loc=" << p_Location << " Code=" << p_iMessageCode << "]";
@@ -244,7 +245,7 @@ VkBool32 VKAPI_CALL VlkInstance::OnDebugReport(VkDebugReportFlagsEXT p_Flags, Vk
 	return false; // Returning false here will yield the same behavior as without validation layers
 }
 
-void VlkInstance::CreateDebugReportCallback()
+void Instance::CreateDebugReportCallback()
 {
 	VkDebugReportCallbackCreateInfoEXT l_Info = {};
 	l_Info.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT;
@@ -255,11 +256,12 @@ void VlkInstance::CreateDebugReportCallback()
 	m_CreateDebugReport(m_Instance, &l_Info, nullptr, &m_DebugReportHandle);
 }
 
-void VlkInstance::DestroyDebugReportCallback()
+void Instance::DestroyDebugReportCallback()
 {
 	m_DestroyDebugReport(m_Instance, m_DebugReportHandle, nullptr);
 }
 #endif
 
+}
 }
 }

@@ -1,33 +1,34 @@
 #include "pch.h"
-#include "VlkDeviceCreateInfo.h"
-#include "VlkUtil.h"
+#include "DeviceCreateInfo.h"
+#include "Util.h"
 
 namespace Hawk {
 namespace Gfx {
+namespace Vulkan {
 
-VlkDeviceCreateInfo::VlkDeviceCreateInfo(std::shared_ptr<VlkPhysicalDevice> p_PhysicalDevice)
+DeviceCreateInfo::DeviceCreateInfo(std::shared_ptr<PhysicalDevice> p_PhysicalDevice)
 : m_PhysicalDevice(p_PhysicalDevice)
 , m_bFinalized(false)
 {
 }
 
-void VlkDeviceCreateInfo::AddQueue(VlkQueueType p_Type, uint32 p_uiIndex, uint32 p_uiPrio)
+void DeviceCreateInfo::AddQueue(QueueType p_Type, uint32 p_uiIndex, uint32 p_uiPrio)
 {
 	QueueRequest l_Request(p_uiIndex, p_uiPrio);
 	m_QueueRequestMap[p_Type].push_back(l_Request);
 }
 
-const VlkDeviceCreateInfo::QueueCreateInfoMap& VlkDeviceCreateInfo::GetQueueCreateInfoMap() const
+const DeviceCreateInfo::QueueCreateInfoMap& DeviceCreateInfo::GetQueueCreateInfoMap() const
 {
 	return m_QueueCreateInfoMap;
 }
 
-std::shared_ptr<VlkPhysicalDevice> VlkDeviceCreateInfo::GetPhysicalDevice() const
+std::shared_ptr<PhysicalDevice> DeviceCreateInfo::GetPhysicalDevice() const
 {
 	return m_PhysicalDevice;
 }
 
-void VlkDeviceCreateInfo::Finalize()
+void DeviceCreateInfo::Finalize()
 {
 	ASSERT(!m_bFinalized, "Finalized has already been called");
 
@@ -36,14 +37,14 @@ void VlkDeviceCreateInfo::Finalize()
 	m_bFinalized = true;
 }
 
-bool VlkDeviceCreateInfo::IsFinalized() const
+bool DeviceCreateInfo::IsFinalized() const
 {
 	return m_bFinalized;
 }
 
-void VlkDeviceCreateInfo::SortAndValidateQueueRequests()
+void DeviceCreateInfo::SortAndValidateQueueRequests()
 {
-	auto l_Itr = m_QueueRequestMap.find(VlkQueueType::GraphicsPresentation);
+	auto l_Itr = m_QueueRequestMap.find(QueueType::GraphicsPresentation);
 	THROW_IF(l_Itr == m_QueueRequestMap.end(), "No queue added for graphics presentation");
 	THROW_IF_NOT(l_Itr->second.size() == 1, "There should be exactly one graphics presentation queue");
 
@@ -62,10 +63,10 @@ void VlkDeviceCreateInfo::SortAndValidateQueueRequests()
 	}
 }
 
-void VlkDeviceCreateInfo::SetupQueueCreateInfoMap()
+void DeviceCreateInfo::SetupQueueCreateInfoMap()
 {
-	VlkPhysicalDevice::QueueFamilyProperties l_PropsVec;
-	VlkPhysicalDevice::GetQueueFamilyProperties(m_PhysicalDevice->GetHandle(), l_PropsVec);
+	PhysicalDevice::QueueFamilyProperties l_PropsVec;
+	PhysicalDevice::GetQueueFamilyProperties(m_PhysicalDevice->GetHandle(), l_PropsVec);
 
 	using FamilyNumQueuesLeft = std::unordered_map<uint32, uint32>;
 	FamilyNumQueuesLeft l_NumQueuesLeft;
@@ -76,7 +77,7 @@ void VlkDeviceCreateInfo::SetupQueueCreateInfoMap()
 
 	for (const auto& l_Entry : m_QueueRequestMap)
 	{
-		VlkQueueType l_Type = l_Entry.first;
+		QueueType l_Type = l_Entry.first;
 		for (const auto& l_Request : l_Entry.second)
 		{
 			bool l_bAdded = false;
@@ -84,7 +85,7 @@ void VlkDeviceCreateInfo::SetupQueueCreateInfoMap()
 			{
 				VkQueueFamilyProperties& l_Props = l_PropsVec[l_uiFamilyIndex];
 				uint32& l_uiNumQueuesLeft = l_NumQueuesLeft[l_uiFamilyIndex];
-				VkQueueFlags l_Flag = VlkUtil::QueueTypeToFlag(l_Type);
+				VkQueueFlags l_Flag = Util::QueueTypeToFlag(l_Type);
 				bool l_bSupportsType = (l_Flag & l_Props.queueFlags) == l_Flag;
 				bool l_bQueuesLeft = l_uiNumQueuesLeft != 0;
 				if (l_bSupportsType && l_bQueuesLeft)
@@ -101,5 +102,6 @@ void VlkDeviceCreateInfo::SetupQueueCreateInfoMap()
 	}
 }
 
+}
 }
 }

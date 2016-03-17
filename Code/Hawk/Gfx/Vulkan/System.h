@@ -1,12 +1,13 @@
 #pragma once
-#include "VlkTypes.h"
+#include "Types.h"
 #include "System/Exception.h"
 #define VK_USE_PLATFORM_WIN32_KHR
 #include <vulkan/vulkan.h>
 
 namespace Hawk {
 namespace Gfx {
-namespace VlkSystem
+namespace Vulkan {
+namespace System
 {
 	void Initialize();
 	uint32 GetAPIVersion();
@@ -14,10 +15,11 @@ namespace VlkSystem
 }
 }
 }
+}
 
-#define VK_THROW(p, msg) THROW(msg << " [VkResult: " << Hawk::Gfx::VlkSystem::ResultToString(p) << "]")
+#define VK_THROW(p, msg) THROW(msg << " [VkResult: " << Hawk::Gfx::Vulkan::System::ResultToString(p) << "]")
 #define VK_THROW_IF_ERR(p, msg)	if ((p < 0)) VK_THROW(p, msg)
 #define VK_THROW_IF_NOT_SUCCESS(p, msg) if ((p != 0)) VK_THROW(p, msg)
 
 std::ostream& operator<<(std::ostream& os, VkExtent3D p_Extent);
-std::ostream& operator<<(std::ostream& os, Hawk::Gfx::VlkQueueType p_QueueType);
+std::ostream& operator<<(std::ostream& os, Hawk::Gfx::Vulkan::QueueType p_QueueType);

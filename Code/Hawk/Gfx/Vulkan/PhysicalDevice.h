@@ -1,20 +1,21 @@
 #pragma once
-#include "VlkSystem.h"
-#include "VlkInstance.h"
+#include "System.h"
+#include "Instance.h"
 #include <vector>
 #include <memory>
 
 namespace Hawk {
 namespace Gfx {
+namespace Vulkan {
 
-class VlkPhysicalDevice final
+class PhysicalDevice final
 {
 public:
-	VlkPhysicalDevice(std::shared_ptr<VlkInstance> p_Instance);
-	VlkPhysicalDevice(std::shared_ptr<VlkInstance> p_Instance, uint32 p_uiDeviceID);
-	~VlkPhysicalDevice();
-	VlkPhysicalDevice(const VlkPhysicalDevice&) = delete;
-	VlkPhysicalDevice& operator=(const VlkPhysicalDevice&) = delete;
+	PhysicalDevice(std::shared_ptr<Instance> p_Instance);
+	PhysicalDevice(std::shared_ptr<Instance> p_Instance, uint32 p_uiDeviceID);
+	~PhysicalDevice();
+	PhysicalDevice(const PhysicalDevice&) = delete;
+	PhysicalDevice& operator=(const PhysicalDevice&) = delete;
 
 	static bool IsLayerAvailable(VkPhysicalDevice p_Device, const std::string& p_Name);
 	static bool IsExtensionAvailable(VkPhysicalDevice p_Device, const std::string& p_Name, const std::string& p_LayerName = std::string());
@@ -45,9 +46,10 @@ private:
 
 	static void GetDeviceProperties(const VkPhysicalDevice p_Device, VkPhysicalDeviceProperties& p_Properties);	
 	
-	std::shared_ptr<VlkInstance> m_Instance;
+	std::shared_ptr<Instance> m_Instance;
 	VkPhysicalDevice m_PhysicalDevice;
 };
 
+}
 }
 }

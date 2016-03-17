@@ -1,9 +1,10 @@
 #pragma once
-#include "VlkSystem.h"
+#include "System.h"
 
 namespace Hawk {
 namespace Gfx {
-namespace VlkConstants
+namespace Vulkan {
+namespace Constants
 {
 	extern const uint32				c_uiNumBackBuffers;
 	extern const VkFormat			c_BackBufferFormat;
@@ -11,5 +12,6 @@ namespace VlkConstants
 	extern const VkPresentModeKHR	c_PresentationMode;
 }
 
+}
 }
 }
