@@ -8,6 +8,8 @@ namespace Gfx {
 VlkSwapchain::VlkSwapchain(std::shared_ptr<VlkInstance> p_Instance, std::shared_ptr<VlkDevice> p_Device)
 : m_Device(p_Device)
 , m_Swapchain(VK_NULL_HANDLE)
+, m_Queue(p_Device->GetPresentationQueue())
+, m_uiCurrentBufferIndex(0)
 {
 	CreateSurface(p_Instance, p_Device->GetPhysicalDevice()->GetHandle());
 
@@ -15,6 +17,8 @@ VlkSwapchain::VlkSwapchain(std::shared_ptr<VlkInstance> p_Instance, std::shared_
 	GetCreateInfo(l_Info);
 
 	VK_THROW_IF_NOT_SUCCESS(vkCreateSwapchainKHR(p_Device->GetHandle(), &l_Info, nullptr, &m_Swapchain), "Failed to create swapchain");
+
+	InitPresentInfo();
 
 	LOG("Swapchain created", "vulkan", Debug);
 }
@@ -28,13 +32,16 @@ VlkSwapchain::~VlkSwapchain()
 
 void VlkSwapchain::Present()
 {
-
+	m_PresentInfo.pImageIndices = &m_uiCurrentBufferIndex;
+	VkResult l_Result = vkQueuePresentKHR(m_Queue->GetHandle(), &m_PresentInfo);
+	LOG_IF(l_Result == VK_SUBOPTIMAL_KHR, "Queue presentation suboptimal", "vulkan", Warning);
+	VK_THROW_IF_ERR(l_Result, "Queue presentation failed");
 }
 
 void VlkSwapchain::CreateSurface(std::shared_ptr<VlkInstance> p_Instance, VkPhysicalDevice p_PhysicalDevice)
 {
 #ifdef VK_USE_PLATFORM_WIN32_KHR
-	m_Surface = std::make_unique<VlkWindowSurface>(p_Instance, p_PhysicalDevice, m_Device->GetPresentationQueue().get());
+	m_Surface = std::make_unique<VlkWindowSurface>(p_Instance, p_PhysicalDevice, m_Queue.get());
 #endif
 }
 
@@ -54,6 +61,16 @@ void VlkSwapchain::GetCreateInfo(VkSwapchainCreateInfoKHR& p_Info) const
 	p_Info.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
 	p_Info.presentMode = VlkConstants::c_PresentationMode;
 	p_Info.clipped = VK_TRUE; // Do not render obscured pixels, may increase performance. Pixels on presentable images should not be read back.
+}
+
+void VlkSwapchain::InitPresentInfo()
+{
+	ASSERT(m_Swapchain, "Internal swapchain null");
+
+	m_PresentInfo = {};
+	m_PresentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+	m_PresentInfo.swapchainCount = 1;
+	m_PresentInfo.pSwapchains = &m_Swapchain;
 }
 
 }

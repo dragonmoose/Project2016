@@ -34,6 +34,7 @@ void VlkAPI::Initialize()
 void VlkAPI::Render()
 {
 	m_Device->WaitUntilIdle();
+	m_Swapchain->Present();
 }
 
 void VlkAPI::SetFullscreenState(bool /*p_bState*/)
