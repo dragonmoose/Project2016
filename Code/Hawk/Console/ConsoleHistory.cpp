@@ -8,7 +8,7 @@ namespace Hawk {
 
 const std::string ConsoleHistory::c_Filename = "console_history.txt";
 
-ConsoleHistory::ConsoleHistory(UINT32 p_uiMaxSize)
+ConsoleHistory::ConsoleHistory(uint32 p_uiMaxSize)
 : m_uiMaxSize(p_uiMaxSize)
 , m_uiCurrRecord(0)
 , m_bStartState(true)

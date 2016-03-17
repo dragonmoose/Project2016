@@ -16,7 +16,7 @@ namespace ProfilerManager
 		Data() : m_uiCount(0) {}
 		Data(const Duration& p_FirstMeasure) : m_uiCount(1), m_PeakTime(p_FirstMeasure), m_TotalTime(p_FirstMeasure) {}
 
-		UINT32 m_uiCount;
+		uint32 m_uiCount;
 		Duration m_PeakTime;
 		Duration m_TotalTime;
 	};

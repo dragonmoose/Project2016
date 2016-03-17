@@ -17,7 +17,7 @@ namespace
 	const char Key_Backspace = 8;
 	const char Key_Tab = 9;
 
-	const UINT32 c_uiMaxHistoryRecords = 100;
+	const uint32 c_uiMaxHistoryRecords = 100;
 	const std::array<std::string, 5> c_HistoryExcludedCmds = { "-", "quit", "help", "cls", "console.history" };
 
 	bool IncludeInHistory(const std::string& p_Cmd)

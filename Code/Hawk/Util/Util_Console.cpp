@@ -6,8 +6,8 @@
 namespace Hawk {
 namespace Util_Console
 {
-	void SetRandSeed(UINT32 p_uiSeed);
-	void GetRand(float p_fMin, float p_fMax, UINT32 p_uiCount);
+	void SetRandSeed(uint32 p_uiSeed);
+	void GetRand(float p_fMin, float p_fMax, uint32 p_uiCount);
 }
 
 #ifdef HAWK_DEBUG
@@ -18,18 +18,18 @@ void Util_Console::Register(ConsoleCommandManager* p_pManager, std::shared_ptr<D
 }
 #endif
 
-void Util_Console::SetRandSeed(UINT32 p_uiSeed)
+void Util_Console::SetRandSeed(uint32 p_uiSeed)
 {
 	Random::Initialize(p_uiSeed);
 }
 
-void Util_Console::GetRand(float p_fMin, float p_fMax, UINT32 p_uiCount)
+void Util_Console::GetRand(float p_fMin, float p_fMax, uint32 p_uiCount)
 {
 	CONSOLE_WRITE_SCOPE();
-	static const UINT32 sc_uiMaxCols = 10;
-	UINT32 l_uiCurrCol = 0;
+	static const uint32 sc_uiMaxCols = 10;
+	uint32 l_uiCurrCol = 0;
 	std::cout << "\n";
-	for (UINT32 i = 0; i < p_uiCount; i++)
+	for (uint32 i = 0; i < p_uiCount; i++)
 	{
 		std::cout << Random::GetInt(static_cast<int32>(p_fMin), static_cast<int32>(p_fMax)) << " ";
 

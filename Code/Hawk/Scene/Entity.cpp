@@ -150,11 +150,11 @@ const glm::mat4x4& Entity::GetFrameWorldMatrix()
 	return m_FrameWorldMatrix;
 }
 
-void Entity::DebugPrint(UINT32 p_uiDepth) const
+void Entity::DebugPrint(uint32 p_uiDepth) const
 {
 	std::fill_n(std::ostreambuf_iterator<char>(std::cout), p_uiDepth * 3, ' ');
 	std::cout << GetName() << "\t#" << m_ID << "\n";
-	UINT32 l_uiChildDepth = p_uiDepth + 1;
+	uint32 l_uiChildDepth = p_uiDepth + 1;
 	for (auto& l_Child : m_Children)
 	{
 		l_Child->DebugPrint(l_uiChildDepth);

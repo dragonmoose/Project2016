@@ -7,7 +7,7 @@ namespace Hawk {
 class ConsoleHistory final
 {
 public:
-	ConsoleHistory(UINT32 p_uiMaxSize);
+	ConsoleHistory(uint32 p_uiMaxSize);
 
 	ConsoleHistory(const ConsoleHistory&) = delete;
 	ConsoleHistory& operator=(const ConsoleHistory&) = delete;
@@ -24,7 +24,7 @@ private:
 	void Load();
 	void Save();
 
-	const UINT32 m_uiMaxSize;
+	const uint32 m_uiMaxSize;
 	static const std::string c_Filename;
 
 	std::deque<std::string> m_Cmds;

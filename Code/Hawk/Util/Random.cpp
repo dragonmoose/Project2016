@@ -11,12 +11,12 @@ namespace Random
 	const float c_fMaxValue = static_cast<float>(n_Generator.max());
 }
 
-void Random::Initialize(UINT32 p_uiSeed)
+void Random::Initialize(uint32 p_uiSeed)
 {
-	UINT32 l_uiSeed = p_uiSeed;
+	uint32 l_uiSeed = p_uiSeed;
 	if (l_uiSeed == 0)
 	{
-		l_uiSeed = static_cast<UINT32>(std::chrono::system_clock::now().time_since_epoch().count());
+		l_uiSeed = static_cast<uint32>(std::chrono::system_clock::now().time_since_epoch().count());
 	}
 	n_Generator.seed(l_uiSeed);
 	LOG_IF(p_uiSeed == 0, "Random number generator initialized from system clock. Seed=" << l_uiSeed, "core", Info);

@@ -85,7 +85,7 @@ void Core::Initialize()
 #endif
 	LOG("Working directory set to: " << boost::filesystem::current_path(), "core", Info);
 
-	Random::Initialize(Config::Instance().Get<UINT32>("dev.randSeed", 0));
+	Random::Initialize(Config::Instance().Get<uint32>("dev.randSeed", 0));
 
 	AddModules();	
 	WindowManager::Initialize(m_EventRouter);

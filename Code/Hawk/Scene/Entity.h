@@ -51,7 +51,7 @@ public:
 
 	const glm::mat4x4& GetFrameWorldMatrix();
 
-	void DebugPrint(UINT32 p_uiDepth) const;
+	void DebugPrint(uint32 p_uiDepth) const;
 	static void ResetIDCounter();
 
 private:

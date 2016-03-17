@@ -60,7 +60,7 @@ std::shared_ptr<Dispatcher> Thread::GetDispatcher() const
 void Thread::Sleep()
 {
 #ifdef HAWK_DEBUG
-	UINT32 l_uiThreadSleepTimeMS = Config::Instance().Get("dev.threadSleepTimeMS", 0);
+	uint32 l_uiThreadSleepTimeMS = Config::Instance().Get("dev.threadSleepTimeMS", 0);
 	if (l_uiThreadSleepTimeMS > 0)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(l_uiThreadSleepTimeMS));
