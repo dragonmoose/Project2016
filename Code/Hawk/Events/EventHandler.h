@@ -19,12 +19,12 @@ template<class T>
 class EventHandler final : public IEventHandler
 {
 public:
-	using Func_t = std::function<void(const T&)>;
+	using Func = std::function<void(const T&)>;
 
-	explicit EventHandler(Func_t& p_Func) : m_Func(p_Func) {}
+	explicit EventHandler(Func& p_Func) : m_Func(p_Func) {}
 	void Call(const IEvent& p_Event) override { m_Func(static_cast<const T&>(p_Event)); }
 
 private:
-	Func_t m_Func;
+	Func m_Func;
 };
 }

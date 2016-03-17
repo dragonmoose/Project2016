@@ -11,13 +11,13 @@ VlkDeviceCreateInfo::VlkDeviceCreateInfo(std::shared_ptr<VlkPhysicalDevice> p_Ph
 {
 }
 
-void VlkDeviceCreateInfo::AddQueue(VlkQueueType p_Type, uint32_t p_uiIndex, uint32_t p_uiPrio)
+void VlkDeviceCreateInfo::AddQueue(VlkQueueType p_Type, uint32 p_uiIndex, uint32 p_uiPrio)
 {
 	QueueRequest l_Request(p_uiIndex, p_uiPrio);
 	m_QueueRequestMap[p_Type].push_back(l_Request);
 }
 
-const VlkDeviceCreateInfo::QueueCreateInfoMap_t& VlkDeviceCreateInfo::GetQueueCreateInfoMap() const
+const VlkDeviceCreateInfo::QueueCreateInfoMap& VlkDeviceCreateInfo::GetQueueCreateInfoMap() const
 {
 	return m_QueueCreateInfoMap;
 }
@@ -49,13 +49,13 @@ void VlkDeviceCreateInfo::SortAndValidateQueueRequests()
 
 	for (auto& l_Entry : m_QueueRequestMap)
 	{
-		QueueRequests_t& l_Requests = l_Entry.second;
+		QueueRequests& l_Requests = l_Entry.second;
 		std::sort(l_Requests.begin(), l_Requests.end(), [](const QueueRequest& lhs, const QueueRequest& rhs)
 		{
 			return lhs.m_uiIndex < rhs.m_uiIndex;
 		});
 
-		for (uint32_t i = 0; i < l_Requests.size(); i++)
+		for (uint32 i = 0; i < l_Requests.size(); i++)
 		{
 			THROW_IF_NOT(l_Requests[i].m_uiIndex == i, "Invalid index for queue of type: " << l_Entry.first << " Index=" << l_Requests[i].m_uiIndex << " Expected=" << i);
 		}
@@ -64,12 +64,12 @@ void VlkDeviceCreateInfo::SortAndValidateQueueRequests()
 
 void VlkDeviceCreateInfo::SetupQueueCreateInfoMap()
 {
-	VlkPhysicalDevice::QueueFamilyProperties_t l_PropsVec;
+	VlkPhysicalDevice::QueueFamilyProperties l_PropsVec;
 	VlkPhysicalDevice::GetQueueFamilyProperties(m_PhysicalDevice->GetHandle(), l_PropsVec);
 
-	using FamilyNumQueuesLeft_t = std::unordered_map<uint32_t, uint32_t>;
-	FamilyNumQueuesLeft_t l_NumQueuesLeft;
-	for (uint32_t l_uiFamilyIndex = 0; l_uiFamilyIndex < l_PropsVec.size(); l_uiFamilyIndex++)
+	using FamilyNumQueuesLeft = std::unordered_map<uint32, uint32>;
+	FamilyNumQueuesLeft l_NumQueuesLeft;
+	for (uint32 l_uiFamilyIndex = 0; l_uiFamilyIndex < l_PropsVec.size(); l_uiFamilyIndex++)
 	{
 		l_NumQueuesLeft[l_uiFamilyIndex] = l_PropsVec[l_uiFamilyIndex].queueCount;
 	}
@@ -80,16 +80,16 @@ void VlkDeviceCreateInfo::SetupQueueCreateInfoMap()
 		for (const auto& l_Request : l_Entry.second)
 		{
 			bool l_bAdded = false;
-			for (uint32_t l_uiFamilyIndex = 0; l_uiFamilyIndex < l_PropsVec.size(); l_uiFamilyIndex++)
+			for (uint32 l_uiFamilyIndex = 0; l_uiFamilyIndex < l_PropsVec.size(); l_uiFamilyIndex++)
 			{
 				VkQueueFamilyProperties& l_Props = l_PropsVec[l_uiFamilyIndex];
-				uint32_t& l_uiNumQueuesLeft = l_NumQueuesLeft[l_uiFamilyIndex];
+				uint32& l_uiNumQueuesLeft = l_NumQueuesLeft[l_uiFamilyIndex];
 				VkQueueFlags l_Flag = VlkUtil::QueueTypeToFlag(l_Type);
 				bool l_bSupportsType = (l_Flag & l_Props.queueFlags) == l_Flag;
 				bool l_bQueuesLeft = l_uiNumQueuesLeft != 0;
 				if (l_bSupportsType && l_bQueuesLeft)
 				{
-					uint32_t l_uiQueueIndex = l_Props.queueCount - l_uiNumQueuesLeft;
+					uint32 l_uiQueueIndex = l_Props.queueCount - l_uiNumQueuesLeft;
 					m_QueueCreateInfoMap[l_Type].emplace_back(l_uiFamilyIndex, l_Request.m_uiIndex, l_uiQueueIndex, l_Request.m_uiPrio);
 					l_uiNumQueuesLeft--;
 					l_bAdded = true;

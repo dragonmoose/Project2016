@@ -22,7 +22,7 @@ class ConsoleInputParser;
 class ConsoleCommandManager final
 {
 public:
-	using InputLines_t = std::vector<std::string>;
+	using InputLines = std::vector<std::string>;
 
 	ConsoleCommandManager(std::shared_ptr<Dispatcher>& p_Dispatcher);
 	ConsoleCommandManager(const ConsoleCommandManager&) = delete;
@@ -31,8 +31,8 @@ public:
 	void Start();
 	void Stop();
 
-	template<class Object_t, class... Args_t>
-	void Register(const std::string& p_Name, Object_t* p_Object, void(Object_t::*p_Func)(Args_t...), Dispatcher* p_Dispatcher, const std::string& p_Desc, const std::string& p_ArgsDesc, bool p_bRequireArgs = true)
+	template<class Object, class... Args>
+	void Register(const std::string& p_Name, Object* p_Object, void(Object::*p_Func)(Args...), Dispatcher* p_Dispatcher, const std::string& p_Desc, const std::string& p_ArgsDesc, bool p_bRequireArgs = true)
 	{
 		try
 		{
@@ -40,8 +40,8 @@ public:
 
 			const std::string l_Name = StringUtil::ToLower(p_Name);
 
-			MutexScope_t l_MutexScope(m_Mutex);
-			bool l_bInserted = m_Functions.insert(FunctionMap_t::value_type(l_Name, std::make_unique<CF::MemberConsoleFunction<Object_t, Args_t...>>(p_Object, p_Func, p_Dispatcher, p_Name, p_Desc, p_ArgsDesc, p_bRequireArgs))).second;
+			MutexScope l_MutexScope(m_Mutex);
+			bool l_bInserted = m_Functions.insert(FunctionMap::value_type(l_Name, std::make_unique<CF::MemberConsoleFunction<Object, Args...>>(p_Object, p_Func, p_Dispatcher, p_Name, p_Desc, p_ArgsDesc, p_bRequireArgs))).second;
 			THROW_IF_NOT(l_bInserted, "Failed to register member console function (already registered?): " << p_Name);
 		}
 		catch (Exception& e)
@@ -50,8 +50,8 @@ public:
 		}
 	}
 
-	template<class... Args_t>
-	void Register(const std::string& p_Name, void(*p_Func)(Args_t...), Dispatcher* p_Dispatcher, const std::string& p_Desc, const std::string& p_ArgsDesc, bool p_bRequireArgs = true)
+	template<class... Args>
+	void Register(const std::string& p_Name, void(*p_Func)(Args...), Dispatcher* p_Dispatcher, const std::string& p_Desc, const std::string& p_ArgsDesc, bool p_bRequireArgs = true)
 	{
 		try
 		{
@@ -59,8 +59,8 @@ public:
 
 			const std::string l_Name = StringUtil::ToLower(p_Name);
 
-			MutexScope_t l_MutexScope(m_Mutex);
-			bool l_bInserted = m_Functions.insert(FunctionMap_t::value_type(l_Name, std::make_unique<CF::FreeConsoleFunction<Args_t...>>(p_Func, p_Dispatcher, p_Name, p_Desc, p_ArgsDesc, p_bRequireArgs))).second;
+			MutexScope l_MutexScope(m_Mutex);
+			bool l_bInserted = m_Functions.insert(FunctionMap::value_type(l_Name, std::make_unique<CF::FreeConsoleFunction<Args...>>(p_Func, p_Dispatcher, p_Name, p_Desc, p_ArgsDesc, p_bRequireArgs))).second;
 			THROW_IF_NOT(l_bInserted, "Failed to register free console function (already registered?): " << p_Name);
 		}
 		catch (Exception& e)
@@ -99,8 +99,8 @@ private:
 	std::string m_CurrTypedLine;
 
 	mutable Mutex m_Mutex;
-	using FunctionMap_t = std::map<std::string, std::unique_ptr<CF::IConsoleFunction>>;
-	FunctionMap_t m_Functions;
+	using FunctionMap = std::map<std::string, std::unique_ptr<CF::IConsoleFunction>>;
+	FunctionMap m_Functions;
 
 	std::unique_ptr<ConsoleHistory> m_History;
 	std::string m_Prompt;

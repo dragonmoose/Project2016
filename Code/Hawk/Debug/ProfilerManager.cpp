@@ -34,18 +34,18 @@ namespace ProfilerManager
 		Duration m_AvgTime;
 		Data m_Data;
 	};
-	using ViewDataVec_t = std::vector<ViewData>;
+	using ViewDataVec = std::vector<ViewData>;
 
-	using DataMap_t = std::unordered_map<std::string, Data>;
-	DataMap_t n_DataMap;
+	using DataMap = std::unordered_map<std::string, Data>;
+	DataMap n_DataMap;
 	Mutex n_Mutex;
 	bool n_bPaused = false;
 
 	void Pause();
 	void Resume();
 	void Clear();
-	void Print(const std::string& p_SortMode, uint32_t p_uiMax, const std::string& p_Filter);
-	ViewDataVec_t GetViewDataVec(const std::string& p_SortMode, uint32_t p_uiMax, const std::string& p_Filter);
+	void Print(const std::string& p_SortMode, uint32 p_uiMax, const std::string& p_Filter);
+	ViewDataVec GetViewDataVec(const std::string& p_SortMode, uint32 p_uiMax, const std::string& p_Filter);
 }
 
 void ProfilerManager::Initialize(ConsoleCommandManager* p_ConsoleManager, Dispatcher* p_Dispatcher)
@@ -60,11 +60,11 @@ void ProfilerManager::Add(const std::string& p_Name, const Duration& p_Duration)
 {
 	if (!n_bPaused)
 	{
-		MutexScope_t l_MutexScope(n_Mutex);
+		MutexScope l_MutexScope(n_Mutex);
 		auto l_Itr = n_DataMap.find(p_Name);
 		if (l_Itr == n_DataMap.end())
 		{
-			std::pair<DataMap_t::iterator, bool> l_bResult = n_DataMap.insert(DataMap_t::value_type(p_Name, Data(p_Duration)));
+			std::pair<DataMap::iterator, bool> l_bResult = n_DataMap.insert(DataMap::value_type(p_Name, Data(p_Duration)));
 			ASSERT(l_bResult.second, "Failed to insert profiler data. Name=" << p_Name);
 		}
 		else
@@ -111,17 +111,17 @@ void ProfilerManager::Resume()
 
 void ProfilerManager::Clear()
 {
-	MutexScope_t l_MutexScope(n_Mutex);
+	MutexScope l_MutexScope(n_Mutex);
 	n_DataMap.clear();
 
 	CONSOLE_WRITE_SCOPE();
 	std::cout << "Cleared all profiling data.\n\n";
 }
 
-void ProfilerManager::Print(const std::string& p_SortMode, uint32_t p_uiMax, const std::string& p_Filter)
+void ProfilerManager::Print(const std::string& p_SortMode, uint32 p_uiMax, const std::string& p_Filter)
 {
 	CONSOLE_WRITE_SCOPE();
-	ViewDataVec_t l_DataVec = GetViewDataVec(p_SortMode, p_uiMax, p_Filter);
+	ViewDataVec l_DataVec = GetViewDataVec(p_SortMode, p_uiMax, p_Filter);
 
 	if (l_DataVec.empty())
 	{
@@ -129,8 +129,8 @@ void ProfilerManager::Print(const std::string& p_SortMode, uint32_t p_uiMax, con
 		return;
 	}
 
-	static const int32_t w1 = 40;
-	static const int32_t w2 = 20;
+	static const int32 w1 = 40;
+	static const int32 w2 = 20;
 
 	std::cout << "\n" << std::left << std::setw(w1) << "Name" << std::setw(w2) << "Peak time (s)" << std::setw(w2) << "Avg time (s)" << std::setw(w2) << "Total time (s)" << "Count\n";
 	std::cout << "---------------------------------------------------------------------------------------------------------\n";
@@ -148,10 +148,10 @@ void ProfilerManager::Print(const std::string& p_SortMode, uint32_t p_uiMax, con
 	std::cout << "\n";
 }
 
-ProfilerManager::ViewDataVec_t ProfilerManager::GetViewDataVec(const std::string& p_SortMode, uint32_t p_uiMax, const std::string& p_Filter)
+ProfilerManager::ViewDataVec ProfilerManager::GetViewDataVec(const std::string& p_SortMode, uint32 p_uiMax, const std::string& p_Filter)
 {
-	MutexScope_t l_MutexScope(n_Mutex);
-	ViewDataVec_t l_DataVec;
+	MutexScope l_MutexScope(n_Mutex);
+	ViewDataVec l_DataVec;
 	l_DataVec.reserve(n_DataMap.size());
 
 	for (const auto& l_KeyVal : n_DataMap)
@@ -185,7 +185,7 @@ ProfilerManager::ViewDataVec_t ProfilerManager::GetViewDataVec(const std::string
 		hwk::erase_if(l_DataVec, [&p_Filter](const ViewData& p_Data) { return !StringUtil::Contains(p_Data.m_Name, p_Filter); });
 	}
 
-	uint32_t l_uiMax = p_uiMax > 0 ? p_uiMax : 10;
+	uint32 l_uiMax = p_uiMax > 0 ? p_uiMax : 10;
 	if (l_uiMax < l_DataVec.size())
 	{
 		l_DataVec.resize(l_uiMax);

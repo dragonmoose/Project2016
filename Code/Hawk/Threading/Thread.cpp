@@ -6,10 +6,10 @@
 namespace Hawk {
 
 const std::string Thread::sc_MainThreadName("Thread_Main");
-const ThreadID_t Thread::sc_MainThreadID = 1;
+const ThreadID Thread::sc_MainThreadID = 1;
 std::atomic_uint Thread::s_uiNextThreadID = 2;
 
-Thread::Thread(const std::string& p_Name, UpdateFunc_t p_UpdateFunc)
+Thread::Thread(const std::string& p_Name, UpdateFunc p_UpdateFunc)
 : m_Name(p_Name)
 , m_Dispatcher(std::make_shared<Dispatcher>(p_Name))
 , m_UpdateFunc(p_UpdateFunc)
@@ -18,11 +18,11 @@ Thread::Thread(const std::string& p_Name, UpdateFunc_t p_UpdateFunc)
 {
 }
 
-void Thread::RegisterFrameBegin(FrameBeginCallback_t p_Callback)
+void Thread::RegisterFrameBegin(FrameBeginCallback p_Callback)
 {
 	m_FrameBegin = p_Callback;
 }
-void Thread::RegisterFrameEnd(FrameBeginCallback_t p_Callback)
+void Thread::RegisterFrameEnd(FrameBeginCallback p_Callback)
 {
 	m_FrameEnd = p_Callback;
 }
@@ -47,7 +47,7 @@ const std::string& Thread::GetName() const
 	return m_Name;
 }
 
-ThreadID_t Thread::GetID() const
+ThreadID Thread::GetID() const
 {
 	return m_ID;
 }

@@ -6,13 +6,13 @@
 #undef WIN32_LEAN_AND_MEAN
 #undef NOMINMAX
 
+#include "System/Types.h"
+#include "System/Exception.h"
+#include "Debug/Assert.h"
 #include "Console/ConsoleAPI.h"
 #include "Console/Logger.h"
 #include "Debug/Profiler.h"
-#include "Debug/Assert.h"
 #include "System/Config.h"
-#include "System/Exception.h"
-#include "System/Types.h"
 #include "System/CoreInfo.h"
 #include <string>
 #include <sstream>

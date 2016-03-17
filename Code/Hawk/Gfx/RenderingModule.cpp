@@ -31,8 +31,8 @@ RenderingModule::RenderingModule()
 
 RenderingModule::~RenderingModule()
 {
-	WindowManager::RegisterWindowManipulatedCallback(WindowManager::WindowManipulatedCallback_t());
-	WindowManager::RegisterWindowSizeChanged(WindowManager::WindowSizeChangedCallback_t());
+	WindowManager::RegisterWindowManipulatedCallback(WindowManager::WindowManipulatedCallback());
+	WindowManager::RegisterWindowSizeChanged(WindowManager::WindowSizeChangedCallback());
 }
 
 std::string RenderingModule::GetName() const

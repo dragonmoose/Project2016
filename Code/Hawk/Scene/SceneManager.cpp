@@ -44,7 +44,7 @@ void SceneManager::Update(const Duration& p_Duration)
 	}
 }
 
-void SceneManager::AddToScene(Entity::EntityPtr_t p_Entity)
+void SceneManager::AddToScene(Entity::EntityPtr p_Entity)
 {
 	ASSERT(!hwk::contains(m_Entities, p_Entity), "Scene already contains entity. EntityName=" << p_Entity->GetName());
 
@@ -53,7 +53,7 @@ void SceneManager::AddToScene(Entity::EntityPtr_t p_Entity)
 	LOGM("Entity added to scene: " << p_Entity->GetName(), Debug);
 }
 
-void SceneManager::RemoveFromScene(Entity::EntityPtr_t p_Entity)
+void SceneManager::RemoveFromScene(Entity::EntityPtr p_Entity)
 {
 	auto l_Itr = std::find(m_Entities.begin(), m_Entities.end(), p_Entity);
 	ASSERT(l_Itr != m_Entities.end(), "Entity not part of scene. EntityName=" << p_Entity->GetName());

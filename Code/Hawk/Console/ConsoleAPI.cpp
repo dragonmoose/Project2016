@@ -243,7 +243,7 @@ void ConsoleAPI::ClearScreen()
 	DWORD l_dwNumCharsInBuffer;
 	DWORD l_dwCharsWritten;
 
-	MutexScope_t l_MutexScope(n_Mutex);
+	MutexScope l_MutexScope(n_Mutex);
 
 	THROW_IF_NOT(::GetConsoleScreenBufferInfo(n_hOut, &l_ScreenBufferInfo), "Failed to get console screen buffer info");
 	l_dwNumCharsInBuffer = l_ScreenBufferInfo.dwSize.X * l_ScreenBufferInfo.dwSize.Y;
@@ -259,7 +259,7 @@ void ConsoleAPI::ClearCurrLine()
 	CONSOLE_SCREEN_BUFFER_INFO l_ScreenBufferInfo;
 	DWORD l_dwCharsWritten;
 
-	MutexScope_t l_MutexScope(n_Mutex);
+	MutexScope l_MutexScope(n_Mutex);
 	THROW_IF_NOT(::GetConsoleScreenBufferInfo(n_hOut, &l_ScreenBufferInfo), "Failed to get console screen buffer info");
 	COORD l_StartPos = { 0, l_ScreenBufferInfo.dwCursorPosition.Y };
 

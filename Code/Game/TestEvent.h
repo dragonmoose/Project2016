@@ -4,13 +4,13 @@
 
 struct TestEvent : public Hawk::IEvent
 {
-	int32_t m_iValue;
+	int32 m_iValue;
 	//std::string m_Str;
 };
 
 struct TestEvent2 : public Hawk::IEvent
 {
-	int32_t m_iValue;
+	int32 m_iValue;
 	//std::string m_Str;
 };
 

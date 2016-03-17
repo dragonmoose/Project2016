@@ -24,14 +24,14 @@ void SceneManager::CmdPrint()
 	std::cout << "\n";
 }
 
-void SceneManager::CmdRemoveEntity(EntityID_t p_EntityID)
+void SceneManager::CmdRemoveEntity(EntityID p_EntityID)
 {
 	try
 	{
 		auto l_Itr = m_EntityIDMap.find(p_EntityID);
 		THROW_IF(l_Itr == m_EntityIDMap.end(), "No entity in scene with ID=" << p_EntityID);
 
-		const Entity::EntityPtr_t l_Entity = l_Itr->second;
+		const Entity::EntityPtr l_Entity = l_Itr->second;
 		l_Entity->GetParent()->RemoveChild(l_Entity);
 		std::cout << "Entity removed.\n";
 	}
@@ -41,7 +41,7 @@ void SceneManager::CmdRemoveEntity(EntityID_t p_EntityID)
 	}
 }
 
-void SceneManager::CmdReparentEntity(EntityID_t p_EntityID, EntityID_t p_NewParentID)
+void SceneManager::CmdReparentEntity(EntityID p_EntityID, EntityID p_NewParentID)
 {
 	try
 	{
@@ -49,11 +49,11 @@ void SceneManager::CmdReparentEntity(EntityID_t p_EntityID, EntityID_t p_NewPare
 
 		auto l_Itr = m_EntityIDMap.find(p_EntityID);
 		THROW_IF(l_Itr == m_EntityIDMap.end(), "No entity in scene with ID=" << p_EntityID);
-		const Entity::EntityPtr_t l_Entity = l_Itr->second;
+		const Entity::EntityPtr l_Entity = l_Itr->second;
 
 		auto l_ParentItr = m_EntityIDMap.find(p_NewParentID);
 		THROW_IF(l_ParentItr == m_EntityIDMap.end(), "No entity in scene with ID=" << p_NewParentID);
-		const Entity::EntityPtr_t l_ParentEntity = l_ParentItr->second;
+		const Entity::EntityPtr l_ParentEntity = l_ParentItr->second;
 
 		THROW_IF(l_Entity->IsChildOf(l_ParentEntity->GetID()), "Already child of specified entity");
 
@@ -66,17 +66,17 @@ void SceneManager::CmdReparentEntity(EntityID_t p_EntityID, EntityID_t p_NewPare
 	}
 }
 
-void SceneManager::CmdAncestorOf(EntityID_t p_EntityID1, EntityID_t p_EntityID2)
+void SceneManager::CmdAncestorOf(EntityID p_EntityID1, EntityID p_EntityID2)
 {
 	try
 	{
 		auto l_Itr1 = m_EntityIDMap.find(p_EntityID1);
 		THROW_IF(l_Itr1 == m_EntityIDMap.end(), "No entity in scene with ID=" << p_EntityID1);
-		const Entity::EntityPtr_t l_Entity1 = l_Itr1->second;
+		const Entity::EntityPtr l_Entity1 = l_Itr1->second;
 
 		auto l_Itr2 = m_EntityIDMap.find(p_EntityID2);
 		THROW_IF(l_Itr2 == m_EntityIDMap.end(), "No entity in scene with ID=" << p_EntityID2);
-		const Entity::EntityPtr_t l_Entity2 = l_Itr2->second;
+		const Entity::EntityPtr l_Entity2 = l_Itr2->second;
 
 		std::cout << "Result: " << l_Entity1->IsAncestorOf(l_Entity2) << "\n\n";
 	}
@@ -88,19 +88,19 @@ void SceneManager::CmdAncestorOf(EntityID_t p_EntityID1, EntityID_t p_EntityID2)
 
 namespace
 {
-	Entity::EntityPtr_t AddEntity(Entity::EntityPtr_t p_Parent)
+	Entity::EntityPtr AddEntity(Entity::EntityPtr p_Parent)
 	{
-		Entity::EntityPtr_t l_Entity = std::make_shared<Entity>();
+		Entity::EntityPtr l_Entity = std::make_shared<Entity>();
 		p_Parent->AddChild(l_Entity);
 		return l_Entity;
 	}
 
-	void AddEntities(Entity::EntityPtr_t p_Parent, int32_t p_iDepth, int32_t p_iLevelMax)
+	void AddEntities(Entity::EntityPtr p_Parent, int32 p_iDepth, int32 p_iLevelMax)
 	{
 		if (p_iDepth >= 0)
 		{
-			int32_t l_iNumNodes = Random::GetInt(1, p_iLevelMax);
-			for (int32_t i = 0; i < l_iNumNodes; i++)
+			int32 l_iNumNodes = Random::GetInt(1, p_iLevelMax);
+			for (int32 i = 0; i < l_iNumNodes; i++)
 			{
 				AddEntities(AddEntity(p_Parent), p_iDepth - 1, p_iLevelMax);
 			}
@@ -115,7 +115,7 @@ void SceneManager::CmdClear()
 	std::cout << "Scene cleared.\n";
 }
 
-void SceneManager::CmdPopulate(int32_t p_iDepth, int32_t p_iLevelMax)
+void SceneManager::CmdPopulate(int32 p_iDepth, int32 p_iLevelMax)
 {
 	try
 	{

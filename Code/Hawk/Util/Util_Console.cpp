@@ -31,7 +31,7 @@ void Util_Console::GetRand(float p_fMin, float p_fMax, UINT32 p_uiCount)
 	std::cout << "\n";
 	for (UINT32 i = 0; i < p_uiCount; i++)
 	{
-		std::cout << Random::GetInt(static_cast<int32_t>(p_fMin), static_cast<int32_t>(p_fMax)) << " ";
+		std::cout << Random::GetInt(static_cast<int32>(p_fMin), static_cast<int32>(p_fMax)) << " ";
 
 		if (l_uiCurrCol == sc_uiMaxCols)
 		{

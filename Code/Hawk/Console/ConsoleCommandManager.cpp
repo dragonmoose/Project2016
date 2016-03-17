@@ -105,7 +105,7 @@ void ConsoleCommandManager::RunInputLoop()
 						{
 							ConsoleInputParser l_ParsedInput(m_CurrLine);
 
-							MutexScope_t l_MutexScope(m_Mutex);
+							MutexScope l_MutexScope(m_Mutex);
 							auto l_Itr = m_Functions.find(l_ParsedInput.GetCommand());
 							if (l_Itr != m_Functions.end())
 							{
@@ -313,9 +313,9 @@ std::string ConsoleCommandManager::GetNextAutoCompletedCmd(const std::string& p_
 	else
 	{
 		const std::string l_Filter = StringUtil::ToLower(p_Filter);
-		using MatchVec_t = std::vector<std::string>;
-		MatchVec_t l_Matches;
-		hwk::transform_first_if(m_Functions, std::back_inserter(l_Matches), [l_Filter](const FunctionMap_t::value_type& p_Value)
+		using MatchVec = std::vector<std::string>;
+		MatchVec l_Matches;
+		hwk::transform_first_if(m_Functions, std::back_inserter(l_Matches), [l_Filter](const FunctionMap::value_type& p_Value)
 		{
 			return StringUtil::StartsWith(p_Value.first, l_Filter);
 		});

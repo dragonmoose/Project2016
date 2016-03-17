@@ -28,8 +28,8 @@ public:
 	bool operator>=(const Time& p_rhs) const;
 
 private:
-	using TimePoint_t = std::chrono::time_point<std::chrono::steady_clock>;
-	TimePoint_t m_TimePoint;
+	using TimePoint = std::chrono::time_point<std::chrono::steady_clock>;
+	TimePoint m_TimePoint;
 };
 }
 

@@ -40,8 +40,8 @@ public:
 	}
 	
 private:
-	using EventHandlerMap_t = std::unordered_map<std::type_index, std::unique_ptr<IEventHandler>>;
-	EventHandlerMap_t m_Events;
+	using EventHandlerMap = std::unordered_map<std::type_index, std::unique_ptr<IEventHandler>>;
+	EventHandlerMap m_Events;
 	std::shared_ptr<EventQueue> m_EventQueue;
 	std::shared_ptr<EventRouter> m_Router;
 };

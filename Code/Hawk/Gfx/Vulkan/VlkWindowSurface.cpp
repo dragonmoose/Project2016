@@ -59,7 +59,7 @@ void VlkWindowSurface::CheckWSISupport(VkPhysicalDevice p_PhysicalDevice, const 
 
 	VkBool32 l_bResult = {};
 
-	uint32_t l_uiFamilyIndex = p_PresentationQueue->GetFamilyIndex();
+	uint32 l_uiFamilyIndex = p_PresentationQueue->GetFamilyIndex();
 
 	VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfaceSupportKHR(p_PhysicalDevice, l_uiFamilyIndex, m_Surface, &l_bResult), "Failed to check support for WSI");
 	THROW_IF_NOT(l_bResult, "WSI-check failed: Queue family " << l_uiFamilyIndex << " does not support the specified surface");
@@ -83,7 +83,7 @@ void VlkWindowSurface::CheckAndSetCapabilities(VkPhysicalDevice p_PhysicalDevice
 void VlkWindowSurface::CheckColorFormats(VkPhysicalDevice p_PhysicalDevice) const
 {
 	std::vector<VkSurfaceFormatKHR> l_Formats;
-	uint32_t l_uiCount = 0;
+	uint32 l_uiCount = 0;
 	VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfaceFormatsKHR(p_PhysicalDevice, m_Surface, &l_uiCount, nullptr), "Failed to get format count");
 
 	l_Formats.resize(l_uiCount);
@@ -95,7 +95,7 @@ void VlkWindowSurface::CheckColorFormats(VkPhysicalDevice p_PhysicalDevice) cons
 void VlkWindowSurface::CheckPresentationModes(VkPhysicalDevice p_PhysicalDevice) const
 {
 	std::vector<VkPresentModeKHR> l_Modes;
-	uint32_t l_uiCount = 0;
+	uint32 l_uiCount = 0;
 	VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfacePresentModesKHR(p_PhysicalDevice, m_Surface, &l_uiCount, nullptr), "Failed to get presentation mode count");
 
 	l_Modes.resize(l_uiCount);

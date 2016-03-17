@@ -10,7 +10,7 @@
 namespace Hawk {
 
 class Mutex;
-using MutexScope_t = std::lock_guard<Mutex>;
+using MutexScope = std::lock_guard<Mutex>;
 
 class HAWK_DLL_EXPORT Mutex final
 {

@@ -11,7 +11,7 @@ EventManager::EventManager(std::shared_ptr<EventRouter>& p_Router)
 
 void EventManager::HandleQueued()
 {
-	EventQueue::Queue_t l_QueuedEvents;
+	EventQueue::Queue l_QueuedEvents;
 	m_EventQueue->Pop(l_QueuedEvents);
 	while (!l_QueuedEvents.empty())
 	{

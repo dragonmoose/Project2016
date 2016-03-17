@@ -19,8 +19,8 @@ public:
 	EventRouter(const EventRouter&) = delete;
 	EventRouter& operator=(const EventRouter&) = delete;
 
-	using EventQueues_t = std::vector<std::weak_ptr<EventQueue>>;
-	using EventQueuesMap_t = std::unordered_map<std::type_index, EventQueues_t>;
+	using EventQueues = std::vector<std::weak_ptr<EventQueue>>;
+	using EventQueuesMap = std::unordered_map<std::type_index, EventQueues>;
 
 	void Register(const std::type_index& p_EventTypeIndex, std::shared_ptr<EventQueue>& p_EventQueue);
 
@@ -29,7 +29,7 @@ public:
 	{
 		PROFILE();
 		const std::type_index& l_TypeIndex = std::type_index(typeid(T));
-		EventQueuesMap_t::iterator l_Itr = m_EventQueues.find(l_TypeIndex);
+		EventQueuesMap::iterator l_Itr = m_EventQueues.find(l_TypeIndex);
 		if (l_Itr != m_EventQueues.end())
 		{
 			for (auto l_Itr2 = l_Itr->second.begin(); l_Itr2 != l_Itr->second.end(); )
@@ -49,7 +49,7 @@ public:
 	}
 
 private:
-	EventQueuesMap_t m_EventQueues;
+	EventQueuesMap m_EventQueues;
 };
 
 }

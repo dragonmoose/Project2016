@@ -18,13 +18,13 @@ class SceneManager;
 class Entity : public std::enable_shared_from_this<Entity>
 {
 public:
-	using EntityPtr_t = std::shared_ptr<Entity>;
-	using EntityVec_t = std::vector<EntityPtr_t>;
+	using EntityPtr = std::shared_ptr<Entity>;
+	using EntityVec = std::vector<EntityPtr>;
 
 	Entity();
 	Entity(const std::string& p_Name);
 	~Entity();
-	void SetParent(EntityPtr_t p_Parent);
+	void SetParent(EntityPtr p_Parent);
 
 	template<class T, class... Args>
 	T& AddComponent(Args&&... p_Args)
@@ -35,19 +35,19 @@ public:
 
 	const std::string& GetName() const;
 
-	void AddChild(EntityPtr_t p_Entity);
-	void RemoveChild(EntityPtr_t p_Entity);
-	EntityPtr_t GetParent() const;
+	void AddChild(EntityPtr p_Entity);
+	void RemoveChild(EntityPtr p_Entity);
+	EntityPtr GetParent() const;
 	bool HasParent() const;
-	bool HasChild(EntityID_t p_ID) const;
-	bool IsChildOf(EntityID_t p_ID) const;
-	bool IsAncestorOf(EntityPtr_t p_Entity) const;
+	bool HasChild(EntityID p_ID) const;
+	bool IsChildOf(EntityID p_ID) const;
+	bool IsAncestorOf(EntityPtr p_Entity) const;
 	void AddToScene(SceneManager* p_pSceneManager);
 
 	void Initialize();
 	void RegisterEvents(EventManager& p_EventManager);
 	void Update(const Duration& p_Duration);
-	EntityID_t GetID() const;
+	EntityID GetID() const;
 
 	const glm::mat4x4& GetFrameWorldMatrix();
 
@@ -55,29 +55,29 @@ public:
 	static void ResetIDCounter();
 
 private:
-	void DetachChild(EntityPtr_t p_Entity);
+	void DetachChild(EntityPtr p_Entity);
 	bool InScene() const;
 	void RemoveFromScene();
 
 	std::string m_Name;
 	bool m_bInitialized;
 
-	static EntityID_t s_NextID;
+	static EntityID s_NextID;
 
-	using Components_t = std::vector<Component>;
-	Components_t m_Components;
+	using Components = std::vector<Component>;
+	Components m_Components;
 
-	EntityPtr_t m_Parent;
+	EntityPtr m_Parent;
 
-	using Children_t = std::vector<EntityPtr_t>;
-	Children_t m_Children;
+	using Children = std::vector<EntityPtr>;
+	Children m_Children;
 
 	SceneManager* m_pSceneManager;
 
 	glm::vec3 m_Position;
 	glm::quat m_Rotation;
 	glm::mat4x4 m_FrameWorldMatrix;
-	EntityID_t m_ID;
+	EntityID m_ID;
 };
 
 }

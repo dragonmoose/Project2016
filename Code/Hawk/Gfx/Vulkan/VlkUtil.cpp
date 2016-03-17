@@ -5,7 +5,7 @@
 namespace Hawk {
 namespace Gfx {
 
-std::string VlkUtil::SpecVersionToString(uint32_t p_uiVersion)
+std::string VlkUtil::SpecVersionToString(uint32 p_uiVersion)
 {
 	std::ostringstream l_Stream;
 	l_Stream << VK_VERSION_MAJOR(p_uiVersion) << "."
@@ -14,12 +14,12 @@ std::string VlkUtil::SpecVersionToString(uint32_t p_uiVersion)
 	return l_Stream.str();
 }
 
-std::string VlkUtil::PipelineCacheUUIDToString(const uint8_t* p_UUID)
+std::string VlkUtil::PipelineCacheUUIDToString(const uint8* p_UUID)
 {
 	std::ostringstream l_Stream;
 	for (int i = 0; i < VK_UUID_SIZE; i++)
 	{
-		l_Stream << static_cast<uint32_t>(p_UUID[i]);
+		l_Stream << static_cast<uint32>(p_UUID[i]);
 		if (i < VK_UUID_SIZE - 1)
 		{
 			l_Stream << ":";
@@ -69,7 +69,7 @@ std::string VlkUtil::QueueFlagsToString(VkQueueFlags p_Flags)
 	return l_Stream.str();
 }
 
-std::string VlkUtil::TimestampValidBitsToString(uint32_t p_Bits)
+std::string VlkUtil::TimestampValidBitsToString(uint32 p_Bits)
 {
 	if (p_Bits == 0)
 	{

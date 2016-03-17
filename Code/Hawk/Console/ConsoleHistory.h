@@ -28,7 +28,7 @@ private:
 	static const std::string c_Filename;
 
 	std::deque<std::string> m_Cmds;
-	uint32_t m_uiCurrRecord;
+	uint32 m_uiCurrRecord;
 	bool m_bStartState;
 };
 }

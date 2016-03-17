@@ -15,10 +15,10 @@ namespace WindowManager
 	HINSTANCE GetHInstance();
 	bool Update();
 
-	using WindowManipulatedCallback_t = std::function<void(void)>;
-	void RegisterWindowManipulatedCallback(WindowManipulatedCallback_t p_Callback);
+	using WindowManipulatedCallback = std::function<void(void)>;
+	void RegisterWindowManipulatedCallback(WindowManipulatedCallback p_Callback);
 
-	using WindowSizeChangedCallback_t = std::function<void(UINT32, UINT32, bool)>;
-	void RegisterWindowSizeChanged(WindowSizeChangedCallback_t p_Callback);
+	using WindowSizeChangedCallback = std::function<void(UINT32, UINT32, bool)>;
+	void RegisterWindowSizeChanged(WindowSizeChangedCallback p_Callback);
 }
 }

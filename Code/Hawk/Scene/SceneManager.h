@@ -19,25 +19,25 @@ public:
 	void Initialize() override;
 	void RegisterEvents(EventManager& p_EventManager) override;
 	void Update(const Duration& p_Duration) override;
-	void AddToScene(Entity::EntityPtr_t p_Entity);
-	void RemoveFromScene(Entity::EntityPtr_t p_Entity);
+	void AddToScene(Entity::EntityPtr p_Entity);
+	void RemoveFromScene(Entity::EntityPtr p_Entity);
 	void Clear();
 
 	void CmdPrint();
-	void CmdRemoveEntity(EntityID_t p_EntityID);
-	void CmdReparentEntity(EntityID_t p_EntityID, EntityID_t p_NewParentID);
-	void CmdAncestorOf(EntityID_t p_EntityID1, EntityID_t p_EntityID2);
+	void CmdRemoveEntity(EntityID p_EntityID);
+	void CmdReparentEntity(EntityID p_EntityID, EntityID p_NewParentID);
+	void CmdAncestorOf(EntityID p_EntityID1, EntityID p_EntityID2);
 	void CmdClear();
-	void CmdPopulate(int32_t p_iDepth, int32_t p_iLevelMax);
+	void CmdPopulate(int32 p_iDepth, int32 p_iLevelMax);
 
 private:
 	void CreateRoot();
 
-	Entity::EntityPtr_t m_Root;
-	Entity::EntityVec_t m_Entities;
+	Entity::EntityPtr m_Root;
+	Entity::EntityVec m_Entities;
 
-	using EntityIDMap_t = std::unordered_map<EntityID_t, Entity::EntityPtr_t>;
-	EntityIDMap_t m_EntityIDMap;	
+	using EntityIDMap = std::unordered_map<EntityID, Entity::EntityPtr>;
+	EntityIDMap m_EntityIDMap;	
 };
 
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include "Types.h"
 #include <ostream>
 #include <vector>
 
@@ -8,7 +9,7 @@ std::ostream& operator<<(std::ostream& os, const std::vector<T>& p_Vec)
 	if (!p_Vec.empty())
 	{
 		os << "[";
-		for (uint32_t i = 0; i < p_Vec.size(); i++)
+		for (uint32 i = 0; i < p_Vec.size(); i++)
 		{
 			os << p_Vec[i];
 			if (i < p_Vec.size() - 1)

@@ -9,7 +9,7 @@ namespace Gfx {
 namespace VlkSystem
 {
 	void Initialize();
-	uint32_t GetAPIVersion();
+	uint32 GetAPIVersion();
 	const std::string& ResultToString(VkResult p_Result);
 }
 }

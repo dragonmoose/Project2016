@@ -56,7 +56,7 @@ void VlkDevice::WaitUntilIdle()
 	}
 }
 
-std::shared_ptr<VlkQueue> VlkDevice::GetQueue(VlkQueueType p_Type, uint32_t p_uiIndex) const
+std::shared_ptr<VlkQueue> VlkDevice::GetQueue(VlkQueueType p_Type, uint32 p_uiIndex) const
 {
 	const auto& l_Itr = m_Queues.find(p_Type);
 	THROW_IF(l_Itr == m_Queues.end(), "Queues of type " << p_Type << " not available");
@@ -105,7 +105,7 @@ void VlkDevice::GetExtensionsToCreate(std::vector<const char*>& p_Extensions)
 	}
 }
 
-void VlkDevice::CreateDevice(const QueueFamilyCreateInfos_t& p_QueueFamilyCreateInfos)
+void VlkDevice::CreateDevice(const QueueFamilyCreateInfos& p_QueueFamilyCreateInfos)
 {
 	ValidateQueueFamilyCreateInfos(p_QueueFamilyCreateInfos);
 	VkPhysicalDeviceFeatures l_Features = {};
@@ -129,7 +129,7 @@ void VlkDevice::CreateDevice(const QueueFamilyCreateInfos_t& p_QueueFamilyCreate
 	VK_THROW_IF_NOT_SUCCESS(vkCreateDevice(m_PhysicalDevice->GetHandle(), &l_Info, nullptr, &m_Device), "Failed to create device");
 }
 
-void VlkDevice::ExtractQueues(const VlkDeviceCreateInfo::QueueCreateInfoMap_t& p_Map)
+void VlkDevice::ExtractQueues(const VlkDeviceCreateInfo::QueueCreateInfoMap& p_Map)
 {
 	ASSERT(m_Device, "Device not created");
 	for (const auto& l_Entry : p_Map)
@@ -151,7 +151,7 @@ void VlkDevice::Initialize(const VlkDeviceCreateInfo& p_CreateInfo)
 {
 	THROW_IF_NOT(p_CreateInfo.GetPhysicalDevice(), "PhysicalDevice is null");
 
-	QueueFamilyCreateInfos_t l_QueueFamilyCreateInfos;
+	QueueFamilyCreateInfos l_QueueFamilyCreateInfos;
 	GetQueueFamilyCreateInfos(p_CreateInfo.GetQueueCreateInfoMap(), l_QueueFamilyCreateInfos);
 
 	CreateDevice(l_QueueFamilyCreateInfos);
@@ -170,12 +170,12 @@ void VlkDevice::Validate()
 	}
 }
 
-void VlkDevice::ValidateQueueFamilyCreateInfos(const QueueFamilyCreateInfos_t& p_QueueFamilyCreateInfos)
+void VlkDevice::ValidateQueueFamilyCreateInfos(const QueueFamilyCreateInfos& p_QueueFamilyCreateInfos)
 {
 	THROW_IF(p_QueueFamilyCreateInfos.empty(), "At least one queue needs to be specified when creating device");
-	for (uint32_t i = 0; i < p_QueueFamilyCreateInfos.size(); i++)
+	for (uint32 i = 0; i < p_QueueFamilyCreateInfos.size(); i++)
 	{
-		for (uint32_t j = i + 1; j < p_QueueFamilyCreateInfos.size(); j++)
+		for (uint32 j = i + 1; j < p_QueueFamilyCreateInfos.size(); j++)
 		{
 			THROW_IF(p_QueueFamilyCreateInfos[i].queueFamilyIndex == p_QueueFamilyCreateInfos[j].queueFamilyIndex, "Duplicate queue family index when creating device");
 		}
@@ -194,15 +194,15 @@ void VlkDevice::OnDeviceLost()
 	}
 }
 
-void VlkDevice::GetQueueFamilyCreateInfos(const VlkDeviceCreateInfo::QueueCreateInfoMap_t& p_QueueCreateMap, QueueFamilyCreateInfos_t& p_FamilyCreateInfos)
+void VlkDevice::GetQueueFamilyCreateInfos(const VlkDeviceCreateInfo::QueueCreateInfoMap& p_QueueCreateMap, QueueFamilyCreateInfos& p_FamilyCreateInfos)
 {
 	struct FamilyInfo
 	{
-		uint32_t m_uiCount;
-		std::unordered_map<uint32_t, uint32_t> m_Prios;
+		uint32 m_uiCount;
+		std::unordered_map<uint32, uint32> m_Prios;
 	};
-	using QueueFamilyMap_t = std::unordered_map<uint32_t, FamilyInfo>;
-	QueueFamilyMap_t l_Families;
+	using QueueFamilyMap = std::unordered_map<uint32, FamilyInfo>;
+	QueueFamilyMap l_Families;
 
 	for (const auto& l_Entry : p_QueueCreateMap)
 	{
@@ -231,7 +231,7 @@ void VlkDevice::GetQueueFamilyCreateInfos(const VlkDeviceCreateInfo::QueueCreate
 			l_fSum += l_Prio.second;
 		}
 
-		for (uint32_t i = 0; i < l_FamilyInfo.m_Prios.size(); i++)
+		for (uint32 i = 0; i < l_FamilyInfo.m_Prios.size(); i++)
 		{
 			l_NormalizedPrios[i] = l_FamilyInfo.m_Prios.at(i) / l_fSum;
 		}

@@ -9,10 +9,10 @@ namespace Hawk {
 
 ConsoleInputParser::ConsoleInputParser(const std::string& p_Input)
 {
-	using Separator_t = boost::char_separator<char>;
-	Separator_t l_Sep(" ");
-	boost::tokenizer<Separator_t> l_Tokenizer(p_Input, l_Sep);
-	const int32_t l_iNumTokens = std::distance(l_Tokenizer.begin(), l_Tokenizer.end());
+	using Separator = boost::char_separator<char>;
+	Separator l_Sep(" ");
+	boost::tokenizer<Separator> l_Tokenizer(p_Input, l_Sep);
+	const int32 l_iNumTokens = std::distance(l_Tokenizer.begin(), l_Tokenizer.end());
 	THROW_IF_NOT(l_iNumTokens > 0, "Invalid number of input tokens for console command. Num=" << l_iNumTokens);
 
 	auto l_Itr = l_Tokenizer.begin();

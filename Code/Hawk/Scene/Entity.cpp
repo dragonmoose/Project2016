@@ -4,7 +4,7 @@
 
 namespace Hawk {
 
-EntityID_t Entity::s_NextID = 1;
+EntityID Entity::s_NextID = 1;
 
 Entity::Entity()
 : Entity(std::string("Entity_") + std::to_string(s_NextID))
@@ -25,7 +25,7 @@ Entity::~Entity()
 	LOG("Entity deleted. Name=" << m_Name << " ID=" << m_ID, "scene", Debug);
 }
 
-void Entity::SetParent(EntityPtr_t p_Parent)
+void Entity::SetParent(EntityPtr p_Parent)
 {
 	ASSERT(p_Parent.get() != this, "Cannot set parent to itself");
 	if (HasParent())
@@ -43,7 +43,7 @@ const std::string& Entity::GetName() const
 	return m_Name;
 }
 
-void Entity::AddChild(EntityPtr_t p_Entity)
+void Entity::AddChild(EntityPtr p_Entity)
 {
 	ASSERT(std::find(m_Children.begin(), m_Children.end(), p_Entity) == m_Children.end(), "Cannot add entity to itself");
 	ASSERT(!p_Entity->IsAncestorOf(shared_from_this()), "Cannot add ancestor entity as child");
@@ -62,14 +62,14 @@ void Entity::AddChild(EntityPtr_t p_Entity)
 	}
 }
 
-void Entity::RemoveChild(EntityPtr_t p_Entity)
+void Entity::RemoveChild(EntityPtr p_Entity)
 {
 	//ASSERT_THREAD("scene");
 	DetachChild(p_Entity);
 	p_Entity->RemoveFromScene();
 }
 
-Entity::EntityPtr_t Entity::GetParent() const
+Entity::EntityPtr Entity::GetParent() const
 {
 	return m_Parent;
 }
@@ -79,17 +79,17 @@ bool Entity::HasParent() const
 	return m_Parent != nullptr;
 }
 
-bool Entity::HasChild(EntityID_t p_ID) const
+bool Entity::HasChild(EntityID p_ID) const
 {
-	return std::find_if(m_Children.begin(), m_Children.end(), [p_ID](const EntityPtr_t& p_Entity) { return p_ID == p_Entity->GetID(); }) != m_Children.end();
+	return std::find_if(m_Children.begin(), m_Children.end(), [p_ID](const EntityPtr& p_Entity) { return p_ID == p_Entity->GetID(); }) != m_Children.end();
 }
 
-bool Entity::IsChildOf(EntityID_t p_ID) const
+bool Entity::IsChildOf(EntityID p_ID) const
 {
 	return HasParent() ? m_Parent->GetID() == p_ID : false;
 }
 
-bool Entity::IsAncestorOf(EntityPtr_t p_Entity) const
+bool Entity::IsAncestorOf(EntityPtr p_Entity) const
 {
 	ASSERT(p_Entity, "Entity cannot be null");
 	if (p_Entity->IsChildOf(m_ID))
@@ -140,7 +140,7 @@ void Entity::Update(const Duration& p_Duration)
 	}
 }
 
-EntityID_t Entity::GetID() const
+EntityID Entity::GetID() const
 {
 	return m_ID;
 }
@@ -165,7 +165,7 @@ void Entity::ResetIDCounter()
 	s_NextID = 1;
 }
 
-void Entity::DetachChild(EntityPtr_t p_Entity)
+void Entity::DetachChild(EntityPtr p_Entity)
 {
 	auto l_Itr = std::find(m_Children.begin(), m_Children.end(), p_Entity);
 	ASSERT(l_Itr != m_Children.end(), "Entity is not a child of this entity. Parent=" << m_Name << " Child=" << p_Entity->m_Name);

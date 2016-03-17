@@ -66,10 +66,10 @@ Target LexicalCast_Default(Source p_Value)
 
 #pragma warning (push)
 #pragma warning (disable:4100) // Compiler flags p_Args as being unreferenced, although it isn't
-template<class TypeList_t, class Func, class Object_t, std::size_t... Index>
+template<class TypeList, class Func, class Object, std::size_t... Index>
 void DispatchMemberFunction(
 	Func p_Func,
-	Object_t* p_Object,
+	Object* p_Object,
 	const std::vector<std::string>& p_Args,
 	std::index_sequence<Index...>,
 	Dispatcher* p_Dispatcher,
@@ -78,24 +78,24 @@ void DispatchMemberFunction(
 	if (p_bRequireArgs)
 	{
 		p_Dispatcher->Post(
-			std::bind(p_Func, p_Object, boost::lexical_cast<boost::mpl::at_c<TypeList_t, Index>::type>(p_Args[Index])...)
+			std::bind(p_Func, p_Object, boost::lexical_cast<boost::mpl::at_c<TypeList, Index>::type>(p_Args[Index])...)
 		);
 	}
 	else
 	{
 		p_Dispatcher->Post(
-			std::bind(p_Func, p_Object, LexicalCast_Default<boost::mpl::at_c<TypeList_t, Index>::type>(p_Args[Index])...)
+			std::bind(p_Func, p_Object, LexicalCast_Default<boost::mpl::at_c<TypeList, Index>::type>(p_Args[Index])...)
 		);
 	}
 }
 #pragma warning (pop)
 
-template<class Object_t, class... Args_t>
+template<class Object, class... Args>
 class MemberConsoleFunction final : public IConsoleFunction
 {
 public:
-	MemberConsoleFunction(Object_t* p_Object, void(Object_t::*p_Func)(Args_t...), Dispatcher* p_Dispatcher, const std::string& p_Name, const std::string& p_Desc, const std::string& p_ArgsDesc, bool p_bRequireArgs)
-	: IConsoleFunction(p_Dispatcher, p_Name, p_Desc, p_ArgsDesc, p_bRequireArgs, sizeof...(Args_t))
+	MemberConsoleFunction(Object* p_Object, void(Object::*p_Func)(Args...), Dispatcher* p_Dispatcher, const std::string& p_Name, const std::string& p_Desc, const std::string& p_ArgsDesc, bool p_bRequireArgs)
+	: IConsoleFunction(p_Dispatcher, p_Name, p_Desc, p_ArgsDesc, p_bRequireArgs, sizeof...(Args))
 	, m_Object(p_Object)
 	, m_Func(p_Func)
 	{
@@ -103,19 +103,19 @@ public:
 
 	void Call(const std::vector<std::string>& p_Args) const override
 	{
-		using Index_Seq_t = std::make_index_sequence<sizeof...(Args_t)>;
-		DispatchMemberFunction<TypeList_t>(m_Func, m_Object, p_Args, Index_Seq_t(), m_Dispatcher, RequiresArgs());
+		using Index_Seq = std::make_index_sequence<sizeof...(Args)>;
+		DispatchMemberFunction<TypeList>(m_Func, m_Object, p_Args, Index_Seq(), m_Dispatcher, RequiresArgs());
 	}
 
 private:
-	void(Object_t::*m_Func)(Args_t...);
-	using TypeList_t = boost::mpl::vector<std::decay_t<Args_t>...>;
-	Object_t* m_Object;
+	void(Object::*m_Func)(Args...);
+	using TypeList = boost::mpl::vector<std::decay_t<Args>...>;
+	Object* m_Object;
 };
 
 #pragma warning (push)
 #pragma warning (disable:4100) // Compiler flags p_Args as being unreferenced, although it isn't
-template<class TypeList_t, class Func, std::size_t... Index>
+template<class TypeList, class Func, std::size_t... Index>
 void DispatchFreeFunction(
 	Func p_Func,
 	const std::vector<std::string>& p_Args,
@@ -126,37 +126,37 @@ void DispatchFreeFunction(
 	if (p_bRequireArgs)
 	{
 		p_Dispatcher->Post(
-			std::bind(p_Func, boost::lexical_cast<boost::mpl::at_c<TypeList_t, Index>::type>(p_Args[Index])...)
+			std::bind(p_Func, boost::lexical_cast<boost::mpl::at_c<TypeList, Index>::type>(p_Args[Index])...)
 		);
 	}
 	else
 	{
 		p_Dispatcher->Post(
-			std::bind(p_Func, LexicalCast_Default<boost::mpl::at_c<TypeList_t, Index>::type>(p_Args[Index])...)
+			std::bind(p_Func, LexicalCast_Default<boost::mpl::at_c<TypeList, Index>::type>(p_Args[Index])...)
 		);
 	}
 }
 #pragma warning (pop)
 
-template<class... Args_t>
+template<class... Args>
 class FreeConsoleFunction final : public IConsoleFunction
 {
 public:
-	FreeConsoleFunction(void(*p_Func)(Args_t...), Dispatcher* p_Dispatcher, const std::string& p_Name, const std::string& p_Desc, const std::string& p_ArgsDesc, bool p_bRequireArgs)
-	: IConsoleFunction(p_Dispatcher, p_Name, p_Desc, p_ArgsDesc, p_bRequireArgs, sizeof...(Args_t))
+	FreeConsoleFunction(void(*p_Func)(Args...), Dispatcher* p_Dispatcher, const std::string& p_Name, const std::string& p_Desc, const std::string& p_ArgsDesc, bool p_bRequireArgs)
+	: IConsoleFunction(p_Dispatcher, p_Name, p_Desc, p_ArgsDesc, p_bRequireArgs, sizeof...(Args))
 	, m_Func(p_Func)
 	{
 	}
 
 	void Call(const std::vector<std::string>& p_Args) const override
 	{
-		using Index_Seq_t = std::make_index_sequence<sizeof...(Args_t)>;
-		DispatchFreeFunction<TypeList_t>(m_Func, p_Args, Index_Seq_t(), m_Dispatcher, RequiresArgs());
+		using Index_Seq = std::make_index_sequence<sizeof...(Args)>;
+		DispatchFreeFunction<TypeList>(m_Func, p_Args, Index_Seq(), m_Dispatcher, RequiresArgs());
 	}
 
 private:
-	void(*m_Func)(Args_t...);
-	using TypeList_t = boost::mpl::vector<std::decay_t<Args_t>...>;
+	void(*m_Func)(Args...);
+	using TypeList = boost::mpl::vector<std::decay_t<Args>...>;
 };
 
 }

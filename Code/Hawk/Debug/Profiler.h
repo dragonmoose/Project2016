@@ -27,7 +27,7 @@ private:
 }
 
 #ifdef HAWK_DEBUG
-#define PROFILE()																\
+#define PROFILE()																	\
 		std::ostringstream __l_Stream__;											\
 		__l_Stream__ << Hawk::FileUtil::GetFilenameWithoutPath(__FILE__) << "(";	\
 		std::string __l_Func__(__FUNCTION__);										\

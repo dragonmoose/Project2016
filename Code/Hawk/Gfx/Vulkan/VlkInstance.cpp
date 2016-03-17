@@ -82,7 +82,7 @@ VkInstance VlkInstance::GetHandle() const
 
 void VlkInstance::CmdPrintLayers(bool p_bKeepUnsupported)
 {
-	LayerProperties_t l_Layers;
+	LayerProperties l_Layers;
 	GetAllLayers(l_Layers, p_bKeepUnsupported);
 
 	CONSOLE_WRITE_SCOPE();
@@ -106,7 +106,7 @@ void VlkInstance::CmdPrintExtensions(bool p_bKeepUnsupported)
 	CONSOLE_WRITE_SCOPE();
 
 	std::cout << "\n-Global extensions-----------------------\n";
-	ExtensionProperties_t l_Extensions;
+	ExtensionProperties l_Extensions;
 	GetAllExtensions(l_Extensions);
 	for (const auto& l_Extension : l_Extensions)
 	{
@@ -114,7 +114,7 @@ void VlkInstance::CmdPrintExtensions(bool p_bKeepUnsupported)
 	}
 	std::cout << "\n-Layer extensions------------------------\n";
 
-	LayerProperties_t l_Layers;
+	LayerProperties l_Layers;
 	GetAllLayers(l_Layers, p_bKeepUnsupported);
 
 	for (const auto& l_Layer : l_Layers)
@@ -140,7 +140,7 @@ void VlkInstance::CmdPrintExtensions(bool p_bKeepUnsupported)
 
 bool VlkInstance::IsLayerAvailable(const std::string& p_Name)
 {
-	LayerProperties_t l_Layers;
+	LayerProperties l_Layers;
 	GetAllLayers(l_Layers, false);
 	return std::find_if(l_Layers.begin(), l_Layers.end(),
 		[p_Name](const VkLayerProperties& p_Layer) { return p_Name == p_Layer.layerName && VlkSystem::GetAPIVersion() >= p_Layer.specVersion; }) != l_Layers.end();
@@ -150,15 +150,15 @@ bool VlkInstance::IsExtensionAvailable(const std::string& p_Name, const std::str
 {
 	if (!p_LayerName.empty() && !IsLayerAvailable(p_LayerName)) return false;
 
-	ExtensionProperties_t l_Extensions;
+	ExtensionProperties l_Extensions;
 	GetAllExtensions(l_Extensions, p_LayerName);
 	return std::find_if(l_Extensions.begin(), l_Extensions.end(),
 		[p_Name](const VkExtensionProperties& p_Extension) { return p_Name == p_Extension.extensionName; }) != l_Extensions.end();
 }
 
-void VlkInstance::GetAllLayers(LayerProperties_t& p_Layers, bool p_bKeepUnsupported)
+void VlkInstance::GetAllLayers(LayerProperties& p_Layers, bool p_bKeepUnsupported)
 {
-	uint32_t l_uiCount = 0;
+	uint32 l_uiCount = 0;
 	VK_THROW_IF_NOT_SUCCESS(vkEnumerateInstanceLayerProperties(&l_uiCount, nullptr), "Failed to get instance layer count");
 
 	p_Layers.resize(l_uiCount);
@@ -170,9 +170,9 @@ void VlkInstance::GetAllLayers(LayerProperties_t& p_Layers, bool p_bKeepUnsuppor
 	}
 }
 
-void VlkInstance::GetAllExtensions(ExtensionProperties_t& p_Extensions, const std::string& p_LayerName)
+void VlkInstance::GetAllExtensions(ExtensionProperties& p_Extensions, const std::string& p_LayerName)
 {
-	uint32_t l_uiCount = 0;
+	uint32 l_uiCount = 0;
 	const char* l_LayerName = !p_LayerName.empty() ? p_LayerName.c_str() : nullptr;
 
 	VK_THROW_IF_NOT_SUCCESS(vkEnumerateInstanceExtensionProperties(l_LayerName, &l_uiCount, nullptr), "Failed to get instance extension count. Layer=" << p_LayerName);
@@ -217,7 +217,7 @@ void VlkInstance::RetrieveDebugCallbacks()
 	THROW_IF_NOT(m_DestroyDebugReport, "Failed to create DestroyDebugReport vulkan extension");
 }
 
-VkBool32 VKAPI_CALL VlkInstance::OnDebugReport(VkDebugReportFlagsEXT p_Flags, VkDebugReportObjectTypeEXT p_ObjectType, uint64_t p_uiObject, size_t p_Location, int32_t p_iMessageCode, const char* p_pLayerPrefix, const char* p_pMessage, void* /*p_pUserData*/)
+VkBool32 VKAPI_CALL VlkInstance::OnDebugReport(VkDebugReportFlagsEXT p_Flags, VkDebugReportObjectTypeEXT p_ObjectType, uint64 p_uiObject, std::size_t p_Location, int32 p_iMessageCode, const char* p_pLayerPrefix, const char* p_pMessage, void* /*p_pUserData*/)
 {
 	std::ostringstream l_Msg;
 	l_Msg << p_pLayerPrefix << ": '" << p_pMessage << "' [ObjType=" << p_ObjectType << " Obj=" << p_uiObject << " Loc=" << p_Location << " Code=" << p_iMessageCode << "]";

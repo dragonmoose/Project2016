@@ -27,7 +27,7 @@ private:
 	void CmdSetActiveCategory(const std::string& p_Category);
 	void CmdList();
 	std::shared_ptr<IRenderingAPI> m_API;
-	using Category_t = std::string;
+	using Category = std::string;
 
 	struct Node
 	{
@@ -38,8 +38,8 @@ private:
 		std::string m_Label;
 		std::string m_Value;
 	};
-	using NodeMap_t = std::unordered_map<Category_t, std::vector<Node>>;
-	NodeMap_t m_Map;
+	using NodeMap = std::unordered_map<Category, std::vector<Node>>;
+	NodeMap m_Map;
 };
 
 }

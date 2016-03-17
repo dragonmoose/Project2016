@@ -18,10 +18,10 @@ ModuleThread::ModuleThread(const std::string& p_Name)
 	m_Thread.RegisterFrameEnd(std::bind(&ModuleThread::OnFrameEnd, this));
 }
 
-bool ModuleThread::TryRemove(ModuleID_t p_ID)
+bool ModuleThread::TryRemove(ModuleID p_ID)
 {
-	MutexScope_t l_MutexScope(m_Mutex);
-	Modules_t::const_iterator l_Itr = FindByID(p_ID);
+	MutexScope l_MutexScope(m_Mutex);
+	Modules::const_iterator l_Itr = FindByID(p_ID);
 	if (l_Itr != m_Modules.end())
 	{
 		m_Modules.erase(l_Itr);
@@ -30,10 +30,10 @@ bool ModuleThread::TryRemove(ModuleID_t p_ID)
 	return false;
 }
 
-bool ModuleThread::TryGetModule(ModuleID_t p_ID, Module** p_Module) const
+bool ModuleThread::TryGetModule(ModuleID p_ID, Module** p_Module) const
 {
-	MutexScope_t l_MutexScope(m_Mutex);
-	Modules_t::const_iterator l_Itr = FindByID(p_ID);
+	MutexScope l_MutexScope(m_Mutex);
+	Modules::const_iterator l_Itr = FindByID(p_ID);
 	if (l_Itr != m_Modules.end())
 	{
 		*p_Module = l_Itr->get();
@@ -58,7 +58,7 @@ const std::string& ModuleThread::GetName() const
 	return m_Thread.GetName();
 }
 
-ThreadID_t ModuleThread::GetThreadID() const
+ThreadID ModuleThread::GetThreadID() const
 {
 	return m_Thread.GetID();
 }
@@ -99,7 +99,7 @@ void ModuleThread::Update()
 	Duration l_Delta(m_CurrFrameStartTime - m_PrevFrameStartTime);
 	l_Delta = std::min(l_Delta, sc_MaxFrameDuration);
 
-	MutexScope_t l_MutexScope(m_Mutex);
+	MutexScope l_MutexScope(m_Mutex);
 	for (auto& l_Module : m_Modules)
 	{
 		l_Module->_Update(l_Delta);
@@ -116,7 +116,7 @@ void ModuleThread::OnFrameEnd()
 	m_PrevFrameStartTime = m_CurrFrameStartTime;
 }
 
-ModuleThread::Modules_t::const_iterator ModuleThread::FindByID(ModuleID_t p_ID) const
+ModuleThread::Modules::const_iterator ModuleThread::FindByID(ModuleID p_ID) const
 {
 	return std::find_if(m_Modules.begin(), m_Modules.end(), [p_ID](const std::unique_ptr<Module>& p_Module)
 	{

@@ -25,7 +25,7 @@ private:
 	std::unique_ptr<VlkWindowSurface> m_Surface;
 	std::shared_ptr<VlkQueue> m_Queue;
 	VkPresentInfoKHR m_PresentInfo;
-	uint32_t m_uiCurrentBufferIndex;
+	uint32 m_uiCurrentBufferIndex;
 };
 
 }

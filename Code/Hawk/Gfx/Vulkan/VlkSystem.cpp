@@ -6,11 +6,11 @@ namespace Hawk {
 namespace Gfx {
 namespace VlkSystem
 {
-	using ResultMap_t = std::unordered_map<VkResult, std::string>;
-	ResultMap_t n_ResultMap;
+	using ResultMap = std::unordered_map<VkResult, std::string>;
+	ResultMap n_ResultMap;
 	const std::string n_DefaultResult("N/A");
 	bool n_bInitialized = false;
-	uint32_t n_uiAPIVersion = VK_MAKE_VERSION(1, 0, 3);
+	uint32 n_uiAPIVersion = VK_MAKE_VERSION(1, 0, 3);
 
 	void PopulateResultMap();
 }
@@ -24,7 +24,7 @@ void VlkSystem::Initialize()
 	n_bInitialized = true;
 }
 
-uint32_t VlkSystem::GetAPIVersion()
+uint32 VlkSystem::GetAPIVersion()
 {
 	return n_uiAPIVersion;
 }

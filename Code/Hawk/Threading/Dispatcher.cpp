@@ -8,17 +8,17 @@ Dispatcher::Dispatcher(const std::string& p_ThreadName)
 {
 }
 
-void Dispatcher::Post(Func_t p_Func)
+void Dispatcher::Post(Func p_Func)
 {
-	MutexScope_t l_MutexScope(m_Mutex);
+	MutexScope l_MutexScope(m_Mutex);
 	m_Functions.push_back(p_Func);
 }
 
 void Dispatcher::Execute()
 {
-	FuncVec_t l_Functions;
+	FuncVec l_Functions;
 	{
-		MutexScope_t l_MutexScope(m_Mutex);
+		MutexScope l_MutexScope(m_Mutex);
 		m_Functions.swap(l_Functions);
 	}
 

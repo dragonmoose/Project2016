@@ -16,8 +16,8 @@ public:
 	ScopedConsoleCommands(const ScopedConsoleCommands&) = delete;
 	ScopedConsoleCommands& operator=(const ScopedConsoleCommands&) = delete;
 
-	template<class Object_t, class... Args_t>
-	void Register(const std::string& p_Name, Object_t* p_Object, void(Object_t::*p_Func)(Args_t...), const std::string& p_Desc, const std::string& p_ArgsDesc, bool p_bRequireArgs = true)
+	template<class Object_t, class... Args>
+	void Register(const std::string& p_Name, Object_t* p_Object, void(Object_t::*p_Func)(Args...), const std::string& p_Desc, const std::string& p_ArgsDesc, bool p_bRequireArgs = true)
 	{
 #ifdef HAWK_DEBUG
 		m_Manager->Register(p_Name, p_Object, p_Func, m_Dispatcher.get(), p_Desc, p_ArgsDesc, p_bRequireArgs);
@@ -25,8 +25,8 @@ public:
 #endif
 	}
 
-	template<class... Args_t>
-	void Register(const std::string& p_Name, void(*p_Func)(Args_t...), const std::string& p_Desc, const std::string& p_ArgsDesc, bool p_bRequireArgs = true)
+	template<class... Args>
+	void Register(const std::string& p_Name, void(*p_Func)(Args...), const std::string& p_Desc, const std::string& p_ArgsDesc, bool p_bRequireArgs = true)
 	{
 #ifdef HAWK_DEBUG
 		m_Manager->Register(p_Name, p_Func, m_Dispatcher.get(), p_Desc, p_ArgsDesc, p_bRequireArgs);

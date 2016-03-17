@@ -83,7 +83,7 @@ void Config::PrivLoad()
 	boost::property_tree::ptree l_NewProperties;
 	boost::property_tree::ini_parser::read_ini(m_Filename, l_NewProperties);
 
-	MutexScope_t l_MutexScope(m_Mutex);
+	MutexScope l_MutexScope(m_Mutex);
 	m_Properties.swap(l_NewProperties);
 }
 

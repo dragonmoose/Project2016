@@ -4,7 +4,7 @@
 namespace Hawk {
 namespace Gfx {
 
-VlkQueue::VlkQueue(VkQueue p_Queue, VlkQueueType p_Type, uint32_t p_uiFamilyIndex)
+VlkQueue::VlkQueue(VkQueue p_Queue, VlkQueueType p_Type, uint32 p_uiFamilyIndex)
 : m_Queue(p_Queue)
 , m_Type(p_Type)
 , m_uiFamilyIndex(p_uiFamilyIndex)
@@ -22,7 +22,7 @@ VkQueue VlkQueue::GetHandle() const
 	return m_Queue;
 }
 
-uint32_t VlkQueue::GetFamilyIndex() const
+uint32 VlkQueue::GetFamilyIndex() const
 {
 	return m_uiFamilyIndex;
 }

@@ -32,6 +32,7 @@ VlkSwapchain::~VlkSwapchain()
 
 void VlkSwapchain::Present()
 {
+	// TODO: Act upon error messages
 	m_PresentInfo.pImageIndices = &m_uiCurrentBufferIndex;
 	VkResult l_Result = vkQueuePresentKHR(m_Queue->GetHandle(), &m_PresentInfo);
 	LOG_IF(l_Result == VK_SUBOPTIMAL_KHR, "Queue presentation suboptimal", "vulkan", Warning);

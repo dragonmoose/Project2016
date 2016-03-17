@@ -12,14 +12,14 @@ namespace Hawk {
 class HAWK_DLL_EXPORT Thread final
 {
 public:
-	using UpdateFunc_t = std::function<void(void)>;
-	using FrameBeginCallback_t = std::function<void(void)>;
-	using FrameEndCallback_t = std::function<void(void)>;
+	using UpdateFunc = std::function<void(void)>;
+	using FrameBeginCallback = std::function<void(void)>;
+	using FrameEndCallback = std::function<void(void)>;
 
-	Thread(const std::string& p_Name, UpdateFunc_t p_UpdateFunc);
+	Thread(const std::string& p_Name, UpdateFunc p_UpdateFunc);
 
-	void RegisterFrameBegin(FrameBeginCallback_t p_Callback);
-	void RegisterFrameEnd(FrameBeginCallback_t p_Callback);
+	void RegisterFrameBegin(FrameBeginCallback p_Callback);
+	void RegisterFrameEnd(FrameBeginCallback p_Callback);
 
 	Thread(const Thread&) = delete;
 	Thread& operator=(const Thread&) = delete;
@@ -27,12 +27,12 @@ public:
 	void Start();
 	void Stop();
 	const std::string& GetName() const;
-	ThreadID_t GetID() const;
+	ThreadID GetID() const;
 	std::shared_ptr<Dispatcher> GetDispatcher() const;
 	static void Sleep();
 
 	static const std::string sc_MainThreadName;
-	static const ThreadID_t sc_MainThreadID;
+	static const ThreadID sc_MainThreadID;
 
 private:
 	void Run();
@@ -40,13 +40,13 @@ private:
 	std::string m_Name;
 	std::shared_ptr<Dispatcher> m_Dispatcher;
 	std::thread m_Thread;
-	UpdateFunc_t m_UpdateFunc;
-	FrameBeginCallback_t m_FrameBegin;
-	FrameEndCallback_t m_FrameEnd;
+	UpdateFunc m_UpdateFunc;
+	FrameBeginCallback m_FrameBegin;
+	FrameEndCallback m_FrameEnd;
 	std::atomic_bool m_bStopSignal;
 
 	static std::atomic_uint s_uiNextThreadID;
-	ThreadID_t m_ID;
+	ThreadID m_ID;
 };
 
 }

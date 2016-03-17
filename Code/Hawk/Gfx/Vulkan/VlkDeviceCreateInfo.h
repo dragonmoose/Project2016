@@ -17,33 +17,33 @@ public:
 
 	struct QueueRequest
 	{
-		QueueRequest(uint32_t p_uiIndex, uint32_t p_uiPrio)
+		QueueRequest(uint32 p_uiIndex, uint32 p_uiPrio)
 		: m_uiIndex(p_uiIndex)
 		, m_uiPrio(p_uiPrio) {}
 
-		uint32_t m_uiIndex;
-		uint32_t m_uiPrio;
+		uint32 m_uiIndex;
+		uint32 m_uiPrio;
 	};
-	using QueueRequests_t = std::vector<QueueRequest>;
-	using QueueRequestMap_t = std::unordered_map<VlkQueueType, QueueRequests_t>;
+	using QueueRequests = std::vector<QueueRequest>;
+	using QueueRequestMap = std::unordered_map<VlkQueueType, QueueRequests>;
 
 	struct QueueCreateInfo
 	{
-		QueueCreateInfo(uint32_t p_uiFamilyIndex, uint32_t p_uiTypeIndex, uint32_t p_uiQueueIndex, uint32_t p_uiPrio)
+		QueueCreateInfo(uint32 p_uiFamilyIndex, uint32 p_uiTypeIndex, uint32 p_uiQueueIndex, uint32 p_uiPrio)
 			: m_uiFamilyIndex(p_uiFamilyIndex)
 			, m_uiTypeIndex(p_uiTypeIndex)
 			, m_uiQueueIndex(p_uiQueueIndex)
 			, m_uiPrio(p_uiPrio) {}
 
-		uint32_t m_uiFamilyIndex;
-		uint32_t m_uiTypeIndex;
-		uint32_t m_uiQueueIndex;
-		uint32_t m_uiPrio;
+		uint32 m_uiFamilyIndex;
+		uint32 m_uiTypeIndex;
+		uint32 m_uiQueueIndex;
+		uint32 m_uiPrio;
 	};
-	using QueueCreateInfoMap_t = std::unordered_map<VlkQueueType, std::vector<QueueCreateInfo>>;
+	using QueueCreateInfoMap = std::unordered_map<VlkQueueType, std::vector<QueueCreateInfo>>;
 
-	void AddQueue(VlkQueueType p_Type, uint32_t p_uiIndex, uint32_t p_uiPrio);
-	const VlkDeviceCreateInfo::QueueCreateInfoMap_t& GetQueueCreateInfoMap() const;
+	void AddQueue(VlkQueueType p_Type, uint32 p_uiIndex, uint32 p_uiPrio);
+	const VlkDeviceCreateInfo::QueueCreateInfoMap& GetQueueCreateInfoMap() const;
 	std::shared_ptr<VlkPhysicalDevice> GetPhysicalDevice() const;
 	void Finalize();
 	bool IsFinalized() const;
@@ -51,8 +51,8 @@ public:
 	void SetupQueueCreateInfoMap();
 
 private:
-	QueueRequestMap_t m_QueueRequestMap;
-	QueueCreateInfoMap_t m_QueueCreateInfoMap;
+	QueueRequestMap m_QueueRequestMap;
+	QueueCreateInfoMap m_QueueCreateInfoMap;
 	std::shared_ptr<VlkPhysicalDevice> m_PhysicalDevice;
 	bool m_bFinalized;
 };

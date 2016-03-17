@@ -22,14 +22,14 @@ public:
 	template<class T>
 	T Get(const std::string& p_Key, const T& p_Default) const
 	{
-		MutexScope_t l_MutexScope(m_Mutex);
+		MutexScope l_MutexScope(m_Mutex);
 		return m_Properties.get<T>(p_Key, p_Default);
 	}
 
 	template<class T>
 	bool TryGet(const std::string& p_Key, const T& p_Default, T& p_Value) const
 	{
-		MutexScope_t l_MutexScope(m_Mutex);
+		MutexScope l_MutexScope(m_Mutex);
 		boost::optional<T> l_Node = m_Properties.get_optional<T>(p_Key);
 		if (l_Node)
 		{
@@ -42,7 +42,7 @@ public:
 
 	void Set(const std::string& p_Key, const std::string& p_Value)
 	{
-		MutexScope_t l_MutexScope(m_Mutex);
+		MutexScope l_MutexScope(m_Mutex);
 		m_Properties.put(p_Key, p_Value);
 	}
 	bool Load(bool p_bForce = false);

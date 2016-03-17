@@ -25,7 +25,7 @@ Module::~Module()
 	LOGM("Module destroyed", Debug)
 }
 
-ModuleID_t Module::GetID() const
+ModuleID Module::GetID() const
 {
 	return m_ID;
 }
@@ -195,7 +195,7 @@ bool Module::IsPaused() const
 void Module::SetFixedTimeStep(float p_fValue, FixedTimeStepDecl p_Decl)
 {
 	float l_fValue = (p_Decl == FixedTimeStepDecl::FramesPerSecond ? (1.0f / p_fValue) : p_fValue);
-	m_TimePerFrame = Duration(static_cast<int32_t>(l_fValue * 1000000.0f), Duration::Precision::MicroSecond);
+	m_TimePerFrame = Duration(static_cast<int32>(l_fValue * 1000000.0f), Duration::Precision::MicroSecond);
 	LOGM("Using fixed time step. " << 1.0f / l_fValue << " FPS Interval: " << l_fValue << " seconds", Debug);
 }
 

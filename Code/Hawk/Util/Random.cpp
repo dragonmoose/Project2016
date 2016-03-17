@@ -29,7 +29,7 @@ float Random::GetFloat(float p_fMin, float p_fMax)
 	return Math::Lerp(p_fMin, p_fMax, GetNormalized());
 }
 
-int32_t Random::GetInt(int32_t p_iMin, int32_t p_iMax)
+int32 Random::GetInt(int32 p_iMin, int32 p_iMax)
 {
 	ASSERT(p_iMin < p_iMax, "Argument error. Min=" << p_iMin << " Max=" << p_iMax);
 	return Math::Lerp(p_iMin, p_iMax, GetNormalized());

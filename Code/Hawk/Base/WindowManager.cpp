@@ -19,8 +19,8 @@ namespace WindowManager
 	std::unique_ptr<EventManager> n_EventManager;
 	bool n_bWindowManipulated = false;
 
-	WindowSizeChangedCallback_t n_WindowSizeChangedCallback;
-	WindowManipulatedCallback_t n_WindowManipulatedCallback;
+	WindowSizeChangedCallback n_WindowSizeChangedCallback;
+	WindowManipulatedCallback n_WindowManipulatedCallback;
 }
 
 void WindowManager::Initialize(std::shared_ptr<EventRouter>& p_EventRouter)
@@ -94,12 +94,12 @@ bool WindowManager::Update()
 	return l_Msg.message != WM_QUIT;
 }
 
-void WindowManager::RegisterWindowSizeChanged(WindowSizeChangedCallback_t p_Callback)
+void WindowManager::RegisterWindowSizeChanged(WindowSizeChangedCallback p_Callback)
 {
 	n_WindowSizeChangedCallback = p_Callback;
 }
 
-void WindowManager::RegisterWindowManipulatedCallback(WindowManipulatedCallback_t p_Callback)
+void WindowManager::RegisterWindowManipulatedCallback(WindowManipulatedCallback p_Callback)
 {
 	n_WindowManipulatedCallback = p_Callback;
 }

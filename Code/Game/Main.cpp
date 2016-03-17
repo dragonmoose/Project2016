@@ -17,8 +17,8 @@ int WINAPI WinMain(HINSTANCE p_hInstance, HINSTANCE /*p_hPrevInstance*/, LPSTR /
 	{
 		l_Core.Initialize();
 
-		Hawk::ThreadID_t l_Thread1 = l_Core.CreateModuleThread("Thread1");
-		Hawk::ThreadID_t l_Thread2 = l_Core.CreateModuleThread("Thread2");
+		Hawk::ThreadID l_Thread1 = l_Core.CreateModuleThread("Thread1");
+		Hawk::ThreadID l_Thread2 = l_Core.CreateModuleThread("Thread2");
 		l_Core.AddModule<TestModule>(l_Thread1);
 		l_Core.AddModule<TestModule2>(l_Thread2);
 		//l_Core.RemoveModule(432);

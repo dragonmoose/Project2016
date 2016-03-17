@@ -1,12 +1,21 @@
 #pragma once
 #include <cstdint>
 
+using uint8 = uint8_t;
+using int8 = int8_t;
+using uint16 = uint16_t;
+using int16 = int16_t;
+using uint32 = uint32_t;
+using int32 = int32_t;
+using uint64 = uint64_t;
+using int64 = int64_t;
+
 namespace Hawk {
 
-using ModuleID_t		= uint32_t;
-using ThreadID_t		= uint32_t;
-using EntityID_t		= uint32_t;
+using ModuleID		= uint32;
+using ThreadID		= uint32;
+using EntityID		= uint32;
 
-__declspec(selectany) ThreadID_t ThreadID_Invalid = ThreadID_t();
-__declspec(selectany) ThreadID_t ModuleID_Invalid = ModuleID_t();
+__declspec(selectany) ThreadID ThreadID_Invalid = ThreadID();
+__declspec(selectany) ThreadID ModuleID_Invalid = ModuleID();
 }

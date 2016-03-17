@@ -72,8 +72,8 @@ void VlkAPI::CreateInstance()
 
 void VlkAPI::CreatePhysicalDevice()
 {
-	uint32_t l_uiDeviceID = 0;
-	if (Config::Instance().TryGet<uint32_t>("vulkan.deviceID", 0, l_uiDeviceID))
+	uint32 l_uiDeviceID = 0;
+	if (Config::Instance().TryGet<uint32>("vulkan.deviceID", 0, l_uiDeviceID))
 	{
 		m_PhysicalDevice = std::make_shared<VlkPhysicalDevice>(m_Instance, l_uiDeviceID);
 	}
