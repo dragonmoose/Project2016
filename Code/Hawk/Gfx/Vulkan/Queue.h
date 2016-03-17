@@ -17,7 +17,7 @@ public:
 	uint32 GetFamilyIndex() const;
 
 private:
-	VkQueue m_Queue;
+	VkQueue m_Handle;
 	QueueType m_Type;
 	uint32 m_uiFamilyIndex;	
 };

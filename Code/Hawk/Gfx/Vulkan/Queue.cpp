@@ -6,11 +6,11 @@ namespace Gfx {
 namespace Vulkan {
 
 Queue::Queue(VkQueue p_Queue, QueueType p_Type, uint32 p_uiFamilyIndex)
-: m_Queue(p_Queue)
+: m_Handle(p_Queue)
 , m_Type(p_Type)
 , m_uiFamilyIndex(p_uiFamilyIndex)
 {
-	THROW_IF_NOT(m_Queue, "VkQueue handle null");
+	THROW_IF_NOT(m_Handle, "VkQueue handle null");
 }
 
 Queue::~Queue()
@@ -20,7 +20,7 @@ Queue::~Queue()
 
 VkQueue Queue::GetHandle() const
 {
-	return m_Queue;
+	return m_Handle;
 }
 
 uint32 Queue::GetFamilyIndex() const

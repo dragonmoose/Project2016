@@ -1,6 +1,6 @@
 #pragma once
 #include "System.h"
-#include <stdint.h>
+#include "System/Types.h"
 #include <string>
 
 namespace Hawk {

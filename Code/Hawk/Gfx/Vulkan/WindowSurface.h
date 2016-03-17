@@ -28,7 +28,7 @@ private:
 	void CheckColorFormats(VkPhysicalDevice p_PhysicalDevice) const;
 	void CheckPresentationModes(VkPhysicalDevice p_PhysicalDevice) const;
 
-	VkSurfaceKHR m_Surface;
+	VkSurfaceKHR m_Handle;
 	std::shared_ptr<Instance> m_Instance;
 	VkExtent2D m_InitialExtent;
 	VkSurfaceTransformFlagBitsKHR m_InitialTransform;

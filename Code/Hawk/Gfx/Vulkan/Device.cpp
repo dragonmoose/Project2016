@@ -25,7 +25,7 @@ namespace
 }
 
 Device::Device(const DeviceCreateInfo& p_CreateInfo)
-: m_Device(VK_NULL_HANDLE)
+: m_Handle(VK_NULL_HANDLE)
 , m_PhysicalDevice(p_CreateInfo.GetPhysicalDevice())
 {
 	ASSERT(p_CreateInfo.IsFinalized(), "CreateInfo not finalized");
@@ -36,17 +36,17 @@ Device::Device(const DeviceCreateInfo& p_CreateInfo)
 
 Device::~Device()
 {
-	ASSERT(m_Device, "Device null");
-	VkResult l_Result = vkDeviceWaitIdle(m_Device);
+	ASSERT(m_Handle, "Device null");
+	VkResult l_Result = vkDeviceWaitIdle(m_Handle);
 	LOG_IF(l_Result != VK_SUCCESS, "Failed to wait for device to become idle. Error: " << System::ResultToString(l_Result), "vulkan", Error);
 
-	vkDestroyDevice(m_Device, nullptr); // Will also destroy all queues created on device
+	vkDestroyDevice(m_Handle, nullptr); // Will also destroy all queues created on device
 	LOG("Vulkan device destroyed", "vulkan", Debug);
 }
 
 void Device::WaitUntilIdle()
 {
-	VkResult l_Result = vkDeviceWaitIdle(m_Device);
+	VkResult l_Result = vkDeviceWaitIdle(m_Handle);
 	if (l_Result == VK_ERROR_DEVICE_LOST)
 	{
 		OnDeviceLost();
@@ -77,7 +77,7 @@ std::shared_ptr<PhysicalDevice> Device::GetPhysicalDevice() const
 
 VkDevice Device::GetHandle() const
 {
-	return m_Device;
+	return m_Handle;
 }
 
 void Device::GetLayersToCreate(std::vector<const char*>& p_Layers)
@@ -127,19 +127,19 @@ void Device::CreateDevice(const QueueFamilyCreateInfos& p_QueueFamilyCreateInfos
 	l_Info.enabledExtensionCount = l_EnabledExtensions.size();
 	l_Info.ppEnabledExtensionNames = l_EnabledExtensions.data();
 	l_Info.pEnabledFeatures = &l_Features;
-	VK_THROW_IF_NOT_SUCCESS(vkCreateDevice(m_PhysicalDevice->GetHandle(), &l_Info, nullptr, &m_Device), "Failed to create device");
+	VK_THROW_IF_NOT_SUCCESS(vkCreateDevice(m_PhysicalDevice->GetHandle(), &l_Info, nullptr, &m_Handle), "Failed to create device");
 }
 
 void Device::ExtractQueues(const DeviceCreateInfo::QueueCreateInfoMap& p_Map)
 {
-	ASSERT(m_Device, "Device not created");
+	ASSERT(m_Handle, "Device not created");
 	for (const auto& l_Entry : p_Map)
 	{
 		QueueType l_Type = l_Entry.first;
 		for (const auto& l_Info : l_Entry.second)
 		{
 			VkQueue l_Queue = VK_NULL_HANDLE;
-			vkGetDeviceQueue(m_Device, l_Info.m_uiFamilyIndex, l_Info.m_uiQueueIndex, &l_Queue);
+			vkGetDeviceQueue(m_Handle, l_Info.m_uiFamilyIndex, l_Info.m_uiQueueIndex, &l_Queue);
 			THROW_IF_NOT(l_Queue, "Failed to get handle to queue. QueueType=" << l_Type << " FamilyIndex=" << l_Info.m_uiFamilyIndex << " QueueIndex=" << l_Info.m_uiQueueIndex);
 			
 			m_Queues[l_Type].emplace_back(std::make_shared<Queue>(l_Queue, l_Type, l_Info.m_uiFamilyIndex));
@@ -162,7 +162,7 @@ void Device::Initialize(const DeviceCreateInfo& p_CreateInfo)
 void Device::Validate()
 {
 	THROW_IF_NOT(m_PhysicalDevice, "Physical device null");
-	THROW_IF_NOT(m_Device, "Device null");
+	THROW_IF_NOT(m_Handle, "Device null");
 	for (const auto& l_Entry : m_QueueRequestMap)
 	{
 		auto l_Itr = m_Queues.find(l_Entry.first);

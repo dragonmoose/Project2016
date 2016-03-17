@@ -21,7 +21,7 @@ private:
 	void GetCreateInfo(VkSwapchainCreateInfoKHR& p_Info) const;
 	void InitPresentInfo();
 
-	VkSwapchainKHR m_Swapchain;
+	VkSwapchainKHR m_Handle;
 	std::shared_ptr<Device> m_Device;
 	std::unique_ptr<WindowSurface> m_Surface;
 	std::shared_ptr<Queue> m_Queue;

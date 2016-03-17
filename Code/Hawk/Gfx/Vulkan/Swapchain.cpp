@@ -8,7 +8,7 @@ namespace Vulkan {
 
 Swapchain::Swapchain(std::shared_ptr<Instance> p_Instance, std::shared_ptr<Device> p_Device)
 : m_Device(p_Device)
-, m_Swapchain(VK_NULL_HANDLE)
+, m_Handle(VK_NULL_HANDLE)
 , m_Queue(p_Device->GetPresentationQueue())
 , m_uiCurrentBufferIndex(0)
 {
@@ -17,7 +17,7 @@ Swapchain::Swapchain(std::shared_ptr<Instance> p_Instance, std::shared_ptr<Devic
 	VkSwapchainCreateInfoKHR l_Info = {};
 	GetCreateInfo(l_Info);
 
-	VK_THROW_IF_NOT_SUCCESS(vkCreateSwapchainKHR(p_Device->GetHandle(), &l_Info, nullptr, &m_Swapchain), "Failed to create swapchain");
+	VK_THROW_IF_NOT_SUCCESS(vkCreateSwapchainKHR(p_Device->GetHandle(), &l_Info, nullptr, &m_Handle), "Failed to create swapchain");
 
 	InitPresentInfo();
 
@@ -27,7 +27,7 @@ Swapchain::Swapchain(std::shared_ptr<Instance> p_Instance, std::shared_ptr<Devic
 Swapchain::~Swapchain()
 {
 	// TODO: Need to make sure images are no longer in use before destroying swap chain
-	vkDestroySwapchainKHR(m_Device->GetHandle(), m_Swapchain, nullptr);
+	vkDestroySwapchainKHR(m_Device->GetHandle(), m_Handle, nullptr);
 	LOG("Swapchain destroyed", "vulkan", Debug);
 }
 
@@ -67,12 +67,12 @@ void Swapchain::GetCreateInfo(VkSwapchainCreateInfoKHR& p_Info) const
 
 void Swapchain::InitPresentInfo()
 {
-	ASSERT(m_Swapchain, "Internal swapchain null");
+	ASSERT(m_Handle, "Internal swapchain null");
 
 	m_PresentInfo = {};
 	m_PresentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 	m_PresentInfo.swapchainCount = 1;
-	m_PresentInfo.pSwapchains = &m_Swapchain;
+	m_PresentInfo.pSwapchains = &m_Handle;
 }
 
 }

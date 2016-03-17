@@ -40,7 +40,7 @@ private:
 	PFN_vkDestroyDebugReportCallbackEXT m_DestroyDebugReport;
 	VkDebugReportCallbackEXT m_DebugReportHandle;
 #endif
-	VkInstance m_Instance;
+	VkInstance m_Handle;
 };
 
 }

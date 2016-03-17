@@ -11,13 +11,13 @@ namespace Vulkan {
 PhysicalDevice::PhysicalDevice(std::shared_ptr<Instance> p_Instance)
 : m_Instance(p_Instance)
 {
-	m_PhysicalDevice = GetDeviceByIndex(0);
+	m_Handle = GetDeviceByIndex(0);
 }
 
 PhysicalDevice::PhysicalDevice(std::shared_ptr<Instance> p_Instance, uint32 p_uiDeviceID)
 : m_Instance(p_Instance)
 {
-	m_PhysicalDevice = GetDeviceByID(p_uiDeviceID);
+	m_Handle = GetDeviceByID(p_uiDeviceID);
 }
 
 PhysicalDevice::~PhysicalDevice()
@@ -45,7 +45,7 @@ bool PhysicalDevice::IsExtensionAvailable(VkPhysicalDevice p_Device, const std::
 
 VkPhysicalDevice PhysicalDevice::GetHandle() const
 {
-	return m_PhysicalDevice;
+	return m_Handle;
 }
 
 void PhysicalDevice::GetQueueFamilyProperties(const VkPhysicalDevice p_Device, QueueFamilyProperties& p_Properties)

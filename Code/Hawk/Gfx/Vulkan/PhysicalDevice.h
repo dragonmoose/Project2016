@@ -47,7 +47,7 @@ private:
 	static void GetDeviceProperties(const VkPhysicalDevice p_Device, VkPhysicalDeviceProperties& p_Properties);	
 	
 	std::shared_ptr<Instance> m_Instance;
-	VkPhysicalDevice m_PhysicalDevice;
+	VkPhysicalDevice m_Handle;
 };
 
 }

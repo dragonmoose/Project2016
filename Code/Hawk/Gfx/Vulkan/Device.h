@@ -40,7 +40,7 @@ private:
 	void GetFeatures(VkPhysicalDeviceFeatures& p_Features);
 
 	std::shared_ptr<PhysicalDevice> m_PhysicalDevice;
-	VkDevice m_Device;
+	VkDevice m_Handle;
 
 	Queues m_Queues;
 	DeviceCreateInfo::QueueRequestMap m_QueueRequestMap;
