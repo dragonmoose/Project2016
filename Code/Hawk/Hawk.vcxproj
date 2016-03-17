@@ -131,6 +131,7 @@
     <ClInclude Include="Gfx\IRenderingAPI.h" />
     <ClInclude Include="Gfx\RenderableComponent.h" />
     <ClInclude Include="Gfx\RenderingModule.h" />
+    <ClInclude Include="Gfx\Vulkan\CommandPool.h" />
     <ClInclude Include="Gfx\Vulkan\Constants.h" />
     <ClInclude Include="Gfx\Vulkan\PhysicalDevice.h" />
     <ClInclude Include="Gfx\Vulkan\Queue.h" />
@@ -192,6 +193,7 @@
     <ClCompile Include="Gfx\RenderableComponent.cpp" />
     <ClCompile Include="Gfx\RenderingModule.cpp" />
     <ClCompile Include="Gfx\Vulkan\API.cpp" />
+    <ClCompile Include="Gfx\Vulkan\CommandPool.cpp" />
     <ClCompile Include="Gfx\Vulkan\Constants.cpp" />
     <ClCompile Include="Gfx\Vulkan\DeviceCreateInfo.cpp" />
     <ClCompile Include="Gfx\Vulkan\Device.cpp" />
