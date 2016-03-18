@@ -59,7 +59,6 @@ void RenderingModule::RegisterEvents(EventManager& /*p_EventManager*/)
 #ifdef HAWK_DEBUG
 void RenderingModule::InitializeConsole(ScopedConsoleCommands* p_Console)
 {
-	p_Console->Register("gfx.listDevices", m_API.get(), &IRenderingAPI::CmdListDevices, "Lists the available hardware adapters", "");
 	p_Console->Register("gfx.setFullscreen", this, &RenderingModule::SetFullscreenState, "Sets fullscreen/windowed", "[1=fullscreen, 0=windowed");
 	m_API->InitializeConsole(p_Console);
 }

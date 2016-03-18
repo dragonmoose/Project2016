@@ -5,6 +5,7 @@
 #include "System.h"
 #include "WindowSurface.h"
 #include "Swapchain.h"
+#include "CommandPool.h"
 #include <memory>
 
 namespace Hawk {
@@ -25,7 +26,6 @@ public:
 
 #ifdef HAWK_DEBUG
 	void InitializeConsole(ScopedConsoleCommands* p_Console) override;
-	void CmdListDevices() override;
 #endif
 
 private:
@@ -41,6 +41,7 @@ private:
 	std::shared_ptr<Device> m_Device;
 	std::shared_ptr<WindowSurface> m_WindowSurface;
 	std::shared_ptr<Swapchain> m_Swapchain;
+	std::shared_ptr<CommandPool> m_CommandPool;
 };
 
 }

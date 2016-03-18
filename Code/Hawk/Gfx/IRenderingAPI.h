@@ -22,12 +22,9 @@ public:
 	virtual void SetDebugText(const std::string& p_Text) = 0;
 
 #ifdef HAWK_DEBUG
-	virtual void InitializeConsole(ScopedConsoleCommands* /*p_Console*/) { CmdNotImplemented(); }
-	virtual void CmdListDevices() { CmdNotImplemented(); }
+	virtual void InitializeConsole(ScopedConsoleCommands* /*p_Console*/) { }
 #endif
 
-private:
-	void CmdNotImplemented() { std::cout << "Command not implemented.\n\n"; }
 };
 
 }

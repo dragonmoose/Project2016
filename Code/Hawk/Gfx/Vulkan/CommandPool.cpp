@@ -18,7 +18,7 @@ CommandPool::CommandPool(std::shared_ptr<Device> p_Device, uint32 p_uiQueueFamil
 	l_Info.queueFamilyIndex = p_uiQueueFamilyIndex;
 
 	VK_THROW_IF_NOT_SUCCESS(vkCreateCommandPool(m_Device->GetHandle(), &l_Info, nullptr, &m_Handle), "Failed to create command pool");
-	LOG("Created CommandPool. QueueFamilyIndex=" << p_uiQueueFamilyIndex << " IndividualBufferReset=" << p_bIndividualBufferReset << " ShortLifetimeObjects=" << p_bShortLifetimeObjects, "vulkan", Debug);
+	LOG("CommandPool created. QueueFamilyIndex=" << p_uiQueueFamilyIndex << " IndividualBufferReset=" << p_bIndividualBufferReset << " ShortLifetimeObjects=" << p_bShortLifetimeObjects, "vulkan", Debug);
 }
 
 CommandPool::~CommandPool()

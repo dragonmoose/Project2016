@@ -95,6 +95,8 @@ namespace Logger
 #define FATAL_STD_EXCEPTION(e, tag)					LOG_WITH_SOURCE_INFO(e.what(), tag, _Fatal) ON_FATAL(e.what(), tag)
 #define FATALM_STD_EXCEPTION(e)						FATAL_STD_EXCEPTION(e, GetLogDesc())
 
+#define NOT_IMPLEMENTED()							LOG_WITH_SOURCE_INFO(__FUNCTION__ <<  " not implemented yet!", "system", Warning);
+
 #else
 #define LOG(msg, tag, level)
 #define LOGM(msg, level)
@@ -121,5 +123,7 @@ namespace Logger
 
 #define FATAL_STD_EXCEPTION(e, tag) FATAL_EXCEPTION(e, tag)
 #define FATALM_STD_EXCEPTION(e) FATALM_EXCEPTION(e)
+
+#define NOT_IMPLEMENTED()
 
 #endif

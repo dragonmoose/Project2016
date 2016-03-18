@@ -28,6 +28,8 @@ void API::Initialize()
 	CreateDevice(l_CreateInfo);
 	CreateSwapchain();
 
+	m_CommandPool = std::make_shared<CommandPool>(m_Device, m_Device->GetPresentationQueue()->GetFamilyIndex());
+
 	//SetFullscreenState(Config::Instance().Get("gfx.fullscreen", false));
 	LOG("Vulkan initialized", "vulkan", Info);
 }
@@ -61,9 +63,6 @@ void API::InitializeConsole(ScopedConsoleCommands* p_Console)
 	p_Console->Register("vk.printDeviceExtensions", m_PhysicalDevice.get(), &PhysicalDevice::CmdPrintExtensions, "Lists Vulkan device extensions for the given device", "[DeviceIndex] [KeepUnsupported 0|1]");
 }
 
-void API::CmdListDevices()
-{
-}
 #endif
 
 void API::CreateInstance()
