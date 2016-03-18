@@ -29,6 +29,9 @@ void API::Initialize()
 	CreateSwapchain();
 
 	m_CommandPool = std::make_shared<CommandPool>(m_Device, m_Device->GetPresentationQueue()->GetFamilyIndex());
+	
+	std::shared_ptr<CommandBuffer> l_Buffer = m_CommandPool->CreateBuffer();
+	l_Buffer->Reset(false);
 
 	//SetFullscreenState(Config::Instance().Get("gfx.fullscreen", false));
 	LOG("Vulkan initialized", "vulkan", Info);

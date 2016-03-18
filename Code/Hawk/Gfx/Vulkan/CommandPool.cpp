@@ -38,6 +38,20 @@ void CommandPool::Reset(bool p_bReleaseResources) const
 	VK_THROW_IF_NOT_SUCCESS(vkResetCommandPool(m_Device->GetHandle(), m_Handle, p_bReleaseResources ? VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT : 0), "Failed to reset command pool. ReleaseResources=" << p_bReleaseResources);
 }
 
+std::shared_ptr<CommandBuffer> CommandPool::CreateBuffer() const
+{
+	VkCommandBufferAllocateInfo l_Info = {};
+	l_Info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+	l_Info.commandPool = m_Handle;
+	l_Info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+	l_Info.commandBufferCount = 1;
+
+	VkCommandBuffer l_Buffer = VK_NULL_HANDLE;
+	VK_THROW_IF_NOT_SUCCESS(vkAllocateCommandBuffers(m_Device->GetHandle(), &l_Info, &l_Buffer), "Failed to allocate command buffer");
+	LOG("Primary command buffer created", "vulkan", Debug);
+	return std::make_shared<CommandBuffer>(l_Buffer);
+}
+
 }
 }
 }

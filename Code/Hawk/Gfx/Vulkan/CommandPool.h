@@ -1,6 +1,7 @@
 #pragma once
 #include "System.h"
 #include "Device.h"
+#include "CommandBuffer.h"
 #include <memory>
 
 namespace Hawk {
@@ -16,7 +17,8 @@ public:
 	CommandPool& operator=(const CommandPool&) = delete;
 
 	VkCommandPool GetHandle() const;
-	void Reset(bool p_bReleaseResources = false) const;
+	void Reset(bool p_bReleaseResources) const;
+	std::shared_ptr<CommandBuffer> CreateBuffer() const;
 
 private:
 	VkCommandPool m_Handle;
