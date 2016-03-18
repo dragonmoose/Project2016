@@ -16,6 +16,7 @@ public:
 	CommandPool& operator=(const CommandPool&) = delete;
 
 	VkCommandPool GetHandle() const;
+	void Reset(bool p_bReleaseResources = false) const;
 
 private:
 	VkCommandPool m_Handle;
