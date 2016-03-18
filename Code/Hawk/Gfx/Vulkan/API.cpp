@@ -4,6 +4,7 @@
 #include "PhysicalDevice.h"
 #include "System.h"
 #include "WindowSurface.h"
+#include "CommandBuffer.h"
 #include "Console/ScopedConsoleCommands.h"
 
 namespace Hawk {
@@ -30,8 +31,7 @@ void API::Initialize()
 
 	m_CommandPool = std::make_shared<CommandPool>(m_Device, m_Device->GetPresentationQueue()->GetFamilyIndex());
 	
-	std::shared_ptr<CommandBuffer> l_Buffer = m_CommandPool->CreateBuffer();
-	l_Buffer->Reset(false);
+	std::shared_ptr<CommandBuffer> l_Buffer = std::make_shared<CommandBuffer>(m_Device, m_CommandPool);
 
 	//SetFullscreenState(Config::Instance().Get("gfx.fullscreen", false));
 	LOG("Vulkan initialized", "vulkan", Info);

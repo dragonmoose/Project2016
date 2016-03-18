@@ -5,15 +5,25 @@ namespace Hawk {
 namespace Gfx {
 namespace Vulkan {
 
-CommandBuffer::CommandBuffer(VkCommandBuffer p_Handle)
-: m_Handle(p_Handle)
+CommandBuffer::CommandBuffer(std::shared_ptr<Device> p_Device, std::shared_ptr<CommandPool> p_CommandPool)
+: m_Device(p_Device)
+, m_CommandPool(p_CommandPool)
+, m_Handle(VK_NULL_HANDLE)
 {
-	ASSERT(p_Handle, "Null handle");
-	LOG("CommandBuffer created", "vulkan", Debug);
+	VkCommandBufferAllocateInfo l_Info = {};
+	l_Info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+	l_Info.commandPool = m_CommandPool->GetHandle();
+	l_Info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+	l_Info.commandBufferCount = 1;
+
+	VK_THROW_IF_NOT_SUCCESS(vkAllocateCommandBuffers(m_Device->GetHandle(), &l_Info, &m_Handle), "Failed to allocate primary command buffer");
+	LOG("Primary command buffer created", "vulkan", Debug);
 }
 
 CommandBuffer::~CommandBuffer()
 {
+	// TODO: Make sure no elements of buffer are in pending execution state
+	vkFreeCommandBuffers(m_Device->GetHandle(), m_CommandPool->GetHandle(), 1, &m_Handle);
 	LOG("CommandBuffer destroyed", "vulkan", Debug);
 }
 
@@ -30,6 +40,8 @@ std::shared_ptr<CommandBuffer> CommandBuffer::CreateSecondary()
 
 void CommandBuffer::Reset(bool p_bReleaseResources) const
 {
+	// TODO: Make sure not in pending execution state
+	ASSERT(m_CommandPool->AllowsIndividualBufferReset(), "Buffer not created from a command pool that allows buffers to be reset individually");
 	VK_THROW_IF_NOT_SUCCESS(vkResetCommandBuffer(m_Handle, p_bReleaseResources ? VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT : 0), "Failed to reset command buffer");
 }
 

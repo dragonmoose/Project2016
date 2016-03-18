@@ -4,13 +4,13 @@
 #include <intrin.h>
 
 #ifdef HAWK_DEBUG
-	#define ASSERT(p, msg)							\
-		if ((p))									\
-		{											\
-		}											\
-		else										\
-		{	FATAL(msg, "assert");					\
-			__debugbreak();							\
+	#define ASSERT(p, msg)										\
+		if ((p))												\
+		{														\
+		}														\
+		else													\
+		{	FATAL("ASSERT FAILED: " << msg, "assert");			\
+			__debugbreak();										\
 		}
 	#define ASSERT_THREAD(p)		ASSERT(Hawk::ThreadInfoManager::IsThread(p), "Not on thread: " << p);
 	#define ASSERT_LN(msg)			ASSERT(false, msg)
