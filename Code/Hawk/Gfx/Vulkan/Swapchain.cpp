@@ -13,12 +13,8 @@ Swapchain::Swapchain(std::shared_ptr<Instance> p_Instance, std::shared_ptr<Devic
 , m_uiCurrentBufferIndex(0)
 {
 	CreateSurface(p_Instance, p_Device->GetPhysicalDevice()->GetHandle());
-
-	VkSwapchainCreateInfoKHR l_Info = {};
-	GetCreateInfo(l_Info);
-
-	VK_THROW_IF_NOT_SUCCESS(vkCreateSwapchainKHR(p_Device->GetHandle(), &l_Info, nullptr, &m_Handle), "Failed to create swapchain");
-
+	CreateSwapchain();
+	GetImages();
 	InitPresentInfo();
 
 	LOG("Swapchain created", "vulkan", Debug);
@@ -33,11 +29,29 @@ Swapchain::~Swapchain()
 
 void Swapchain::Present()
 {
+	PrepareCurrImageForPresentation();
+
 	// TODO: Act upon error messages
 	m_PresentInfo.pImageIndices = &m_uiCurrentBufferIndex;
 	VkResult l_Result = vkQueuePresentKHR(m_Queue->GetHandle(), &m_PresentInfo);
 	LOG_IF(l_Result == VK_SUBOPTIMAL_KHR, "Queue presentation suboptimal", "vulkan", Warning);
 	VK_THROW_IF_ERR(l_Result, "Queue presentation failed");
+
+	PrepareCurrImageForRendering();
+}
+
+void Swapchain::SetCurrImage()
+{
+	// TODO: Handle the different error messages here
+	// TODO: Make use of semaphore to avoid waiting for image
+	uint32 l_uiIndex = 0;
+	VK_THROW_IF_NOT_SUCCESS(vkAcquireNextImageKHR(m_Device->GetHandle(), m_Handle, UINT64_MAX, VK_NULL_HANDLE, VK_NULL_HANDLE, &l_uiIndex), "Failed to acquire next image");
+	m_CurrImage = m_Images[l_uiIndex];
+}
+
+VkImage Swapchain::GetCurrImage() const
+{
+	return m_CurrImage;
 }
 
 void Swapchain::CreateSurface(std::shared_ptr<Instance> p_Instance, VkPhysicalDevice p_PhysicalDevice)
@@ -73,6 +87,32 @@ void Swapchain::InitPresentInfo()
 	m_PresentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 	m_PresentInfo.swapchainCount = 1;
 	m_PresentInfo.pSwapchains = &m_Handle;
+}
+
+void Swapchain::GetImages()
+{
+	uint32 l_uiNumImages = 0;
+	VK_THROW_IF_NOT_SUCCESS(vkGetSwapchainImagesKHR(m_Device->GetHandle(), m_Handle, &l_uiNumImages, nullptr), "Failed to get swapchain image count");
+	THROW_IF_NOT(l_uiNumImages == Constants::c_uiNumBackBuffers, "Backbuffer count mismatch");
+
+	m_Images.resize(l_uiNumImages);
+	VK_THROW_IF_NOT_SUCCESS(vkGetSwapchainImagesKHR(m_Device->GetHandle(), m_Handle, &l_uiNumImages, m_Images.data()), "Failed to get swapchain images");
+}
+
+void Swapchain::CreateSwapchain()
+{
+	VkSwapchainCreateInfoKHR l_Info = {};
+	GetCreateInfo(l_Info);
+	VK_THROW_IF_NOT_SUCCESS(vkCreateSwapchainKHR(m_Device->GetHandle(), &l_Info, nullptr, &m_Handle), "Failed to create swapchain");
+}
+
+void Swapchain::PrepareCurrImageForPresentation()
+{
+}
+
+void Swapchain::PrepareCurrImageForRendering()
+{
+
 }
 
 }

@@ -74,6 +74,7 @@ void WindowSurface::CheckAndSetCapabilities(VkPhysicalDevice p_PhysicalDevice)
 	VkSurfaceCapabilitiesKHR l_Capabilities = {};
 	VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(p_PhysicalDevice, m_Handle, &l_Capabilities), "Failed to get surface capabilities");
 
+	THROW_IF_NOT(l_Capabilities.minImageCount <= Constants::c_uiNumBackBuffers, "Specified backbuffer count less than the required minimum. Minimum=" << l_Capabilities.minImageCount);
 	THROW_IF_NOT(l_Capabilities.maxImageCount >= Constants::c_uiNumBackBuffers, "Surface does not support the required number of backbuffers. Required=" << Constants::c_uiNumBackBuffers);
 	THROW_IF_NOT(l_Capabilities.supportedUsageFlags & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, "Vulkan specification requires surfaces to support color attachment usage");
 

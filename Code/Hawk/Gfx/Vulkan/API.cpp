@@ -33,13 +33,15 @@ void API::Initialize()
 	
 	std::shared_ptr<CommandBuffer> l_Buffer = std::make_shared<CommandBuffer>(m_Device, m_CommandPool);
 
+	l_Buffer->Begin();
+	l_Buffer->End();
+
 	//SetFullscreenState(Config::Instance().Get("gfx.fullscreen", false));
 	LOG("Vulkan initialized", "vulkan", Info);
 }
 
 void API::Render()
 {
-	m_Device->WaitUntilIdle();
 	m_Swapchain->Present();
 }
 
