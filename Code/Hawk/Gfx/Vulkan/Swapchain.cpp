@@ -19,6 +19,7 @@ Swapchain::Swapchain(std::shared_ptr<Instance> p_Instance, std::shared_ptr<Devic
 	GetImages();
 	CreateImageViews();
 	InitPresentInfo();
+	SetCurrImage();
 
 	LOG("Swapchain created", "vulkan", Debug);
 }
@@ -43,14 +44,18 @@ void Swapchain::SetCurrImage()
 {
 	// TODO: Handle the different error messages here
 	// TODO: Make use of semaphore to avoid waiting for image
-	uint32 l_uiIndex = 0;
-	VK_THROW_IF_NOT_SUCCESS(vkAcquireNextImageKHR(m_Device->GetHandle(), m_Handle, UINT64_MAX, VK_NULL_HANDLE, VK_NULL_HANDLE, &l_uiIndex), "Failed to acquire next image");
-	m_CurrImage = m_Images[l_uiIndex];
+	VK_THROW_IF_NOT_SUCCESS(vkAcquireNextImageKHR(m_Device->GetHandle(), m_Handle, UINT64_MAX, VK_NULL_HANDLE, VK_NULL_HANDLE, &m_uiCurrentBufferIndex), "Failed to acquire next image");
 }
 
-VkImage Swapchain::GetCurrImage() const
+uint32 Swapchain::GetCurrImageIndex() const
 {
-	return m_CurrImage;
+	return m_uiCurrentBufferIndex;
+}
+
+VkImage Swapchain::GetImage(uint32 p_uiIndex) const
+{
+	ASSERT(p_uiIndex < m_Images.size(), "Image index out of bounds. Index=" << p_uiIndex << " Size=" << m_Images.size());
+	return m_Images[p_uiIndex];
 }
 
 std::shared_ptr<ImageView> Swapchain::GetImageView(uint32 p_uiIndex) const

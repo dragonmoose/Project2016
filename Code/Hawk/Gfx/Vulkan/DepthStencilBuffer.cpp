@@ -23,8 +23,6 @@ DepthStencilBuffer::~DepthStencilBuffer()
 	LOG("DepthStencilBuffer destroyed", "vulkan", Debug);
 }
 
-
-
 std::shared_ptr<ImageView> DepthStencilBuffer::GetImageView() const
 {
 	return m_ImageView;

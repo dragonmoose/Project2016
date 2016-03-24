@@ -17,7 +17,8 @@ public:
 	Swapchain& operator=(const Swapchain&) = delete;
 	void Present();
 	void SetCurrImage();
-	VkImage GetCurrImage() const;
+	VkImage GetImage(uint32 p_uiIndex) const;
+	uint32 GetCurrImageIndex() const;
 
 	using ImageViews_t = std::vector<std::shared_ptr<ImageView>>;
 	std::shared_ptr<ImageView> GetImageView(uint32 p_uiIndex) const;
@@ -37,7 +38,6 @@ private:
 	std::shared_ptr<Queue> m_Queue;
 	VkPresentInfoKHR m_PresentInfo;
 	std::vector<VkImage> m_Images;
-	VkImage m_CurrImage;
 	uint32 m_uiCurrentBufferIndex;
 	std::vector<std::shared_ptr<ImageView>> m_ImageViews;
 	VkExtent2D m_Extent;

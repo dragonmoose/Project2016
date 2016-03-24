@@ -31,12 +31,12 @@ void API::Initialize()
 	CreateDevice(l_CreateInfo);
 	CreateSwapchain();
 	CreateRenderPasses();
-	CreateDepthStencilBuffers();
+	CreateDepthStencilBuffer();
 	CreateFrameBuffers();
 
+	m_Queue = m_Device->GetQueue(QueueType::GraphicsPresentation, 0);
 	m_CommandPool = std::make_shared<CommandPool>(m_Device, m_Device->GetPresentationQueue()->GetFamilyIndex());
-	
-	TestCommandBuffer();
+	SetupCommandBuffers();
 	
 	//SetFullscreenState(Config::Instance().Get("gfx.fullscreen", false));
 	LOG("Vulkan initialized", "vulkan", Info);
@@ -44,6 +44,31 @@ void API::Initialize()
 
 void API::Render()
 {
+	m_Swapchain->SetCurrImage();
+
+	m_ClearCommandBuffer->Begin();
+	VkRenderPassBeginInfo l_RenderPassBeginInfo = {};
+	l_RenderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+	l_RenderPassBeginInfo.renderPass = m_DefaultRenderPass->GetHandle();
+	l_RenderPassBeginInfo.framebuffer = m_FrameBuffers[m_Swapchain->GetCurrImageIndex()]->GetHandle();
+	l_RenderPassBeginInfo.renderArea.extent = m_Swapchain->GetExtent();
+	l_RenderPassBeginInfo.clearValueCount = 2;
+
+	std::array<VkClearValue, 2> l_ClearValues;
+	l_ClearValues[0].color.float32[0] = 1.0f;
+	l_ClearValues[0].color.float32[1] = 0.0f;
+	l_ClearValues[0].color.float32[2] = 0.0f;
+	l_ClearValues[0].color.float32[3] = 1.0f;
+	l_ClearValues[1].depthStencil.depth = 0.0f;
+	l_ClearValues[1].depthStencil.stencil = 0;
+	l_RenderPassBeginInfo.pClearValues = l_ClearValues.data();
+
+	vkCmdBeginRenderPass(m_ClearCommandBuffer->GetHandle(), &l_RenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+	vkCmdEndRenderPass(m_ClearCommandBuffer->GetHandle());
+	m_ClearCommandBuffer->End();
+
+	m_Queue->Add(m_ClearCommandBuffer.get());
+	m_Queue->Submit();
 	m_Swapchain->Present();
 }
 
@@ -123,17 +148,47 @@ void API::CreateFrameBuffers()
 	m_FrameBuffers.resize(Constants::c_uiNumBackBuffers);
 	for (uint32 i = 0; i < Constants::c_uiNumBackBuffers; i++)
 	{
-		m_FrameBuffers[i] = std::make_shared<FrameBuffer>(m_Device, m_DefaultRenderPass.get(), m_Swapchain->GetImageView(i).get(), m_DepthStencilBuffers[i]->GetImageView().get(), m_Swapchain->GetExtent());
+		m_FrameBuffers[i] = std::make_shared<FrameBuffer>(m_Device, m_DefaultRenderPass.get(), m_Swapchain->GetImageView(i).get(), m_DepthStencilBuffer->GetImageView().get(), m_Swapchain->GetExtent());
 	}
 }
 
-void API::CreateDepthStencilBuffers()
+void API::CreateDepthStencilBuffer()
 {
-	m_DepthStencilBuffers.resize(Constants::c_uiNumBackBuffers);
+	m_DepthStencilBuffer = std::make_shared<DepthStencilBuffer>(m_Device, m_Swapchain->GetExtent());
+}
+
+void API::SetupCommandBuffers()
+{
+	m_InitCommandBuffer = std::make_shared<CommandBuffer>(m_Device, m_CommandPool);
+	m_InitCommandBuffer->Begin();
+
 	for (uint32 i = 0; i < Constants::c_uiNumBackBuffers; i++)
 	{
-		m_DepthStencilBuffers[i] = std::make_shared<DepthStencilBuffer>(m_Device, m_Swapchain->GetExtent());
+		VkImageMemoryBarrier l_ImageBarrier = {};
+		l_ImageBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+		l_ImageBarrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_TRANSFER_WRITE_BIT;
+		l_ImageBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		l_ImageBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		l_ImageBarrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		l_ImageBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		l_ImageBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		l_ImageBarrier.image = m_Swapchain->GetImage(i);
+		l_ImageBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		l_ImageBarrier.subresourceRange.baseMipLevel = 0;
+		l_ImageBarrier.subresourceRange.layerCount = 1;
+		l_ImageBarrier.subresourceRange.levelCount = 1;
+		
+		vkCmdPipelineBarrier(m_InitCommandBuffer->GetHandle(), VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_DEPENDENCY_BY_REGION_BIT,
+			0, nullptr, 0, nullptr, 1, &l_ImageBarrier);
 	}
+
+	m_InitCommandBuffer->End();
+	m_Queue->Add(m_InitCommandBuffer.get());
+	m_Queue->Submit();
+
+	m_PreRenderCommandBuffer = std::make_shared<CommandBuffer>(m_Device, m_CommandPool);
+	m_PostRenderCommandBuffer = std::make_shared<CommandBuffer>(m_Device, m_CommandPool);
+	m_ClearCommandBuffer = std::make_shared<CommandBuffer>(m_Device, m_CommandPool);
 }
 
 
@@ -141,14 +196,6 @@ const std::string& API::GetLogDesc()
 {
 	static const std::string l_Desc("vulkan");
 	return l_Desc;
-}
-
-void API::TestCommandBuffer()
-{
-	std::shared_ptr<CommandBuffer> l_Buffer = std::make_shared<CommandBuffer>(m_Device, m_CommandPool);
-
-	l_Buffer->Begin();
-	l_Buffer->End();
 }
 
 }

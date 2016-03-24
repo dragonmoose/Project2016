@@ -9,6 +9,7 @@
 #include "FrameBuffer.h"
 #include "RenderPass.h"
 #include "DepthStencilBuffer.h"
+#include "Queue.h"
 #include <memory>
 #include <array>
 
@@ -40,10 +41,9 @@ private:
 	void CreateSwapchain();
 	void CreateRenderPasses();
 	void CreateFrameBuffers();
-	void CreateDepthStencilBuffers();
+	void CreateDepthStencilBuffer();
+	void SetupCommandBuffers();
 	static const std::string& GetLogDesc();
-
-	void TestCommandBuffer();
 
 	std::shared_ptr<Instance> m_Instance;
 	std::shared_ptr<PhysicalDevice> m_PhysicalDevice;
@@ -52,8 +52,13 @@ private:
 	std::shared_ptr<Swapchain> m_Swapchain;
 	std::shared_ptr<CommandPool> m_CommandPool;
 	std::vector<std::shared_ptr<FrameBuffer>> m_FrameBuffers;
-	std::vector< std::shared_ptr<DepthStencilBuffer>> m_DepthStencilBuffers;
+	std::shared_ptr<DepthStencilBuffer> m_DepthStencilBuffer;
 	std::shared_ptr<RenderPass> m_DefaultRenderPass;
+	std::shared_ptr<CommandBuffer> m_InitCommandBuffer;
+	std::shared_ptr<CommandBuffer> m_PreRenderCommandBuffer;
+	std::shared_ptr<CommandBuffer> m_PostRenderCommandBuffer;
+	std::shared_ptr<CommandBuffer> m_ClearCommandBuffer;
+	std::shared_ptr<Queue> m_Queue;
 };
 
 }
