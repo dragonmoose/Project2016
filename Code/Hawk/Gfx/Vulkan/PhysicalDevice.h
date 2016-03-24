@@ -24,12 +24,15 @@ public:
 	using QueueFamilyProperties = std::vector<VkQueueFamilyProperties>;
 	static void GetQueueFamilyProperties(const VkPhysicalDevice p_Device, QueueFamilyProperties& p_Properties);
 
+	VkFormat GetBackBufferDepthFormat() const;
+	VkFormat GetBackBufferColorFormat() const;
 
 #ifdef HAWK_DEBUG
 	void CmdPrintDevices();
 	void CmdPrintQueueFamilies(uint32 p_uiDeviceIndex);
 	void CmdPrintLayers(uint32 p_uiDeviceIndex, bool p_bKeepUnsupported);
 	void CmdPrintExtensions(uint32 p_uiDeviceIndex, bool p_bKeepUnsupported);
+	void CmdPrintDepthFormats(uint32 p_uiDeviceIndex, bool p_bKeepUnsupported);
 #endif
 
 private:
@@ -44,10 +47,19 @@ private:
 	VkPhysicalDevice GetDeviceByIndex(uint32 p_uiIndex) const;
 	VkPhysicalDevice GetDeviceByID(uint32 p_uiDeviceID) const;
 
-	static void GetDeviceProperties(const VkPhysicalDevice p_Device, VkPhysicalDeviceProperties& p_Properties);	
+	static void GetDeviceProperties(const VkPhysicalDevice p_Device, VkPhysicalDeviceProperties& p_Properties);
+	static bool IsDepthFormatSupported(VkPhysicalDevice p_Device, VkFormat p_Format);
+	static bool IsColorFormatSupported(VkPhysicalDevice p_Device, VkFormat p_Format);
+
+	void Init();
+	void SelectBackBufferDepthFormat();
+	void SelectBackBufferColorFormat();
 	
 	std::shared_ptr<Instance> m_Instance;
 	VkPhysicalDevice m_Handle;
+
+	VkFormat m_BackBufferDepthFormat;
+	VkFormat m_BackBufferColorFormat;
 };
 
 }

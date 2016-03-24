@@ -12,7 +12,7 @@ Swapchain::Swapchain(std::shared_ptr<Instance> p_Instance, std::shared_ptr<Devic
 , m_Queue(p_Device->GetPresentationQueue())
 , m_uiCurrentBufferIndex(0)
 {
-	CreateSurface(p_Instance, p_Device->GetPhysicalDevice()->GetHandle());
+	CreateSurface(p_Instance, p_Device->GetPhysicalDevice().get());
 	CreateSwapchain();
 	GetImages();
 	InitPresentInfo();
@@ -54,7 +54,7 @@ VkImage Swapchain::GetCurrImage() const
 	return m_CurrImage;
 }
 
-void Swapchain::CreateSurface(std::shared_ptr<Instance> p_Instance, VkPhysicalDevice p_PhysicalDevice)
+void Swapchain::CreateSurface(std::shared_ptr<Instance> p_Instance, const PhysicalDevice* p_PhysicalDevice)
 {
 #ifdef VK_USE_PLATFORM_WIN32_KHR
 	m_Surface = std::make_unique<WindowSurface>(p_Instance, p_PhysicalDevice, m_Queue.get());
@@ -67,7 +67,7 @@ void Swapchain::GetCreateInfo(VkSwapchainCreateInfoKHR& p_Info) const
 	p_Info.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
 	p_Info.surface = m_Surface->GetHandle();
 	p_Info.minImageCount = Constants::c_uiNumBackBuffers;
-	p_Info.imageFormat = Constants::c_BackBufferFormat;
+	p_Info.imageFormat = m_Device->GetPhysicalDevice()->GetBackBufferColorFormat();
 	p_Info.imageColorSpace = Constants::c_BackBufferColorSpace;
 	p_Info.imageExtent = m_Surface->GetInitialExtent();
 	p_Info.imageArrayLayers = 1; // Should be 1 for non-stereoscopic views

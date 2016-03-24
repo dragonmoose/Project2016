@@ -5,6 +5,7 @@
 #include "System.h"
 #include "WindowSurface.h"
 #include "CommandBuffer.h"
+#include "RenderPass.h"
 #include "Console/ScopedConsoleCommands.h"
 
 namespace Hawk {
@@ -31,11 +32,8 @@ void API::Initialize()
 
 	m_CommandPool = std::make_shared<CommandPool>(m_Device, m_Device->GetPresentationQueue()->GetFamilyIndex());
 	
-	std::shared_ptr<CommandBuffer> l_Buffer = std::make_shared<CommandBuffer>(m_Device, m_CommandPool);
-
-	l_Buffer->Begin();
-	l_Buffer->End();
-
+	TestCommandBuffer();
+	
 	//SetFullscreenState(Config::Instance().Get("gfx.fullscreen", false));
 	LOG("Vulkan initialized", "vulkan", Info);
 }
@@ -66,6 +64,7 @@ void API::InitializeConsole(ScopedConsoleCommands* p_Console)
 	p_Console->Register("vk.printQueueFamilies", m_PhysicalDevice.get(), &PhysicalDevice::CmdPrintQueueFamilies, "Lists queue families for the given device", "");
 	p_Console->Register("vk.printDeviceLayers", m_PhysicalDevice.get(), &PhysicalDevice::CmdPrintLayers, "Lists Vulkan device layers for the given device", "[DeviceIndex] [KeepUnsupported 0|1]");
 	p_Console->Register("vk.printDeviceExtensions", m_PhysicalDevice.get(), &PhysicalDevice::CmdPrintExtensions, "Lists Vulkan device extensions for the given device", "[DeviceIndex] [KeepUnsupported 0|1]");
+	p_Console->Register("vk.printSupportedDepthFormats", m_PhysicalDevice.get(), &PhysicalDevice::CmdPrintDepthFormats, "Lists the supported depth/stencil formats for the given device", "[DeviceIndex] [KeepUnsupported 0|1]");
 }
 
 #endif
@@ -114,6 +113,16 @@ const std::string& API::GetLogDesc()
 {
 	static const std::string l_Desc("vulkan");
 	return l_Desc;
+}
+
+void API::TestCommandBuffer()
+{
+	std::shared_ptr<CommandBuffer> l_Buffer = std::make_shared<CommandBuffer>(m_Device, m_CommandPool);
+	std::shared_ptr<RenderPass> l_Pass = std::make_shared<RenderPass>(m_Device);
+
+	l_Buffer->Begin();
+
+	l_Buffer->End();
 }
 
 }

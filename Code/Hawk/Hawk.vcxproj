@@ -136,6 +136,7 @@
     <ClInclude Include="Gfx\Vulkan\Constants.h" />
     <ClInclude Include="Gfx\Vulkan\PhysicalDevice.h" />
     <ClInclude Include="Gfx\Vulkan\Queue.h" />
+    <ClInclude Include="Gfx\Vulkan\RenderPass.h" />
     <ClInclude Include="Gfx\Vulkan\Swapchain.h" />
     <ClInclude Include="Gfx\Vulkan\WindowSurface.h" />
     <ClInclude Include="Gfx\Vulkan\DeviceCreateInfo.h" />
@@ -202,6 +203,7 @@
     <ClCompile Include="Gfx\Vulkan\Instance.cpp" />
     <ClCompile Include="Gfx\Vulkan\PhysicalDevice.cpp" />
     <ClCompile Include="Gfx\Vulkan\Queue.cpp" />
+    <ClCompile Include="Gfx\Vulkan\RenderPass.cpp" />
     <ClCompile Include="Gfx\Vulkan\Swapchain.cpp" />
     <ClCompile Include="Gfx\Vulkan\WindowSurface.cpp" />
     <ClCompile Include="Gfx\Vulkan\System.cpp" />

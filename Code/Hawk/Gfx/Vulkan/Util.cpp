@@ -6,6 +6,17 @@ namespace Hawk {
 namespace Gfx {
 namespace Vulkan {
 
+namespace Util
+{
+	std::vector<VkFormat> n_DepthFormats = {
+		VK_FORMAT_D32_SFLOAT_S8_UINT,
+		VK_FORMAT_D32_SFLOAT,
+		VK_FORMAT_D24_UNORM_S8_UINT,
+		VK_FORMAT_D16_UNORM_S8_UINT,
+		VK_FORMAT_D16_UNORM
+	};
+}
+
 std::string Util::SpecVersionToString(uint32 p_uiVersion)
 {
 	std::ostringstream l_Stream;
@@ -102,6 +113,35 @@ VkQueueFlags Util::QueueTypeToFlag(QueueType p_Type)
 	default:
 		THROW("Invalid type: " << (int)p_Type);
 	}
+}
+
+std::string Util::DepthFormatToString(VkFormat p_Format)
+{
+	switch (p_Format)
+	{
+		case VK_FORMAT_D32_SFLOAT_S8_UINT:
+			return "D32_SFLOAT_S8_UINT";
+		case VK_FORMAT_D32_SFLOAT:
+			return "D32_SFLOAT";
+		case VK_FORMAT_D24_UNORM_S8_UINT:
+			return "D24_UNORM_S8_UINT";
+		case VK_FORMAT_D16_UNORM_S8_UINT:
+			return "D16_UNORM_S8_UINT";
+		case VK_FORMAT_D16_UNORM:
+			return "D16_UNORM";
+		default:
+			THROW("Invalid depth format type: " << (int)p_Format);
+	}
+}
+
+const std::vector<VkFormat>& Util::GetDepthFormats()
+{
+	return n_DepthFormats;
+}
+
+bool Util::IsDepthFormat(VkFormat p_Format)
+{
+	return std::find(n_DepthFormats.cbegin(), n_DepthFormats.cend(), p_Format) != n_DepthFormats.end();
 }
 
 }

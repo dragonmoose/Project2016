@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "PhysicalDevice.h"
+#include "Constants.h"
 #include "Util.h"
 #include "Util/Algorithm.h"
 #include <iomanip>
@@ -10,14 +11,16 @@ namespace Vulkan {
 
 PhysicalDevice::PhysicalDevice(std::shared_ptr<Instance> p_Instance)
 : m_Instance(p_Instance)
+, m_Handle(GetDeviceByIndex(0))
 {
-	m_Handle = GetDeviceByIndex(0);
+	Init();
 }
 
 PhysicalDevice::PhysicalDevice(std::shared_ptr<Instance> p_Instance, uint32 p_uiDeviceID)
 : m_Instance(p_Instance)
+, m_Handle(GetDeviceByID(p_uiDeviceID))
 {
-	m_Handle = GetDeviceByID(p_uiDeviceID);
+	Init();
 }
 
 PhysicalDevice::~PhysicalDevice()
@@ -55,6 +58,16 @@ void PhysicalDevice::GetQueueFamilyProperties(const VkPhysicalDevice p_Device, Q
 
 	p_Properties.resize(l_uiCount);
 	vkGetPhysicalDeviceQueueFamilyProperties(p_Device, &l_uiCount, p_Properties.data());
+}
+
+VkFormat PhysicalDevice::GetBackBufferDepthFormat() const
+{
+	return m_BackBufferDepthFormat;
+}
+
+VkFormat PhysicalDevice::GetBackBufferColorFormat() const
+{
+	return m_BackBufferColorFormat;
 }
 
 #ifdef HAWK_DEBUG
@@ -165,6 +178,26 @@ void PhysicalDevice::CmdPrintExtensions(uint32 p_uiDeviceIndex, bool p_bKeepUnsu
 	}
 	std::cout << "\n";
 }
+
+void PhysicalDevice::CmdPrintDepthFormats(uint32 p_uiDeviceIndex, bool p_bKeepUnsupported)
+{
+	VkPhysicalDevice l_Device = GetDeviceByIndex(p_uiDeviceIndex);
+
+	CONSOLE_WRITE_SCOPE();
+	std::cout << "\n";
+	for (const auto& l_Format : Util::GetDepthFormats())
+	{
+		if (IsDepthFormatSupported(l_Device, l_Format))
+		{
+			std::cout << Util::DepthFormatToString(l_Format) << "\n";
+		}
+		else if (p_bKeepUnsupported)
+		{
+			std::cout << Util::DepthFormatToString(l_Format) << "\t**NOT SUPPORTED**\n";
+		}
+	}
+	std::cout << "\n";
+}
 #endif
 
 void PhysicalDevice::GetAllLayers(VkPhysicalDevice p_Device, LayerProperties& p_Layers, bool p_bKeepUnsupported)
@@ -230,6 +263,63 @@ VkPhysicalDevice PhysicalDevice::GetDeviceByID(uint32 p_uiDeviceID) const
 void PhysicalDevice::GetDeviceProperties(const VkPhysicalDevice p_Device, VkPhysicalDeviceProperties& p_Properties)
 {
 	vkGetPhysicalDeviceProperties(p_Device, &p_Properties);
+}
+
+bool PhysicalDevice::IsDepthFormatSupported(VkPhysicalDevice p_Device, VkFormat p_Format)
+{
+	VkFormatProperties l_Props = {};
+	vkGetPhysicalDeviceFormatProperties(p_Device, p_Format, &l_Props);
+	return !!(l_Props.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
+}
+
+bool PhysicalDevice::IsColorFormatSupported(VkPhysicalDevice p_Device, VkFormat p_Format)
+{
+	VkFormatProperties l_Props = {};
+	vkGetPhysicalDeviceFormatProperties(p_Device, p_Format, &l_Props);
+	return !!(l_Props.optimalTilingFeatures & VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT);
+}
+
+void PhysicalDevice::Init()
+{
+	SelectBackBufferDepthFormat();
+	SelectBackBufferColorFormat();
+}
+
+void PhysicalDevice::SelectBackBufferDepthFormat()
+{
+	VkFormat l_SelectedFormat = VK_FORMAT_UNDEFINED;
+	if (IsDepthFormatSupported(m_Handle, Constants::c_PreferredDepthBufferFormat))
+	{
+		l_SelectedFormat = Constants::c_PreferredDepthBufferFormat;
+	}
+	else
+	{
+		LOG("Preferred depth buffer format not supported by device, attempting to choose another one", "vulkan", Warning);
+
+		for (const auto& l_Format : Util::GetDepthFormats())
+		{
+			if (IsDepthFormatSupported(m_Handle, l_Format))
+			{
+				l_SelectedFormat = l_Format;
+				break;
+			}
+		}
+	}
+	THROW_IF(l_SelectedFormat == VK_FORMAT_UNDEFINED, "Failed to find a depth buffer format");
+
+	m_BackBufferDepthFormat = l_SelectedFormat;
+	LOG("Selected depth format: " << Util::DepthFormatToString(l_SelectedFormat), "vulkan", Debug);
+}
+
+void PhysicalDevice::SelectBackBufferColorFormat()
+{
+	VkFormat l_SelectedFormat = VK_FORMAT_UNDEFINED;
+	if (IsColorFormatSupported(m_Handle, Constants::c_PreferredBackBufferColorFormat))
+	{
+		l_SelectedFormat = Constants::c_PreferredBackBufferColorFormat;
+	}
+	THROW_IF(l_SelectedFormat == VK_FORMAT_UNDEFINED, "Failed to find a color format for the back buffer");
+	m_BackBufferColorFormat = l_SelectedFormat;
 }
 
 }

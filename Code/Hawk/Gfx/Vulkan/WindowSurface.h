@@ -8,12 +8,13 @@ namespace Gfx {
 namespace Vulkan {
 
 class Queue;
+class PhysicalDevice;
 
 class WindowSurface final
 {
 public:
 #ifdef VK_USE_PLATFORM_WIN32_KHR
-	WindowSurface(std::shared_ptr<Instance> p_Instance, VkPhysicalDevice p_PhysicalDevice, const Queue* p_PresentationQueue);
+	WindowSurface(std::shared_ptr<Instance> p_Instance, const PhysicalDevice* p_PhysicalDevice, const Queue* p_PresentationQueue);
 #endif
 	~WindowSurface();
 	WindowSurface(const WindowSurface&) = delete;
@@ -25,7 +26,7 @@ public:
 private:
 	void CheckWSISupport(VkPhysicalDevice p_PhysicalDevice, const Queue* p_PresentationQueue) const;
 	void CheckAndSetCapabilities(VkPhysicalDevice p_PhysicalDevice);
-	void CheckColorFormats(VkPhysicalDevice p_PhysicalDevice) const;
+	void CheckColorFormats(const PhysicalDevice* p_PhysicalDevice) const;
 	void CheckPresentationModes(VkPhysicalDevice p_PhysicalDevice) const;
 
 	VkSurfaceKHR m_Handle;

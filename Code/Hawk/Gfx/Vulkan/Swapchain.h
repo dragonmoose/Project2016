@@ -19,7 +19,7 @@ public:
 	VkImage GetCurrImage() const;
 
 private:
-	void CreateSurface(std::shared_ptr<Instance> p_Instance, VkPhysicalDevice p_PhysicalDevice);
+	void CreateSurface(std::shared_ptr<Instance> p_Instance, const PhysicalDevice* p_PhysicalDevice);
 	void GetCreateInfo(VkSwapchainCreateInfoKHR& p_Info) const;
 	void InitPresentInfo();
 	void GetImages();

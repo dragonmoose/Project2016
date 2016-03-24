@@ -10,7 +10,7 @@ namespace Hawk {
 namespace Gfx {
 namespace Vulkan {
 
-WindowSurface::WindowSurface(std::shared_ptr<Instance> p_Instance, VkPhysicalDevice p_PhysicalDevice, const Queue* p_PresentationQueue)
+WindowSurface::WindowSurface(std::shared_ptr<Instance> p_Instance, const PhysicalDevice* p_PhysicalDevice, const Queue* p_PresentationQueue)
 : m_Handle(VK_NULL_HANDLE)
 , m_Instance(p_Instance)
 {
@@ -22,10 +22,10 @@ WindowSurface::WindowSurface(std::shared_ptr<Instance> p_Instance, VkPhysicalDev
 
 	VK_THROW_IF_NOT_SUCCESS(vkCreateWin32SurfaceKHR(p_Instance->GetHandle(), &l_Info, nullptr, &m_Handle), "Failed to create win32 surface");
 
-	CheckWSISupport(p_PhysicalDevice, p_PresentationQueue);
-	CheckAndSetCapabilities(p_PhysicalDevice);
+	CheckWSISupport(p_PhysicalDevice->GetHandle(), p_PresentationQueue);
+	CheckAndSetCapabilities(p_PhysicalDevice->GetHandle());
 	CheckColorFormats(p_PhysicalDevice);
-	CheckPresentationModes(p_PhysicalDevice);
+	CheckPresentationModes(p_PhysicalDevice->GetHandle());
 	LOG("Window surface created", "vulkan", Debug);
 }
 
@@ -82,16 +82,16 @@ void WindowSurface::CheckAndSetCapabilities(VkPhysicalDevice p_PhysicalDevice)
 	m_InitialTransform = l_Capabilities.currentTransform;
 }
 
-void WindowSurface::CheckColorFormats(VkPhysicalDevice p_PhysicalDevice) const
+void WindowSurface::CheckColorFormats(const PhysicalDevice* p_PhysicalDevice) const
 {
 	std::vector<VkSurfaceFormatKHR> l_Formats;
 	uint32 l_uiCount = 0;
-	VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfaceFormatsKHR(p_PhysicalDevice, m_Handle, &l_uiCount, nullptr), "Failed to get format count");
+	VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfaceFormatsKHR(p_PhysicalDevice->GetHandle(), m_Handle, &l_uiCount, nullptr), "Failed to get format count");
 
 	l_Formats.resize(l_uiCount);
-	VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfaceFormatsKHR(p_PhysicalDevice, m_Handle, &l_uiCount, l_Formats.data()), "Failed to get formats");
+	VK_THROW_IF_NOT_SUCCESS(vkGetPhysicalDeviceSurfaceFormatsKHR(p_PhysicalDevice->GetHandle(), m_Handle, &l_uiCount, l_Formats.data()), "Failed to get formats");
 
-	THROW_IF(std::find_if(l_Formats.cbegin(), l_Formats.cend(), [](const VkSurfaceFormatKHR& p_Format) { return p_Format.format == Constants::c_BackBufferFormat && p_Format.colorSpace == Constants::c_BackBufferColorSpace; }) == l_Formats.cend(), "Required backbuffer format not supported by surface");
+	THROW_IF(std::find_if(l_Formats.cbegin(), l_Formats.cend(), [p_PhysicalDevice](const VkSurfaceFormatKHR& p_Format) { return p_Format.format == p_PhysicalDevice->GetBackBufferColorFormat() && p_Format.colorSpace == Constants::c_BackBufferColorSpace; }) == l_Formats.cend(), "Required backbuffer format not supported by surface");
 }
 
 void WindowSurface::CheckPresentationModes(VkPhysicalDevice p_PhysicalDevice) const

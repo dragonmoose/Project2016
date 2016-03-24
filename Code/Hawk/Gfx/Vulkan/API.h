@@ -36,6 +36,8 @@ private:
 	void CreateSwapchain();
 	static const std::string& GetLogDesc();
 
+	void TestCommandBuffer();
+
 	std::shared_ptr<Instance> m_Instance;
 	std::shared_ptr<PhysicalDevice> m_PhysicalDevice;
 	std::shared_ptr<Device> m_Device;
