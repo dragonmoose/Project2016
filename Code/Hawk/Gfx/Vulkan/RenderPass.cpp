@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "RenderPass.h"
-#include <array>
 
 namespace Hawk {
 namespace Gfx {

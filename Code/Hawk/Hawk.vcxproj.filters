@@ -158,13 +158,16 @@
     <ClCompile Include="Gfx\Vulkan\RenderPass.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\Framebuffer.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="Gfx\Vulkan\ImageView.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Gfx\Vulkan\DepthStencilBuffer.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\FrameBuffer.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\Image.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
@@ -380,13 +383,16 @@
     <ClInclude Include="Gfx\Vulkan\RenderPass.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\Framebuffer.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="Gfx\Vulkan\ImageView.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Gfx\Vulkan\DepthStencilBuffer.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\FrameBuffer.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\Image.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>

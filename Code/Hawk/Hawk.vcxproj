@@ -135,7 +135,8 @@
     <ClInclude Include="Gfx\Vulkan\CommandPool.h" />
     <ClInclude Include="Gfx\Vulkan\Constants.h" />
     <ClInclude Include="Gfx\Vulkan\DepthStencilBuffer.h" />
-    <ClInclude Include="Gfx\Vulkan\Framebuffer.h" />
+    <ClInclude Include="Gfx\Vulkan\FrameBuffer.h" />
+    <ClInclude Include="Gfx\Vulkan\Image.h" />
     <ClInclude Include="Gfx\Vulkan\ImageView.h" />
     <ClInclude Include="Gfx\Vulkan\PhysicalDevice.h" />
     <ClInclude Include="Gfx\Vulkan\Queue.h" />
@@ -204,7 +205,8 @@
     <ClCompile Include="Gfx\Vulkan\DepthStencilBuffer.cpp" />
     <ClCompile Include="Gfx\Vulkan\DeviceCreateInfo.cpp" />
     <ClCompile Include="Gfx\Vulkan\Device.cpp" />
-    <ClCompile Include="Gfx\Vulkan\Framebuffer.cpp" />
+    <ClCompile Include="Gfx\Vulkan\FrameBuffer.cpp" />
+    <ClCompile Include="Gfx\Vulkan\Image.cpp" />
     <ClCompile Include="Gfx\Vulkan\ImageView.cpp" />
     <ClCompile Include="Gfx\Vulkan\Instance.cpp" />
     <ClCompile Include="Gfx\Vulkan\PhysicalDevice.cpp" />

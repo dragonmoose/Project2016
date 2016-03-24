@@ -26,6 +26,8 @@ public:
 
 	VkFormat GetBackBufferDepthStencilFormat() const;
 	VkFormat GetBackBufferColorFormat() const;
+	void GetFrameBufferLimits(uint32& p_uiWidth, uint32& p_uiHeight, uint32& p_uiLayers) const;
+	bool TryGetMemoryTypeIndex(uint32 p_uiMemoryTypeBits, VkMemoryPropertyFlags p_Flags, uint32& p_uiIndex) const;
 
 #ifdef HAWK_DEBUG
 	void CmdPrintDevices();
@@ -60,6 +62,7 @@ private:
 
 	VkFormat m_BackBufferDepthStencilFormat;
 	VkFormat m_BackBufferColorFormat;
+	VkPhysicalDeviceMemoryProperties m_MemoryProperties;
 };
 
 }

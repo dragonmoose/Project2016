@@ -7,14 +7,15 @@ namespace Gfx {
 namespace Vulkan {
 
 class RenderPass;
+class ImageView;
 
-class Framebuffer final
+class FrameBuffer final
 {
 public:
-	Framebuffer(std::shared_ptr<Device> p_Device, const RenderPass* p_RenderPass);
-	~Framebuffer();
-	Framebuffer(const Framebuffer&) = delete;
-	Framebuffer& operator=(const Framebuffer&) = delete;
+	FrameBuffer(std::shared_ptr<Device> p_Device, const RenderPass* p_RenderPass, const ImageView* p_ColorView, const ImageView* p_DepthStencilView, VkExtent2D p_Extent);
+	~FrameBuffer();
+	FrameBuffer(const FrameBuffer&) = delete;
+	FrameBuffer& operator=(const FrameBuffer&) = delete;
 
 	VkFramebuffer GetHandle() const;
 

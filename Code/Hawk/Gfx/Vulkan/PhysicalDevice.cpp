@@ -70,6 +70,32 @@ VkFormat PhysicalDevice::GetBackBufferColorFormat() const
 	return m_BackBufferColorFormat;
 }
 
+void PhysicalDevice::GetFrameBufferLimits(uint32& p_uiWidth, uint32& p_uiHeight, uint32& p_uiLayers) const
+{
+	VkPhysicalDeviceProperties l_Props;
+	GetDeviceProperties(m_Handle, l_Props);
+	p_uiWidth = l_Props.limits.maxFramebufferWidth;
+	p_uiHeight = l_Props.limits.maxFramebufferHeight;
+	p_uiLayers = l_Props.limits.maxFramebufferLayers;
+}
+
+bool PhysicalDevice::TryGetMemoryTypeIndex(uint32 p_uiMemoryTypeBits, VkMemoryPropertyFlags p_Flags, uint32& p_uiIndex) const
+{
+	for (uint32 i = 0; i < m_MemoryProperties.memoryTypeCount; i++)
+	{
+		uint32 l_uiCheckBit = 1 << i;
+		if (p_uiMemoryTypeBits & l_uiCheckBit)
+		{
+			if (m_MemoryProperties.memoryTypes[i].propertyFlags & p_Flags)
+			{
+				p_uiIndex = i;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 #ifdef HAWK_DEBUG
 void PhysicalDevice::CmdPrintDevices()
 {
@@ -283,6 +309,7 @@ void PhysicalDevice::Init()
 {
 	SelectBackBufferDepthStencilFormat();
 	SelectBackBufferColorFormat();
+	vkGetPhysicalDeviceMemoryProperties(m_Handle, &m_MemoryProperties);
 }
 
 void PhysicalDevice::SelectBackBufferDepthStencilFormat()

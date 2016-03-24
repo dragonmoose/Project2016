@@ -3,7 +3,6 @@
 #include "System.h"
 #include "Util.h"
 #include "Util/Algorithm.h"
-#include <array>
 #include <functional>
 
 namespace Hawk {

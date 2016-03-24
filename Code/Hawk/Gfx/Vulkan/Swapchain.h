@@ -19,6 +19,10 @@ public:
 	void SetCurrImage();
 	VkImage GetCurrImage() const;
 
+	using ImageViews_t = std::vector<std::shared_ptr<ImageView>>;
+	std::shared_ptr<ImageView> GetImageView(uint32 p_uiIndex) const;
+	VkExtent2D GetExtent() const;
+
 private:
 	void CreateSurface(std::shared_ptr<Instance> p_Instance, const PhysicalDevice* p_PhysicalDevice);
 	void GetCreateInfo(VkSwapchainCreateInfoKHR& p_Info) const;
@@ -36,6 +40,7 @@ private:
 	VkImage m_CurrImage;
 	uint32 m_uiCurrentBufferIndex;
 	std::vector<std::shared_ptr<ImageView>> m_ImageViews;
+	VkExtent2D m_Extent;
 };
 
 }

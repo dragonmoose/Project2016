@@ -6,7 +6,11 @@
 #include "WindowSurface.h"
 #include "Swapchain.h"
 #include "CommandPool.h"
+#include "FrameBuffer.h"
+#include "RenderPass.h"
+#include "DepthStencilBuffer.h"
 #include <memory>
+#include <array>
 
 namespace Hawk {
 namespace Gfx {
@@ -34,6 +38,9 @@ private:
 	void SetupQueues(DeviceCreateInfo& p_CreateInfo);
 	void CreateDevice(const DeviceCreateInfo& p_CreateInfo);
 	void CreateSwapchain();
+	void CreateRenderPasses();
+	void CreateFrameBuffers();
+	void CreateDepthStencilBuffers();
 	static const std::string& GetLogDesc();
 
 	void TestCommandBuffer();
@@ -44,6 +51,9 @@ private:
 	std::shared_ptr<WindowSurface> m_WindowSurface;
 	std::shared_ptr<Swapchain> m_Swapchain;
 	std::shared_ptr<CommandPool> m_CommandPool;
+	std::vector<std::shared_ptr<FrameBuffer>> m_FrameBuffers;
+	std::vector< std::shared_ptr<DepthStencilBuffer>> m_DepthStencilBuffers;
+	std::shared_ptr<RenderPass> m_DefaultRenderPass;
 };
 
 }

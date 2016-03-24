@@ -13,6 +13,8 @@ Swapchain::Swapchain(std::shared_ptr<Instance> p_Instance, std::shared_ptr<Devic
 , m_uiCurrentBufferIndex(0)
 {
 	CreateSurface(p_Instance, p_Device->GetPhysicalDevice().get());
+	m_Extent = m_Surface->GetInitialExtent();
+
 	CreateSwapchain();
 	GetImages();
 	CreateImageViews();
@@ -49,6 +51,17 @@ void Swapchain::SetCurrImage()
 VkImage Swapchain::GetCurrImage() const
 {
 	return m_CurrImage;
+}
+
+std::shared_ptr<ImageView> Swapchain::GetImageView(uint32 p_uiIndex) const
+{
+	ASSERT(p_uiIndex < m_ImageViews.size(), "ImageView index out of bounds. Index=" << p_uiIndex << " Size=" << m_ImageViews.size());
+	return m_ImageViews[p_uiIndex];
+}
+
+VkExtent2D Swapchain::GetExtent() const
+{
+	return m_Extent;
 }
 
 void Swapchain::CreateSurface(std::shared_ptr<Instance> p_Instance, const PhysicalDevice* p_PhysicalDevice)

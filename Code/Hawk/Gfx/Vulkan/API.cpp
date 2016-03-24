@@ -7,6 +7,7 @@
 #include "CommandBuffer.h"
 #include "RenderPass.h"
 #include "Console/ScopedConsoleCommands.h"
+#include "Constants.h"
 
 namespace Hawk {
 namespace Gfx {
@@ -29,6 +30,9 @@ void API::Initialize()
 
 	CreateDevice(l_CreateInfo);
 	CreateSwapchain();
+	CreateRenderPasses();
+	CreateDepthStencilBuffers();
+	CreateFrameBuffers();
 
 	m_CommandPool = std::make_shared<CommandPool>(m_Device, m_Device->GetPresentationQueue()->GetFamilyIndex());
 	
@@ -109,6 +113,30 @@ void API::CreateSwapchain()
 	m_Swapchain = std::make_shared<Swapchain>(m_Instance, m_Device);
 }
 
+void API::CreateRenderPasses()
+{
+	m_DefaultRenderPass = std::make_shared<RenderPass>(m_Device);
+}
+
+void API::CreateFrameBuffers()
+{
+	m_FrameBuffers.resize(Constants::c_uiNumBackBuffers);
+	for (uint32 i = 0; i < Constants::c_uiNumBackBuffers; i++)
+	{
+		m_FrameBuffers[i] = std::make_shared<FrameBuffer>(m_Device, m_DefaultRenderPass.get(), m_Swapchain->GetImageView(i).get(), m_DepthStencilBuffers[i]->GetImageView().get(), m_Swapchain->GetExtent());
+	}
+}
+
+void API::CreateDepthStencilBuffers()
+{
+	m_DepthStencilBuffers.resize(Constants::c_uiNumBackBuffers);
+	for (uint32 i = 0; i < Constants::c_uiNumBackBuffers; i++)
+	{
+		m_DepthStencilBuffers[i] = std::make_shared<DepthStencilBuffer>(m_Device, m_Swapchain->GetExtent());
+	}
+}
+
+
 const std::string& API::GetLogDesc()
 {
 	static const std::string l_Desc("vulkan");
@@ -118,10 +146,8 @@ const std::string& API::GetLogDesc()
 void API::TestCommandBuffer()
 {
 	std::shared_ptr<CommandBuffer> l_Buffer = std::make_shared<CommandBuffer>(m_Device, m_CommandPool);
-	std::shared_ptr<RenderPass> l_Pass = std::make_shared<RenderPass>(m_Device);
 
 	l_Buffer->Begin();
-
 	l_Buffer->End();
 }
 
