@@ -52,6 +52,11 @@ uint32 Swapchain::GetCurrImageIndex() const
 	return m_uiCurrentBufferIndex;
 }
 
+VkImage Swapchain::GetCurrImage() const
+{
+	return m_Images[m_uiCurrentBufferIndex];
+}
+
 VkImage Swapchain::GetImage(uint32 p_uiIndex) const
 {
 	ASSERT(p_uiIndex < m_Images.size(), "Image index out of bounds. Index=" << p_uiIndex << " Size=" << m_Images.size());

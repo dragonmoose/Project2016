@@ -8,6 +8,7 @@
 #include "RenderPass.h"
 #include "Console/ScopedConsoleCommands.h"
 #include "Constants.h"
+#include "Util/Random.h"			// test
 
 namespace Hawk {
 namespace Gfx {
@@ -46,6 +47,27 @@ void API::Render()
 {
 	m_Swapchain->SetCurrImage();
 
+	m_PreRenderCommandBuffer->Begin();
+
+	VkImageMemoryBarrier l_ImageBarrier = {};
+	l_ImageBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+	l_ImageBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+	l_ImageBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
+	l_ImageBarrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+	l_ImageBarrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+	l_ImageBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	l_ImageBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	l_ImageBarrier.image = m_Swapchain->GetCurrImage();
+	l_ImageBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	l_ImageBarrier.subresourceRange.baseMipLevel = 0;
+	l_ImageBarrier.subresourceRange.layerCount = 1;
+	l_ImageBarrier.subresourceRange.levelCount = 1;
+	vkCmdPipelineBarrier(m_PreRenderCommandBuffer->GetHandle(), VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_DEPENDENCY_BY_REGION_BIT,
+		0, nullptr, 0, nullptr, 1, &l_ImageBarrier);
+	m_PreRenderCommandBuffer->End();
+	m_Queue->Add(m_PreRenderCommandBuffer.get());
+	m_Queue->Submit();
+
 	m_ClearCommandBuffer->Begin();
 	VkRenderPassBeginInfo l_RenderPassBeginInfo = {};
 	l_RenderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -55,12 +77,12 @@ void API::Render()
 	l_RenderPassBeginInfo.clearValueCount = 2;
 
 	std::array<VkClearValue, 2> l_ClearValues;
-	l_ClearValues[0].color.float32[0] = 1.0f;
-	l_ClearValues[0].color.float32[1] = 0.0f;
-	l_ClearValues[0].color.float32[2] = 0.0f;
-	l_ClearValues[0].color.float32[3] = 1.0f;
-	l_ClearValues[1].depthStencil.depth = 0.0f;
-	l_ClearValues[1].depthStencil.stencil = 0;
+	l_ClearValues[0].depthStencil.depth = 0.0f;
+	l_ClearValues[0].depthStencil.stencil = 0;
+	l_ClearValues[1].color.float32[0] = 0.0f;
+	l_ClearValues[1].color.float32[1] = 0.0f;
+	l_ClearValues[1].color.float32[2] = Random::GetFloat(0.0f, 0.5f);
+	l_ClearValues[1].color.float32[3] = 1.0f;
 	l_RenderPassBeginInfo.pClearValues = l_ClearValues.data();
 
 	vkCmdBeginRenderPass(m_ClearCommandBuffer->GetHandle(), &l_RenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);

@@ -19,6 +19,7 @@ public:
 	void SetCurrImage();
 	VkImage GetImage(uint32 p_uiIndex) const;
 	uint32 GetCurrImageIndex() const;
+	VkImage GetCurrImage() const;
 
 	using ImageViews_t = std::vector<std::shared_ptr<ImageView>>;
 	std::shared_ptr<ImageView> GetImageView(uint32 p_uiIndex) const;
