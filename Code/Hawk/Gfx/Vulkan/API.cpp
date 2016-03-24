@@ -64,7 +64,7 @@ void API::InitializeConsole(ScopedConsoleCommands* p_Console)
 	p_Console->Register("vk.printQueueFamilies", m_PhysicalDevice.get(), &PhysicalDevice::CmdPrintQueueFamilies, "Lists queue families for the given device", "");
 	p_Console->Register("vk.printDeviceLayers", m_PhysicalDevice.get(), &PhysicalDevice::CmdPrintLayers, "Lists Vulkan device layers for the given device", "[DeviceIndex] [KeepUnsupported 0|1]");
 	p_Console->Register("vk.printDeviceExtensions", m_PhysicalDevice.get(), &PhysicalDevice::CmdPrintExtensions, "Lists Vulkan device extensions for the given device", "[DeviceIndex] [KeepUnsupported 0|1]");
-	p_Console->Register("vk.printSupportedDepthFormats", m_PhysicalDevice.get(), &PhysicalDevice::CmdPrintDepthFormats, "Lists the supported depth/stencil formats for the given device", "[DeviceIndex] [KeepUnsupported 0|1]");
+	p_Console->Register("vk.printSupportedDepthStencilFormats", m_PhysicalDevice.get(), &PhysicalDevice::CmdPrintDepthStencilFormats, "Lists the supported depth/stencil formats for the given device", "[DeviceIndex] [KeepUnsupported 0|1]");
 }
 
 #endif

@@ -15,6 +15,7 @@ Swapchain::Swapchain(std::shared_ptr<Instance> p_Instance, std::shared_ptr<Devic
 	CreateSurface(p_Instance, p_Device->GetPhysicalDevice().get());
 	CreateSwapchain();
 	GetImages();
+	CreateImageViews();
 	InitPresentInfo();
 
 	LOG("Swapchain created", "vulkan", Debug);
@@ -29,15 +30,11 @@ Swapchain::~Swapchain()
 
 void Swapchain::Present()
 {
-	PrepareCurrImageForPresentation();
-
 	// TODO: Act upon error messages
 	m_PresentInfo.pImageIndices = &m_uiCurrentBufferIndex;
 	VkResult l_Result = vkQueuePresentKHR(m_Queue->GetHandle(), &m_PresentInfo);
 	LOG_IF(l_Result == VK_SUBOPTIMAL_KHR, "Queue presentation suboptimal", "vulkan", Warning);
 	VK_THROW_IF_ERR(l_Result, "Queue presentation failed");
-
-	PrepareCurrImageForRendering();
 }
 
 void Swapchain::SetCurrImage()
@@ -106,13 +103,13 @@ void Swapchain::CreateSwapchain()
 	VK_THROW_IF_NOT_SUCCESS(vkCreateSwapchainKHR(m_Device->GetHandle(), &l_Info, nullptr, &m_Handle), "Failed to create swapchain");
 }
 
-void Swapchain::PrepareCurrImageForPresentation()
+void Swapchain::CreateImageViews()
 {
-}
-
-void Swapchain::PrepareCurrImageForRendering()
-{
-
+	m_ImageViews.resize(Constants::c_uiNumBackBuffers);
+	for (uint32 i = 0; i < Constants::c_uiNumBackBuffers; i++)
+	{
+		m_ImageViews[i] = std::make_shared<ImageView>(m_Device, m_Images[i], m_Device->GetPhysicalDevice()->GetBackBufferColorFormat());
+	}
 }
 
 }

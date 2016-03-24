@@ -60,9 +60,9 @@ void PhysicalDevice::GetQueueFamilyProperties(const VkPhysicalDevice p_Device, Q
 	vkGetPhysicalDeviceQueueFamilyProperties(p_Device, &l_uiCount, p_Properties.data());
 }
 
-VkFormat PhysicalDevice::GetBackBufferDepthFormat() const
+VkFormat PhysicalDevice::GetBackBufferDepthStencilFormat() const
 {
-	return m_BackBufferDepthFormat;
+	return m_BackBufferDepthStencilFormat;
 }
 
 VkFormat PhysicalDevice::GetBackBufferColorFormat() const
@@ -179,21 +179,21 @@ void PhysicalDevice::CmdPrintExtensions(uint32 p_uiDeviceIndex, bool p_bKeepUnsu
 	std::cout << "\n";
 }
 
-void PhysicalDevice::CmdPrintDepthFormats(uint32 p_uiDeviceIndex, bool p_bKeepUnsupported)
+void PhysicalDevice::CmdPrintDepthStencilFormats(uint32 p_uiDeviceIndex, bool p_bKeepUnsupported)
 {
 	VkPhysicalDevice l_Device = GetDeviceByIndex(p_uiDeviceIndex);
 
 	CONSOLE_WRITE_SCOPE();
 	std::cout << "\n";
-	for (const auto& l_Format : Util::GetDepthFormats())
+	for (const auto& l_Format : Util::GetDepthStencilFormats())
 	{
-		if (IsDepthFormatSupported(l_Device, l_Format))
+		if (IsDepthStencilFormatSupported(l_Device, l_Format))
 		{
-			std::cout << Util::DepthFormatToString(l_Format) << "\n";
+			std::cout << Util::DepthStencilFormatToString(l_Format) << "\n";
 		}
 		else if (p_bKeepUnsupported)
 		{
-			std::cout << Util::DepthFormatToString(l_Format) << "\t**NOT SUPPORTED**\n";
+			std::cout << Util::DepthStencilFormatToString(l_Format) << "\t**NOT SUPPORTED**\n";
 		}
 	}
 	std::cout << "\n";
@@ -265,7 +265,7 @@ void PhysicalDevice::GetDeviceProperties(const VkPhysicalDevice p_Device, VkPhys
 	vkGetPhysicalDeviceProperties(p_Device, &p_Properties);
 }
 
-bool PhysicalDevice::IsDepthFormatSupported(VkPhysicalDevice p_Device, VkFormat p_Format)
+bool PhysicalDevice::IsDepthStencilFormatSupported(VkPhysicalDevice p_Device, VkFormat p_Format)
 {
 	VkFormatProperties l_Props = {};
 	vkGetPhysicalDeviceFormatProperties(p_Device, p_Format, &l_Props);
@@ -281,14 +281,14 @@ bool PhysicalDevice::IsColorFormatSupported(VkPhysicalDevice p_Device, VkFormat 
 
 void PhysicalDevice::Init()
 {
-	SelectBackBufferDepthFormat();
+	SelectBackBufferDepthStencilFormat();
 	SelectBackBufferColorFormat();
 }
 
-void PhysicalDevice::SelectBackBufferDepthFormat()
+void PhysicalDevice::SelectBackBufferDepthStencilFormat()
 {
 	VkFormat l_SelectedFormat = VK_FORMAT_UNDEFINED;
-	if (IsDepthFormatSupported(m_Handle, Constants::c_PreferredDepthBufferFormat))
+	if (IsDepthStencilFormatSupported(m_Handle, Constants::c_PreferredDepthBufferFormat))
 	{
 		l_SelectedFormat = Constants::c_PreferredDepthBufferFormat;
 	}
@@ -296,9 +296,9 @@ void PhysicalDevice::SelectBackBufferDepthFormat()
 	{
 		LOG("Preferred depth buffer format not supported by device, attempting to choose another one", "vulkan", Warning);
 
-		for (const auto& l_Format : Util::GetDepthFormats())
+		for (const auto& l_Format : Util::GetDepthStencilFormats())
 		{
-			if (IsDepthFormatSupported(m_Handle, l_Format))
+			if (IsDepthStencilFormatSupported(m_Handle, l_Format))
 			{
 				l_SelectedFormat = l_Format;
 				break;
@@ -307,8 +307,8 @@ void PhysicalDevice::SelectBackBufferDepthFormat()
 	}
 	THROW_IF(l_SelectedFormat == VK_FORMAT_UNDEFINED, "Failed to find a depth buffer format");
 
-	m_BackBufferDepthFormat = l_SelectedFormat;
-	LOG("Selected depth format: " << Util::DepthFormatToString(l_SelectedFormat), "vulkan", Debug);
+	m_BackBufferDepthStencilFormat = l_SelectedFormat;
+	LOG("Selected depth format: " << Util::DepthStencilFormatToString(l_SelectedFormat), "vulkan", Debug);
 }
 
 void PhysicalDevice::SelectBackBufferColorFormat()
@@ -318,8 +318,23 @@ void PhysicalDevice::SelectBackBufferColorFormat()
 	{
 		l_SelectedFormat = Constants::c_PreferredBackBufferColorFormat;
 	}
-	THROW_IF(l_SelectedFormat == VK_FORMAT_UNDEFINED, "Failed to find a color format for the back buffer");
+	else
+	{
+		LOG("Preferred back buffer color format not supported by device, attempting to choose another one", "vulkan", Warning);
+
+		for (const auto& l_Format : Util::GetColorFormats())
+		{
+			if (IsColorFormatSupported(m_Handle, l_Format))
+			{
+				l_SelectedFormat = l_Format;
+				break;
+			}
+		}
+	}
+	THROW_IF(l_SelectedFormat == VK_FORMAT_UNDEFINED, "Failed to find a back buffer color format");
+
 	m_BackBufferColorFormat = l_SelectedFormat;
+	LOG("Selected back buffer color format: " << Util::ColorFormatToString(l_SelectedFormat), "vulkan", Debug);
 }
 
 }

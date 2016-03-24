@@ -1,6 +1,7 @@
 #include "Device.h"
 #include "WindowSurface.h"
 #include "Queue.h"
+#include "ImageView.h"
 #include <memory>
 
 namespace Hawk {
@@ -24,8 +25,7 @@ private:
 	void InitPresentInfo();
 	void GetImages();
 	void CreateSwapchain();
-	void PrepareCurrImageForPresentation();
-	void PrepareCurrImageForRendering();
+	void CreateImageViews();
 
 	VkSwapchainKHR m_Handle;
 	std::shared_ptr<Device> m_Device;
@@ -35,6 +35,7 @@ private:
 	std::vector<VkImage> m_Images;
 	VkImage m_CurrImage;
 	uint32 m_uiCurrentBufferIndex;
+	std::vector<std::shared_ptr<ImageView>> m_ImageViews;
 };
 
 }

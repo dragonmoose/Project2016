@@ -9,12 +9,14 @@ namespace Vulkan {
 RenderPass::RenderPass(std::shared_ptr<Device> p_Device)
 : m_Device(p_Device)
 , m_Handle(VK_NULL_HANDLE)
+, m_uiNumAttachments(2)
 {
-	std::array<VkAttachmentDescription, 2> l_Attachments;
+	std::vector<VkAttachmentDescription> l_Attachments;
+	l_Attachments.resize(m_uiNumAttachments);
 	VkAttachmentDescription& l_DepthAttachment = l_Attachments[0];
 	VkAttachmentDescription& l_ColorAttachment = l_Attachments[1];
 
-	l_DepthAttachment.format = m_Device->GetPhysicalDevice()->GetBackBufferDepthFormat();
+	l_DepthAttachment.format = m_Device->GetPhysicalDevice()->GetBackBufferDepthStencilFormat();
 	l_DepthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
 	l_DepthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 	l_DepthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -48,14 +50,13 @@ RenderPass::RenderPass(std::shared_ptr<Device> p_Device)
 
 	VkRenderPassCreateInfo l_Info = {};
 	l_Info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-	l_Info.attachmentCount = l_Attachments.size();
+	l_Info.attachmentCount = m_uiNumAttachments;
 	l_Info.pAttachments = l_Attachments.data();
 	l_Info.subpassCount = 1;
 	l_Info.pSubpasses = &l_Subpass;
 		
 	VK_THROW_IF_NOT_SUCCESS(vkCreateRenderPass(m_Device->GetHandle(), &l_Info, nullptr, &m_Handle), "Failed to create render pass");
 	LOG("RenderPass created", "vulkan", Debug);
-
 }
 
 RenderPass::~RenderPass()
@@ -67,6 +68,11 @@ RenderPass::~RenderPass()
 VkRenderPass RenderPass::GetHandle() const
 {
 	return m_Handle;
+}
+
+uint32 RenderPass::GetNumAttachments() const
+{
+	return m_uiNumAttachments;
 }
 
 }

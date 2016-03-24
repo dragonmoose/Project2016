@@ -14,10 +14,14 @@ namespace Util
 	std::string QueueFlagsToString(VkQueueFlags p_Flags);
 	std::string TimestampValidBitsToString(uint32 p_Bits);
 	VkQueueFlags QueueTypeToFlag(QueueType p_Type);
-	std::string DepthFormatToString(VkFormat p_Format);
+	std::string DepthStencilFormatToString(VkFormat p_Format);
+	std::string ColorFormatToString(VkFormat p_Format);
 
-	const std::vector<VkFormat>& GetDepthFormats();
-	bool IsDepthFormat(VkFormat p_Format);
+	const std::vector<VkFormat>& GetDepthStencilFormats();
+	bool IsDepthStencilFormat(VkFormat p_Format);
+
+	const std::vector<VkFormat>& GetColorFormats();
+	bool IsColorFormat(VkFormat p_Format);
 }
 
 }
