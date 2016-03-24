@@ -60,7 +60,7 @@ RenderPass::RenderPass(std::shared_ptr<Device> p_Device)
 
 RenderPass::~RenderPass()
 {
-	//vkDestroyRenderPass(m_Device->GetHandle(), m_Handle, nullptr);
+	vkDestroyRenderPass(m_Device->GetHandle(), m_Handle, nullptr);
 	LOG("RenderPass destroyed", "vulkan", Debug);
 }
 
