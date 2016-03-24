@@ -23,6 +23,10 @@ RenderPass::RenderPass(std::shared_ptr<Device> p_Device)
 	l_DepthAttachment.initialLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 	l_DepthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
+	VkAttachmentReference l_DepthAttachmentRef = {};
+	l_DepthAttachmentRef.attachment = 0;
+	l_DepthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
 	l_ColorAttachment.format = m_Device->GetPhysicalDevice()->GetBackBufferColorFormat();
 	l_ColorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
 	l_ColorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
@@ -32,12 +36,25 @@ RenderPass::RenderPass(std::shared_ptr<Device> p_Device)
 	l_ColorAttachment.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 	l_ColorAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
+	VkAttachmentReference l_ColorAttachmentRef = {};
+	l_ColorAttachmentRef.attachment = 1;
+	l_ColorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+	
+	VkSubpassDescription l_Subpass = {};
+	l_Subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+	l_Subpass.colorAttachmentCount = 1;
+	l_Subpass.pColorAttachments = &l_ColorAttachmentRef;
+	l_Subpass.pDepthStencilAttachment = &l_DepthAttachmentRef;
+
 	VkRenderPassCreateInfo l_Info = {};
 	l_Info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
 	l_Info.attachmentCount = l_Attachments.size();
 	l_Info.pAttachments = l_Attachments.data();
+	l_Info.subpassCount = 1;
+	l_Info.pSubpasses = &l_Subpass;
 		
-	//VK_THROW_IF_NOT_SUCCESS(vkCreateRenderPass(m_Device->GetHandle(), &l_Info, nullptr, &l_RenderPass), "Failed to create render pass");*/
+	VK_THROW_IF_NOT_SUCCESS(vkCreateRenderPass(m_Device->GetHandle(), &l_Info, nullptr, &m_Handle), "Failed to create render pass");
+	LOG("RenderPass created", "vulkan", Debug);
 
 }
 
