@@ -19,7 +19,6 @@ Swapchain::Swapchain(std::shared_ptr<Instance> p_Instance, std::shared_ptr<Devic
 	GetImages();
 	CreateImageViews();
 	InitPresentInfo();
-	SetCurrImage();
 
 	LOG("Swapchain created", "vulkan", Debug);
 }

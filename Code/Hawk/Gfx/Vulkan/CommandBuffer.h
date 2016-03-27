@@ -25,6 +25,12 @@ public:
 	void Begin();
 	void End();
 
+	template<class T>
+	void Issue(const T& p_Obj)
+	{
+		p_Obj.Issue(GetHandle());
+	}
+
 private:
 	void InitBeginInfo(bool p_bOneTimeSubmit);
 

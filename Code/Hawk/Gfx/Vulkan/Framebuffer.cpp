@@ -47,7 +47,7 @@ FrameBuffer::~FrameBuffer()
 	LOG("FrameBuffer destroyed", "vulkan", Debug);
 }
 
-VkRenderPass FrameBuffer::GetHandle() const
+VkFramebuffer FrameBuffer::GetHandle() const
 {
 	return m_Handle;
 }

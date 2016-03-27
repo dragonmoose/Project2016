@@ -28,6 +28,12 @@ std::shared_ptr<ImageView> DepthStencilBuffer::GetImageView() const
 	return m_ImageView;
 }
 
+VkImage DepthStencilBuffer::GetImage() const
+{
+	return m_Image->GetHandle();
+}
+
+
 }
 }
 }

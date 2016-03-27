@@ -12,12 +12,24 @@ namespace Vulkan {
 namespace
 {
 	std::vector<const char*> n_EnabledLayers = {};
-	std::vector<const char*> n_EnabledExtensions = {};
+	std::vector<const char*> n_EnabledExtensions = {
+		VK_KHR_SURFACE_EXTENSION_NAME,
+#ifdef VK_USE_PLATFORM_WIN32_KHR
+		VK_KHR_WIN32_SURFACE_EXTENSION_NAME
+#endif
+	};
 
 #ifdef HAWK_DEBUG
 	std::vector<const char*> n_EnabledDebugLayers = {
-		"VK_LAYER_LUNARG_api_dump",
+		"VK_LAYER_LUNARG_threading",
+		"VK_LAYER_LUNARG_mem_tracker",
+		"VK_LAYER_LUNARG_object_tracker",
+		"VK_LAYER_LUNARG_draw_state",
+		"VK_LAYER_LUNARG_param_checker",
+		"VK_LAYER_LUNARG_swapchain",
 		"VK_LAYER_LUNARG_device_limits",
+		"VK_LAYER_LUNARG_image",
+		"VK_LAYER_GOOGLE_unique_objects",
 	};
 
 	std::vector<const char*> n_EnabledDebugExtensions = {

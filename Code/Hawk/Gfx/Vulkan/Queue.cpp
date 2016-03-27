@@ -26,6 +26,8 @@ void Queue::AddBatch(std::shared_ptr<CommandBufferBatch> p_Batch)
 
 void Queue::Submit()
 {
+	ASSERT(!m_Batches.empty(), "Calling submit on queue without any batches added");
+
 	std::vector<VkSubmitInfo> l_InfoVec;
 	l_InfoVec.resize(m_Batches.size());
 

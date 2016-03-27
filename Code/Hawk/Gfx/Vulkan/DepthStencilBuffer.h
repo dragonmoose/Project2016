@@ -18,6 +18,7 @@ public:
 	DepthStencilBuffer& operator=(const DepthStencilBuffer&) = delete;
 
 	std::shared_ptr<ImageView> GetImageView() const;
+	VkImage GetImage() const;
 
 private:
 	std::shared_ptr<Device> m_Device;

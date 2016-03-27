@@ -6,6 +6,7 @@
 #include "WindowSurface.h"
 #include "CommandBuffer.h"
 #include "RenderPass.h"
+#include "CmdImageMemoryBarrier.h"
 #include "Console/ScopedConsoleCommands.h"
 #include "Constants.h"
 #include "Util/Random.h"			// test
@@ -45,27 +46,11 @@ void API::Initialize()
 
 void API::Render()
 {
+	return;
 	m_Swapchain->SetCurrImage();
 
-	/*CommandBuffer& l_PreRenderBuffer = m_CommandBufferBatch->GetBuffer("PrePresent");
+	CommandBuffer& l_PreRenderBuffer = m_CommandBufferBatch->GetBuffer("PrePresent");
 	l_PreRenderBuffer.Begin();
-
-	VkImageMemoryBarrier l_ImageBarrier = {};
-	l_ImageBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-	l_ImageBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-	l_ImageBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
-	l_ImageBarrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-	l_ImageBarrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-	l_ImageBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-	l_ImageBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-	l_ImageBarrier.image = m_Swapchain->GetCurrImage();
-	l_ImageBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-	l_ImageBarrier.subresourceRange.baseMipLevel = 0;
-	l_ImageBarrier.subresourceRange.layerCount = 1;
-	l_ImageBarrier.subresourceRange.levelCount = 1;
-	vkCmdPipelineBarrier(l_PreRenderBuffer.GetHandle(), VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_DEPENDENCY_BY_REGION_BIT,
-		0, nullptr, 0, nullptr, 1, &l_ImageBarrier);
-	l_PreRenderBuffer.End();*/
 
 	CommandBuffer& l_ClearBuffer = m_CommandBufferBatch->GetBuffer("Clear");
 	l_ClearBuffer.Begin();
@@ -182,30 +167,16 @@ void API::SetupCommandBuffers()
 {
 	m_CommandBufferBatch = std::make_shared<CommandBufferBatch>(m_Device, m_CommandPool);
 	CommandBuffer& l_InitBuffer = m_CommandBufferBatch->CreateBuffer("Init", false);
-	m_CommandBufferBatch->CreateBuffer("Clear", false);
-	m_CommandBufferBatch->CreateBuffer("PrePresent", true);
-	m_CommandBufferBatch->CreateBuffer("PostPresent", true);
+	//m_CommandBufferBatch->CreateBuffer("Clear", false);
+	//m_CommandBufferBatch->CreateBuffer("PrePresent", true);
+	//m_CommandBufferBatch->CreateBuffer("PostPresent", true);
 
 	l_InitBuffer.Begin();
 	for (uint32 i = 0; i < Constants::c_uiNumBackBuffers; i++)
 	{
-		VkImageMemoryBarrier l_ImageBarrier = {};
-		l_ImageBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-		l_ImageBarrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_TRANSFER_WRITE_BIT;
-		l_ImageBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-		l_ImageBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-		l_ImageBarrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-		l_ImageBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-		l_ImageBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-		l_ImageBarrier.image = m_Swapchain->GetImage(i);
-		l_ImageBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-		l_ImageBarrier.subresourceRange.baseMipLevel = 0;
-		l_ImageBarrier.subresourceRange.layerCount = 1;
-		l_ImageBarrier.subresourceRange.levelCount = 1;
-		
-		vkCmdPipelineBarrier(l_InitBuffer.GetHandle(), VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_DEPENDENCY_BY_REGION_BIT,
-			0, nullptr, 0, nullptr, 1, &l_ImageBarrier);
+		l_InitBuffer.Issue(CmdImageMemoryBarrier(CmdImageMemoryBarrier::TransferOp::Color_UndefinedToPresent, m_Swapchain->GetImage(i)));
 	}
+	l_InitBuffer.Issue(CmdImageMemoryBarrier(CmdImageMemoryBarrier::TransferOp::DepthStencil_UndefinedToWrite, m_DepthStencilBuffer->GetImage()));
 	l_InitBuffer.End();
 
 	m_Queue->AddBatch(m_CommandBufferBatch);

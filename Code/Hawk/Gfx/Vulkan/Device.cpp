@@ -12,12 +12,19 @@ namespace Vulkan {
 namespace
 {
 	std::vector<const char*> n_EnabledLayers = {};
-	std::vector<const char*> n_EnabledExtensions = {};
+	std::vector<const char*> n_EnabledExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
 #ifdef HAWK_DEBUG
 	std::vector<const char*> n_EnabledDebugLayers = {
-		"VK_LAYER_LUNARG_api_dump",
+		"VK_LAYER_LUNARG_threading",
+		"VK_LAYER_LUNARG_mem_tracker",
+		"VK_LAYER_LUNARG_object_tracker",
+		"VK_LAYER_LUNARG_draw_state",
+		"VK_LAYER_LUNARG_param_checker",
+		"VK_LAYER_LUNARG_swapchain",
 		"VK_LAYER_LUNARG_device_limits",
+		"VK_LAYER_LUNARG_image",
+		"VK_LAYER_GOOGLE_unique_objects",
 	};
 
 	std::vector<const char*> n_EnabledDebugExtensions = {};
@@ -128,6 +135,11 @@ void Device::CreateDevice(const QueueFamilyCreateInfos& p_QueueFamilyCreateInfos
 	l_Info.ppEnabledExtensionNames = l_EnabledExtensions.data();
 	l_Info.pEnabledFeatures = &l_Features;
 	VK_THROW_IF_NOT_SUCCESS(vkCreateDevice(m_PhysicalDevice->GetHandle(), &l_Info, nullptr, &m_Handle), "Failed to create device");
+
+	for (auto& l_Elem : p_QueueFamilyCreateInfos)
+	{
+		delete[] l_Elem.pQueuePriorities;
+	}
 }
 
 void Device::ExtractQueues(const DeviceCreateInfo::QueueCreateInfoMap& p_Map)
@@ -223,8 +235,7 @@ void Device::GetQueueFamilyCreateInfos(const DeviceCreateInfo::QueueCreateInfoMa
 		l_CreateInfo.queueFamilyIndex = l_Family.first;
 		l_CreateInfo.queueCount = l_FamilyInfo.m_uiCount;
 
-		std::vector<float> l_NormalizedPrios;
-		l_NormalizedPrios.resize(l_FamilyInfo.m_Prios.size());
+		float* l_NormalizedPrios = new float[l_FamilyInfo.m_Prios.size()]; // deleted at the end of CreateDevice()
 
 		float l_fSum = 0.0f;
 		for (const auto& l_Prio : l_FamilyInfo.m_Prios)
@@ -236,7 +247,7 @@ void Device::GetQueueFamilyCreateInfos(const DeviceCreateInfo::QueueCreateInfoMa
 		{
 			l_NormalizedPrios[i] = l_FamilyInfo.m_Prios.at(i) / l_fSum;
 		}
-		l_CreateInfo.pQueuePriorities = l_NormalizedPrios.data();
+		l_CreateInfo.pQueuePriorities = l_NormalizedPrios;
 		p_FamilyCreateInfos.push_back(l_CreateInfo);
 		LOG("Queue family registered for creation. FamilyIndex=" << l_CreateInfo.queueFamilyIndex << " QueueCount=" << l_CreateInfo.queueCount << " Prios: " << l_NormalizedPrios, "vulkan", Debug)
 	}
