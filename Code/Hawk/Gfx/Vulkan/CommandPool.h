@@ -1,14 +1,12 @@
 #pragma once
 #include "System.h"
-#include "Device.h"
-//#include "CommandBuffer.h"
 #include <memory>
 
 namespace Hawk {
 namespace Gfx {
 namespace Vulkan {
 
-class CommandBuffer;
+class Device;
 
 class CommandPool final
 {

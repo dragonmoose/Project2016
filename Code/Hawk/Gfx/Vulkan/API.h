@@ -10,6 +10,7 @@
 #include "RenderPass.h"
 #include "DepthStencilBuffer.h"
 #include "Queue.h"
+#include "CommandBufferBatch.h"
 #include <memory>
 #include <array>
 
@@ -54,11 +55,8 @@ private:
 	std::vector<std::shared_ptr<FrameBuffer>> m_FrameBuffers;
 	std::shared_ptr<DepthStencilBuffer> m_DepthStencilBuffer;
 	std::shared_ptr<RenderPass> m_DefaultRenderPass;
-	std::shared_ptr<CommandBuffer> m_InitCommandBuffer;
-	std::shared_ptr<CommandBuffer> m_PreRenderCommandBuffer;
-	std::shared_ptr<CommandBuffer> m_PostRenderCommandBuffer;
-	std::shared_ptr<CommandBuffer> m_ClearCommandBuffer;
 	std::shared_ptr<Queue> m_Queue;
+	std::shared_ptr<CommandBufferBatch> m_CommandBufferBatch;
 };
 
 }

@@ -32,9 +32,21 @@ decltype(auto) average(Range& p_Range)
 }
 
 template<class Range, class T>
-decltype(auto) contains(Range& p_Range, const T& p_Value)
+bool contains(Range& p_Range, const T& p_Value)
 {
 	return std::find(p_Range.cbegin(), p_Range.cend(), p_Value) != p_Range.cend();
+}
+
+template<class Range, class T>
+decltype(auto) find_first(Range& p_Range, const T& p_Value)
+{
+	return std::find_if(p_Range.cbegin(), p_Range.cend(), [p_Value](const Range::value_type& p_KeyVal) { return p_KeyVal.first == p_Value; });
+}
+
+template<class Range, class Pred>
+decltype(auto) find_if(Range& p_Range, Pred p_Pred)
+{
+	return std::find_if(p_Range.cbegin(), p_Range.cend(), p_Pred);
 }
 
 template<class Range>

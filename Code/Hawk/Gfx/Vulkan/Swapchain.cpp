@@ -33,9 +33,12 @@ Swapchain::~Swapchain()
 
 void Swapchain::Present()
 {
-	// TODO: Act upon error messages
 	m_PresentInfo.pImageIndices = &m_uiCurrentBufferIndex;
 	VkResult l_Result = vkQueuePresentKHR(m_Queue->GetHandle(), &m_PresentInfo);
+	if (l_Result == VK_ERROR_OUT_OF_DATE_KHR)
+	{
+		// TODO: Window has been resized, swapchain needs to be recreated (query the new surface properties and recreate their swapchain)
+	}
 	LOG_IF(l_Result == VK_SUBOPTIMAL_KHR, "Queue presentation suboptimal", "vulkan", Warning);
 	VK_THROW_IF_ERR(l_Result, "Queue presentation failed");
 }
@@ -43,7 +46,7 @@ void Swapchain::Present()
 void Swapchain::SetCurrImage()
 {
 	// TODO: Handle the different error messages here
-	// TODO: Make use of semaphore to avoid waiting for image
+	// TODO: Add semaphore that will signal when 
 	VK_THROW_IF_NOT_SUCCESS(vkAcquireNextImageKHR(m_Device->GetHandle(), m_Handle, UINT64_MAX, VK_NULL_HANDLE, VK_NULL_HANDLE, &m_uiCurrentBufferIndex), "Failed to acquire next image");
 }
 

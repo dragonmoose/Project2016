@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CommandBuffer.h"
+#include "Device.h"
 
 namespace Hawk {
 namespace Gfx {

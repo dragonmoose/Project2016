@@ -47,7 +47,8 @@ void API::Render()
 {
 	m_Swapchain->SetCurrImage();
 
-	m_PreRenderCommandBuffer->Begin();
+	/*CommandBuffer& l_PreRenderBuffer = m_CommandBufferBatch->GetBuffer("PrePresent");
+	l_PreRenderBuffer.Begin();
 
 	VkImageMemoryBarrier l_ImageBarrier = {};
 	l_ImageBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -62,13 +63,12 @@ void API::Render()
 	l_ImageBarrier.subresourceRange.baseMipLevel = 0;
 	l_ImageBarrier.subresourceRange.layerCount = 1;
 	l_ImageBarrier.subresourceRange.levelCount = 1;
-	vkCmdPipelineBarrier(m_PreRenderCommandBuffer->GetHandle(), VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_DEPENDENCY_BY_REGION_BIT,
+	vkCmdPipelineBarrier(l_PreRenderBuffer.GetHandle(), VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_DEPENDENCY_BY_REGION_BIT,
 		0, nullptr, 0, nullptr, 1, &l_ImageBarrier);
-	m_PreRenderCommandBuffer->End();
-	m_Queue->Add(m_PreRenderCommandBuffer.get());
-	m_Queue->Submit();
+	l_PreRenderBuffer.End();*/
 
-	m_ClearCommandBuffer->Begin();
+	CommandBuffer& l_ClearBuffer = m_CommandBufferBatch->GetBuffer("Clear");
+	l_ClearBuffer.Begin();
 	VkRenderPassBeginInfo l_RenderPassBeginInfo = {};
 	l_RenderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 	l_RenderPassBeginInfo.renderPass = m_DefaultRenderPass->GetHandle();
@@ -85,11 +85,10 @@ void API::Render()
 	l_ClearValues[1].color.float32[3] = 1.0f;
 	l_RenderPassBeginInfo.pClearValues = l_ClearValues.data();
 
-	vkCmdBeginRenderPass(m_ClearCommandBuffer->GetHandle(), &l_RenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
-	vkCmdEndRenderPass(m_ClearCommandBuffer->GetHandle());
-	m_ClearCommandBuffer->End();
+	vkCmdBeginRenderPass(l_ClearBuffer.GetHandle(), &l_RenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+	vkCmdEndRenderPass(l_ClearBuffer.GetHandle());
+	l_ClearBuffer.End();
 
-	m_Queue->Add(m_ClearCommandBuffer.get());
 	m_Queue->Submit();
 	m_Swapchain->Present();
 }
@@ -181,9 +180,13 @@ void API::CreateDepthStencilBuffer()
 
 void API::SetupCommandBuffers()
 {
-	m_InitCommandBuffer = std::make_shared<CommandBuffer>(m_Device, m_CommandPool);
-	m_InitCommandBuffer->Begin();
+	m_CommandBufferBatch = std::make_shared<CommandBufferBatch>(m_Device, m_CommandPool);
+	CommandBuffer& l_InitBuffer = m_CommandBufferBatch->CreateBuffer("Init", false);
+	m_CommandBufferBatch->CreateBuffer("Clear", false);
+	m_CommandBufferBatch->CreateBuffer("PrePresent", true);
+	m_CommandBufferBatch->CreateBuffer("PostPresent", true);
 
+	l_InitBuffer.Begin();
 	for (uint32 i = 0; i < Constants::c_uiNumBackBuffers; i++)
 	{
 		VkImageMemoryBarrier l_ImageBarrier = {};
@@ -200,17 +203,13 @@ void API::SetupCommandBuffers()
 		l_ImageBarrier.subresourceRange.layerCount = 1;
 		l_ImageBarrier.subresourceRange.levelCount = 1;
 		
-		vkCmdPipelineBarrier(m_InitCommandBuffer->GetHandle(), VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_DEPENDENCY_BY_REGION_BIT,
+		vkCmdPipelineBarrier(l_InitBuffer.GetHandle(), VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_DEPENDENCY_BY_REGION_BIT,
 			0, nullptr, 0, nullptr, 1, &l_ImageBarrier);
 	}
+	l_InitBuffer.End();
 
-	m_InitCommandBuffer->End();
-	m_Queue->Add(m_InitCommandBuffer.get());
+	m_Queue->AddBatch(m_CommandBufferBatch);
 	m_Queue->Submit();
-
-	m_PreRenderCommandBuffer = std::make_shared<CommandBuffer>(m_Device, m_CommandPool);
-	m_PostRenderCommandBuffer = std::make_shared<CommandBuffer>(m_Device, m_CommandPool);
-	m_ClearCommandBuffer = std::make_shared<CommandBuffer>(m_Device, m_CommandPool);
 }
 
 

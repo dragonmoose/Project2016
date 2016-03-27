@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Queue.h"
-#include "CommandBuffer.h"
+#include "CommandBufferBatch.h"
 
 namespace Hawk {
 namespace Gfx {
@@ -12,7 +12,6 @@ Queue::Queue(VkQueue p_Queue, QueueType p_Type, uint32 p_uiFamilyIndex)
 , m_uiFamilyIndex(p_uiFamilyIndex)
 {
 	THROW_IF_NOT(m_Handle, "VkQueue handle null");
-	Clear();
 }
 
 Queue::~Queue()
@@ -20,27 +19,21 @@ Queue::~Queue()
 	LOG("Queue of type " << m_Type << " destroyed", "vulkan", Debug);
 }
 
-void Queue::Add(const CommandBuffer* p_CommandBuffer)
+void Queue::AddBatch(std::shared_ptr<CommandBufferBatch> p_Batch)
 {
-	m_PendingCommandBuffers.push_back(p_CommandBuffer->GetHandle());
+	m_Batches.push_back(p_Batch);
 }
 
 void Queue::Submit()
 {
-	ASSERT(!m_PendingCommandBuffers.empty(), "Nothing to submit");
-	m_SubmitInfo.commandBufferCount = m_PendingCommandBuffers.size();
-	m_SubmitInfo.pCommandBuffers = m_PendingCommandBuffers.data();
-	VK_THROW_IF_NOT_SUCCESS(vkQueueSubmit(m_Handle, 1, &m_SubmitInfo, VK_NULL_HANDLE), "Failed to submit queue");
-	Clear();
-}
+	std::vector<VkSubmitInfo> l_InfoVec;
+	l_InfoVec.resize(m_Batches.size());
 
-void Queue::Clear()
-{
-	m_PendingCommandBuffers.clear();
-
-	m_SubmitInfo = {};
-	m_SubmitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-	// TODO: Synchronization
+	for (uint32 i = 0; i < l_InfoVec.size(); i++)
+	{
+		l_InfoVec[i] = m_Batches[i]->GetSubmitInfo();
+	}
+	VK_THROW_IF_NOT_SUCCESS(vkQueueSubmit(m_Handle, l_InfoVec.size(), l_InfoVec.data(), VK_NULL_HANDLE), "Failed to submit queue");
 }
 
 VkQueue Queue::GetHandle() const

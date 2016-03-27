@@ -122,10 +122,34 @@
     <ClCompile Include="Gfx\Vulkan\Constants.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\DeviceCreateInfo.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\System.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\Util.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\DepthStencilBuffer.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\CommandBuffer.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\CommandPool.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
     <ClCompile Include="Gfx\Vulkan\Device.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\DeviceCreateInfo.cpp">
+    <ClCompile Include="Gfx\Vulkan\FrameBuffer.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\Image.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\ImageView.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Gfx\Vulkan\Instance.cpp">
@@ -137,37 +161,19 @@
     <ClCompile Include="Gfx\Vulkan\Queue.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\RenderPass.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\Semaphore.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
     <ClCompile Include="Gfx\Vulkan\Swapchain.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\System.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\Util.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Gfx\Vulkan\WindowSurface.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\CommandPool.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\CommandBuffer.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\RenderPass.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\ImageView.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\DepthStencilBuffer.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\FrameBuffer.cpp">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Gfx\Vulkan\Image.cpp">
+    <ClCompile Include="Gfx\Vulkan\CommandBufferBatch.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
@@ -344,22 +350,7 @@
     <ClInclude Include="Gfx\Vulkan\Constants.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\Device.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="Gfx\Vulkan\DeviceCreateInfo.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\Instance.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\PhysicalDevice.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\Queue.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\Swapchain.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Gfx\Vulkan\System.h">
@@ -371,28 +362,49 @@
     <ClInclude Include="Gfx\Vulkan\Util.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\WindowSurface.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\CommandPool.h">
+    <ClInclude Include="Gfx\Vulkan\DepthStencilBuffer.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Gfx\Vulkan\CommandBuffer.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\RenderPass.h">
+    <ClInclude Include="Gfx\Vulkan\CommandPool.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\ImageView.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\DepthStencilBuffer.h">
+    <ClInclude Include="Gfx\Vulkan\Device.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Gfx\Vulkan\FrameBuffer.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Gfx\Vulkan\Image.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\ImageView.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\Instance.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\PhysicalDevice.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\Queue.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\RenderPass.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\Semaphore.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\Swapchain.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\WindowSurface.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\CommandBufferBatch.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>
