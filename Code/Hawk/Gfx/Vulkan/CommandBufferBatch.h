@@ -13,13 +13,14 @@ class CommandPool;
 class CommandBufferBatch final
 {
 public:
-	CommandBufferBatch(std::shared_ptr<Device> p_Device, std::shared_ptr<CommandPool> p_CommandPool);
+	CommandBufferBatch(const std::string& p_Name, std::shared_ptr<Device> p_Device, std::shared_ptr<CommandPool> p_CommandPool);
 	~CommandBufferBatch();
 	CommandBufferBatch(const CommandBufferBatch&) = delete;
 	CommandBufferBatch& operator=(const CommandBufferBatch&) = delete;
 
-	CommandBuffer& CreateBuffer(const std::string& p_Name, bool p_bOneTimeSubmit);
-	CommandBuffer& GetBuffer(const std::string& p_Name);
+	CommandBuffer* CreateBuffer(const std::string& p_Name, bool p_bOneTimeSubmit);
+	CommandBuffer* GetBuffer(const std::string& p_Name);
+	const std::string& GetName() const;
 
 	void AddWaitSemaphore(const Semaphore* p_Semaphore, VkPipelineStageFlags p_PipelineWaitStages);
 	void AddSignalSemaphore(const Semaphore* p_Semaphore);
@@ -37,6 +38,7 @@ private:
 	std::vector<VkCommandBuffer> m_vkBuffers;
 	std::vector<VkSemaphore> m_vkWaitSemaphores;
 	std::vector<VkSemaphore> m_vkSignalSemaphores;
+	std::string m_Name;
 };
 
 }

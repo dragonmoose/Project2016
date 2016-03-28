@@ -3,6 +3,7 @@
 #include "System.h"
 #include "Util.h"
 #include "Util/Algorithm.h"
+#include "Util/StringUtil.h"
 #include <functional>
 
 namespace Hawk {
@@ -62,10 +63,10 @@ Instance::Instance()
 	l_Info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	l_Info.pApplicationInfo = &l_AppInfo;
 
-	l_Info.enabledLayerCount = l_EnabledLayers.size();
+	l_Info.enabledLayerCount = (uint32)l_EnabledLayers.size();
 	l_Info.ppEnabledLayerNames = l_EnabledLayers.data();
 
-	l_Info.enabledExtensionCount = l_EnabledExtensions.size();
+	l_Info.enabledExtensionCount = (uint32)l_EnabledExtensions.size();
 	l_Info.ppEnabledExtensionNames = l_EnabledExtensions.data();
 
 	VK_THROW_IF_NOT_SUCCESS(vkCreateInstance(&l_Info, nullptr, &m_Handle), "Failed to create vulkan instance for API-version: " << Util::SpecVersionToString(l_Info.pApplicationInfo->apiVersion));
@@ -235,7 +236,14 @@ VkBool32 VKAPI_CALL Instance::OnDebugReport(VkDebugReportFlagsEXT p_Flags, VkDeb
 	l_Msg << p_pLayerPrefix << ": '" << p_pMessage << "' [ObjType=" << p_ObjectType << " Obj=" << p_uiObject << " Loc=" << p_Location << " Code=" << p_iMessageCode << "]";
 	if (p_Flags & VK_DEBUG_REPORT_INFORMATION_BIT_EXT)
 	{
-		LOG(l_Msg.str(), "vkdbg", Info);
+		if (Hawk::StringUtil::AreEqual("MEM", p_pLayerPrefix, true)) // "MEM" spams
+		{
+			LOG(l_Msg.str(), "vkdbg", Trace);
+		}
+		else
+		{
+			LOG(l_Msg.str(), "vkdbg", Info);
+		}
 	}
 	else if (p_Flags & VK_DEBUG_REPORT_WARNING_BIT_EXT)
 	{

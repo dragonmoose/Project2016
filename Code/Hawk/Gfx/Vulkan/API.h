@@ -5,12 +5,11 @@
 #include "System.h"
 #include "WindowSurface.h"
 #include "Swapchain.h"
-#include "CommandPool.h"
 #include "FrameBuffer.h"
 #include "RenderPass.h"
 #include "DepthStencilBuffer.h"
-#include "Queue.h"
-#include "CommandBufferBatch.h"
+#include "GPUWorkManager.h"	// TODO: Fix so that these can be forward declared (some parse problem with RenderModule)
+#include "Semaphore.h"
 #include <memory>
 #include <array>
 
@@ -43,7 +42,9 @@ private:
 	void CreateRenderPasses();
 	void CreateFrameBuffers();
 	void CreateDepthStencilBuffer();
-	void SetupCommandBuffers();
+	void PrepareRendering();
+	void CreateGPUWorkManager();
+	void CreateCommandBuffers();
 	static const std::string& GetLogDesc();
 
 	std::shared_ptr<Instance> m_Instance;
@@ -51,12 +52,11 @@ private:
 	std::shared_ptr<Device> m_Device;
 	std::shared_ptr<WindowSurface> m_WindowSurface;
 	std::shared_ptr<Swapchain> m_Swapchain;
-	std::shared_ptr<CommandPool> m_CommandPool;
 	std::vector<std::shared_ptr<FrameBuffer>> m_FrameBuffers;
 	std::shared_ptr<DepthStencilBuffer> m_DepthStencilBuffer;
 	std::shared_ptr<RenderPass> m_DefaultRenderPass;
-	std::shared_ptr<Queue> m_Queue;
-	std::shared_ptr<CommandBufferBatch> m_CommandBufferBatch;
+	std::unique_ptr<GPUWorkManager> m_GPUWorkManager;
+	std::unique_ptr<Semaphore> m_NextImageSemaphore;
 };
 
 }

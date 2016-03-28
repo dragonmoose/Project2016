@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Swapchain.h"
 #include "Constants.h"
+#include "Semaphore.h"
 
 namespace Hawk {
 namespace Gfx {
@@ -42,11 +43,11 @@ void Swapchain::Present()
 	VK_THROW_IF_ERR(l_Result, "Queue presentation failed");
 }
 
-void Swapchain::SetCurrImage()
+void Swapchain::AcquireNextImage(Semaphore* p_Semaphore)
 {
 	// TODO: Handle the different error messages here
 	// TODO: Add semaphore that will signal when 
-	VK_THROW_IF_NOT_SUCCESS(vkAcquireNextImageKHR(m_Device->GetHandle(), m_Handle, UINT64_MAX, VK_NULL_HANDLE, VK_NULL_HANDLE, &m_uiCurrentBufferIndex), "Failed to acquire next image");
+	VK_THROW_IF_NOT_SUCCESS(vkAcquireNextImageKHR(m_Device->GetHandle(), m_Handle, UINT64_MAX, p_Semaphore->GetHandle(), VK_NULL_HANDLE, &m_uiCurrentBufferIndex), "Failed to acquire next image");
 }
 
 uint32 Swapchain::GetCurrImageIndex() const

@@ -16,8 +16,8 @@ public:
 	Queue(const Queue&) = delete;
 	Queue& operator=(const Queue&) = delete;
 
-	void AddBatch(std::shared_ptr<CommandBufferBatch> p_Batch);
-	void Submit();
+	void Submit(const CommandBufferBatch* p_Batch) const;
+	void Queue::Submit(const std::vector<CommandBufferBatch*>& p_Batches) const;
 
 	VkQueue GetHandle() const;
 	uint32 GetFamilyIndex() const;
@@ -26,7 +26,6 @@ private:
 	VkQueue m_Handle;
 	QueueType m_Type;
 	uint32 m_uiFamilyIndex;
-	std::vector<std::shared_ptr<CommandBufferBatch>> m_Batches;
 };
 
 }

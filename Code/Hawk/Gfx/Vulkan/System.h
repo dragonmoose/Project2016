@@ -3,10 +3,16 @@
 #include "System/Exception.h"
 #define VK_USE_PLATFORM_WIN32_KHR
 #include <vulkan/vulkan.h>
+#include <memory>
 
 namespace Hawk {
 namespace Gfx {
 namespace Vulkan {
+
+class Queue;
+class CommandBuffer;
+class CommandBufferPool;
+
 namespace System
 {
 	void Initialize();

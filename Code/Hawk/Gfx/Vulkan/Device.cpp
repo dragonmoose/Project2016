@@ -127,11 +127,11 @@ void Device::CreateDevice(const QueueFamilyCreateInfos& p_QueueFamilyCreateInfos
 
 	VkDeviceCreateInfo l_Info = {};
 	l_Info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-	l_Info.queueCreateInfoCount = p_QueueFamilyCreateInfos.size();
+	l_Info.queueCreateInfoCount = (uint32)p_QueueFamilyCreateInfos.size();
 	l_Info.pQueueCreateInfos = p_QueueFamilyCreateInfos.data();
-	l_Info.enabledLayerCount = l_EnabledLayers.size();
+	l_Info.enabledLayerCount = (uint32)l_EnabledLayers.size();
 	l_Info.ppEnabledLayerNames = l_EnabledLayers.data();
-	l_Info.enabledExtensionCount = l_EnabledExtensions.size();
+	l_Info.enabledExtensionCount = (uint32)l_EnabledExtensions.size();
 	l_Info.ppEnabledExtensionNames = l_EnabledExtensions.data();
 	l_Info.pEnabledFeatures = &l_Features;
 	VK_THROW_IF_NOT_SUCCESS(vkCreateDevice(m_PhysicalDevice->GetHandle(), &l_Info, nullptr, &m_Handle), "Failed to create device");

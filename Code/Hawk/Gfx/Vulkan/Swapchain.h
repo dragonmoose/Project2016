@@ -8,6 +8,8 @@ namespace Hawk {
 namespace Gfx {
 namespace Vulkan {
 
+class Semaphore;
+
 class Swapchain final
 {
 public:
@@ -16,7 +18,7 @@ public:
 	Swapchain(const Swapchain&) = delete;
 	Swapchain& operator=(const Swapchain&) = delete;
 	void Present();
-	void SetCurrImage();
+	void AcquireNextImage(Semaphore* p_Semaphore);
 	VkImage GetImage(uint32 p_uiIndex) const;
 	uint32 GetCurrImageIndex() const;
 	VkImage GetCurrImage() const;

@@ -41,7 +41,7 @@ void CmdImageMemoryBarrier::Issue(VkCommandBuffer p_CommandBufferHandle) const
 		0, nullptr, 0, nullptr, 1, &m_Barrier);
 }
 
-void CmdImageMemoryBarrier::GetFlags(TransferOp p_TransferOp, VkImageLayout l_OldLayout, VkImageLayout l_NewLayout, VkAccessFlags l_SrcAccessMask, VkAccessFlags l_DestAccessMask, VkImageAspectFlags l_AspectMask) const
+void CmdImageMemoryBarrier::GetFlags(TransferOp p_TransferOp, VkImageLayout& l_OldLayout, VkImageLayout& l_NewLayout, VkAccessFlags& l_SrcAccessMask, VkAccessFlags& l_DestAccessMask, VkImageAspectFlags& l_AspectMask) const
 {
 	switch (p_TransferOp)
 	{
@@ -55,7 +55,7 @@ void CmdImageMemoryBarrier::GetFlags(TransferOp p_TransferOp, VkImageLayout l_Ol
 		case TransferOp::Color_WriteToPresent:
 			l_OldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 			l_NewLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-			l_SrcAccessMask = VK_ACCESS_HOST_WRITE_BIT;
+			l_SrcAccessMask = VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 			l_DestAccessMask = VK_ACCESS_MEMORY_READ_BIT;
 			l_AspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 			break;
