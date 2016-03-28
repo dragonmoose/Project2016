@@ -71,8 +71,6 @@ void GPUWorkManager::WaitUntilIdle()
 	}
 }
 
-
-
 }
 }
 }
