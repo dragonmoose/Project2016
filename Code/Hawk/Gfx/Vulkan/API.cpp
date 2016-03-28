@@ -17,6 +17,7 @@ namespace Vulkan {
 
 API::~API()
 {
+	m_Device->WaitUntilIdle();
 	LOG("API destroyed", "vulkan", Debug);
 }
 
@@ -47,10 +48,11 @@ void API::Initialize()
 void API::Render()
 {
 	m_Swapchain->AcquireNextImage(m_NextImageSemaphore.get());
+	m_GPUWorkManager->WaitUntilIdle();
 
 	CommandBuffer* l_PrepareBuffer = m_GPUWorkManager->GetBatch("PreRenderBatch")->GetBuffer("PreRenderBuffer");
 	l_PrepareBuffer->Begin();
-	l_PrepareBuffer->Issue(CmdImageMemoryBarrier(CmdImageMemoryBarrier::TransferOp::Color_PresentToWrite, m_Swapchain->GetCurrImage()));
+	l_PrepareBuffer->Issue(CmdImageMemoryBarrier(CmdImageMemoryBarrier::TransferOp::Color_PresentToWrite, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, m_Swapchain->GetCurrImage()));
 	l_PrepareBuffer->End();
 
 	CommandBuffer* l_ClearBuffer = m_GPUWorkManager->GetBatch("ClearBatch")->GetBuffer("ClearBuffer");
@@ -78,7 +80,7 @@ void API::Render()
 
 	CommandBuffer* l_PostBuffer = m_GPUWorkManager->GetBatch("PostRenderBatch")->GetBuffer("PostRenderBuffer");
 	l_PostBuffer->Begin();
-	l_PostBuffer->Issue(CmdImageMemoryBarrier(CmdImageMemoryBarrier::TransferOp::Color_WriteToPresent, m_Swapchain->GetCurrImage()));
+	l_PostBuffer->Issue(CmdImageMemoryBarrier(CmdImageMemoryBarrier::TransferOp::Color_WriteToPresent, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, m_Swapchain->GetCurrImage()));
 	l_PostBuffer->End();
 
 	m_GPUWorkManager->SubmitQueued();
@@ -179,9 +181,9 @@ void API::PrepareRendering()
 	l_Buffer->Begin();
 	for (uint32 i = 0; i < Constants::c_uiNumBackBuffers; i++)
 	{
-		l_Buffer->Issue(CmdImageMemoryBarrier(CmdImageMemoryBarrier::TransferOp::Color_UndefinedToPresent, m_Swapchain->GetImage(i)));
+		l_Buffer->Issue(CmdImageMemoryBarrier(CmdImageMemoryBarrier::TransferOp::Color_UndefinedToPresent, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, m_Swapchain->GetImage(i)));
 	}
-	l_Buffer->Issue(CmdImageMemoryBarrier(CmdImageMemoryBarrier::TransferOp::DepthStencil_UndefinedToWrite, m_DepthStencilBuffer->GetImage()));
+	l_Buffer->Issue(CmdImageMemoryBarrier(CmdImageMemoryBarrier::TransferOp::DepthStencil_UndefinedToWrite, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, m_DepthStencilBuffer->GetImage()));
 	l_Buffer->End();
 	m_GPUWorkManager->Submit(l_Batch);
 }

@@ -46,13 +46,31 @@ CommandBufferBatch* GPUWorkManager::GetBatch(const std::string& p_Name) const
 void GPUWorkManager::SubmitQueued() const
 {
 	m_Queue->Submit(m_QueuedBatches);
-	VkResult l_Res = vkQueueWaitIdle(m_Queue->GetHandle());
 }
 
 void GPUWorkManager::Submit(CommandBufferBatch* p_Batch) const
 {
 	m_Queue->Submit(p_Batch);
 }
+
+void GPUWorkManager::ResetPool(bool p_bReleaseResources)
+{
+	m_Pool->Reset(p_bReleaseResources);
+}
+
+void GPUWorkManager::WaitUntilIdle()
+{
+	VkResult l_Result = vkQueueWaitIdle(m_Queue->GetHandle());
+	if (l_Result == VK_ERROR_DEVICE_LOST)
+	{
+		// TODO: Respond to device lost
+	}
+	else
+	{
+		VK_THROW_IF_ERR(l_Result, "Failed to wait for device to become idle");
+	}
+}
+
 
 
 }

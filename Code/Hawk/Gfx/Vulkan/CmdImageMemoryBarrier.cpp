@@ -5,8 +5,10 @@ namespace Hawk {
 namespace Gfx {
 namespace Vulkan {
 
-CmdImageMemoryBarrier::CmdImageMemoryBarrier(TransferOp p_TransferOp, VkImage p_Image)
+CmdImageMemoryBarrier::CmdImageMemoryBarrier(TransferOp p_TransferOp, VkPipelineStageFlags p_SrcStageMask, VkPipelineStageFlags p_DstStageMask, VkImage p_Image)
 : m_Barrier {VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER}
+, m_SrcStageMask(p_SrcStageMask)
+, m_DstStageMask(p_DstStageMask)
 {
 	VkImageLayout l_OldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 	VkImageLayout l_NewLayout = VK_IMAGE_LAYOUT_UNDEFINED;
@@ -37,7 +39,7 @@ void CmdImageMemoryBarrier::SetImage(VkImage p_Image)
 void CmdImageMemoryBarrier::Issue(VkCommandBuffer p_CommandBufferHandle) const
 {
 	ASSERT(m_Barrier.image, "No image set");
-	vkCmdPipelineBarrier(p_CommandBufferHandle, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_DEPENDENCY_BY_REGION_BIT,
+	vkCmdPipelineBarrier(p_CommandBufferHandle, m_SrcStageMask, m_DstStageMask, VK_DEPENDENCY_BY_REGION_BIT,
 		0, nullptr, 0, nullptr, 1, &m_Barrier);
 }
 

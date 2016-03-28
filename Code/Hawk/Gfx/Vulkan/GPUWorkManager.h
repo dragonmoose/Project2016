@@ -17,6 +17,9 @@ struct GPUWorkManagerInitInfo
 {
 	std::shared_ptr<Device> m_Device;
 	std::shared_ptr<Queue> m_Queue;
+
+	// Buffers can be reset individually and will also be reset when Begin() is called.
+	// If false it is an error to call Begin() without first calling ResetPool() on the GPUWorkManager.
 	bool m_bAllowIndividualBufferReset;
 	bool m_bShortLifetimeObjects;
 };
@@ -34,6 +37,9 @@ public:
 
 	void SubmitQueued() const;
 	void Submit(CommandBufferBatch* p_Batch) const;
+
+	void ResetPool(bool p_bReleaseResources);
+	void WaitUntilIdle();
 
 private:
 	std::shared_ptr<Device> m_Device;
