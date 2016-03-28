@@ -48,11 +48,11 @@ void API::Initialize()
 void API::Render()
 {
 	m_Swapchain->AcquireNextImage(m_NextImageSemaphore.get());
-	m_GPUWorkManager->WaitUntilIdle();
+	m_GPUWorkManager->WaitUntilIdle();		// TODO: Is there a better way to do this?
 
 	CommandBuffer* l_PrepareBuffer = m_GPUWorkManager->GetBatch("PreRenderBatch")->GetBuffer("PreRenderBuffer");
 	l_PrepareBuffer->Begin();
-	l_PrepareBuffer->Issue(CmdImageMemoryBarrier(CmdImageMemoryBarrier::TransferOp::Color_PresentToWrite, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, m_Swapchain->GetCurrImage()));
+	l_PrepareBuffer->Issue(CmdImageMemoryBarrier(CmdImageMemoryBarrier::TransferOp::Color_PresentToWrite, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, m_Swapchain->GetCurrImage()));
 	l_PrepareBuffer->End();
 
 	CommandBuffer* l_ClearBuffer = m_GPUWorkManager->GetBatch("ClearBatch")->GetBuffer("ClearBuffer");

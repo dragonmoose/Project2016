@@ -110,6 +110,7 @@ void Swapchain::InitPresentInfo()
 	m_PresentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 	m_PresentInfo.swapchainCount = 1;
 	m_PresentInfo.pSwapchains = &m_Handle;
+	// TODO: Need semaphore to wait for render commands to complete (samples do not)?
 }
 
 void Swapchain::GetImages()

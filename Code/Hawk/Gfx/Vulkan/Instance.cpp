@@ -31,6 +31,7 @@ namespace
 		"VK_LAYER_LUNARG_device_limits",
 		"VK_LAYER_LUNARG_image",
 		"VK_LAYER_GOOGLE_unique_objects",
+		"VK_LAYER_LUNARG_api_dump",
 	};
 
 	std::vector<const char*> n_EnabledDebugExtensions = {
