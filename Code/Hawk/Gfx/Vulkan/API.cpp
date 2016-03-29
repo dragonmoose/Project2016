@@ -48,7 +48,6 @@ void API::Initialize()
 void API::Render()
 {
 	m_Swapchain->AcquireNextImage(m_NextImageSemaphore.get());
-	m_GPUWorkManager->WaitUntilIdle();		// TODO: Is there a better way to do this?
 
 	CommandBuffer* l_PrepareBuffer = m_GPUWorkManager->GetBatch("PreRenderBatch")->GetBuffer("PreRenderBuffer");
 	l_PrepareBuffer->Begin();
@@ -85,6 +84,7 @@ void API::Render()
 
 	m_GPUWorkManager->SubmitQueued();
 	m_Swapchain->Present();
+	m_GPUWorkManager->WaitUntilIdle();		// TODO: Is there a better way to do this?
 }
 
 void API::SetFullscreenState(bool /*p_bState*/)
