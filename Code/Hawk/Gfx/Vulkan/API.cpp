@@ -204,9 +204,9 @@ void API::CreateCommandBuffers()
 			std::array<VkClearValue, 2> l_ClearValues;
 			l_ClearValues[0].depthStencil.depth = 0.0f;
 			l_ClearValues[0].depthStencil.stencil = 0;
-			l_ClearValues[1].color.float32[0] = 0.0f;
-			l_ClearValues[1].color.float32[1] = 1.0f;
-			l_ClearValues[1].color.float32[2] = 0.0f;
+			l_ClearValues[1].color.float32[0] = 1.0f;
+			l_ClearValues[1].color.float32[1] = 0.0f;
+			l_ClearValues[1].color.float32[2] = 1.0f;
 			l_ClearValues[1].color.float32[3] = 1.0f;
 			l_RenderPassBeginInfo.pClearValues = l_ClearValues.data();
 
