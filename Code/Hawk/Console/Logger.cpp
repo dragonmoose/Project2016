@@ -36,6 +36,7 @@ void Logger::Log(const std::string& p_Msg, const std::string& p_Tag, const std::
 {
 	if (!ConsoleAPI::Initialized()) return;
 
+	// TODO: Lock is acquired in ThreadInfoManager::GetLogText even when logging is disabled - prevent this
 	const std::string& l_ThreadInfo = ThreadInfoManager::GetLogText(std::this_thread::get_id());
 	if (!ShouldLog(p_Msg, l_ThreadInfo, p_Tag, p_Level)) return;
 

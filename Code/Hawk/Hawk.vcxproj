@@ -249,6 +249,11 @@
     <ClCompile Include="Util\StringUtil.cpp" />
     <ClCompile Include="Util\Util_Console.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="TODO.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Text>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

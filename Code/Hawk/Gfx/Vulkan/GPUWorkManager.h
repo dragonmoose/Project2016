@@ -23,6 +23,7 @@ struct GPUWorkManagerInitInfo
 	uint32 m_uiNumCopies;
 };
 
+// TODO: Improve this interface (how to handle multiple copies better?)
 class GPUWorkManager final
 {
 public:
