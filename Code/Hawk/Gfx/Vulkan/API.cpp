@@ -49,40 +49,7 @@ void API::Render()
 {
 	m_Swapchain->AcquireNextImage(m_NextImageSemaphore.get());
 
-	CommandBuffer* l_PrepareBuffer = m_GPUWorkManager->GetBatch("PreRenderBatch")->GetBuffer("PreRenderBuffer");
-	l_PrepareBuffer->Begin();
-	l_PrepareBuffer->Issue(CmdImageMemoryBarrier(CmdImageMemoryBarrier::TransferOp::Color_PresentToWrite, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, m_Swapchain->GetCurrImage()));
-	l_PrepareBuffer->End();
-
-	CommandBuffer* l_ClearBuffer = m_GPUWorkManager->GetBatch("ClearBatch")->GetBuffer("ClearBuffer");
-	l_ClearBuffer->Begin();
-
-	VkRenderPassBeginInfo l_RenderPassBeginInfo = {};
-	l_RenderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-	l_RenderPassBeginInfo.renderPass = m_DefaultRenderPass->GetHandle();
-	l_RenderPassBeginInfo.framebuffer = m_FrameBuffers[m_Swapchain->GetCurrImageIndex()]->GetHandle();
-	l_RenderPassBeginInfo.renderArea.extent = m_Swapchain->GetExtent();
-	l_RenderPassBeginInfo.clearValueCount = 2;
-
-	std::array<VkClearValue, 2> l_ClearValues;
-	l_ClearValues[0].depthStencil.depth = 0.0f;
-	l_ClearValues[0].depthStencil.stencil = 0;
-	l_ClearValues[1].color.float32[0] = 0.0f;
-	l_ClearValues[1].color.float32[1] = 0.0f;
-	l_ClearValues[1].color.float32[2] = Random::GetFloat(0.0f, 0.5f);
-	l_ClearValues[1].color.float32[3] = 1.0f;
-	l_RenderPassBeginInfo.pClearValues = l_ClearValues.data();
-
-	vkCmdBeginRenderPass(l_ClearBuffer->GetHandle(), &l_RenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
-	vkCmdEndRenderPass(l_ClearBuffer->GetHandle());
-	l_ClearBuffer->End();
-
-	CommandBuffer* l_PostBuffer = m_GPUWorkManager->GetBatch("PostRenderBatch")->GetBuffer("PostRenderBuffer");
-	l_PostBuffer->Begin();
-	l_PostBuffer->Issue(CmdImageMemoryBarrier(CmdImageMemoryBarrier::TransferOp::Color_WriteToPresent, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, m_Swapchain->GetCurrImage()));
-	l_PostBuffer->End();
-
-	m_GPUWorkManager->SubmitQueued();
+	m_GPUWorkManager->SubmitQueued(m_Swapchain->GetCurrImageIndex());
 	m_Swapchain->Present();
 	m_GPUWorkManager->WaitUntilIdle();		// TODO: Is there a better way to do this?
 }
@@ -175,17 +142,24 @@ void API::CreateDepthStencilBuffer()
 
 void API::PrepareRendering()
 {
-	CommandBufferBatch* l_Batch = m_GPUWorkManager->CreateBatch("SetupBatch", false);
-	CommandBuffer* l_Buffer = l_Batch->CreateBuffer("SetupBuffer", true);
-
-	l_Buffer->Begin();
+	m_GPUWorkManager->CreateBatch("SetupBatch", false);
+	std::vector<CommandBufferBatch*> l_Batches;
+	l_Batches.resize(Constants::c_uiNumBackBuffers);
 	for (uint32 i = 0; i < Constants::c_uiNumBackBuffers; i++)
 	{
+		CommandBufferBatch* l_Batch = m_GPUWorkManager->GetBatch("SetupBatch", i);
+		l_Batches[i] = l_Batch;
+
+		CommandBuffer* l_Buffer = l_Batch->CreateBuffer("SetupBuffer", true);
+		l_Buffer->Begin();
 		l_Buffer->Issue(CmdImageMemoryBarrier(CmdImageMemoryBarrier::TransferOp::Color_UndefinedToPresent, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, m_Swapchain->GetImage(i)));
+		if (i == 0)
+		{
+			l_Buffer->Issue(CmdImageMemoryBarrier(CmdImageMemoryBarrier::TransferOp::DepthStencil_UndefinedToWrite, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, m_DepthStencilBuffer->GetImage()));
+		}
+		l_Buffer->End();
 	}
-	l_Buffer->Issue(CmdImageMemoryBarrier(CmdImageMemoryBarrier::TransferOp::DepthStencil_UndefinedToWrite, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, m_DepthStencilBuffer->GetImage()));
-	l_Buffer->End();
-	m_GPUWorkManager->Submit(l_Batch);
+	m_GPUWorkManager->Submit(l_Batches);
 }
 
 void API::CreateGPUWorkManager()
@@ -194,17 +168,60 @@ void API::CreateGPUWorkManager()
 	l_Info.m_Device = m_Device;
 	l_Info.m_Queue = m_Device->GetQueue(QueueType::GraphicsPresentation, 0);
 	l_Info.m_bAllowIndividualBufferReset = true;
+	l_Info.m_uiNumCopies = Constants::c_uiNumBackBuffers;
 	m_GPUWorkManager = std::make_unique<GPUWorkManager>(l_Info);
 }
 
 void API::CreateCommandBuffers()
 {
-	CommandBufferBatch* l_PreRenderBatch = m_GPUWorkManager->CreateBatch("PreRenderBatch", true);
-	l_PreRenderBatch->AddWaitSemaphore(m_NextImageSemaphore.get(), VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT);
-	l_PreRenderBatch->CreateBuffer("PreRenderBuffer", true);
+	m_GPUWorkManager->CreateBatch("PreRenderBatch", true);
+	m_GPUWorkManager->CreateBatch("ClearBatch", true);
+	m_GPUWorkManager->CreateBatch("PostRenderBatch", true);
 
-	m_GPUWorkManager->CreateBatch("ClearBatch", true)->CreateBuffer("ClearBuffer", true);
-	m_GPUWorkManager->CreateBatch("PostRenderBatch", true)->CreateBuffer("PostRenderBuffer", true);
+	for (uint32 i = 0; i < Constants::c_uiNumBackBuffers; i++)
+	{
+		{
+			CommandBufferBatch* l_Batch = m_GPUWorkManager->GetBatch("PreRenderBatch", i);
+			l_Batch->AddWaitSemaphore(m_NextImageSemaphore.get(), VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT);
+
+			CommandBuffer* l_Buffer = l_Batch->CreateBuffer("PreRenderBuffer", false);
+			l_Buffer->Begin();
+			l_Buffer->Issue(CmdImageMemoryBarrier(CmdImageMemoryBarrier::TransferOp::Color_PresentToWrite, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, m_Swapchain->GetImage(i)));
+			l_Buffer->End();
+		}
+		{
+			CommandBufferBatch* l_Batch = m_GPUWorkManager->GetBatch("ClearBatch", i);
+			CommandBuffer* l_Buffer = l_Batch->CreateBuffer("ClearBuffer", false);
+			l_Buffer->Begin();
+
+			VkRenderPassBeginInfo l_RenderPassBeginInfo = {};
+			l_RenderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+			l_RenderPassBeginInfo.renderPass = m_DefaultRenderPass->GetHandle();
+			l_RenderPassBeginInfo.framebuffer = m_FrameBuffers[i]->GetHandle();
+			l_RenderPassBeginInfo.renderArea.extent = m_Swapchain->GetExtent();
+			l_RenderPassBeginInfo.clearValueCount = 2;
+
+			std::array<VkClearValue, 2> l_ClearValues;
+			l_ClearValues[0].depthStencil.depth = 0.0f;
+			l_ClearValues[0].depthStencil.stencil = 0;
+			l_ClearValues[1].color.float32[0] = 0.0f;
+			l_ClearValues[1].color.float32[1] = 1.0f;
+			l_ClearValues[1].color.float32[2] = 0.0f;
+			l_ClearValues[1].color.float32[3] = 1.0f;
+			l_RenderPassBeginInfo.pClearValues = l_ClearValues.data();
+
+			vkCmdBeginRenderPass(l_Buffer->GetHandle(), &l_RenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+			vkCmdEndRenderPass(l_Buffer->GetHandle());
+			l_Buffer->End();
+		}
+		{
+			CommandBufferBatch* l_Batch = m_GPUWorkManager->GetBatch("PostRenderBatch", i);
+			CommandBuffer* l_Buffer = l_Batch->CreateBuffer("PostRender", false);
+			l_Buffer->Begin();
+			l_Buffer->Issue(CmdImageMemoryBarrier(CmdImageMemoryBarrier::TransferOp::Color_WriteToPresent, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, m_Swapchain->GetImage(i)));
+			l_Buffer->End();
+		}
+	}
 }
 
 const std::string& API::GetLogDesc()
