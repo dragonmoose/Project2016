@@ -124,6 +124,7 @@
     <ClInclude Include="Events\EventRouter.h" />
     <ClInclude Include="Events\IEvent.h" />
     <ClInclude Include="Events\QueuedEvent.h" />
+    <ClInclude Include="Gfx\Color.h" />
     <ClInclude Include="Gfx\DebugGeometrySubModule.h" />
     <ClInclude Include="Gfx\DebugTextSubModule.h" />
     <ClInclude Include="Gfx\DebugEvents.h" />
@@ -132,6 +133,8 @@
     <ClInclude Include="Gfx\RenderableComponent.h" />
     <ClInclude Include="Gfx\RenderingModule.h" />
     <ClInclude Include="Gfx\Vulkan\CmdImageMemoryBarrier.h" />
+    <ClInclude Include="Gfx\Vulkan\CmdRenderPass.h" />
+    <ClInclude Include="Gfx\Vulkan\CmdScissor.h" />
     <ClInclude Include="Gfx\Vulkan\CommandBuffer.h" />
     <ClInclude Include="Gfx\Vulkan\CommandBufferBatch.h" />
     <ClInclude Include="Gfx\Vulkan\CommandPool.h" />
@@ -146,8 +149,11 @@
     <ClInclude Include="Gfx\Vulkan\Queue.h" />
     <ClInclude Include="Gfx\Vulkan\RenderPass.h" />
     <ClInclude Include="Gfx\Vulkan\Semaphore.h" />
+    <ClInclude Include="Gfx\Vulkan\ShaderModule.h" />
+    <ClInclude Include="Gfx\Vulkan\ShaderManager.h" />
     <ClInclude Include="Gfx\Vulkan\Swapchain.h" />
     <ClInclude Include="Gfx\Vulkan\VertexDeclarations.h" />
+    <ClInclude Include="Gfx\Vulkan\CmdViewport.h" />
     <ClInclude Include="Gfx\Vulkan\WindowSurface.h" />
     <ClInclude Include="Gfx\Vulkan\DeviceCreateInfo.h" />
     <ClInclude Include="Gfx\Vulkan\Device.h" />
@@ -199,6 +205,7 @@
     <ClCompile Include="Debug\ProfilerManager.cpp" />
     <ClCompile Include="Events\EventManager.cpp" />
     <ClCompile Include="Events\EventRouter.cpp" />
+    <ClCompile Include="Gfx\Color.cpp" />
     <ClCompile Include="Gfx\DebugGeometrySubModule.cpp" />
     <ClCompile Include="Gfx\DebugTextSubModule.cpp" />
     <ClCompile Include="Gfx\FPSTrackerSubModule.cpp" />
@@ -206,6 +213,8 @@
     <ClCompile Include="Gfx\RenderingModule.cpp" />
     <ClCompile Include="Gfx\Vulkan\API.cpp" />
     <ClCompile Include="Gfx\Vulkan\CmdImageMemoryBarrier.cpp" />
+    <ClCompile Include="Gfx\Vulkan\CmdRenderPass.cpp" />
+    <ClCompile Include="Gfx\Vulkan\CmdScissor.cpp" />
     <ClCompile Include="Gfx\Vulkan\CommandBuffer.cpp" />
     <ClCompile Include="Gfx\Vulkan\CommandBufferBatch.cpp" />
     <ClCompile Include="Gfx\Vulkan\CommandPool.cpp" />
@@ -223,7 +232,10 @@
     <ClCompile Include="Gfx\Vulkan\Queue.cpp" />
     <ClCompile Include="Gfx\Vulkan\RenderPass.cpp" />
     <ClCompile Include="Gfx\Vulkan\Semaphore.cpp" />
+    <ClCompile Include="Gfx\Vulkan\ShaderModule.cpp" />
+    <ClCompile Include="Gfx\Vulkan\ShaderManager.cpp" />
     <ClCompile Include="Gfx\Vulkan\Swapchain.cpp" />
+    <ClCompile Include="Gfx\Vulkan\CmdViewport.cpp" />
     <ClCompile Include="Gfx\Vulkan\WindowSurface.cpp" />
     <ClCompile Include="Gfx\Vulkan\System.cpp" />
     <ClCompile Include="Gfx\Vulkan\Util.cpp" />

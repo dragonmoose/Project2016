@@ -3,13 +3,15 @@
 #include "Device.h"
 #include "VertexDeclarations.h"
 #include "RenderPass.h"
+#include "ShaderModule.h"
+#include "ShaderManager.h"
 #include "Base/WindowManager.h"
 
 namespace Hawk {
 namespace Gfx {
 namespace Vulkan {
 
-GraphicsPipeline::GraphicsPipeline(std::shared_ptr<Device> p_Device, const RenderPass* p_RenderPass)
+GraphicsPipeline::GraphicsPipeline(std::shared_ptr<Device> p_Device, const RenderPass* p_RenderPass, ShaderManager* p_ShaderManager)
 : m_Device(p_Device)
 {
 	VkPipelineCache l_Cache = VK_NULL_HANDLE; // TODO: Use pipeline caching
@@ -90,10 +92,16 @@ GraphicsPipeline::GraphicsPipeline(std::shared_ptr<Device> p_Device, const Rende
 	l_DynamicInfo.dynamicStateCount = (uint32)l_DynamicStates.size();
 	l_DynamicInfo.pDynamicStates = l_DynamicStates.data();
 
+	std::vector<VkPipelineShaderStageCreateInfo> l_ShaderInfo;
+	l_ShaderInfo.resize(2);
+	
+	//l_ShaderInfo[0] = p_ShaderManager->GetShader("test.vert", "main", VK_SHADER_STAGE_VERTEX_BIT);
+	l_ShaderInfo[1] = p_ShaderManager->GetShader("triangle.vert.spv", "main", VK_SHADER_STAGE_VERTEX_BIT);
+
 	VkGraphicsPipelineCreateInfo l_Info = {};
 	l_Info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 	l_Info.stageCount = 2;
-	//l_Info.pStages = fix!
+	l_Info.pStages = l_ShaderInfo.data();
 	l_Info.pVertexInputState = &l_VertexInputStateInfo;
 	l_Info.pInputAssemblyState = &l_AssemblyInfo;
 	l_Info.pTessellationState = nullptr;
@@ -108,13 +116,13 @@ GraphicsPipeline::GraphicsPipeline(std::shared_ptr<Device> p_Device, const Rende
 	l_Info.subpass = 0;
 	l_Info.basePipelineHandle = VK_NULL_HANDLE;
 
-	VK_THROW_IF_NOT_SUCCESS(vkCreateGraphicsPipelines(m_Device->GetHandle(), l_Cache, 1, &l_Info, nullptr, &m_Handle), "Failed to create graphics pipeline");
+//	VK_THROW_IF_NOT_SUCCESS(vkCreateGraphicsPipelines(m_Device->GetHandle(), l_Cache, 1, &l_Info, nullptr, &m_Handle), "Failed to create graphics pipeline");
 }
 
 GraphicsPipeline::~GraphicsPipeline()
 {
 	LOG("GraphicsPipeline destroyed", "vulkan", Debug);
-	vkDestroyPipeline(m_Device->GetHandle(), m_Handle, nullptr);
+//	vkDestroyPipeline(m_Device->GetHandle(), m_Handle, nullptr);
 }
 
 VkPipeline GraphicsPipeline::GetHandle() const

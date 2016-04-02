@@ -10,6 +10,7 @@
 #include "DepthStencilBuffer.h"
 #include "GPUWorkManager.h"	// TODO: Fix so that these can be forward declared (some parse problem with RenderModule)
 #include "Semaphore.h"
+#include "ShaderManager.h"
 #include <memory>
 #include <array>
 
@@ -57,6 +58,7 @@ private:
 	std::shared_ptr<RenderPass> m_DefaultRenderPass;
 	std::unique_ptr<GPUWorkManager> m_GPUWorkManager;
 	std::unique_ptr<Semaphore> m_NextImageSemaphore;
+	std::shared_ptr<ShaderManager> m_ShaderManager;
 };
 
 }

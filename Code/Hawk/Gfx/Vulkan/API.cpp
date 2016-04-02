@@ -6,9 +6,15 @@
 #include "WindowSurface.h"
 #include "CommandBuffer.h"
 #include "RenderPass.h"
+#include "ShaderModule.h"
 #include "CmdImageMemoryBarrier.h"
+#include "GraphicsPipeline.h"
 #include "Console/ScopedConsoleCommands.h"
 #include "Constants.h"
+#include "CmdViewport.h"
+#include "CmdScissor.h"
+#include "CmdRenderPass.h"
+#include "Gfx/Color.h"
 #include "Util/Random.h"			// test
 
 namespace Hawk {
@@ -33,10 +39,13 @@ void API::Initialize()
 
 	CreateDevice(l_CreateInfo);
 	CreateSwapchain();
+	m_ShaderManager = std::make_shared<ShaderManager>(m_Device);
 	CreateRenderPasses();
 	CreateDepthStencilBuffer();
 	CreateFrameBuffers();
 	CreateGPUWorkManager();
+
+	GraphicsPipeline tst_Pipeline(m_Device, m_DefaultRenderPass.get(), m_ShaderManager.get());
 
 	CreateCommandBuffers();
 	PrepareRendering();
@@ -194,24 +203,18 @@ void API::CreateCommandBuffers()
 			CommandBuffer* l_Buffer = l_Batch->CreateBuffer("ClearBuffer", false);
 			l_Buffer->Begin();
 
-			VkRenderPassBeginInfo l_RenderPassBeginInfo = {};
-			l_RenderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-			l_RenderPassBeginInfo.renderPass = m_DefaultRenderPass->GetHandle();
-			l_RenderPassBeginInfo.framebuffer = m_FrameBuffers[i]->GetHandle();
-			l_RenderPassBeginInfo.renderArea.extent = m_Swapchain->GetExtent();
-			l_RenderPassBeginInfo.clearValueCount = 2;
+			VkExtent2D l_Extent = m_Swapchain->GetExtent();
 
-			std::array<VkClearValue, 2> l_ClearValues;
-			l_ClearValues[0].depthStencil.depth = 0.0f;
-			l_ClearValues[0].depthStencil.stencil = 0;
-			l_ClearValues[1].color.float32[0] = 1.0f;
-			l_ClearValues[1].color.float32[1] = 0.0f;
-			l_ClearValues[1].color.float32[2] = 1.0f;
-			l_ClearValues[1].color.float32[3] = 1.0f;
-			l_RenderPassBeginInfo.pClearValues = l_ClearValues.data();
+			CmdRenderPass l_CmdRenderPass(m_DefaultRenderPass.get(), m_FrameBuffers[i].get(), l_Extent, Color::Magenta);
+			l_CmdRenderPass.Begin(l_Buffer->GetHandle());
 
-			vkCmdBeginRenderPass(l_Buffer->GetHandle(), &l_RenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
-			vkCmdEndRenderPass(l_Buffer->GetHandle());
+			l_Buffer->Issue(CmdViewport(l_Extent));
+			l_Buffer->Issue(CmdScissor(l_Extent));
+
+			l_CmdRenderPass.End(l_Buffer->GetHandle());
+
+			// end pass
+
 			l_Buffer->End();
 		}
 		{

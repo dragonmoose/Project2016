@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Config.h"
 #include "Duration.h"
-#include <boost/filesystem.hpp>
+#include "Util/FileUtil.h"
 #include <boost/property_tree/ini_parser.hpp>
 
 namespace Hawk {
@@ -35,7 +35,7 @@ bool Config::Load(bool p_bForce)
 	{
 		if (!m_Filename.empty())
 		{
-			if (boost::filesystem::exists(m_Filename))
+			if (FileUtil::Exists(m_Filename))
 			{
 				if (p_bForce)
 				{
@@ -43,7 +43,7 @@ bool Config::Load(bool p_bForce)
 				}
 				else
 				{
-					std::time_t l_WriteTime = boost::filesystem::last_write_time(m_Filename);
+					std::time_t l_WriteTime = FileUtil::LastWriteTime(m_Filename);
 					if (l_WriteTime > m_LastWriteTime)
 					{
 						m_LastWriteTime = l_WriteTime;

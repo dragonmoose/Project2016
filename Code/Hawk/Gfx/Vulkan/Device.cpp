@@ -12,14 +12,17 @@ namespace Vulkan {
 namespace
 {
 	std::vector<const char*> n_EnabledLayers = {};
-	std::vector<const char*> n_EnabledExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+	std::vector<const char*> n_EnabledExtensions = {
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+		"VK_NV_glsl_shader",
+	};
 
 #ifdef HAWK_DEBUG
 	std::vector<const char*> n_EnabledDebugLayers = {
 		"VK_LAYER_LUNARG_threading",
 		"VK_LAYER_LUNARG_mem_tracker",
 		"VK_LAYER_LUNARG_object_tracker",
-		"VK_LAYER_LUNARG_draw_state",
+		"VK_LAYER_LUNARG_draw_state", // TODO: Check if still makes shader creation from glsl fail
 		"VK_LAYER_LUNARG_param_checker",
 		"VK_LAYER_LUNARG_swapchain",
 		"VK_LAYER_LUNARG_device_limits",

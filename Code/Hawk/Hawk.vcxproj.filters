@@ -185,6 +185,24 @@
     <ClCompile Include="Gfx\Vulkan\GraphicsPipeline.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\ShaderModule.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\ShaderManager.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\CmdViewport.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\CmdScissor.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\CmdRenderPass.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Color.cpp">
+      <Filter>Gfx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -427,6 +445,24 @@
     </ClInclude>
     <ClInclude Include="Gfx\Vulkan\VertexDeclarations.h">
       <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\ShaderManager.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\ShaderModule.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\CmdViewport.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\CmdScissor.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\CmdRenderPass.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Color.h">
+      <Filter>Gfx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
