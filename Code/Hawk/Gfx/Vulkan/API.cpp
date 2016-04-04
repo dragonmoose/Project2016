@@ -14,6 +14,8 @@
 #include "CmdViewport.h"
 #include "CmdScissor.h"
 #include "CmdRenderPass.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 #include "Gfx/Color.h"
 #include "Util/Random.h"			// test
 
@@ -49,6 +51,30 @@ void API::Initialize()
 
 	CreateCommandBuffers();
 	PrepareRendering();
+
+	VertexDeclarations::PosColorVertices l_Vertices =
+	{
+		{{-1.0f, -1.0f, -1.0f},	{0.0f, 0.0f, 1.0f, 1.0f}}, // Back
+		{{1.0f, -1.0f, -1.0f},	{0.0f, 0.0f, 1.0f, 1.0f}},
+		{{1.0f, 1.0f, -1.0f},	{0.0f, 0.0f, 1.0f, 1.0f}},
+		{{-1.0f, 1.0f, -1.0f},	{0.0f, 0.0f, 1.0f, 1.0f}},
+
+		{{-1.0f, -1.0f, 1.0f},	{1.0f, 0.0f, 0.0f, 1.0f}}, // Front
+		{{1.0f, -1.0f, 1.0f},	{1.0f, 0.0f, 0.0f, 1.0f}},
+		{{1.0f, 1.0f, 1.0f},	{1.0f, 0.0f, 0.0f, 1.0f}},
+		{{-1.0f, 1.0f, 1.0f},	{1.0f, 0.0f, 0.0f, 1.0f}}
+	};
+	VertexBuffer l_VertexBuffer(m_Device, l_Vertices);
+
+	std::vector<uint32> l_Indices = {
+		0, 3, 2, 0, 2, 1, // Back
+		4, 7, 6, 4, 6, 5, // Front
+		7, 3, 0, 7, 0, 4, // Left
+		2, 6, 5, 2, 5, 1, // Right
+		2, 3, 7, 2, 7, 6, // Top
+		4, 0, 1, 4, 1, 5  // Bottom
+	};
+	IndexBuffer l_IndexBuffer(m_Device, l_Indices);
 
 	//SetFullscreenState(Config::Instance().Get("gfx.fullscreen", false));
 	LOG("Vulkan initialized", "vulkan", Info);
@@ -212,8 +238,6 @@ void API::CreateCommandBuffers()
 			l_Buffer->Issue(CmdScissor(l_Extent));
 
 			l_CmdRenderPass.End(l_Buffer->GetHandle());
-
-			// end pass
 
 			l_Buffer->End();
 		}

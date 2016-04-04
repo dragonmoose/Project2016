@@ -145,6 +145,7 @@
     <ClInclude Include="Gfx\Vulkan\GraphicsPipeline.h" />
     <ClInclude Include="Gfx\Vulkan\Image.h" />
     <ClInclude Include="Gfx\Vulkan\ImageView.h" />
+    <ClInclude Include="Gfx\Vulkan\IndexBuffer.h" />
     <ClInclude Include="Gfx\Vulkan\PhysicalDevice.h" />
     <ClInclude Include="Gfx\Vulkan\Queue.h" />
     <ClInclude Include="Gfx\Vulkan\RenderPass.h" />
@@ -152,6 +153,7 @@
     <ClInclude Include="Gfx\Vulkan\ShaderModule.h" />
     <ClInclude Include="Gfx\Vulkan\ShaderManager.h" />
     <ClInclude Include="Gfx\Vulkan\Swapchain.h" />
+    <ClInclude Include="Gfx\Vulkan\VertexBuffer.h" />
     <ClInclude Include="Gfx\Vulkan\VertexDeclarations.h" />
     <ClInclude Include="Gfx\Vulkan\CmdViewport.h" />
     <ClInclude Include="Gfx\Vulkan\WindowSurface.h" />
@@ -227,6 +229,7 @@
     <ClCompile Include="Gfx\Vulkan\GraphicsPipeline.cpp" />
     <ClCompile Include="Gfx\Vulkan\Image.cpp" />
     <ClCompile Include="Gfx\Vulkan\ImageView.cpp" />
+    <ClCompile Include="Gfx\Vulkan\IndexBuffer.cpp" />
     <ClCompile Include="Gfx\Vulkan\Instance.cpp" />
     <ClCompile Include="Gfx\Vulkan\PhysicalDevice.cpp" />
     <ClCompile Include="Gfx\Vulkan\Queue.cpp" />
@@ -236,6 +239,7 @@
     <ClCompile Include="Gfx\Vulkan\ShaderManager.cpp" />
     <ClCompile Include="Gfx\Vulkan\Swapchain.cpp" />
     <ClCompile Include="Gfx\Vulkan\CmdViewport.cpp" />
+    <ClCompile Include="Gfx\Vulkan\VertexBuffer.cpp" />
     <ClCompile Include="Gfx\Vulkan\WindowSurface.cpp" />
     <ClCompile Include="Gfx\Vulkan\System.cpp" />
     <ClCompile Include="Gfx\Vulkan\Util.cpp" />

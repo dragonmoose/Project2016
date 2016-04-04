@@ -14,7 +14,7 @@ namespace Vulkan {
 GraphicsPipeline::GraphicsPipeline(std::shared_ptr<Device> p_Device, const RenderPass* p_RenderPass, ShaderManager* p_ShaderManager)
 : m_Device(p_Device)
 {
-	VkPipelineCache l_Cache = VK_NULL_HANDLE; // TODO: Use pipeline caching
+	//VkPipelineCache l_Cache = VK_NULL_HANDLE; // TODO: Use pipeline caching
 
 	VkPipelineVertexInputStateCreateInfo l_VertexInputStateInfo = {};
 	l_VertexInputStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -22,7 +22,7 @@ GraphicsPipeline::GraphicsPipeline(std::shared_ptr<Device> p_Device, const Rende
 	// TODO: Declare this elsewhere, how manage binding, inputRate?
 	VkVertexInputBindingDescription l_VertexBindingDesc = {};
 	l_VertexBindingDesc.binding = 0;
-	l_VertexBindingDesc.stride = VertexDeclarations::PosColor::Stride();
+	l_VertexBindingDesc.stride = VertexDeclarations::PosColor::Size();
 	l_VertexBindingDesc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 	
 	l_VertexInputStateInfo.vertexBindingDescriptionCount = 1;

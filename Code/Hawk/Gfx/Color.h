@@ -30,10 +30,8 @@ public:
 	static const Color Blue;
 	static const Color Magenta;
 
-
 private:
 	float ToFloat(uint8 p_uiValue) const;
-
 	std::array<float, 4> m_Channels;
 };
 

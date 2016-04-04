@@ -65,14 +65,13 @@ void Image::AllocateMemory()
 	VkMemoryAllocateInfo l_AllocateInfo = {};
 	l_AllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 	l_AllocateInfo.allocationSize = l_MemReq.size;
-	uint32 l_uiMemoryTypeIndex = 0;
-	THROW_IF_NOT(m_Device->GetPhysicalDevice()->TryGetMemoryTypeIndex(l_MemReq.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, l_uiMemoryTypeIndex), "Failed to find suitable memory type for image allocation");
-	l_AllocateInfo.memoryTypeIndex = l_uiMemoryTypeIndex;
+
+	THROW_IF_NOT(m_Device->GetPhysicalDevice()->TryGetMemoryTypeIndex(l_MemReq.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, l_AllocateInfo.memoryTypeIndex), "Failed to find suitable memory type for image allocation");
 
 	VK_THROW_IF_NOT_SUCCESS(vkAllocateMemory(m_Device->GetHandle(), &l_AllocateInfo, nullptr, &m_DeviceMemory), "Failed to allocate memory for image");
 	VK_THROW_IF_NOT_SUCCESS(vkBindImageMemory(m_Device->GetHandle(), m_Handle, m_DeviceMemory, 0), "Failed to bind memory to image");
 
-	LOG("Allocated memory for image. SizeInBytes=" << l_MemReq.size << " MemoryTypeIndex=" << l_uiMemoryTypeIndex, "vulkan", Debug);
+	LOG("Allocated memory for image. SizeInBytes=" << l_MemReq.size << " MemoryTypeIndex=" << l_AllocateInfo.memoryTypeIndex, "vulkan", Debug);
 }
 
 }

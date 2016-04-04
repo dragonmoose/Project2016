@@ -203,6 +203,12 @@
     <ClCompile Include="Gfx\Color.cpp">
       <Filter>Gfx</Filter>
     </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\VertexBuffer.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\IndexBuffer.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -463,6 +469,12 @@
     </ClInclude>
     <ClInclude Include="Gfx\Color.h">
       <Filter>Gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\VertexBuffer.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\IndexBuffer.h">
+      <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
