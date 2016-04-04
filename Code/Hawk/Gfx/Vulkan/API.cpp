@@ -66,7 +66,7 @@ void API::Initialize()
 	};
 	VertexBuffer l_VertexBuffer(m_Device, l_Vertices);
 
-	std::vector<uint32> l_Indices = {
+	std::vector<uint16> l_Indices = {
 		0, 3, 2, 0, 2, 1, // Back
 		4, 7, 6, 4, 6, 5, // Front
 		7, 3, 0, 7, 0, 4, // Left
