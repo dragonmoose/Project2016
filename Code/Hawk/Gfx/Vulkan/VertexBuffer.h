@@ -50,6 +50,7 @@ public:
 	VertexBuffer& operator=(const VertexBuffer&) = delete;
 
 	VkBuffer GetHandle() const;
+	void Issue(VkCommandBuffer p_CommandBufferHandle) const;
 
 private:
 

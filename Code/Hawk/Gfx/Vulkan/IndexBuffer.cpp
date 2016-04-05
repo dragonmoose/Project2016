@@ -61,16 +61,16 @@ VkBuffer IndexBuffer::GetHandle() const
 {
 	return m_Handle;
 }
+
 uint32 IndexBuffer::GetCount() const
 {
 	return m_uiCount;
 }
 
-VkIndexType IndexBuffer::GetIndexType() const
+void IndexBuffer::Issue(VkCommandBuffer p_CommandBufferHandle) const
 {
-	return m_IndexType;
+	vkCmdBindIndexBuffer(p_CommandBufferHandle, m_Handle, 0, m_IndexType);
 }
-
 
 }
 }

@@ -140,6 +140,9 @@
     <ClInclude Include="Gfx\Vulkan\CommandPool.h" />
     <ClInclude Include="Gfx\Vulkan\Constants.h" />
     <ClInclude Include="Gfx\Vulkan\DepthStencilBuffer.h" />
+    <ClInclude Include="Gfx\Vulkan\DescriptorPool.h" />
+    <ClInclude Include="Gfx\Vulkan\DescriptorSet.h" />
+    <ClInclude Include="Gfx\Vulkan\DescriptorSetLayout.h" />
     <ClInclude Include="Gfx\Vulkan\FrameBuffer.h" />
     <ClInclude Include="Gfx\Vulkan\GPUWorkManager.h" />
     <ClInclude Include="Gfx\Vulkan\GraphicsPipeline.h" />
@@ -147,6 +150,7 @@
     <ClInclude Include="Gfx\Vulkan\ImageView.h" />
     <ClInclude Include="Gfx\Vulkan\IndexBuffer.h" />
     <ClInclude Include="Gfx\Vulkan\PhysicalDevice.h" />
+    <ClInclude Include="Gfx\Vulkan\PipelineLayout.h" />
     <ClInclude Include="Gfx\Vulkan\Queue.h" />
     <ClInclude Include="Gfx\Vulkan\RenderPass.h" />
     <ClInclude Include="Gfx\Vulkan\Semaphore.h" />
@@ -222,6 +226,9 @@
     <ClCompile Include="Gfx\Vulkan\CommandPool.cpp" />
     <ClCompile Include="Gfx\Vulkan\Constants.cpp" />
     <ClCompile Include="Gfx\Vulkan\DepthStencilBuffer.cpp" />
+    <ClCompile Include="Gfx\Vulkan\DescriptorPool.cpp" />
+    <ClCompile Include="Gfx\Vulkan\DescriptorSet.cpp" />
+    <ClCompile Include="Gfx\Vulkan\DescriptorSetLayout.cpp" />
     <ClCompile Include="Gfx\Vulkan\DeviceCreateInfo.cpp" />
     <ClCompile Include="Gfx\Vulkan\Device.cpp" />
     <ClCompile Include="Gfx\Vulkan\FrameBuffer.cpp" />
@@ -232,6 +239,7 @@
     <ClCompile Include="Gfx\Vulkan\IndexBuffer.cpp" />
     <ClCompile Include="Gfx\Vulkan\Instance.cpp" />
     <ClCompile Include="Gfx\Vulkan\PhysicalDevice.cpp" />
+    <ClCompile Include="Gfx\Vulkan\PipelineLayout.cpp" />
     <ClCompile Include="Gfx\Vulkan\Queue.cpp" />
     <ClCompile Include="Gfx\Vulkan\RenderPass.cpp" />
     <ClCompile Include="Gfx\Vulkan\Semaphore.cpp" />

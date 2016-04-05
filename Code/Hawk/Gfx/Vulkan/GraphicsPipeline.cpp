@@ -5,16 +5,18 @@
 #include "RenderPass.h"
 #include "ShaderModule.h"
 #include "ShaderManager.h"
+#include "PipelineLayout.h"
 #include "Base/WindowManager.h"
 
 namespace Hawk {
 namespace Gfx {
 namespace Vulkan {
 
-GraphicsPipeline::GraphicsPipeline(std::shared_ptr<Device> p_Device, const RenderPass* p_RenderPass, ShaderManager* p_ShaderManager)
+GraphicsPipeline::GraphicsPipeline(std::shared_ptr<Device> p_Device, const RenderPass* p_RenderPass, ShaderManager* p_ShaderManager, PipelineLayout* p_Layout)
 : m_Device(p_Device)
+, m_Handle(VK_NULL_HANDLE)
 {
-	//VkPipelineCache l_Cache = VK_NULL_HANDLE; // TODO: Use pipeline caching
+	VkPipelineCache l_Cache = VK_NULL_HANDLE; // TODO: Use pipeline caching
 
 	VkPipelineVertexInputStateCreateInfo l_VertexInputStateInfo = {};
 	l_VertexInputStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -28,15 +30,14 @@ GraphicsPipeline::GraphicsPipeline(std::shared_ptr<Device> p_Device, const Rende
 	l_VertexInputStateInfo.vertexBindingDescriptionCount = 1;
 	l_VertexInputStateInfo.pVertexBindingDescriptions = &l_VertexBindingDesc;
 
-	std::vector<VkVertexInputAttributeDescription> l_VertexAttrDescs;
-	l_VertexAttrDescs.resize(2);
+	std::vector<VkVertexInputAttributeDescription> l_VertexAttrDescs(2);
 
-	l_VertexAttrDescs[0].location = 0;
+	l_VertexAttrDescs[0].location = 0;		// layout (location=0) in shader
 	l_VertexAttrDescs[0].binding = 0;
 	l_VertexAttrDescs[0].format = VK_FORMAT_R32G32B32_SFLOAT;
 	l_VertexAttrDescs[0].offset = 0;
 
-	l_VertexAttrDescs[1].location = 1;
+	l_VertexAttrDescs[1].location = 1;		// layout (location=1) in shader
 	l_VertexAttrDescs[1].binding = 0;
 	l_VertexAttrDescs[1].format = VK_FORMAT_R32G32B32_SFLOAT;
 	l_VertexAttrDescs[1].offset = sizeof(float) * 3;
@@ -92,11 +93,10 @@ GraphicsPipeline::GraphicsPipeline(std::shared_ptr<Device> p_Device, const Rende
 	l_DynamicInfo.dynamicStateCount = (uint32)l_DynamicStates.size();
 	l_DynamicInfo.pDynamicStates = l_DynamicStates.data();
 
-	std::vector<VkPipelineShaderStageCreateInfo> l_ShaderInfo;
-	l_ShaderInfo.resize(2);
+	std::vector<VkPipelineShaderStageCreateInfo> l_ShaderInfo(2);
 	
-	//l_ShaderInfo[0] = p_ShaderManager->GetShader("test.vert", "main", VK_SHADER_STAGE_VERTEX_BIT);
-	l_ShaderInfo[1] = p_ShaderManager->GetShader("triangle.vert.spv", "main", VK_SHADER_STAGE_VERTEX_BIT);
+	l_ShaderInfo[0] = p_ShaderManager->GetShader("triangle.vert.spv", "main", VK_SHADER_STAGE_VERTEX_BIT);
+	l_ShaderInfo[1] = p_ShaderManager->GetShader("triangle.frag.spv", "main", VK_SHADER_STAGE_FRAGMENT_BIT);
 
 	VkGraphicsPipelineCreateInfo l_Info = {};
 	l_Info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -111,18 +111,18 @@ GraphicsPipeline::GraphicsPipeline(std::shared_ptr<Device> p_Device, const Rende
 	l_Info.pDepthStencilState = &l_DepthStencilInfo;
 	l_Info.pColorBlendState = &l_BlendInfo;
 	l_Info.pDynamicState = &l_DynamicInfo;
-	//l_Info.layout =
+	l_Info.layout = p_Layout->GetHandle();
 	l_Info.renderPass = p_RenderPass->GetHandle();
 	l_Info.subpass = 0;
 	l_Info.basePipelineHandle = VK_NULL_HANDLE;
 
-//	VK_THROW_IF_NOT_SUCCESS(vkCreateGraphicsPipelines(m_Device->GetHandle(), l_Cache, 1, &l_Info, nullptr, &m_Handle), "Failed to create graphics pipeline");
+	VK_THROW_IF_NOT_SUCCESS(vkCreateGraphicsPipelines(m_Device->GetHandle(), l_Cache, 1, &l_Info, nullptr, &m_Handle), "Failed to create graphics pipeline");
 }
 
 GraphicsPipeline::~GraphicsPipeline()
 {
 	LOG("GraphicsPipeline destroyed", "vulkan", Debug);
-//	vkDestroyPipeline(m_Device->GetHandle(), m_Handle, nullptr);
+	vkDestroyPipeline(m_Device->GetHandle(), m_Handle, nullptr);
 }
 
 VkPipeline GraphicsPipeline::GetHandle() const

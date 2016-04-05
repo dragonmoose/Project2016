@@ -21,7 +21,8 @@ public:
 
 	VkBuffer GetHandle() const;
 	uint32 GetCount() const;
-	VkIndexType GetIndexType() const;
+	void Issue(VkCommandBuffer p_CommandBufferHandle) const;
+
 
 private:
 	void Init(VkDeviceSize p_BufferSize, void* p_Data);

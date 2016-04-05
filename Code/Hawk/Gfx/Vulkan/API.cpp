@@ -16,6 +16,9 @@
 #include "CmdRenderPass.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "DescriptorPool.h"
+#include "DescriptorSetLayout.h"
+#include "PipelineLayout.h"
 #include "Gfx/Color.h"
 #include "Util/Random.h"			// test
 
@@ -47,24 +50,40 @@ void API::Initialize()
 	CreateFrameBuffers();
 	CreateGPUWorkManager();
 
-	GraphicsPipeline tst_Pipeline(m_Device, m_DefaultRenderPass.get(), m_ShaderManager.get());
+	std::vector<VkDescriptorPoolSize> l_Sizes(1);
+	l_Sizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	l_Sizes[0].descriptorCount = 1;
+	std::shared_ptr<DescriptorPool> l_Pool = std::make_shared<DescriptorPool>(m_Device, true, 5, l_Sizes);
 
-	CreateCommandBuffers();
-	PrepareRendering();
+	std::vector<VkDescriptorSetLayoutBinding> l_Bindings(1);
+	l_Bindings[0] = {};
+	l_Bindings[0].binding = 0;
+	l_Bindings[0].descriptorCount = 1;
+	l_Bindings[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	l_Bindings[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+
+	DescriptorSetLayout l_SetLayout(m_Device, l_Bindings);
+	m_DescriptorSet = std::make_shared<DescriptorSet>(m_Device, l_Pool, &l_SetLayout);
+
+	std::vector<VkDescriptorSetLayout> l_Layouts(1);
+	l_Layouts[0] = l_SetLayout.GetHandle();
+	m_PipelineLayout = std::make_shared<PipelineLayout>(m_Device, l_Layouts);
+
+	m_Pipeline = std::make_shared<GraphicsPipeline>(m_Device, m_DefaultRenderPass.get(), m_ShaderManager.get(), m_PipelineLayout.get());
 
 	VertexDeclarations::PosColorVertices l_Vertices =
 	{
-		{{-1.0f, -1.0f, -1.0f},	{0.0f, 0.0f, 1.0f, 1.0f}}, // Back
-		{{1.0f, -1.0f, -1.0f},	{0.0f, 0.0f, 1.0f, 1.0f}},
-		{{1.0f, 1.0f, -1.0f},	{0.0f, 0.0f, 1.0f, 1.0f}},
-		{{-1.0f, 1.0f, -1.0f},	{0.0f, 0.0f, 1.0f, 1.0f}},
+		{{-1.0f, -1.0f, -1.0f},	{0.0f, 0.0f, 1.0f}}, // Back
+		{{1.0f, -1.0f, -1.0f},	{0.0f, 0.0f, 1.0f}},
+		{{1.0f, 1.0f, -1.0f},	{0.0f, 0.0f, 1.0f}},
+		{{-1.0f, 1.0f, -1.0f},	{0.0f, 0.0f, 1.0f}},
 
-		{{-1.0f, -1.0f, 1.0f},	{1.0f, 0.0f, 0.0f, 1.0f}}, // Front
-		{{1.0f, -1.0f, 1.0f},	{1.0f, 0.0f, 0.0f, 1.0f}},
-		{{1.0f, 1.0f, 1.0f},	{1.0f, 0.0f, 0.0f, 1.0f}},
-		{{-1.0f, 1.0f, 1.0f},	{1.0f, 0.0f, 0.0f, 1.0f}}
+		{{-1.0f, -1.0f, 1.0f},	{1.0f, 0.0f, 0.0f}}, // Front
+		{{1.0f, -1.0f, 1.0f},	{1.0f, 0.0f, 0.0f}},
+		{{1.0f, 1.0f, 1.0f},	{1.0f, 0.0f, 0.0f}},
+		{{-1.0f, 1.0f, 1.0f},	{1.0f, 0.0f, 0.0f}}
 	};
-	VertexBuffer l_VertexBuffer(m_Device, l_Vertices);
+	m_VertexBuffer = std::make_shared<VertexBuffer>(m_Device, l_Vertices);
 
 	std::vector<uint16> l_Indices = {
 		0, 3, 2, 0, 2, 1, // Back
@@ -74,7 +93,10 @@ void API::Initialize()
 		2, 3, 7, 2, 7, 6, // Top
 		4, 0, 1, 4, 1, 5  // Bottom
 	};
-	IndexBuffer l_IndexBuffer(m_Device, l_Indices);
+	m_IndexBuffer = std::make_shared<IndexBuffer>(m_Device, l_Indices);
+
+	CreateCommandBuffers();
+	PrepareRendering();
 
 	//SetFullscreenState(Config::Instance().Get("gfx.fullscreen", false));
 	LOG("Vulkan initialized", "vulkan", Info);
@@ -231,12 +253,19 @@ void API::CreateCommandBuffers()
 
 			VkExtent2D l_Extent = m_Swapchain->GetExtent();
 
-			CmdRenderPass l_CmdRenderPass(m_DefaultRenderPass.get(), m_FrameBuffers[i].get(), l_Extent, Color::Magenta);
+			CmdRenderPass l_CmdRenderPass(m_DefaultRenderPass.get(), m_FrameBuffers[i].get(), l_Extent, Color::Black);
 			l_CmdRenderPass.Begin(l_Buffer->GetHandle());
 
 			l_Buffer->Issue(CmdViewport(l_Extent));
 			l_Buffer->Issue(CmdScissor(l_Extent));
 
+			VkDescriptorSet l_DescriptorSetHandle = m_DescriptorSet->GetHandle();
+			vkCmdBindDescriptorSets(l_Buffer->GetHandle(), VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout->GetHandle(), 0, 1, &l_DescriptorSetHandle, 0, nullptr);
+			vkCmdBindPipeline(l_Buffer->GetHandle(), VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline->GetHandle());
+			l_Buffer->Issue(*m_VertexBuffer.get());
+			l_Buffer->Issue(*m_IndexBuffer.get());
+			vkCmdDrawIndexed(l_Buffer->GetHandle(), m_IndexBuffer->GetCount(), 1, 0, 0, 0);
+			
 			l_CmdRenderPass.End(l_Buffer->GetHandle());
 
 			l_Buffer->End();

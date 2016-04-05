@@ -209,6 +209,18 @@
     <ClCompile Include="Gfx\Vulkan\IndexBuffer.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\DescriptorPool.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\DescriptorSet.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\DescriptorSetLayout.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\PipelineLayout.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -474,6 +486,18 @@
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Gfx\Vulkan\IndexBuffer.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\DescriptorPool.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\DescriptorSet.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\DescriptorSetLayout.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\PipelineLayout.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>

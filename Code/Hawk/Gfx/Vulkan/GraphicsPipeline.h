@@ -9,11 +9,12 @@ namespace Vulkan {
 class Device;
 class RenderPass;
 class ShaderManager;
+class PipelineLayout;
 
 class GraphicsPipeline final
 {
 public:
-	GraphicsPipeline(std::shared_ptr<Device> p_Device, const RenderPass* p_RenderPass, ShaderManager* p_ShaderManager);
+	GraphicsPipeline(std::shared_ptr<Device> p_Device, const RenderPass* p_RenderPass, ShaderManager* p_ShaderManager, PipelineLayout* p_Layout);
 	~GraphicsPipeline();
 	GraphicsPipeline(const GraphicsPipeline&) = delete;
 	GraphicsPipeline& operator=(const GraphicsPipeline&) = delete;
