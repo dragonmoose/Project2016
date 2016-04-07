@@ -6,6 +6,7 @@
 #include "ShaderModule.h"
 #include "ShaderManager.h"
 #include "PipelineLayout.h"
+#include "PipelineShaderStageCreateInfo.h"
 #include "Base/WindowManager.h"
 
 namespace Hawk {
@@ -93,15 +94,15 @@ GraphicsPipeline::GraphicsPipeline(std::shared_ptr<Device> p_Device, const Rende
 	l_DynamicInfo.dynamicStateCount = (uint32)l_DynamicStates.size();
 	l_DynamicInfo.pDynamicStates = l_DynamicStates.data();
 
-	std::vector<VkPipelineShaderStageCreateInfo> l_ShaderInfo(2);
+	PipelineShaderStageCreateInfoList l_ShaderInfoList(2);
 	
-	l_ShaderInfo[0] = p_ShaderManager->GetShader("triangle.vert.spv", "main", VK_SHADER_STAGE_VERTEX_BIT);
-	l_ShaderInfo[1] = p_ShaderManager->GetShader("triangle.frag.spv", "main", VK_SHADER_STAGE_FRAGMENT_BIT);
+	p_ShaderManager->GetShader("triangle.vert.spv", "main", VK_SHADER_STAGE_VERTEX_BIT, l_ShaderInfoList[0]);
+	p_ShaderManager->GetShader("triangle.frag.spv", "main", VK_SHADER_STAGE_FRAGMENT_BIT, l_ShaderInfoList[1]);
 
 	VkGraphicsPipelineCreateInfo l_Info = {};
 	l_Info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 	l_Info.stageCount = 2;
-	l_Info.pStages = l_ShaderInfo.data();
+	l_Info.pStages = l_ShaderInfoList.GetDataPtr();
 	l_Info.pVertexInputState = &l_VertexInputStateInfo;
 	l_Info.pInputAssemblyState = &l_AssemblyInfo;
 	l_Info.pTessellationState = nullptr;

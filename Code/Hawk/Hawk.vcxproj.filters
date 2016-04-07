@@ -221,6 +221,9 @@
     <ClCompile Include="Gfx\Vulkan\PipelineLayout.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="Gfx\Vulkan\PipelineShaderStageCreateInfo.cpp">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -498,6 +501,9 @@
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Gfx\Vulkan\PipelineLayout.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\PipelineShaderStageCreateInfo.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>

@@ -151,6 +151,7 @@
     <ClInclude Include="Gfx\Vulkan\IndexBuffer.h" />
     <ClInclude Include="Gfx\Vulkan\PhysicalDevice.h" />
     <ClInclude Include="Gfx\Vulkan\PipelineLayout.h" />
+    <ClInclude Include="Gfx\Vulkan\PipelineShaderStageCreateInfo.h" />
     <ClInclude Include="Gfx\Vulkan\Queue.h" />
     <ClInclude Include="Gfx\Vulkan\RenderPass.h" />
     <ClInclude Include="Gfx\Vulkan\Semaphore.h" />
@@ -240,6 +241,7 @@
     <ClCompile Include="Gfx\Vulkan\Instance.cpp" />
     <ClCompile Include="Gfx\Vulkan\PhysicalDevice.cpp" />
     <ClCompile Include="Gfx\Vulkan\PipelineLayout.cpp" />
+    <ClCompile Include="Gfx\Vulkan\PipelineShaderStageCreateInfo.cpp" />
     <ClCompile Include="Gfx\Vulkan\Queue.cpp" />
     <ClCompile Include="Gfx\Vulkan\RenderPass.cpp" />
     <ClCompile Include="Gfx\Vulkan\Semaphore.cpp" />

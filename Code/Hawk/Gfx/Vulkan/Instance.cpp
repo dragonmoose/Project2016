@@ -22,6 +22,7 @@ namespace
 
 #ifdef HAWK_DEBUG
 	std::vector<const char*> n_EnabledDebugLayers = {
+		"VK_LAYER_LUNARG_api_dump",
 		"VK_LAYER_LUNARG_threading",
 		"VK_LAYER_LUNARG_mem_tracker",
 		"VK_LAYER_LUNARG_object_tracker",

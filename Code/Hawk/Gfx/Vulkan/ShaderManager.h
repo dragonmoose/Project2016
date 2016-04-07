@@ -1,5 +1,6 @@
 #pragma once
 #include "System.h"
+#include "PipelineShaderStageCreateInfo.h"
 #include <string>
 #include <unordered_map>
 #include <memory>
@@ -19,11 +20,11 @@ namespace Vulkan
 		ShaderManager(const ShaderManager&) = delete;
 		ShaderManager& operator=(const ShaderManager&) = delete;
 
-		VkPipelineShaderStageCreateInfo GetShader(const std::string& p_Filename, const std::string& p_EntryPoint, VkShaderStageFlagBits p_Stage);
+		void GetShader(const std::string& p_Filename, const std::string& p_EntryPoint, VkShaderStageFlagBits p_Stage, PipelineShaderStageCreateInfo& p_CreateInfo);
 
 	private:
 		std::string GetPath(const std::string& p_Filename);
-		VkPipelineShaderStageCreateInfo GetCreateInfo(const ShaderModule* p_Module, const std::string& p_EntryPoint, VkShaderStageFlagBits p_Stage);
+		void GetCreateInfo(const ShaderModule* p_Module, const std::string& p_EntryPoint, VkShaderStageFlagBits p_Stage, PipelineShaderStageCreateInfo& p_CreateInfo);
 
 		using Modules = std::unordered_map<std::string, std::unique_ptr<ShaderModule>>;
 		Modules m_Modules;
