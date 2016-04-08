@@ -19,6 +19,7 @@
 #include "DescriptorPool.h"
 #include "DescriptorSetLayout.h"
 #include "PipelineLayout.h"
+#include "System/Duration.h"
 #include "Gfx/Color.h"
 #include "Util/Random.h"			// test
 #include "Util/Math.h"
@@ -76,15 +77,15 @@ void API::Initialize()
 
 	VertexDecl::PosColorVertices l_Vertices =
 	{
-		{{-1.0f, -1.0f, -1.0f},	{1.0f, 0.0f, 0.0f}}, // Back
-		{{1.0f, -1.0f, -1.0f},	{1.0f, 0.0f, 0.0f}},
-		{{1.0f, 1.0f, -1.0f},	{1.0f, 0.0f, 0.0f}},
-		{{-1.0f, 1.0f, -1.0f},	{1.0f, 0.0f, 0.0f}},
+		{{-1.0f, -1.0f, 1.0f},	{1.0f, 0.0f, 0.0f}}, // Back
+		{{1.0f, -1.0f, 1.0f},	{1.0f, 0.0f, 0.0f}},
+		{{1.0f, 1.0f, 1.0f},	{1.0f, 0.0f, 0.0f}},
+		{{-1.0f, 1.0f, 1.0f},	{1.0f, 0.0f, 0.0f}},
 
-		{{-1.0f, -1.0f, 1.0f},	{0.0f, 0.0f, 1.0f}}, // Front
-		{{1.0f, -1.0f, 1.0f},	{0.0f, 0.0f, 1.0f}},
-		{{1.0f, 1.0f, 1.0f},	{0.0f, 0.0f, 1.0f}},
-		{{-1.0f, 1.0f, 1.0f},	{0.0f, 0.0f, 1.0f}}
+		{{-1.0f, -1.0f, -1.0f},	{0.0f, 0.0f, 1.0f}}, // Front
+		{{1.0f, -1.0f, -1.0f},	{0.0f, 0.0f, 1.0f}},
+		{{1.0f, 1.0f, -1.0f},	{0.0f, 0.0f, 1.0f}},
+		{{-1.0f, 1.0f, -1.0f},	{0.0f, 0.0f, 1.0f}}
 	};
 	m_VertexBuffer = std::make_shared<VertexBuffer>(m_Device, l_Vertices);
 
@@ -149,6 +150,16 @@ void API::OnWindowSizeChanged(UINT32 /*p_uiWidth*/, UINT32 /*p_uiHeight*/)
 void API::SetDebugText(const std::string& /*p_Text*/)
 {
 }
+
+void API::Update(Duration p_Duration)
+{
+	static float l_fAngle = 0.0f;
+	UniformBufferDecl::WVP& l_WVP = m_UniformBuffer->GetData();
+	l_WVP.m_World = glm::rotate(glm::mat4(), l_fAngle, glm::vec3(0, 1, 1));
+	l_fAngle += 0.0006f * (float)p_Duration.Get(Duration::Precision::Millisecond);
+	m_UniformBuffer->Update();
+}
+
 
 #ifdef HAWK_DEBUG
 void API::InitializeConsole(ScopedConsoleCommands* p_Console)

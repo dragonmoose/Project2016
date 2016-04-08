@@ -96,7 +96,7 @@ VkDevice Device::GetHandle() const
 void Device::GetLayersToCreate(std::vector<const char*>& p_Layers)
 {
 	std::copy(n_EnabledLayers.begin(), n_EnabledLayers.end(), std::back_inserter(p_Layers));
-#ifdef HAWK_DEBUG
+#if defined(HAWK_DEBUG) && defined(HAWK_VULKAN_ENABLE_VALIDATION) 
 	std::copy(n_EnabledDebugLayers.begin(), n_EnabledDebugLayers.end(), std::back_inserter(p_Layers));
 #endif
 

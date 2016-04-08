@@ -14,7 +14,6 @@ IndexBuffer::IndexBuffer(std::shared_ptr<Device> p_Device, const std::vector<uin
 	Init(m_uiCount * sizeof(uint16), (void*)p_Indices.data());
 }
 
-
 IndexBuffer::IndexBuffer(std::shared_ptr<Device> p_Device, const std::vector<uint32>& p_Indices)
 : m_Device(p_Device)
 , m_uiCount(static_cast<uint32>(p_Indices.size()))

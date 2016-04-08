@@ -64,10 +64,11 @@ void RenderingModule::InitializeConsole(ScopedConsoleCommands* p_Console)
 }
 #endif
 
-void RenderingModule::Update(const Duration& /*p_Duration*/)
+void RenderingModule::Update(const Duration& p_Duration)
 {
 	if (ShouldRender())
 	{
+		m_API->Update(p_Duration);
 		m_API->Render();
 	}
 }

@@ -61,8 +61,8 @@ GraphicsPipeline::GraphicsPipeline(std::shared_ptr<Device> p_Device, const Rende
 	l_RasterizationInfo.depthClampEnable = VK_FALSE;		// TODO: Understand this and following properties
 	l_RasterizationInfo.rasterizerDiscardEnable = VK_FALSE;
 	l_RasterizationInfo.polygonMode = VK_POLYGON_MODE_LINE;
-	l_RasterizationInfo.cullMode = VK_CULL_MODE_NONE;
-	l_RasterizationInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
+	l_RasterizationInfo.cullMode = VK_CULL_MODE_BACK_BIT;
+	l_RasterizationInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 	l_RasterizationInfo.depthBiasEnable = VK_FALSE;
 	l_RasterizationInfo.lineWidth = 4;
 

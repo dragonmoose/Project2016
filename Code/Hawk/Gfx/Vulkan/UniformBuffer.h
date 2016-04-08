@@ -36,6 +36,8 @@ public:
 		THROW_IF_NOT(m_Device->GetPhysicalDevice()->TryGetMemoryTypeIndex(l_MemReq.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, l_AllocateInfo.memoryTypeIndex), "Failed to find suitable memory type for uniform buffer allocation");
 		VK_THROW_IF_NOT_SUCCESS(vkAllocateMemory(m_Device->GetHandle(), &l_AllocateInfo, nullptr, &m_DeviceMemory), "Failed to allocate memory for uniform buffer");
 
+		VK_THROW_IF_NOT_SUCCESS(vkBindBufferMemory(m_Device->GetHandle(), m_BufferInfo.buffer, m_DeviceMemory, 0), "Failed to bind memory to uniform buffer");
+		
 		LOG("UniformBuffer created. AllocatedMemory=" << l_MemReq.size << " BufferSize=" << T::Size(), "vulkan", Debug);
 	}
 
@@ -54,8 +56,6 @@ public:
 		VK_THROW_IF_NOT_SUCCESS(vkMapMemory(m_Device->GetHandle(), m_DeviceMemory, 0, VK_WHOLE_SIZE, 0, &l_Dest), "Failed to map uniform buffer memory");
 		std::memcpy(l_Dest, &m_Data, T::Size());
 		vkUnmapMemory(m_Device->GetHandle(), m_DeviceMemory);
-
-		VK_THROW_IF_NOT_SUCCESS(vkBindBufferMemory(m_Device->GetHandle(), m_BufferInfo.buffer, m_DeviceMemory, 0), "Failed to bind memory to uniform buffer");
 	}
 
 	const VkDescriptorBufferInfo* GetDescriptorBufferInfo() const
