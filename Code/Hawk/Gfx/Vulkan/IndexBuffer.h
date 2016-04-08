@@ -1,6 +1,5 @@
 #pragma once
 #include "System.h"
-#include "Device.h"
 #include <memory>
 
 namespace Hawk {

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "GraphicsPipeline.h"
 #include "Device.h"
-#include "VertexDeclarations.h"
+#include "VertexDecl.h"
 #include "RenderPass.h"
 #include "ShaderModule.h"
 #include "ShaderManager.h"
@@ -25,7 +25,7 @@ GraphicsPipeline::GraphicsPipeline(std::shared_ptr<Device> p_Device, const Rende
 	// TODO: Declare this elsewhere, how manage binding, inputRate?
 	VkVertexInputBindingDescription l_VertexBindingDesc = {};
 	l_VertexBindingDesc.binding = 0;
-	l_VertexBindingDesc.stride = VertexDeclarations::PosColor::Size();
+	l_VertexBindingDesc.stride = static_cast<uint32>(VertexDecl::PosColor::Size());
 	l_VertexBindingDesc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 	
 	l_VertexInputStateInfo.vertexBindingDescriptionCount = 1;
@@ -60,16 +60,17 @@ GraphicsPipeline::GraphicsPipeline(std::shared_ptr<Device> p_Device, const Rende
 	l_RasterizationInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 	l_RasterizationInfo.depthClampEnable = VK_FALSE;		// TODO: Understand this and following properties
 	l_RasterizationInfo.rasterizerDiscardEnable = VK_FALSE;
-	l_RasterizationInfo.polygonMode = VK_POLYGON_MODE_FILL;
+	l_RasterizationInfo.polygonMode = VK_POLYGON_MODE_LINE;
 	l_RasterizationInfo.cullMode = VK_CULL_MODE_NONE;
-	l_RasterizationInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
+	l_RasterizationInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 	l_RasterizationInfo.depthBiasEnable = VK_FALSE;
+	l_RasterizationInfo.lineWidth = 4;
 
 	VkPipelineDepthStencilStateCreateInfo l_DepthStencilInfo = {};
 	l_DepthStencilInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-	l_DepthStencilInfo.depthTestEnable = VK_TRUE;
-	l_DepthStencilInfo.depthWriteEnable = VK_TRUE;
-	l_DepthStencilInfo.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
+	l_DepthStencilInfo.depthTestEnable = VK_FALSE;
+	l_DepthStencilInfo.depthWriteEnable = VK_FALSE;
+	l_DepthStencilInfo.depthCompareOp = VK_COMPARE_OP_ALWAYS;
 	l_DepthStencilInfo.depthBoundsTestEnable = VK_FALSE;
 	l_DepthStencilInfo.stencilTestEnable = VK_FALSE;
 
@@ -96,8 +97,8 @@ GraphicsPipeline::GraphicsPipeline(std::shared_ptr<Device> p_Device, const Rende
 
 	PipelineShaderStageCreateInfoList l_ShaderInfoList(2);
 	
-	p_ShaderManager->GetShader("triangle.vert.spv", "main", VK_SHADER_STAGE_VERTEX_BIT, l_ShaderInfoList[0]);
-	p_ShaderManager->GetShader("triangle.frag.spv", "main", VK_SHADER_STAGE_FRAGMENT_BIT, l_ShaderInfoList[1]);
+	p_ShaderManager->GetShader("trans.vert", "main", VK_SHADER_STAGE_VERTEX_BIT, l_ShaderInfoList[0]);
+	p_ShaderManager->GetShader("trans.frag", "main", VK_SHADER_STAGE_FRAGMENT_BIT, l_ShaderInfoList[1]);
 
 	VkGraphicsPipelineCreateInfo l_Info = {};
 	l_Info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;

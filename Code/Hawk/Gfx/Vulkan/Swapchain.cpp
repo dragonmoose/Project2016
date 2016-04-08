@@ -12,9 +12,11 @@ Swapchain::Swapchain(std::shared_ptr<Instance> p_Instance, std::shared_ptr<Devic
 , m_Handle(VK_NULL_HANDLE)
 , m_Queue(p_Device->GetPresentationQueue())
 , m_uiCurrentBufferIndex(0)
+, m_fAspectRatio(0.0f)
 {
 	CreateSurface(p_Instance, p_Device->GetPhysicalDevice().get());
 	m_Extent = m_Surface->GetInitialExtent();
+	m_fAspectRatio = static_cast<float>(m_Extent.width) / static_cast<float>(m_Extent.height);
 
 	CreateSwapchain();
 	GetImages();
@@ -76,6 +78,12 @@ VkExtent2D Swapchain::GetExtent() const
 {
 	return m_Extent;
 }
+
+float Swapchain::GetAspectRatio() const
+{
+	return m_fAspectRatio;
+}
+
 
 void Swapchain::CreateSurface(std::shared_ptr<Instance> p_Instance, const PhysicalDevice* p_PhysicalDevice)
 {

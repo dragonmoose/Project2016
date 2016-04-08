@@ -15,6 +15,8 @@
 #include "IndexBuffer.h"
 #include "GraphicsPipeline.h"
 #include "DescriptorSet.h"
+#include "UniformBuffer.h"
+#include "UniformBufferDecl.h"
 #include <memory>
 #include <array>
 
@@ -68,7 +70,7 @@ private:
 	std::shared_ptr<GraphicsPipeline> m_Pipeline;
 	std::shared_ptr<DescriptorSet> m_DescriptorSet;
 	std::shared_ptr<PipelineLayout> m_PipelineLayout;
-
+	std::unique_ptr<UniformBuffer<UniformBufferDecl::WVP>> m_UniformBuffer;
 };
 
 }

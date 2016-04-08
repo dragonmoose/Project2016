@@ -23,14 +23,14 @@ namespace
 		"VK_LAYER_LUNARG_threading",
 		"VK_LAYER_LUNARG_mem_tracker",
 		"VK_LAYER_LUNARG_object_tracker",
-		"VK_LAYER_LUNARG_draw_state", // TODO: Check if still makes shader creation from glsl fail
+		/*"VK_LAYER_LUNARG_draw_state",*/ // TODO: Check if still makes shader creation from glsl fail
 		"VK_LAYER_LUNARG_param_checker",
 		"VK_LAYER_LUNARG_swapchain",
 		"VK_LAYER_LUNARG_device_limits",
 		"VK_LAYER_LUNARG_image",
 		"VK_LAYER_GOOGLE_unique_objects",
 		"VK_LAYER_LUNARG_api_dump",
-		"VK_LAYER_LUNARG_standard_validation",
+		/*"VK_LAYER_LUNARG_standard_validation",*/
 	};
 
 	std::vector<const char*> n_EnabledDebugExtensions = {};
@@ -124,6 +124,8 @@ void Device::CreateDevice(const QueueFamilyCreateInfos& p_QueueFamilyCreateInfos
 	ValidateQueueFamilyCreateInfos(p_QueueFamilyCreateInfos);
 	VkPhysicalDeviceFeatures l_Features = {};
 	GetFeatures(l_Features);
+
+	// TODO: Match requested features again those reported by vkGetPhysicalDeviceFeatures
 
 	std::vector<const char*> l_EnabledLayers = {};
 	GetLayersToCreate(l_EnabledLayers);
@@ -259,8 +261,9 @@ void Device::GetQueueFamilyCreateInfos(const DeviceCreateInfo::QueueCreateInfoMa
 	}
 }
 
-void Device::GetFeatures(VkPhysicalDeviceFeatures& /*p_Features*/)
+void Device::GetFeatures(VkPhysicalDeviceFeatures& p_Features)
 {
+	p_Features.fillModeNonSolid = VK_TRUE;
 }
 
 }

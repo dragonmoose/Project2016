@@ -224,6 +224,9 @@
     <ClCompile Include="Gfx\Vulkan\PipelineShaderStageCreateInfo.cpp">
       <Filter>Gfx\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="Util\Math.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -464,9 +467,6 @@
     <ClInclude Include="Gfx\Vulkan\GraphicsPipeline.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Gfx\Vulkan\VertexDeclarations.h">
-      <Filter>Gfx\Vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="Gfx\Vulkan\ShaderManager.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
@@ -504,6 +504,15 @@
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Gfx\Vulkan\PipelineShaderStageCreateInfo.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\UniformBuffer.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\UniformBufferDecl.h">
+      <Filter>Gfx\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Gfx\Vulkan\VertexDecl.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
   </ItemGroup>

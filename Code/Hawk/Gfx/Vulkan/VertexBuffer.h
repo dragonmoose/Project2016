@@ -1,6 +1,6 @@
 #pragma once
 #include "System.h"
-#include "VertexDeclarations.h"
+#include "VertexDecl.h"
 #include "Device.h"
 
 namespace Hawk {
@@ -16,10 +16,10 @@ public:
 	, m_Handle(VK_NULL_HANDLE)
 	, m_DeviceMemory(VK_NULL_HANDLE)
 	{
-		const VkDeviceSize l_OriginalSize = p_Vertices.size() * T::Size();
+		const VkDeviceSize l_BufferSize = p_Vertices.size() * T::Size();
 		VkBufferCreateInfo l_Info = {};
 		l_Info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		l_Info.size = l_OriginalSize;
+		l_Info.size = l_BufferSize;
 		l_Info.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 		// Note: Queue family index params ignored if sharingMode not set to VK_SHARING_MODE_CONCURRENT
 		
@@ -37,11 +37,11 @@ public:
 
 		void* l_Data = nullptr;
 		VK_THROW_IF_NOT_SUCCESS(vkMapMemory(m_Device->GetHandle(), m_DeviceMemory, 0, VK_WHOLE_SIZE, 0, &l_Data), "Failed to map vertex buffer memory");
-		std::memcpy(l_Data, p_Vertices.data(), l_MemReq.size);
+		std::memcpy(l_Data, p_Vertices.data(), l_BufferSize);
 		vkUnmapMemory(m_Device->GetHandle(), m_DeviceMemory);
 
 		VK_THROW_IF_NOT_SUCCESS(vkBindBufferMemory(m_Device->GetHandle(), m_Handle, m_DeviceMemory, 0), "Failed to bind memory to vertex buffer");
-		LOG("VertexBuffer created of size=" << l_MemReq.size << " original size=" << l_OriginalSize << " num vertices=" << p_Vertices.size(), "vulkan", Debug);
+		LOG("VertexBuffer created. AllocatedMemory=" << l_MemReq.size << " BufferSize=" << l_BufferSize << " Num vertices=" << p_Vertices.size(), "vulkan", Debug);
 	}
 
 	~VertexBuffer();

@@ -26,6 +26,7 @@ public:
 	using ImageViews_t = std::vector<std::shared_ptr<ImageView>>;
 	std::shared_ptr<ImageView> GetImageView(uint32 p_uiIndex) const;
 	VkExtent2D GetExtent() const;
+	float GetAspectRatio() const;
 
 private:
 	void CreateSurface(std::shared_ptr<Instance> p_Instance, const PhysicalDevice* p_PhysicalDevice);
@@ -44,6 +45,7 @@ private:
 	uint32 m_uiCurrentBufferIndex;
 	std::vector<std::shared_ptr<ImageView>> m_ImageViews;
 	VkExtent2D m_Extent;
+	float m_fAspectRatio;
 };
 
 }

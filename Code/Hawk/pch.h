@@ -18,3 +18,8 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
+
+#pragma warning (push)
+#pragma warning (disable:4201) // nonstandard extension used: nameless struct/union
+#include <glm/glm.hpp>
+#pragma warning (pop)

@@ -21,6 +21,8 @@
 #include "PipelineLayout.h"
 #include "Gfx/Color.h"
 #include "Util/Random.h"			// test
+#include "Util/Math.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace Hawk {
 namespace Gfx {
@@ -63,37 +65,62 @@ void API::Initialize()
 	l_Bindings[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 
 	DescriptorSetLayout l_SetLayout(m_Device, l_Bindings);
-	m_DescriptorSet = std::make_shared<DescriptorSet>(m_Device, l_Pool, &l_SetLayout);
 
 	std::vector<VkDescriptorSetLayout> l_Layouts(1);
 	l_Layouts[0] = l_SetLayout.GetHandle();
+
 	m_PipelineLayout = std::make_shared<PipelineLayout>(m_Device, l_Layouts);
+	m_DescriptorSet = std::make_shared<DescriptorSet>(m_Device, l_Pool, m_PipelineLayout, &l_SetLayout);
 
 	m_Pipeline = std::make_shared<GraphicsPipeline>(m_Device, m_DefaultRenderPass.get(), m_ShaderManager.get(), m_PipelineLayout.get());
 
-	VertexDeclarations::PosColorVertices l_Vertices =
+	VertexDecl::PosColorVertices l_Vertices =
 	{
-		{{-1.0f, -1.0f, -1.0f},	{0.0f, 0.0f, 1.0f}}, // Back
-		{{1.0f, -1.0f, -1.0f},	{0.0f, 0.0f, 1.0f}},
-		{{1.0f, 1.0f, -1.0f},	{0.0f, 0.0f, 1.0f}},
-		{{-1.0f, 1.0f, -1.0f},	{0.0f, 0.0f, 1.0f}},
+		{{-1.0f, -1.0f, -1.0f},	{1.0f, 0.0f, 0.0f}}, // Back
+		{{1.0f, -1.0f, -1.0f},	{1.0f, 0.0f, 0.0f}},
+		{{1.0f, 1.0f, -1.0f},	{1.0f, 0.0f, 0.0f}},
+		{{-1.0f, 1.0f, -1.0f},	{1.0f, 0.0f, 0.0f}},
 
-		{{-1.0f, -1.0f, 1.0f},	{1.0f, 0.0f, 0.0f}}, // Front
-		{{1.0f, -1.0f, 1.0f},	{1.0f, 0.0f, 0.0f}},
-		{{1.0f, 1.0f, 1.0f},	{1.0f, 0.0f, 0.0f}},
-		{{-1.0f, 1.0f, 1.0f},	{1.0f, 0.0f, 0.0f}}
+		{{-1.0f, -1.0f, 1.0f},	{0.0f, 0.0f, 1.0f}}, // Front
+		{{1.0f, -1.0f, 1.0f},	{0.0f, 0.0f, 1.0f}},
+		{{1.0f, 1.0f, 1.0f},	{0.0f, 0.0f, 1.0f}},
+		{{-1.0f, 1.0f, 1.0f},	{0.0f, 0.0f, 1.0f}}
 	};
 	m_VertexBuffer = std::make_shared<VertexBuffer>(m_Device, l_Vertices);
 
 	std::vector<uint16> l_Indices = {
-		0, 3, 2, 0, 2, 1, // Back
-		4, 7, 6, 4, 6, 5, // Front
-		7, 3, 0, 7, 0, 4, // Left
-		2, 6, 5, 2, 5, 1, // Right
-		2, 3, 7, 2, 7, 6, // Top
-		4, 0, 1, 4, 1, 5  // Bottom
+		0, 3, 1, 1, 3, 2, // Back
+		7, 4, 6, 6, 4, 5, // Front
+		3, 0, 7, 7, 0, 4, // Left
+		6, 5, 2, 2, 5, 1, // Right
+		3, 7, 2, 2, 7, 6, // Top
+		4, 0, 5, 5, 0, 1  // Bottom
 	};
 	m_IndexBuffer = std::make_shared<IndexBuffer>(m_Device, l_Indices);
+
+	m_UniformBuffer = std::make_unique<UniformBuffer<UniformBufferDecl::WVP>>(m_Device);
+
+	UniformBufferDecl::WVP& l_WVP = m_UniformBuffer->GetData();
+	l_WVP.m_Proj = glm::perspective(Math::Deg2Rad(60.0f), m_Swapchain->GetAspectRatio(), 0.1f, 256.0f);
+	l_WVP.m_View = glm::translate(glm::mat4(), glm::vec3(0.0f, 1.0f, -10.0f));
+
+	// define your up vector
+	glm::vec3 upVector = glm::vec3(0, 1, 0);
+	// rotate around to a given bearing: yaw
+	glm::mat4 camera = glm::rotate(glm::mat4(), 20.0f, upVector);
+	// Define the 'look up' axis, should be orthogonal to the up axis
+	glm::vec3 pitchVector = glm::vec3(1, 0, 0);
+	// rotate around to the required head tilt: pitch
+	camera = glm::rotate(camera, Math::Deg2Rad(20.0f), pitchVector);
+	camera *= glm::translate(glm::mat4(), glm::vec3(0.0f, 1.0f, 5.0f));
+
+	// now get the view matrix by taking the camera inverse
+	l_WVP.m_View = glm::inverse(camera);
+
+	l_WVP.m_World = glm::mat4();
+
+	m_UniformBuffer->Update();
+	m_DescriptorSet->Bind(m_UniformBuffer->GetDescriptorBufferInfo(), VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 0); // TODO: Improve connections between these classes
 
 	CreateCommandBuffers();
 	PrepareRendering();
@@ -259,9 +286,9 @@ void API::CreateCommandBuffers()
 			l_Buffer->Issue(CmdViewport(l_Extent));
 			l_Buffer->Issue(CmdScissor(l_Extent));
 
-			VkDescriptorSet l_DescriptorSetHandle = m_DescriptorSet->GetHandle();
-			vkCmdBindDescriptorSets(l_Buffer->GetHandle(), VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout->GetHandle(), 0, 1, &l_DescriptorSetHandle, 0, nullptr);
 			vkCmdBindPipeline(l_Buffer->GetHandle(), VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline->GetHandle());
+
+			l_Buffer->Issue(*m_DescriptorSet.get());
 			l_Buffer->Issue(*m_VertexBuffer.get());
 			l_Buffer->Issue(*m_IndexBuffer.get());
 			vkCmdDrawIndexed(l_Buffer->GetHandle(), m_IndexBuffer->GetCount(), 1, 0, 0, 0);

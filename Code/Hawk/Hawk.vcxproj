@@ -158,8 +158,10 @@
     <ClInclude Include="Gfx\Vulkan\ShaderModule.h" />
     <ClInclude Include="Gfx\Vulkan\ShaderManager.h" />
     <ClInclude Include="Gfx\Vulkan\Swapchain.h" />
+    <ClInclude Include="Gfx\Vulkan\UniformBuffer.h" />
+    <ClInclude Include="Gfx\Vulkan\UniformBufferDecl.h" />
     <ClInclude Include="Gfx\Vulkan\VertexBuffer.h" />
-    <ClInclude Include="Gfx\Vulkan\VertexDeclarations.h" />
+    <ClInclude Include="Gfx\Vulkan\VertexDecl.h" />
     <ClInclude Include="Gfx\Vulkan\CmdViewport.h" />
     <ClInclude Include="Gfx\Vulkan\WindowSurface.h" />
     <ClInclude Include="Gfx\Vulkan\DeviceCreateInfo.h" />
@@ -274,6 +276,7 @@
     <ClCompile Include="Threading\Thread.cpp" />
     <ClCompile Include="Threading\ThreadInfoManager.cpp" />
     <ClCompile Include="Util\FileUtil.cpp" />
+    <ClCompile Include="Util\Math.cpp" />
     <ClCompile Include="Util\Random.cpp" />
     <ClCompile Include="Util\StringUtil.cpp" />
     <ClCompile Include="Util\Util_Console.cpp" />
