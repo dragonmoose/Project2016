@@ -21,7 +21,7 @@ CmdRenderPass::CmdRenderPass(const RenderPass* p_RenderPass, const FrameBuffer* 
 {
 	// TODO: Adapt for different render pass attachment configurations
 	m_ClearValues.resize(2);
-	m_ClearValues[0].depthStencil.depth = 0.0f;
+	m_ClearValues[0].depthStencil.depth = 1.0f;
 	m_ClearValues[0].depthStencil.stencil = 0;
 	m_ClearValues[1].color.float32[0] = p_ClearColor.R();
 	m_ClearValues[1].color.float32[1] = p_ClearColor.G();

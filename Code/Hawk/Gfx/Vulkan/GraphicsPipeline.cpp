@@ -62,15 +62,15 @@ GraphicsPipeline::GraphicsPipeline(std::shared_ptr<Device> p_Device, const Rende
 	l_RasterizationInfo.rasterizerDiscardEnable = VK_FALSE;
 	l_RasterizationInfo.polygonMode = VK_POLYGON_MODE_LINE;
 	l_RasterizationInfo.cullMode = VK_CULL_MODE_NONE;
-	l_RasterizationInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+	l_RasterizationInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
 	l_RasterizationInfo.depthBiasEnable = VK_FALSE;
 	l_RasterizationInfo.lineWidth = 4;
 
 	VkPipelineDepthStencilStateCreateInfo l_DepthStencilInfo = {};
 	l_DepthStencilInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-	l_DepthStencilInfo.depthTestEnable = VK_FALSE;
-	l_DepthStencilInfo.depthWriteEnable = VK_FALSE;
-	l_DepthStencilInfo.depthCompareOp = VK_COMPARE_OP_ALWAYS;
+	l_DepthStencilInfo.depthTestEnable = VK_TRUE;
+	l_DepthStencilInfo.depthWriteEnable = VK_TRUE;
+	l_DepthStencilInfo.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
 	l_DepthStencilInfo.depthBoundsTestEnable = VK_FALSE;
 	l_DepthStencilInfo.stencilTestEnable = VK_FALSE;
 
