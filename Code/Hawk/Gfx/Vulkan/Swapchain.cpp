@@ -48,7 +48,6 @@ void Swapchain::Present()
 void Swapchain::AcquireNextImage(Semaphore* p_Semaphore)
 {
 	// TODO: Handle the different error messages here
-	// TODO: Add semaphore that will signal when 
 	VK_THROW_IF_NOT_SUCCESS(vkAcquireNextImageKHR(m_Device->GetHandle(), m_Handle, UINT64_MAX, p_Semaphore->GetHandle(), VK_NULL_HANDLE, &m_uiCurrentBufferIndex), "Failed to acquire next image");
 }
 
