@@ -79,9 +79,9 @@ void Core::Initialize()
 		m_ConsoleCommandManager = std::make_shared<ConsoleCommandManager>(m_Dispatcher);
 		m_ConsoleCommandManager->Start();
 		RegisterConsole();
+		ProfilerManager::RegisterConsole(m_ConsoleCommandManager.get(), m_Dispatcher.get());
 	}
 
-	ProfilerManager::Initialize(m_ConsoleCommandManager.get(), m_Dispatcher.get());
 #endif
 	LOG("Working directory set to: " << boost::filesystem::current_path(), "core", Info);
 
@@ -205,7 +205,10 @@ void Core::InitializeModules()
 	{
 		l_Module->_Initialize(std::make_unique<EventManager>(m_EventRouter), m_Dispatcher);
 #if HAWK_DEBUG
-		l_Module->_InitializeConsole(m_ConsoleCommandManager);
+		if (m_Settings.m_bConsole)
+		{
+			l_Module->_InitializeConsole(m_ConsoleCommandManager);
+		}
 #endif
 	}
 

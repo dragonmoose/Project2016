@@ -11,7 +11,7 @@ namespace System
 	ResultMap n_ResultMap;
 	const std::string n_DefaultResult("N/A");
 	bool n_bInitialized = false;
-	uint32 n_uiAPIVersion = VK_MAKE_VERSION(1, 0, 3);
+	uint32 n_uiAPIVersion = VK_MAKE_VERSION(1, 0, 0);
 
 	void PopulateResultMap();
 }

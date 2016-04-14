@@ -9,6 +9,7 @@
 int WINAPI WinMain(HINSTANCE p_hInstance, HINSTANCE /*p_hPrevInstance*/, LPSTR /*p_lpCmdLine*/, int /*p_nCmdShow*/)
 {
 	Hawk::CoreSettings l_Settings;
+	l_Settings.m_bConsole = true;
 	l_Settings.m_hInstance = p_hInstance;
 	l_Settings.m_AppName = "TestApp";
 	l_Settings.m_AppVersion = Hawk::Version(1, 0, 0);

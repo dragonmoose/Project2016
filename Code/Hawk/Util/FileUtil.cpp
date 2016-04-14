@@ -12,7 +12,6 @@ std::string FileUtil::GetFilenameWithoutPath(const std::string& p_Path)
 
 bool FileUtil::HasExtension(const std::string& p_Path, const std::string& p_Ext)
 {
-	LOG("ext=" << boost::filesystem::path(p_Path).extension().string(), "test", Info);
 	return StringUtil::AreEqual(boost::filesystem::path(p_Path).extension().string(), p_Ext);
 }
 

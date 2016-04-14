@@ -48,7 +48,7 @@ namespace ProfilerManager
 	ViewDataVec GetViewDataVec(const std::string& p_SortMode, uint32 p_uiMax, const std::string& p_Filter);
 }
 
-void ProfilerManager::Initialize(ConsoleCommandManager* p_ConsoleManager, Dispatcher* p_Dispatcher)
+void ProfilerManager::RegisterConsole(ConsoleCommandManager* p_ConsoleManager, Dispatcher* p_Dispatcher)
 {
 	p_ConsoleManager->Register("profiler.print", &ProfilerManager::Print, p_Dispatcher, "Prints profiling data", "[peak|avg|total|count] [max] [filter]", false);
 	p_ConsoleManager->Register("profiler.pause", &ProfilerManager::Pause, p_Dispatcher, "Pauses the collection of profiling data", "");

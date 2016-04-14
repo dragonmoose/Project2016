@@ -19,18 +19,19 @@ namespace
 
 #ifdef HAWK_DEBUG
 	std::vector<const char*> n_EnabledDebugLayers = {
-		"VK_LAYER_LUNARG_api_dump",
-		"VK_LAYER_LUNARG_threading",
-		"VK_LAYER_LUNARG_mem_tracker",
-		"VK_LAYER_LUNARG_object_tracker",
-		/*"VK_LAYER_LUNARG_draw_state",*/ // TODO: Check if still makes shader creation from glsl fail
-		"VK_LAYER_LUNARG_param_checker",
-		"VK_LAYER_LUNARG_swapchain",
+		/*"VK_LAYER_LUNARG_api_dump",
+		"VK_LAYER_LUNARG_core_validation",
 		"VK_LAYER_LUNARG_device_limits",
 		"VK_LAYER_LUNARG_image",
+		"VK_LAYER_LUNARG_object_tracker",
+		"VK_LAYER_LUNARG_parameter_validation",
+		"VK_LAYER_LUNARG_screenshot",
+		"VK_LAYER_LUNARG_swapchain",
+		"VK_LAYER_GOOGLE_threading",
 		"VK_LAYER_GOOGLE_unique_objects",
-		"VK_LAYER_LUNARG_api_dump",
-		/*"VK_LAYER_LUNARG_standard_validation",*/
+		"VK_LAYER_LUNARG_vktrace",
+		"VK_LAYER_LUNARG_standard_validation",
+		"VK_LAYER_RENDERDOC_Capture",*/
 	};
 
 	std::vector<const char*> n_EnabledDebugExtensions = {};
@@ -96,8 +97,11 @@ VkDevice Device::GetHandle() const
 void Device::GetLayersToCreate(std::vector<const char*>& p_Layers)
 {
 	std::copy(n_EnabledLayers.begin(), n_EnabledLayers.end(), std::back_inserter(p_Layers));
-#if defined(HAWK_DEBUG) && defined(HAWK_VULKAN_ENABLE_VALIDATION) 
-	std::copy(n_EnabledDebugLayers.begin(), n_EnabledDebugLayers.end(), std::back_inserter(p_Layers));
+#if defined(HAWK_DEBUG)
+	if (Config::Instance().Get("vulkan.enableDeviceDebugLayers", false))
+	{
+		std::copy(n_EnabledDebugLayers.begin(), n_EnabledDebugLayers.end(), std::back_inserter(p_Layers));
+	}
 #endif
 
 	for (const auto& l_Layer : p_Layers)
@@ -238,7 +242,7 @@ void Device::GetQueueFamilyCreateInfos(const DeviceCreateInfo::QueueCreateInfoMa
 	for (const auto& l_Family : l_Families)
 	{
 		const FamilyInfo& l_FamilyInfo = l_Family.second;
-		VkDeviceQueueCreateInfo l_CreateInfo;
+		VkDeviceQueueCreateInfo l_CreateInfo = {};
 		l_CreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
 		l_CreateInfo.queueFamilyIndex = l_Family.first;
 		l_CreateInfo.queueCount = l_FamilyInfo.m_uiCount;

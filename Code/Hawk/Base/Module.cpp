@@ -83,12 +83,15 @@ void Module::Initialize()
 #ifdef HAWK_DEBUG
 void Module::_InitializeConsole(std::shared_ptr<ConsoleCommandManager>& p_ConsoleCommandManager)
 {
-	m_Console = std::make_unique<ScopedConsoleCommands>(p_ConsoleCommandManager, m_Dispatcher);
-
-	InitializeConsole(m_Console.get());
-	for (auto& l_SubModule : m_SubModules)
+	if (p_ConsoleCommandManager)
 	{
-		l_SubModule->InitializeConsole(m_Console.get());
+		m_Console = std::make_unique<ScopedConsoleCommands>(p_ConsoleCommandManager, m_Dispatcher);
+
+		InitializeConsole(m_Console.get());
+		for (auto& l_SubModule : m_SubModules)
+		{
+			l_SubModule->InitializeConsole(m_Console.get());
+		}
 	}
 }
 

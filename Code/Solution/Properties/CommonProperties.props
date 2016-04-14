@@ -7,7 +7,7 @@
     <ThirdPartyDir>$(CodeDir)ThirdParty\</ThirdPartyDir>
     <BoostDir>$(ThirdPartyDir)boost_1_60_0\</BoostDir>
     <GLMDir>$(ThirdPartyDir)glm-0.9.7.2\</GLMDir>
-    <VulkanDir>$(ThirdPartyDir)vulkan-1.0.3.1\</VulkanDir>
+    <VulkanDir>$(ThirdPartyDir)vulkan-1.0.8.0\</VulkanDir>
   </PropertyGroup>
   <PropertyGroup>
     <OutDir>$(RootDir)\$(Platform)\</OutDir>

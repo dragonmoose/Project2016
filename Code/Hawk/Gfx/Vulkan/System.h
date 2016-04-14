@@ -29,5 +29,3 @@ namespace System
 
 std::ostream& operator<<(std::ostream& os, VkExtent3D p_Extent);
 std::ostream& operator<<(std::ostream& os, Hawk::Gfx::Vulkan::QueueType p_QueueType);
-
-#define HAWK_VULKAN_ENABLE_VALIDATION

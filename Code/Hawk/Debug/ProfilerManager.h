@@ -10,7 +10,7 @@ class Dispatcher;
 
 namespace ProfilerManager
 {
-	void Initialize(ConsoleCommandManager* p_ConsoleManager, Dispatcher* p_Dispatcher);
+	void RegisterConsole(ConsoleCommandManager* p_ConsoleManager, Dispatcher* p_Dispatcher);
 	void Add(const std::string& p_Name, const Duration& p_Duration);
 }
 

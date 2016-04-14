@@ -155,8 +155,8 @@ void API::Update(Duration p_Duration)
 {
 	static float l_fAngle = 0.0f;
 	UniformBufferDecl::WVP& l_WVP = m_UniformBuffer->GetData();
+	l_fAngle += 0.0000006f * (float)p_Duration.Get(Duration::Precision::MicroSecond);
 	l_WVP.m_World = glm::rotate(glm::mat4(), l_fAngle, glm::vec3(0, 1, 1));
-	l_fAngle += 0.0006f * (float)p_Duration.Get(Duration::Precision::Millisecond);
 	m_UniformBuffer->Update();
 }
 
@@ -196,11 +196,11 @@ void API::CreatePhysicalDevice()
 void API::SetupQueues(DeviceCreateInfo& p_CreateInfo)
 {
 	p_CreateInfo.AddQueue(QueueType::GraphicsPresentation, 0, 100);
-	p_CreateInfo.AddQueue(QueueType::Graphics, 0, 100);
+	/*p_CreateInfo.AddQueue(QueueType::Graphics, 0, 100);
 	p_CreateInfo.AddQueue(QueueType::Graphics, 1, 150);
 	p_CreateInfo.AddQueue(QueueType::Graphics, 2, 50);
 	p_CreateInfo.AddQueue(QueueType::Compute, 1, 100);
-	p_CreateInfo.AddQueue(QueueType::Compute, 0, 25);
+	p_CreateInfo.AddQueue(QueueType::Compute, 0, 25);*/
 }
 
 void API::CreateDevice(const DeviceCreateInfo& p_CreateInfo)
