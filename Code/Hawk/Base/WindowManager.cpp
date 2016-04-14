@@ -40,7 +40,7 @@ void WindowManager::Open(HINSTANCE p_hInstance, const std::string& p_Name)
 	WNDCLASSEX l_WC = { 0 };
 
 	l_WC.cbSize = sizeof(WNDCLASSEX);
-	l_WC.style = CS_HREDRAW | CS_VREDRAW;
+	l_WC.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	l_WC.lpfnWndProc = WindowProc;
 	l_WC.hInstance = p_hInstance;
 	l_WC.hCursor = LoadCursor(nullptr, IDC_ARROW);
@@ -49,18 +49,34 @@ void WindowManager::Open(HINSTANCE p_hInstance, const std::string& p_Name)
 
 	THROW_IF_NOT(RegisterClassEx(&l_WC), "Failed to register windows class");
 
-	DWORD l_dwStyle = WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME;
-
+	DWORD l_dwStyle = WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
+	DWORD l_dwExStyle = WS_EX_APPWINDOW;
 	RECT l_Rect = { 0, 0, Config::Instance().Get("gfx.width", 640), Config::Instance().Get("gfx.height", 480) };
-	AdjustWindowRect(&l_Rect, l_dwStyle, FALSE);
+	if (Config::Instance().Get("gfx.fullscreen", false))
+	{
+		l_dwStyle |= WS_POPUP;
+		DEVMODE l_DevMode = {};
+		l_DevMode.dmSize = sizeof(DEVMODE);
+		l_DevMode.dmPelsWidth = l_Rect.right - l_Rect.left;
+		l_DevMode.dmPelsHeight = l_Rect.bottom - l_Rect.top;
+		l_DevMode.dmBitsPerPel = 32;		// TODO: Should check buffer config
+		l_DevMode.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL;
+		THROW_IF_NOT(ChangeDisplaySettings(&l_DevMode, CDS_FULLSCREEN) == DISP_CHANGE_SUCCESSFUL, "Failed to set fullscreen");
+	}
+	else
+	{
+		l_dwStyle |= WS_OVERLAPPEDWINDOW;
+		l_dwExStyle |= WS_EX_WINDOWEDGE;
+	}
+	AdjustWindowRectEx(&l_Rect, l_dwStyle, FALSE, l_dwExStyle);
 
 	n_hWindow = CreateWindowEx(
-		0,
+		l_dwExStyle,
 		n_WindowName,
 		p_Name.c_str(),
 		l_dwStyle,
-		CW_USEDEFAULT,
-		CW_USEDEFAULT,
+		0,
+		0,
 		l_Rect.right - l_Rect.left,
 		l_Rect.bottom - l_Rect.top,
 		nullptr,
