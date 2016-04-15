@@ -97,8 +97,8 @@ GraphicsPipeline::GraphicsPipeline(std::shared_ptr<Device> p_Device, const Rende
 
 	PipelineShaderStageCreateInfoList l_ShaderInfoList(2);
 	
-	p_ShaderManager->GetShader("triangle.vert.spv", "main", VK_SHADER_STAGE_VERTEX_BIT, l_ShaderInfoList[0]);
-	p_ShaderManager->GetShader("triangle.frag.spv", "main", VK_SHADER_STAGE_FRAGMENT_BIT, l_ShaderInfoList[1]);
+	p_ShaderManager->GetShader("trans.vert", "main", VK_SHADER_STAGE_VERTEX_BIT, l_ShaderInfoList[0]);
+	p_ShaderManager->GetShader("trans.frag", "main", VK_SHADER_STAGE_FRAGMENT_BIT, l_ShaderInfoList[1]);
 
 	VkGraphicsPipelineCreateInfo l_Info = {};
 	l_Info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
