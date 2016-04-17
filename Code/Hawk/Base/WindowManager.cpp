@@ -102,12 +102,17 @@ HINSTANCE WindowManager::GetHInstance()
 bool WindowManager::Update()
 {
 	MSG l_Msg;
+	bool l_bQuit = false;
 	while (PeekMessage(&l_Msg, nullptr, 0, 0, PM_REMOVE))
 	{
 		TranslateMessage(&l_Msg);
 		DispatchMessage(&l_Msg);
+		if (l_Msg.message == WM_QUIT)	// WM_QUIT won't be dispatched by DispatchMessage, so need to handle it separately
+		{
+			l_bQuit = true;
+		}
 	}
-	return l_Msg.message != WM_QUIT;
+	return !l_bQuit;
 }
 
 void WindowManager::RegisterWindowSizeChanged(WindowSizeChangedCallback p_Callback)
