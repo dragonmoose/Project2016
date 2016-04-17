@@ -54,7 +54,7 @@ public:
 	{
 		void* l_Dest = nullptr;
 		VK_THROW_IF_NOT_SUCCESS(vkMapMemory(m_Device->GetHandle(), m_DeviceMemory, 0, VK_WHOLE_SIZE, 0, &l_Dest), "Failed to map uniform buffer memory");
-		std::memcpy(l_Dest, &m_Data, T::Size());
+		std::memcpy(l_Dest, &m_Data, static_cast<size_t>(T::Size()));
 		vkUnmapMemory(m_Device->GetHandle(), m_DeviceMemory);
 	}
 

@@ -37,7 +37,7 @@ public:
 
 		void* l_Data = nullptr;
 		VK_THROW_IF_NOT_SUCCESS(vkMapMemory(m_Device->GetHandle(), m_DeviceMemory, 0, VK_WHOLE_SIZE, 0, &l_Data), "Failed to map vertex buffer memory");
-		std::memcpy(l_Data, p_Vertices.data(), l_BufferSize);
+		std::memcpy(l_Data, p_Vertices.data(), static_cast<size_t>(l_BufferSize));
 		vkUnmapMemory(m_Device->GetHandle(), m_DeviceMemory);
 
 		VK_THROW_IF_NOT_SUCCESS(vkBindBufferMemory(m_Device->GetHandle(), m_Handle, m_DeviceMemory, 0), "Failed to bind memory to vertex buffer");

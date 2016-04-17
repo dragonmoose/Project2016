@@ -50,7 +50,7 @@ void IndexBuffer::Init(VkDeviceSize p_BufferSize, void* p_Data)
 
 	void* l_Data = nullptr;
 	VK_THROW_IF_NOT_SUCCESS(vkMapMemory(m_Device->GetHandle(), m_DeviceMemory, 0, VK_WHOLE_SIZE, 0, &l_Data), "Failed to map index buffer memory");
-	std::memcpy(l_Data, p_Data, p_BufferSize);
+	std::memcpy(l_Data, p_Data, static_cast<size_t>(p_BufferSize));
 	vkUnmapMemory(m_Device->GetHandle(), m_DeviceMemory);
 
 	VK_THROW_IF_NOT_SUCCESS(vkBindBufferMemory(m_Device->GetHandle(), m_Handle, m_DeviceMemory, 0), "Failed to bind memory to index buffer");
