@@ -57,12 +57,10 @@ private:
 	using Modules = std::vector<std::unique_ptr<Module>>;
 
 	void Update();
-	void OnFrameBegin();
-	void OnFrameEnd();
+
 	Modules::const_iterator FindByID(ModuleID p_ID) const;
 
 	Modules m_Modules;
-	Time m_CurrFrameStartTime;
 	Time m_PrevFrameStartTime;
 	Thread m_Thread;
 	mutable Mutex m_Mutex;

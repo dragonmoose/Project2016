@@ -33,6 +33,7 @@ public:
 	bool IsZero() const;
 
 	int64 Get(Precision p_Precision) const;
+	float GetSecondsFloat() const;
 
 	bool operator==(const Duration& p_rhs) const;
 	bool operator!=(const Duration& p_rhs) const;

@@ -82,6 +82,12 @@ int64 Duration::Get(Precision p_Precision) const
 	return 0;
 }
 
+float Duration::GetSecondsFloat() const
+{
+	return static_cast<float>(0.000000001 * std::chrono::duration_cast<std::chrono::nanoseconds>(m_Duration).count());
+}
+
+
 bool Duration::operator==(const Duration& p_rhs) const
 {
 	return m_Duration == p_rhs.m_Duration;

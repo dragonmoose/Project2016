@@ -155,11 +155,10 @@ void API::Update(Duration p_Duration)
 {
 	static float l_fAngle = 0.0f;
 	UniformBufferDecl::WVP& l_WVP = m_UniformBuffer->GetData();
-	l_fAngle += 0.0000006f * (float)p_Duration.Get(Duration::Precision::MicroSecond);
+	l_fAngle += p_Duration.GetSecondsFloat();
 	l_WVP.m_World = glm::rotate(glm::mat4(), l_fAngle, glm::vec3(0, 1, 1));
 	m_UniformBuffer->Update();
 }
-
 
 #ifdef HAWK_DEBUG
 void API::InitializeConsole(ScopedConsoleCommands* p_Console)

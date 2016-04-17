@@ -162,6 +162,7 @@ void Core::Run()
 
 		Time l_CurrTime;
 		l_CurrTime.SetToNow();
+
 		Duration l_Delta(l_CurrTime - m_PrevFrameStartTime);
 		l_Delta = std::min(l_Delta, ModuleThread::sc_MaxFrameDuration);
 

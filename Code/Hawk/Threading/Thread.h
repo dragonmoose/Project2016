@@ -13,14 +13,8 @@ class HAWK_DLL_EXPORT Thread final
 {
 public:
 	using UpdateFunc = std::function<void(void)>;
-	using FrameBeginCallback = std::function<void(void)>;
-	using FrameEndCallback = std::function<void(void)>;
 
 	Thread(const std::string& p_Name, UpdateFunc p_UpdateFunc);
-
-	void RegisterFrameBegin(FrameBeginCallback p_Callback);
-	void RegisterFrameEnd(FrameBeginCallback p_Callback);
-
 	Thread(const Thread&) = delete;
 	Thread& operator=(const Thread&) = delete;
 
@@ -41,8 +35,6 @@ private:
 	std::shared_ptr<Dispatcher> m_Dispatcher;
 	std::thread m_Thread;
 	UpdateFunc m_UpdateFunc;
-	FrameBeginCallback m_FrameBegin;
-	FrameEndCallback m_FrameEnd;
 	std::atomic_bool m_bStopSignal;
 
 	static std::atomic_uint s_uiNextThreadID;

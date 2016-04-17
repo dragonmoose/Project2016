@@ -18,15 +18,6 @@ Thread::Thread(const std::string& p_Name, UpdateFunc p_UpdateFunc)
 {
 }
 
-void Thread::RegisterFrameBegin(FrameBeginCallback p_Callback)
-{
-	m_FrameBegin = p_Callback;
-}
-void Thread::RegisterFrameEnd(FrameBeginCallback p_Callback)
-{
-	m_FrameEnd = p_Callback;
-}
-
 void Thread::Start()
 {
 	m_Thread = std::thread(&Thread::Run, this);
@@ -73,18 +64,8 @@ void Thread::Run()
 	LOG("Thread started: " << GetName(), "core", Debug);
 	while (!m_bStopSignal)
 	{
-		if (m_FrameBegin)
-		{
-			m_FrameBegin();
-		}
-
 		m_Dispatcher->Execute();
 		m_UpdateFunc();
-
-		if (m_FrameEnd)
-		{
-			m_FrameEnd();
-		}
 		Sleep();
 	}
 }

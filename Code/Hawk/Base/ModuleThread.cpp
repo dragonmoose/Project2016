@@ -14,8 +14,6 @@ ModuleThread::ModuleThread(const std::string& p_Name)
 : m_Thread(p_Name, std::bind(&ModuleThread::Update, this))
 , m_Mutex(p_Name)
 {
-	m_Thread.RegisterFrameBegin(std::bind(&ModuleThread::OnFrameBegin, this));
-	m_Thread.RegisterFrameEnd(std::bind(&ModuleThread::OnFrameEnd, this));
 }
 
 bool ModuleThread::TryRemove(ModuleID p_ID)
@@ -94,26 +92,21 @@ void ModuleThread::Stop()
 
 void ModuleThread::Update()
 {
+	Time l_CurrTime;
+	l_CurrTime.SetToNow();
+
+	Duration l_Delta(l_CurrTime - m_PrevFrameStartTime);
+	l_Delta = std::min(l_Delta, sc_MaxFrameDuration);
+
 	Profiler l_Profiler(std::string("MTUpdate:").append(m_Thread.GetName()));
 	l_Profiler.Start();
-	Duration l_Delta(m_CurrFrameStartTime - m_PrevFrameStartTime);
-	l_Delta = std::min(l_Delta, sc_MaxFrameDuration);
 
 	MutexScope l_MutexScope(m_Mutex);
 	for (auto& l_Module : m_Modules)
 	{
 		l_Module->_Update(l_Delta);
 	}
-}
-
-void ModuleThread::OnFrameBegin()
-{
-	m_CurrFrameStartTime = Time::Now();
-}
-
-void ModuleThread::OnFrameEnd()
-{
-	m_PrevFrameStartTime = m_CurrFrameStartTime;
+	m_PrevFrameStartTime = l_CurrTime;
 }
 
 ModuleThread::Modules::const_iterator ModuleThread::FindByID(ModuleID p_ID) const
