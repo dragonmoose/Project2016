@@ -5,7 +5,7 @@
 namespace Hawk {
 namespace Gfx {
 
-class Color final
+class HAWK_DLL_EXPORT Color final
 {
 public:
 	Color(float p_fRed, float p_fGreen, float p_fBlue, float p_fAlpha);

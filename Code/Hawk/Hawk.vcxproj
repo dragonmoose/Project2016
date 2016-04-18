@@ -174,10 +174,13 @@
     <ClInclude Include="Input\InputEvents.h" />
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Input\KeyCodes.h" />
+    <ClInclude Include="Math\Vec3.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Scene\Component.h" />
     <ClInclude Include="Scene\SceneManager.h" />
     <ClInclude Include="Scene\Entity.h" />
+    <ClInclude Include="Shapes\Box.h" />
+    <ClInclude Include="Shapes\IShape.h" />
     <ClInclude Include="System\Config.h" />
     <ClInclude Include="System\DllExport.h" />
     <ClInclude Include="System\Duration.h" />
@@ -256,6 +259,7 @@
     <ClCompile Include="Gfx\Vulkan\System.cpp" />
     <ClCompile Include="Gfx\Vulkan\Util.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
+    <ClCompile Include="Math\Vec3.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -265,6 +269,7 @@
     <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Scene\Entity.cpp" />
     <ClCompile Include="Scene\SceneManager_Console.cpp" />
+    <ClCompile Include="Shapes\Box.cpp" />
     <ClCompile Include="System\Config.cpp" />
     <ClCompile Include="System\CoreInfo.cpp" />
     <ClCompile Include="System\Duration.cpp" />

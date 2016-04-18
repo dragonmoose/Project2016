@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Events/IEvent.h"
+#include "Math/Vec3.h"
+#include "Color.h"
 #include <string>
 
 namespace Hawk {
-
-class Shape;
 
 namespace Gfx {
 
@@ -31,9 +31,24 @@ struct RemoveDebugTextEvent : public IEvent
 	std::string m_Category;
 };
 
-struct UpdateDebugGeometryEvent : public IEvent
+struct AddDebugAABBEvent : public IEvent
 {
-	UpdateDebugGeometryEvent(const std::string& /*p_Name*/, const Shape& /*p_Shape*/) {};
+	AddDebugAABBEvent(const Vec3& p_Min, const Vec3& p_Max, const Color& p_Color = Color::Red, uint32 p_uiLineWidth = 1, bool p_bDepthTest = false, const Duration& p_Duration = Duration(24, Duration::Precision::Hour))
+	: m_Min(p_Min)
+	, m_Max(p_Max)
+	, m_Color(p_Color)
+	, m_uiLineWidth(p_uiLineWidth)
+	, m_bDepthTest(p_bDepthTest)
+	, m_Duration(p_Duration)
+	{
+	}
+
+	Vec3 m_Min;
+	Vec3 m_Max;
+	Color m_Color;
+	uint32 m_uiLineWidth;
+	bool m_bDepthTest;
+	Duration m_Duration;
 };
 
 }}

@@ -227,6 +227,12 @@
     <ClCompile Include="Util\Math.cpp">
       <Filter>Util</Filter>
     </ClCompile>
+    <ClCompile Include="Math\Vec3.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Shapes\Box.cpp">
+      <Filter>Shapes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -371,9 +377,6 @@
     <ClInclude Include="Util\Random.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="Util\Math.h">
-      <Filter>Util</Filter>
-    </ClInclude>
     <ClInclude Include="Util\Util_Console.h">
       <Filter>Util</Filter>
     </ClInclude>
@@ -515,6 +518,18 @@
     <ClInclude Include="Gfx\Vulkan\VertexDecl.h">
       <Filter>Gfx\Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="Shapes\IShape.h">
+      <Filter>Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Shapes\Box.h">
+      <Filter>Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Math.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Vec3.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
@@ -549,6 +564,12 @@
     </Filter>
     <Filter Include="Gfx\Vulkan">
       <UniqueIdentifier>{d49e3854-cd48-4461-b5ea-f8a9a531eb23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shapes">
+      <UniqueIdentifier>{3205a633-8661-4646-aeec-691a4f6ff484}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{6005e5a4-4274-4545-b0ea-7c80ea0482a4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

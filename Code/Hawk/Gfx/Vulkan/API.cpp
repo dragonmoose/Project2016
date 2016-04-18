@@ -172,6 +172,10 @@ void API::InitializeConsole(ScopedConsoleCommands* p_Console)
 	p_Console->Register("vk.printSupportedDepthStencilFormats", m_PhysicalDevice.get(), &PhysicalDevice::CmdPrintDepthStencilFormats, "Lists the supported depth/stencil formats for the given device", "[DeviceIndex] [KeepUnsupported 0|1]");
 }
 
+void API::DrawAABB(const Vec3& p_Min, const Vec3& p_Max, const Color& p_Color, uint32 p_uiLineWidth, bool p_bDepthTest)
+{
+}
+
 #endif
 
 void API::CreateInstance()

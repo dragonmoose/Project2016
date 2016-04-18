@@ -39,6 +39,8 @@ public:
 
 #ifdef HAWK_DEBUG
 	void InitializeConsole(ScopedConsoleCommands* p_Console) override;
+	void DrawAABB(const Vec3& p_Min, const Vec3& p_Max, const Color& p_Color, uint32 p_uiLineWidth, bool p_bDepthTest) override;
+
 #endif
 
 private:
