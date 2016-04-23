@@ -139,14 +139,14 @@ void Module::_Update(const Duration& p_Duration)
 					l_Profiler.Start();
 					m_EventManager->HandleQueued();
 
-					Update(m_AccumulatedTime);
+					Update(m_TimePerFrame);
 					for (auto& l_SubModule : m_SubModules)
 					{
 						l_SubModule->Update(m_AccumulatedTime);
 					}
 
 					l_Profiler.Stop();
-					m_AccumulatedTime.SetToZero();
+					m_AccumulatedTime -= m_TimePerFrame;
 				}
 			}
 			else

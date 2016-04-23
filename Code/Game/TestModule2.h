@@ -45,7 +45,6 @@ public:
 	}
 	void Update(const Hawk::Duration& p_Duration) override
 	{
-		LOG("Tick: " << p_Duration.ToString() << " secflt: " << p_Duration.GetSecondsFloat(), "test", Trace);
 	}
 
 	void Initialize() override

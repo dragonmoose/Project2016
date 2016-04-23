@@ -44,6 +44,7 @@ public:
 	bool operator>=(const Duration& p_rhs) const;
 
 	Duration& operator+=(const Duration& p_rhs);
+	Duration& operator-=(const Duration& p_rhs);
 	Duration operator/(uint32 p_uiDenominator) const;
 	Duration operator-(const Duration& p_rhs) const;
 

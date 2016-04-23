@@ -133,6 +133,13 @@ Duration& Duration::operator+=(const Duration& p_rhs)
 	return *this;
 }
 
+Duration& Duration::operator-=(const Duration& p_rhs)
+{
+	m_Duration -= p_rhs.m_Duration;
+	return *this;
+}
+
+
 Duration Duration::operator/(uint32 p_uiDenominator) const
 {
 	return Duration((m_Duration / p_uiDenominator).count(), Precision::NanoSecond);
