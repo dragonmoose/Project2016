@@ -197,9 +197,9 @@ bool Module::IsPaused() const
 
 void Module::SetFixedTimeStep(float p_fValue, FixedTimeStepDecl p_Decl)
 {
-	float l_fValue = (p_Decl == FixedTimeStepDecl::FramesPerSecond ? (1.0f / p_fValue) : p_fValue);
-	m_TimePerFrame = Duration(static_cast<int32>(l_fValue * 1000000.0f), Duration::Precision::MicroSecond);
-	LOGM("Using fixed time step. " << 1.0f / l_fValue << " FPS Interval: " << l_fValue << " seconds", Debug);
+	float l_fSecondsPerFrame = (p_Decl == FixedTimeStepDecl::FramesPerSecond ? (1.0f / p_fValue) : p_fValue);
+	m_TimePerFrame = Duration(l_fSecondsPerFrame);
+	LOGM("Using fixed time step. FPS: " << 1.0f / l_fSecondsPerFrame << " [" << l_fSecondsPerFrame << " seconds per frame]", Debug);
 }
 
 void Module::AddSubModule(std::shared_ptr<SubModule> p_SubModule)

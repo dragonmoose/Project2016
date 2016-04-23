@@ -4,6 +4,9 @@
 
 namespace Hawk {
 
+const double Duration::sc_dSecToNano = 1000000000;
+const double Duration::sc_dNanoToSec = 1.0 / sc_dSecToNano;
+
 Duration::Duration()
 {
 	SetToZero();
@@ -35,6 +38,12 @@ Duration::Duration(int64 p_iValue, Precision p_Precision)
 			ASSERT_LN("Invalid precision type given: " << static_cast<int32>(p_Precision));
 	}
 }
+
+Duration::Duration(float p_fSeconds)
+{
+	m_Duration = std::chrono::nanoseconds(static_cast<std::chrono::nanoseconds::rep>(p_fSeconds * sc_dSecToNano));
+}
+
 
 std::string Duration::ToString(Format p_Format) const
 {
@@ -84,7 +93,7 @@ int64 Duration::Get(Precision p_Precision) const
 
 float Duration::GetSecondsFloat() const
 {
-	return static_cast<float>(0.000000001 * std::chrono::duration_cast<std::chrono::nanoseconds>(m_Duration).count());
+	return static_cast<float>(sc_dNanoToSec * std::chrono::duration_cast<std::chrono::nanoseconds>(m_Duration).count());
 }
 
 

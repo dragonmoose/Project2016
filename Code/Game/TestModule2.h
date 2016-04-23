@@ -45,19 +45,11 @@ public:
 	}
 	void Update(const Hawk::Duration& p_Duration) override
 	{
-		m_Duration += p_Duration;
-		if (m_Duration >= Hawk::Duration(1, Hawk::Duration::Precision::Second))
-		{
-			m_Duration.SetToZero();
-			TestEvent l_Event;
-			//l_Event.m_Str = "EventString";
-			l_Event.m_iValue = 666;
-			SendEvent<TestEvent>(l_Event);
-		}
+		LOG("Tick: " << p_Duration.ToString() << " secflt: " << p_Duration.GetSecondsFloat(), "test", Trace);
 	}
 
 	void Initialize() override
 	{
-		SetFixedTimeStep(60, FixedTimeStepDecl::FramesPerSecond);
+		SetFixedTimeStep(1, FixedTimeStepDecl::FramesPerSecond);
 	}
 };

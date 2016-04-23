@@ -28,6 +28,7 @@ public:
 
 	Duration();
 	Duration(int64 p_iValue, Precision p_Precision);
+	explicit Duration(float p_fSeconds);
 	std::string ToString(Format p_Format = Format::HourMinSecMS) const;
 	void SetToZero();
 	bool IsZero() const;
@@ -55,6 +56,10 @@ private:
 
 	using InternalDuration = std::chrono::steady_clock::duration;
 	InternalDuration m_Duration;
+
+	static const double sc_dSecToNano;
+	static const double sc_dNanoToSec;
+
 };
 
 }
