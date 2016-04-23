@@ -12,12 +12,14 @@
 namespace Hawk {
 
 std::atomic_uint Module::s_uiNextModuleID = 1;
+const float Module::sc_fDefaultFixedFPS = 60.0f;
 
 Module::Module()
 : m_bPaused(false)
 , m_ID(s_uiNextModuleID++)
 , m_bInitialized(false)
 {
+	SetFixedTimeStep(sc_fDefaultFixedFPS, FixedTimeStepDecl::FramesPerSecond);
 }
 
 Module::~Module()
@@ -102,6 +104,15 @@ void Module::InitializeConsole(ScopedConsoleCommands* /*p_Console*/)
 void Module::DebugPrint() const
 {
 	std::cout << "\t" << GetLogDesc() << "\n";
+	std::cout << "\t\tTimestep: ";
+	if (m_TimePerFrame.IsZero())
+	{
+		std::cout << "unlocked\n";
+	}
+	else
+	{
+		std::cout << static_cast<int32>(std::round(1.0f / m_TimePerFrame.GetSecondsFloat())) << " fps\n";
+	}
 	std::cout << "\t\t" << "Paused: " << IsPaused() << "\n";
 	if (!m_SubModules.empty())
 	{
@@ -142,7 +153,7 @@ void Module::_Update(const Duration& p_Duration)
 					Update(m_TimePerFrame);
 					for (auto& l_SubModule : m_SubModules)
 					{
-						l_SubModule->Update(m_AccumulatedTime);
+						l_SubModule->Update(m_TimePerFrame);
 					}
 
 					l_Profiler.Stop();
@@ -199,7 +210,11 @@ void Module::SetFixedTimeStep(float p_fValue, FixedTimeStepDecl p_Decl)
 {
 	float l_fSecondsPerFrame = (p_Decl == FixedTimeStepDecl::FramesPerSecond ? (1.0f / p_fValue) : p_fValue);
 	m_TimePerFrame = Duration(l_fSecondsPerFrame);
-	LOGM("Using fixed time step. FPS: " << 1.0f / l_fSecondsPerFrame << " [" << l_fSecondsPerFrame << " seconds per frame]", Debug);
+}
+
+void Module::SetUnlockedFramerate()
+{
+	m_TimePerFrame.SetToZero();
 }
 
 void Module::AddSubModule(std::shared_ptr<SubModule> p_SubModule)

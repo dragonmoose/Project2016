@@ -60,6 +60,7 @@ namespace Hawk
 			SecondsPerFrame
 		};
 		void SetFixedTimeStep(float p_fValue, FixedTimeStepDecl p_Decl);
+		void SetUnlockedFramerate();
 
 		void AddSubModule(std::shared_ptr<SubModule> p_SubModule);
 		bool IsInitialized() const;
@@ -79,6 +80,8 @@ namespace Hawk
 		SubModules m_SubModules;
 		bool m_bInitialized;
 		std::string m_LogDesc;
+
+		static const float sc_fDefaultFixedFPS;
 
 #ifdef HAWK_DEBUG
 		std::unique_ptr<ScopedConsoleCommands> m_Console;

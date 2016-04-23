@@ -44,9 +44,9 @@ std::string RenderingModule::GetName() const
 
 void RenderingModule::Initialize()
 {
-	if (Config::Instance().Get("gfx.setFixedFPS", false))
+	if (Config::Instance().Get("gfx.unlockedFramerate", false))
 	{
-		SetFixedTimeStep(Config::Instance().Get("gfx.fixedFPS", 60.0f), Module::FixedTimeStepDecl::FramesPerSecond);
+		SetUnlockedFramerate();
 	}
 	m_API->Initialize();
 

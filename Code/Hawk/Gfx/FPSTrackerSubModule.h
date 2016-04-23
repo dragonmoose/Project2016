@@ -1,5 +1,7 @@
 #pragma once
 #include "Base/SubModule.h"
+#include "System/Time.h"
+#include <array>
 
 namespace Hawk {
 namespace Gfx {
@@ -21,12 +23,11 @@ private:
 	void Reset();
 
 	std::shared_ptr<DebugTextSubModule> m_DebugTextSubModule;
-	int32 m_iMin;
-	int32 m_iMax;
 	
 	static const int32 sc_iNumSamples = 100;
 	int32 m_iCurrSampleIndex;
-	std::vector<int32> m_Samples;
+	std::array<float, sc_iNumSamples> m_Samples;
+	Time m_PrevTime;
 };
 
 }}

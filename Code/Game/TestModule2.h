@@ -43,7 +43,7 @@ public:
 		}
 		);
 	}
-	void Update(const Hawk::Duration& p_Duration) override
+	void Update(const Hawk::Duration& /*p_Duration*/) override
 	{
 	}
 

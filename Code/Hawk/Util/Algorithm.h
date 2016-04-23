@@ -28,7 +28,7 @@ void erase_if(Range& p_Range, Pred p_Pred)
 template<class Range>
 decltype(auto) average(Range& p_Range)
 {
-	return (std::accumulate(p_Range.begin(), p_Range.end(), 0) / p_Range.size());
+	return (std::accumulate(p_Range.cbegin(), p_Range.cend(), Range::value_type()) / static_cast<Range::value_type>(p_Range.size()));
 }
 
 template<class Range, class T>
