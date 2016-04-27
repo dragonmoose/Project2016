@@ -178,7 +178,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Scene\Component.h" />
     <ClInclude Include="Scene\SceneManager.h" />
-    <ClInclude Include="Scene\Entity.h" />
+    <ClInclude Include="Scene\SceneNode.h" />
     <ClInclude Include="Shapes\Box.h" />
     <ClInclude Include="Shapes\IShape.h" />
     <ClInclude Include="System\Config.h" />
@@ -267,7 +267,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Scene\SceneManager.cpp" />
-    <ClCompile Include="Scene\Entity.cpp" />
+    <ClCompile Include="Scene\SceneNode.cpp" />
     <ClCompile Include="Scene\SceneManager_Console.cpp" />
     <ClCompile Include="Shapes\Box.cpp" />
     <ClCompile Include="System\Config.cpp" />

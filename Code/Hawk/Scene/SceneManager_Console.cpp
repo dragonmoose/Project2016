@@ -8,11 +8,11 @@ namespace Hawk {
 void SceneManager::InitializeConsole(ScopedConsoleCommands* p_Console)
 {
 	p_Console->Register("scene.print", this, &SceneManager::CmdPrint, "Output scene manager tree to console", "");
-	p_Console->Register("entity.remove", this, &SceneManager::CmdRemoveEntity, "Removes entity", "[entityID] [parentID]");
-	p_Console->Register("entity.reparent", this, &SceneManager::CmdReparentEntity, "Reparents entity", "[entityID] [newParentID]");
-	p_Console->Register("entity.ascenstorOf", this, &SceneManager::CmdAncestorOf, "Checks if first entity is ancestor of second entity", "[entityID] [entityID]");
+	p_Console->Register("sceneNode.remove", this, &SceneManager::CmdRemoveSceneNode, "Removes SceneNode", "[SceneNodeID] [parentID]");
+	p_Console->Register("sceneNode.reparent", this, &SceneManager::CmdReparentSceneNode, "Reparents SceneNode", "[SceneNodeID] [newParentID]");
+	p_Console->Register("sceneNode.ascenstorOf", this, &SceneManager::CmdAncestorOf, "Checks if first SceneNode is ancestor of second SceneNode", "[SceneNodeID] [SceneNodeID]");
 	p_Console->Register("scene.clear", this, &SceneManager::CmdClear, "Clears the scene", "");
-	p_Console->Register("scene.populate", this, &SceneManager::CmdPopulate, "Adds test entity hierarchy", "[maxDepth] [max entities per depth level]");
+	p_Console->Register("scene.populate", this, &SceneManager::CmdPopulate, "Adds test SceneNode hierarchy", "[maxDepth] [max entities per depth level]");
 }
 #endif
 
@@ -24,16 +24,16 @@ void SceneManager::CmdPrint()
 	std::cout << "\n";
 }
 
-void SceneManager::CmdRemoveEntity(EntityID p_EntityID)
+void SceneManager::CmdRemoveSceneNode(SceneNodeID p_SceneNodeID)
 {
 	try
 	{
-		auto l_Itr = m_EntityIDMap.find(p_EntityID);
-		THROW_IF(l_Itr == m_EntityIDMap.end(), "No entity in scene with ID=" << p_EntityID);
+		auto l_Itr = m_SceneNodeIDMap.find(p_SceneNodeID);
+		THROW_IF(l_Itr == m_SceneNodeIDMap.end(), "No SceneNode in scene with ID=" << p_SceneNodeID);
 
-		const Entity::EntityPtr l_Entity = l_Itr->second;
-		l_Entity->GetParent()->RemoveChild(l_Entity);
-		std::cout << "Entity removed.\n";
+		const SceneNode::SceneNodePtr l_SceneNode = l_Itr->second;
+		l_SceneNode->GetParent()->RemoveChild(l_SceneNode);
+		std::cout << "SceneNode removed.\n";
 	}
 	catch (Exception& e)
 	{
@@ -41,23 +41,23 @@ void SceneManager::CmdRemoveEntity(EntityID p_EntityID)
 	}
 }
 
-void SceneManager::CmdReparentEntity(EntityID p_EntityID, EntityID p_NewParentID)
+void SceneManager::CmdReparentSceneNode(SceneNodeID p_SceneNodeID, SceneNodeID p_NewParentID)
 {
 	try
 	{
-		THROW_IF(p_EntityID == p_NewParentID, "Cannot add entity to itself");
+		THROW_IF(p_SceneNodeID == p_NewParentID, "Cannot add SceneNode to itself");
 
-		auto l_Itr = m_EntityIDMap.find(p_EntityID);
-		THROW_IF(l_Itr == m_EntityIDMap.end(), "No entity in scene with ID=" << p_EntityID);
-		const Entity::EntityPtr l_Entity = l_Itr->second;
+		auto l_Itr = m_SceneNodeIDMap.find(p_SceneNodeID);
+		THROW_IF(l_Itr == m_SceneNodeIDMap.end(), "No SceneNode in scene with ID=" << p_SceneNodeID);
+		const SceneNode::SceneNodePtr l_SceneNode = l_Itr->second;
 
-		auto l_ParentItr = m_EntityIDMap.find(p_NewParentID);
-		THROW_IF(l_ParentItr == m_EntityIDMap.end(), "No entity in scene with ID=" << p_NewParentID);
-		const Entity::EntityPtr l_ParentEntity = l_ParentItr->second;
+		auto l_ParentItr = m_SceneNodeIDMap.find(p_NewParentID);
+		THROW_IF(l_ParentItr == m_SceneNodeIDMap.end(), "No SceneNode in scene with ID=" << p_NewParentID);
+		const SceneNode::SceneNodePtr l_ParentSceneNode = l_ParentItr->second;
 
-		THROW_IF(l_Entity->IsChildOf(l_ParentEntity->GetID()), "Already child of specified entity");
+		THROW_IF(l_SceneNode->IsChildOf(l_ParentSceneNode->GetID()), "Already child of specified SceneNode");
 
-		l_ParentEntity->AddChild(l_Entity);
+		l_ParentSceneNode->AddChild(l_SceneNode);
 		std::cout << "Child reparented.\n";
 	}
 	catch (Exception& e)
@@ -66,19 +66,19 @@ void SceneManager::CmdReparentEntity(EntityID p_EntityID, EntityID p_NewParentID
 	}
 }
 
-void SceneManager::CmdAncestorOf(EntityID p_EntityID1, EntityID p_EntityID2)
+void SceneManager::CmdAncestorOf(SceneNodeID p_SceneNodeID1, SceneNodeID p_SceneNodeID2)
 {
 	try
 	{
-		auto l_Itr1 = m_EntityIDMap.find(p_EntityID1);
-		THROW_IF(l_Itr1 == m_EntityIDMap.end(), "No entity in scene with ID=" << p_EntityID1);
-		const Entity::EntityPtr l_Entity1 = l_Itr1->second;
+		auto l_Itr1 = m_SceneNodeIDMap.find(p_SceneNodeID1);
+		THROW_IF(l_Itr1 == m_SceneNodeIDMap.end(), "No SceneNode in scene with ID=" << p_SceneNodeID1);
+		const SceneNode::SceneNodePtr l_SceneNode1 = l_Itr1->second;
 
-		auto l_Itr2 = m_EntityIDMap.find(p_EntityID2);
-		THROW_IF(l_Itr2 == m_EntityIDMap.end(), "No entity in scene with ID=" << p_EntityID2);
-		const Entity::EntityPtr l_Entity2 = l_Itr2->second;
+		auto l_Itr2 = m_SceneNodeIDMap.find(p_SceneNodeID2);
+		THROW_IF(l_Itr2 == m_SceneNodeIDMap.end(), "No SceneNode in scene with ID=" << p_SceneNodeID2);
+		const SceneNode::SceneNodePtr l_SceneNode2 = l_Itr2->second;
 
-		std::cout << "Result: " << l_Entity1->IsAncestorOf(l_Entity2) << "\n\n";
+		std::cout << "Result: " << l_SceneNode1->IsAncestorOf(l_SceneNode2) << "\n\n";
 	}
 	catch (Exception& e)
 	{
@@ -88,21 +88,21 @@ void SceneManager::CmdAncestorOf(EntityID p_EntityID1, EntityID p_EntityID2)
 
 namespace
 {
-	Entity::EntityPtr AddEntity(Entity::EntityPtr p_Parent)
+	SceneNode::SceneNodePtr AddSceneNode(SceneNode::SceneNodePtr p_Parent)
 	{
-		Entity::EntityPtr l_Entity = std::make_shared<Entity>();
-		p_Parent->AddChild(l_Entity);
-		return l_Entity;
+		SceneNode::SceneNodePtr l_SceneNode = std::make_shared<SceneNode>();
+		p_Parent->AddChild(l_SceneNode);
+		return l_SceneNode;
 	}
 
-	void AddEntities(Entity::EntityPtr p_Parent, int32 p_iDepth, int32 p_iLevelMax)
+	void AddEntities(SceneNode::SceneNodePtr p_Parent, int32 p_iDepth, int32 p_iLevelMax)
 	{
 		if (p_iDepth >= 0)
 		{
 			int32 l_iNumNodes = Random::GetInt(1, p_iLevelMax);
 			for (int32 i = 0; i < l_iNumNodes; i++)
 			{
-				AddEntities(AddEntity(p_Parent), p_iDepth - 1, p_iLevelMax);
+				AddEntities(AddSceneNode(p_Parent), p_iDepth - 1, p_iLevelMax);
 			}
 		}
 	}

@@ -15,16 +15,16 @@ namespace Hawk {
 class EventManager;
 class SceneManager;
 
-class Entity : public std::enable_shared_from_this<Entity>
+class SceneNode : public std::enable_shared_from_this<SceneNode>
 {
 public:
-	using EntityPtr = std::shared_ptr<Entity>;
-	using EntityVec = std::vector<EntityPtr>;
+	using SceneNodePtr = std::shared_ptr<SceneNode>;
+	using SceneNodeVec = std::vector<SceneNodePtr>;
 
-	Entity();
-	Entity(const std::string& p_Name);
-	~Entity();
-	void SetParent(EntityPtr p_Parent);
+	SceneNode();
+	SceneNode(const std::string& p_Name);
+	~SceneNode();
+	void SetParent(SceneNodePtr p_Parent);
 
 	template<class T, class... Args>
 	T& AddComponent(Args&&... p_Args)
@@ -35,19 +35,19 @@ public:
 
 	const std::string& GetName() const;
 
-	void AddChild(EntityPtr p_Entity);
-	void RemoveChild(EntityPtr p_Entity);
-	EntityPtr GetParent() const;
+	void AddChild(SceneNodePtr p_SceneNode);
+	void RemoveChild(SceneNodePtr p_SceneNode);
+	SceneNodePtr GetParent() const;
 	bool HasParent() const;
-	bool HasChild(EntityID p_ID) const;
-	bool IsChildOf(EntityID p_ID) const;
-	bool IsAncestorOf(EntityPtr p_Entity) const;
+	bool HasChild(SceneNodeID p_ID) const;
+	bool IsChildOf(SceneNodeID p_ID) const;
+	bool IsAncestorOf(SceneNodePtr p_SceneNode) const;
 	void AddToScene(SceneManager* p_pSceneManager);
 
 	void Initialize();
 	void RegisterEvents(EventManager& p_EventManager);
 	void Update(const Duration& p_Duration);
-	EntityID GetID() const;
+	SceneNodeID GetID() const;
 
 	const glm::mat4x4& GetFrameWorldMatrix();
 
@@ -55,21 +55,21 @@ public:
 	static void ResetIDCounter();
 
 private:
-	void DetachChild(EntityPtr p_Entity);
+	void DetachChild(SceneNodePtr p_SceneNode);
 	bool InScene() const;
 	void RemoveFromScene();
 
 	std::string m_Name;
 	bool m_bInitialized;
 
-	static EntityID s_NextID;
+	static SceneNodeID s_NextID;
 
 	using Components = std::vector<Component>;
 	Components m_Components;
 
-	EntityPtr m_Parent;
+	SceneNodePtr m_Parent;
 
-	using Children = std::vector<EntityPtr>;
+	using Children = std::vector<SceneNodePtr>;
 	Children m_Children;
 
 	SceneManager* m_pSceneManager;
@@ -77,7 +77,7 @@ private:
 	glm::vec3 m_Position;
 	glm::quat m_Rotation;
 	glm::mat4x4 m_FrameWorldMatrix;
-	EntityID m_ID;
+	SceneNodeID m_ID;
 };
 
 }

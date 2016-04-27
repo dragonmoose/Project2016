@@ -77,9 +77,6 @@
     <ClCompile Include="Scene\SceneManager.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\Entity.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Threading\Mutex.cpp">
       <Filter>Threading</Filter>
     </ClCompile>
@@ -233,6 +230,9 @@
     <ClCompile Include="Shapes\Box.cpp">
       <Filter>Shapes</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\SceneNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -354,9 +354,6 @@
       <Filter>Base</Filter>
     </ClInclude>
     <ClInclude Include="Scene\SceneManager.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\Entity.h">
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Scene\Component.h">
@@ -530,6 +527,9 @@
     <ClInclude Include="Math\Vec3.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Scene\SceneNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
@@ -570,6 +570,9 @@
     </Filter>
     <Filter Include="Math">
       <UniqueIdentifier>{6005e5a4-4274-4545-b0ea-7c80ea0482a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities">
+      <UniqueIdentifier>{7af04b26-c9a2-4a7a-af27-49275d43272d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

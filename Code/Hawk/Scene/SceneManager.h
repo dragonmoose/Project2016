@@ -1,5 +1,5 @@
 #pragma once
-#include "Entity.h"
+#include "SceneNode.h"
 #include "Base/Module.h"
 #include "System/Types.h"
 
@@ -10,7 +10,7 @@ class SceneManager : public Module
 public:
 	SceneManager();
 	std::string GetName() const override;
-	Entity* GetRoot();
+	SceneNode* GetRoot();
 
 #ifdef HAWK_DEBUG
 	void InitializeConsole(ScopedConsoleCommands* p_Console) override;
@@ -19,25 +19,25 @@ public:
 	void Initialize() override;
 	void RegisterEvents(EventManager& p_EventManager) override;
 	void Update(const Duration& p_Duration) override;
-	void AddToScene(Entity::EntityPtr p_Entity);
-	void RemoveFromScene(Entity::EntityPtr p_Entity);
+	void AddToScene(SceneNode::SceneNodePtr p_SceneNode);
+	void RemoveFromScene(SceneNode::SceneNodePtr p_SceneNode);
 	void Clear();
 
 	void CmdPrint();
-	void CmdRemoveEntity(EntityID p_EntityID);
-	void CmdReparentEntity(EntityID p_EntityID, EntityID p_NewParentID);
-	void CmdAncestorOf(EntityID p_EntityID1, EntityID p_EntityID2);
+	void CmdRemoveSceneNode(SceneNodeID p_SceneNodeID);
+	void CmdReparentSceneNode(SceneNodeID p_SceneNodeID, SceneNodeID p_NewParentID);
+	void CmdAncestorOf(SceneNodeID p_SceneNodeID1, SceneNodeID p_SceneNodeID2);
 	void CmdClear();
 	void CmdPopulate(int32 p_iDepth, int32 p_iLevelMax);
 
 private:
 	void CreateRoot();
 
-	Entity::EntityPtr m_Root;
-	Entity::EntityVec m_Entities;
+	SceneNode::SceneNodePtr m_Root;
+	SceneNode::SceneNodeVec m_Entities;
 
-	using EntityIDMap = std::unordered_map<EntityID, Entity::EntityPtr>;
-	EntityIDMap m_EntityIDMap;	
+	using SceneNodeIDMap = std::unordered_map<SceneNodeID, SceneNode::SceneNodePtr>;
+	SceneNodeIDMap m_SceneNodeIDMap;	
 };
 
 }
