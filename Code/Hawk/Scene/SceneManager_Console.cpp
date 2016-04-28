@@ -2,9 +2,9 @@
 #include "SceneManager.h"
 #include "Util/Random.h"
 
+#ifdef HAWK_DEBUG
 namespace Hawk {
 
-#ifdef HAWK_DEBUG
 void SceneManager::InitializeConsole(ScopedConsoleCommands* p_Console)
 {
 	p_Console->Register("scene.print", this, &SceneManager::CmdPrint, "Output scene manager tree to console", "");
@@ -14,7 +14,6 @@ void SceneManager::InitializeConsole(ScopedConsoleCommands* p_Console)
 	p_Console->Register("scene.clear", this, &SceneManager::CmdClear, "Clears the scene", "");
 	p_Console->Register("scene.populate", this, &SceneManager::CmdPopulate, "Adds test SceneNode hierarchy", "[maxDepth] [max entities per depth level]");
 }
-#endif
 
 void SceneManager::CmdPrint()
 {
@@ -138,3 +137,4 @@ void SceneManager::CmdPopulate(int32 p_iDepth, int32 p_iLevelMax)
 	}
 }
 }
+#endif

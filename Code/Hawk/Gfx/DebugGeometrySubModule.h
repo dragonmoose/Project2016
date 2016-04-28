@@ -1,3 +1,4 @@
+#ifdef HAWK_DEBUG
 #pragma once
 #include "Base/SubModule.h"
 #include "Color.h"
@@ -53,3 +54,4 @@ private:
 
 }
 }
+#endif

@@ -233,6 +233,18 @@
     <ClCompile Include="Scene\SceneNode.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="ECS\Entity.cpp">
+      <Filter>ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="ECS\ComponentMask.cpp">
+      <Filter>ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="ECS\EntityModule.cpp">
+      <Filter>ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="ECS\EntityModule_Console.cpp">
+      <Filter>ECS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -530,6 +542,21 @@
     <ClInclude Include="Scene\SceneNode.h">
       <Filter>Scene</Filter>
     </ClInclude>
+    <ClInclude Include="ECS\Entity.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS\ComponentFlags.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS\Components.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS\ComponentMask.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS\EntityModule.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
@@ -571,7 +598,7 @@
     <Filter Include="Math">
       <UniqueIdentifier>{6005e5a4-4274-4545-b0ea-7c80ea0482a4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Entities">
+    <Filter Include="ECS">
       <UniqueIdentifier>{7af04b26-c9a2-4a7a-af27-49275d43272d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

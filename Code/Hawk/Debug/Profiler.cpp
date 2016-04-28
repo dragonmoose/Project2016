@@ -25,16 +25,17 @@ void Profiler::Start()
 {
 #ifdef HAWK_DEBUG
 	ASSERT(!m_bRunning, "Attempting to start an already running profiler. Name: " << m_Name);
-	m_StartTime.SetToNow();
 	m_bRunning = true;
+	m_StartTime.SetToNow();
 #endif
 }
 
 void Profiler::Stop()
 {
 #ifdef HAWK_DEBUG
+	Duration l_Duration = Time::Now() - m_StartTime;
 	ASSERT(m_bRunning, "Attempting to stop profiler that was never started, or calling Stop() more than once. Name: " << m_Name);
-	ProfilerManager::Add(m_Name, Time::Now() - m_StartTime);
+	ProfilerManager::Add(m_Name, l_Duration);
 	m_bRunning = false;
 #endif
 }

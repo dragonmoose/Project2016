@@ -2,7 +2,9 @@
 #include "RenderingModule.h"
 #include "DebugTextSubModule.h"
 #include "FPSTrackerSubModule.h"
+#ifdef HAWK_DEBUG
 #include "DebugGeometrySubModule.h"
+#endif
 #include "Base/WindowManager.h"
 #if defined(HAWK_RENDERER_D3D12)
 #include "D3D12/D3D12API.h"
@@ -28,7 +30,10 @@ RenderingModule::RenderingModule()
 	m_DebugTextSubModule = std::make_shared<DebugTextSubModule>(m_API);
 	AddSubModule(std::make_shared<FPSTrackerSubModule>(m_DebugTextSubModule));
 	AddSubModule(m_DebugTextSubModule);
+
+#ifdef HAWK_DEBUG
 	AddSubModule(std::make_shared<DebugGeometrySubModule>(m_API));
+#endif
 }
 
 RenderingModule::~RenderingModule()

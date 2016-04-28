@@ -29,7 +29,7 @@ namespace Logger
 	Level StringToLevel(const std::string& p_Level);
 	void GetLevelColors(Level p_Level, ConsoleAPI::Color& p_Color, ConsoleAPI::Color& p_BgColor);
 
-	const std::array<std::string, 6> c_LogLevels = { "trace", "debug", "info", "warning", "error", "fatal" };
+	const std::array<std::string, 7> c_LogLevels = { "trace", "debug", "watch", "info", "warning", "error", "fatal" };
 }
 
 void Logger::Log(const std::string& p_Msg, const std::string& p_Tag, const std::string& p_FileInfo, Level p_Level)
@@ -92,6 +92,7 @@ Logger::Level Logger::StringToLevel(const std::string& p_Level)
 	std::string l_Level = StringUtil::ToLower(p_Level);
 	if (l_Level == "trace") { return Level::Trace; }
 	else if (l_Level == "debug") { return Level::Debug; }
+	else if (l_Level == "watch") { return Level::Watch; }
 	else if (l_Level == "info") { return Level::Info; }
 	else if (l_Level == "warning") { return Level::Warning; }
 	else if (l_Level == "error") { return Level::Error; }
@@ -110,6 +111,11 @@ void Logger::GetLevelColors(Level p_Level, ConsoleAPI::Color& p_Color, ConsoleAP
 	{
 		p_Color = ConsoleAPI::Color::BrightGreen;
 		p_BgColor = ConsoleAPI::Color::None;
+	}
+	else if (p_Level == Level::Watch)
+	{
+		p_Color = ConsoleAPI::Color::BrightWhite;
+		p_BgColor = ConsoleAPI::Color::BrightMagenta;
 	}
 	else if (p_Level == Level::Info)
 	{

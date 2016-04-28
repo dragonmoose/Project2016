@@ -3,6 +3,7 @@
 #include "WindowManager.h"
 #include "Debug/ProfilerManager.h"
 #include "Gfx/RenderingModule.h"
+#include "ECS/EntityModule.h"
 #include "Scene/SceneManager.h"
 #include "System/Time.h"
 #include "Threading/Thread.h"
@@ -197,7 +198,10 @@ void Core::AddModules()
 	{
 		AddModule<Gfx::RenderingModule>(Thread::sc_MainThreadID);
 	}
-	AddModule<SceneManager>(CreateModuleThread("scene"));
+
+	ThreadID l_EntityThread = CreateModuleThread("ecs");
+	AddModule<SceneManager>(l_EntityThread);
+	AddModule<ECS::EntityModule>(l_EntityThread);
 }
 
 void Core::InitializeModules()

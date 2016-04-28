@@ -22,12 +22,12 @@ struct KeyUpEvent : IEvent
 
 HAWK_DLL_EXPORT inline std::ostream& operator<<(std::ostream& os, Hawk::InputEvents::KeyDownEvent p_Event)
 {
-	os << static_cast<unsigned char>(p_Event.m_Code);
+	os << static_cast<uint8>(p_Event.m_Code);
 	return os;
 }
 
 HAWK_DLL_EXPORT inline std::ostream& operator<<(std::ostream& os, Hawk::InputEvents::KeyUpEvent p_Event)
 {
-	os << static_cast<unsigned char>(p_Event.m_Code);
+	os << static_cast<uint8>(p_Event.m_Code);
 	return os;
 }

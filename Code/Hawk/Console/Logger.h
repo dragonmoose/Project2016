@@ -39,6 +39,7 @@ namespace Logger
 	{
 		Trace,
 		Debug,
+		Watch,
 		Info,
 		Warning,
 		Error,

@@ -1,4 +1,6 @@
 #include "pch.h"
+
+#ifdef HAWK_DEBUG
 #include "DebugGeometrySubModule.h"
 #include "DebugEvents.h"
 #include "IRenderingAPI.h"
@@ -59,3 +61,4 @@ void DebugGeometrySubModule::CmdList()
 
 }
 }
+#endif

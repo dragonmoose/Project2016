@@ -133,10 +133,10 @@ LRESULT CALLBACK WindowManager::WindowProc(HWND p_hWindow, UINT p_Message, WPARA
 			PostQuitMessage(0);
 			return 0;
 		case WM_KEYDOWN:
-			n_InputSystem->OnKeyDown(static_cast<unsigned char>(p_wParam));
+			n_InputSystem->OnKeyDown(static_cast<uint8>(p_wParam));
 			return 0;
 		case WM_KEYUP:
-			n_InputSystem->OnKeyUp(static_cast<unsigned char>(p_wParam));
+			n_InputSystem->OnKeyUp(static_cast<uint8>(p_wParam));
 			return 0;
 		case WM_SIZE:
 			if (!n_bWindowManipulated)

@@ -14,8 +14,8 @@ public:
 	InputSystem(const InputSystem&) = delete;
 	InputSystem& operator=(const InputSystem&) = delete;
 
-	void OnKeyDown(unsigned char p_ucKeyCode);
-	void OnKeyUp(unsigned char p_ucKeyCode);
+	void OnKeyDown(uint8 p_ucKeyCode);
+	void OnKeyUp(uint8 p_ucKeyCode);
 
 private:
 	EventManager m_EventManager;
