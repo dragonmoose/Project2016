@@ -48,6 +48,7 @@ namespace Logger
 
 	HAWK_DLL_EXPORT void Log(const std::string& p_Msg, const std::string& p_Tag, const std::string& p_FileInfo, Level p_Level);
 	bool IsValidLogLevelString(const std::string& p_Level);
+	void SetLogToOutputWindow(bool p_bValue);
 }
 }
 

@@ -30,10 +30,18 @@ namespace Logger
 	void GetLevelColors(Level p_Level, ConsoleAPI::Color& p_Color, ConsoleAPI::Color& p_BgColor);
 
 	const std::array<std::string, 7> c_LogLevels = { "trace", "debug", "watch", "info", "warning", "error", "fatal" };
+	bool n_bLogToOutputWindow = false;
 }
 
 void Logger::Log(const std::string& p_Msg, const std::string& p_Tag, const std::string& p_FileInfo, Level p_Level)
 {
+	if (n_bLogToOutputWindow)
+	{
+		std::ostringstream l_Stream;
+		l_Stream << StringUtil::ToUpper(c_LogLevels[static_cast<std::size_t>(p_Level)]);
+		l_Stream << ": " << p_Msg << " (" << p_Tag << ") [" << p_FileInfo << "]\n";
+		::OutputDebugString(l_Stream.str().c_str());
+	}
 	if (!ConsoleAPI::Initialized()) return;
 
 	// TODO: Lock is acquired in ThreadInfoManager::GetLogText even when logging is disabled - prevent this
@@ -64,6 +72,11 @@ void Logger::Log(const std::string& p_Msg, const std::string& p_Tag, const std::
 bool Logger::IsValidLogLevelString(const std::string& p_Level)
 {
 	return std::find(c_LogLevels.cbegin(), c_LogLevels.cend(), StringUtil::ToLower(p_Level)) != c_LogLevels.cend();
+}
+
+void Logger::SetLogToOutputWindow(bool p_bValue)
+{
+	n_bLogToOutputWindow = p_bValue;
 }
 
 bool Logger::ShouldLog(const std::string& p_Msg, const std::string& p_ThreadInfo, const std::string& p_Tag, Level p_Level)

@@ -71,6 +71,7 @@ void Core::Initialize()
 	Config::Instance().Load(true);
 	
 #ifdef HAWK_DEBUG
+	Logger::SetLogToOutputWindow(m_Settings.m_bLogToOutputWindow);
 	if (m_Settings.m_bConsole)
 	{
 		ConsoleAPI::Start();

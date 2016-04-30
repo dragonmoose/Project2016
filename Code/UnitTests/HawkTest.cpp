@@ -23,6 +23,15 @@ template<> static std::wstring Microsoft::VisualStudio::CppUnitTestFramework::To
 
 namespace HawkUnitTests
 {
+	CoreSettings n_CoreSettings;
+	TEST_MODULE_INITIALIZE(ModuleInit)
+	{
+		n_CoreSettings.m_bConsole = false;
+		n_CoreSettings.m_AppName = "HawkUnitTests";
+		n_CoreSettings.m_AppVersion = Version(1, 0, 0);
+		n_CoreSettings.m_hInstance = reinterpret_cast<HINSTANCE>(1);
+		n_CoreSettings.m_bLogToOutputWindow = true;
+	}
 	TEST_CLASS(TimeTest)
 	{
 	public:
@@ -54,9 +63,7 @@ namespace HawkUnitTests
 
 			TEST_METHOD(Modules)
 			{
-				CoreSettings l_Settings;
-				l_Settings.m_bConsole = false;
-				Core l_Core(l_Settings);
+				Core l_Core(n_CoreSettings);
 				l_Core.Initialize();
 				LOG("testing info", "test", Info);
 				l_Core.CreateModuleThread("TestThread");

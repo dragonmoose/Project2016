@@ -14,6 +14,11 @@ std::string StringUtil::ToLower(const std::string& p_Source)
 	return boost::algorithm::to_lower_copy(p_Source);
 }
 
+std::string StringUtil::ToUpper(const std::string& p_Source)
+{
+	return boost::algorithm::to_upper_copy(p_Source);
+}
+
 bool StringUtil::Contains(const std::string& p_Str, const std::string& p_SubStr, bool p_bCaseSensitive)
 {
 	return p_bCaseSensitive ? boost::algorithm::contains(p_Str, p_SubStr) : boost::algorithm::icontains(p_Str, p_SubStr);

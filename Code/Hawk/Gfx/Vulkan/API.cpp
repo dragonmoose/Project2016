@@ -31,7 +31,10 @@ namespace Vulkan {
 
 API::~API()
 {
-	m_Device->WaitUntilIdle();
+	if (m_Device)
+	{
+		m_Device->WaitUntilIdle();
+	}
 	LOG("API destroyed", "vulkan", Debug);
 }
 

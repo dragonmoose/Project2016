@@ -13,6 +13,7 @@ struct CoreSettings final
 	, m_bRenderingModule(true)
 	, m_hInstance(nullptr)
 	, m_AppVersion(0, 0, 0)
+	, m_bLogToOutputWindow(false)
 	{}
 
 	bool m_bConsole;
@@ -21,5 +22,6 @@ struct CoreSettings final
 	HINSTANCE m_hInstance;
 	std::string m_AppName;
 	Version m_AppVersion;
+	bool m_bLogToOutputWindow;
 };
 }
