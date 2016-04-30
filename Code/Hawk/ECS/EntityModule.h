@@ -9,6 +9,8 @@
 namespace Hawk {
 namespace ECS {
 
+class ComponentManager;
+
 class EntityModule : public Module
 {
 public:
@@ -18,6 +20,7 @@ public:
 #ifdef HAWK_DEBUG
 	void InitializeConsole(ScopedConsoleCommands* p_Console) override;
 	void CmdStats(bool p_bStates);
+	void CmdAddRandom(std::size_t m_Count);
 #endif
 
 	void Initialize() override;
@@ -40,13 +43,11 @@ private:
 	EntityList m_Entities;
 	std::size_t m_NextEntityIndex;
 
-	std::vector<PositionComponent> m_Positions;
-	std::vector<CameraComponent> m_Cameras;
-	std::vector<KillTimeComponent> m_KillTimes;
-
 	static const ComponentMask sc_FixedCameraMask;
 	static const ComponentMask sc_InteractiveCameraMask;
 	static const ComponentMask sc_SuicidalEnemyMask;
+
+	std::unique_ptr<ComponentManager> m_ComponentManager;
 
 	std::bitset<256> m_Keys;
 };

@@ -245,6 +245,9 @@
     <ClCompile Include="ECS\EntityModule_Console.cpp">
       <Filter>ECS</Filter>
     </ClCompile>
+    <ClCompile Include="ECS\ComponentManager.cpp">
+      <Filter>ECS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -545,9 +548,6 @@
     <ClInclude Include="ECS\Entity.h">
       <Filter>ECS</Filter>
     </ClInclude>
-    <ClInclude Include="ECS\ComponentFlags.h">
-      <Filter>ECS</Filter>
-    </ClInclude>
     <ClInclude Include="ECS\Components.h">
       <Filter>ECS</Filter>
     </ClInclude>
@@ -555,6 +555,15 @@
       <Filter>ECS</Filter>
     </ClInclude>
     <ClInclude Include="ECS\EntityModule.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS\ComponentManager.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS\IComponent.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS\Constants.h">
       <Filter>ECS</Filter>
     </ClInclude>
   </ItemGroup>

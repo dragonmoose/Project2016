@@ -1,5 +1,5 @@
 #pragma once
-#include "ComponentFlags.h"
+#include "Constants.h"
 #include <string>
 #include <bitset>
 
@@ -9,21 +9,16 @@ namespace ECS {
 class ComponentMask final
 {
 public:
-	ComponentMask() = default;
-	ComponentMask(ComponentFlags p_Flag);
 	bool operator==(const ComponentMask& p_Other) const;
-	ComponentMask& operator|=(ComponentFlags p_Flag);
-	ComponentMask& operator|(ComponentFlags p_Flag);
+	ComponentMask& operator|(ComponentID p_ID);
 	std::string ToString() const;
 	void Clear();
 
 private:
-	void Set(ComponentFlags p_Flag);
-	using Bits = std::bitset<static_cast<std::size_t>(ComponentFlags::_Count)>;
+	void Set(ComponentID p_ID);
+	using Bits = std::bitset<Constants::c_MaxComponents>;
 	Bits m_Bits;
 };
-
-ComponentMask operator|(ComponentFlags lhs, ComponentFlags rhs);
 
 }
 }

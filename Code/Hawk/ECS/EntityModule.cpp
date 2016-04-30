@@ -1,30 +1,33 @@
 #include "pch.h"
 #include "EntityModule.h"
+#include "ComponentManager.h"
 #include "Input/InputEvents.h"
 #include <utility>
 
 namespace Hawk {
 namespace ECS {
 
-using CF = ComponentFlags;
-const ComponentMask EntityModule::sc_FixedCameraMask(CF::Position | CF::Camera);
-const ComponentMask EntityModule::sc_InteractiveCameraMask(CF::Position | CF::Camera | CF::KeyInput);
-const ComponentMask EntityModule::sc_SuicidalEnemyMask(CF::Position | CF::KillTime);
+#define COMPONENT_MASK(c) ComponentMask() | c
+
+const ComponentMask EntityModule::sc_FixedCameraMask = COMPONENT_MASK(PositionComponent::ID | CameraComponent::ID);
+const ComponentMask EntityModule::sc_InteractiveCameraMask = COMPONENT_MASK(PositionComponent::ID | CameraComponent::ID | KeyInputComponent::ID);
+const ComponentMask EntityModule::sc_SuicidalEnemyMask = COMPONENT_MASK(PositionComponent::ID | KillTimeComponent::ID);
 
 EntityModule::EntityModule()
 : m_NextEntityIndex(0)
 {
 	const std::size_t l_MaxEntities = Config::Instance().Get("ecs.maxEntities", 1000);
+	m_ComponentManager = std::make_unique<ComponentManager>(l_MaxEntities);
+	m_ComponentManager->Register<PositionComponent>();
+	m_ComponentManager->Register<CameraComponent>();
+	m_ComponentManager->Register<KillTimeComponent>();
+	m_ComponentManager->Register<KeyInputComponent>();
 
 	m_Entities.resize(l_MaxEntities);
 	for (int i = 0; i < m_Entities.size(); i++)
 	{
 		m_Entities[i].SetID(i);
 	}
-
-	m_Positions.resize(l_MaxEntities);
-	m_Cameras.resize(l_MaxEntities);
-	m_KillTimes.resize(l_MaxEntities);
 
 	LOGM("EntityModule created. MaxEntities=" << l_MaxEntities, Info);
 }
@@ -65,7 +68,7 @@ void EntityModule::Update(const Duration& /*p_Duration*/)
 		}
 		else if (l_Entity.HasMask(sc_SuicidalEnemyMask))
 		{
-			if (Time::Now() >= m_KillTimes[l_Entity.GetID()].m_Time)
+			if (Time::Now() >= m_ComponentManager->Get<KillTimeComponent>(l_Entity.GetID()).m_Time)
 			{
 				l_Entity.MarkPendingKill();
 			}
@@ -150,7 +153,8 @@ void EntityModule::CreateFixedCamera()
 void EntityModule::CreateSuicidalEnemy(uint32 p_DurationSec)
 {
 	Entity& l_Entity = CreateEntity(sc_SuicidalEnemyMask);
-	m_KillTimes[l_Entity.GetID()].m_Time = Time(Duration(p_DurationSec, Duration::Precision::Second));
+	m_ComponentManager->Get<KillTimeComponent>(l_Entity.GetID()).m_Time =
+		Time(Duration(p_DurationSec, Duration::Precision::Second));
 }
 
 std::ostream& operator<<(std::ostream& os, const EntityModule::EntityList& p_Entities)

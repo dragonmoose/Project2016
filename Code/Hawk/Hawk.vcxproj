@@ -118,11 +118,13 @@
     <ClInclude Include="Debug\Assert.h" />
     <ClInclude Include="Debug\Profiler.h" />
     <ClInclude Include="Debug\ProfilerManager.h" />
-    <ClInclude Include="ECS\ComponentFlags.h" />
+    <ClInclude Include="ECS\ComponentManager.h" />
     <ClInclude Include="ECS\ComponentMask.h" />
     <ClInclude Include="ECS\Components.h" />
+    <ClInclude Include="ECS\Constants.h" />
     <ClInclude Include="ECS\Entity.h" />
     <ClInclude Include="ECS\EntityModule.h" />
+    <ClInclude Include="ECS\IComponent.h" />
     <ClInclude Include="Events\EventQueue.h" />
     <ClInclude Include="Events\EventHandler.h" />
     <ClInclude Include="Events\EventManager.h" />
@@ -220,6 +222,7 @@
     <ClCompile Include="Console\ScopedConsoleCommands.cpp" />
     <ClCompile Include="Debug\Profiler.cpp" />
     <ClCompile Include="Debug\ProfilerManager.cpp" />
+    <ClCompile Include="ECS\ComponentManager.cpp" />
     <ClCompile Include="ECS\ComponentMask.cpp" />
     <ClCompile Include="ECS\Entity.cpp" />
     <ClCompile Include="ECS\EntityModule.cpp" />
