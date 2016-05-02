@@ -1,6 +1,4 @@
 #pragma once
-#include "Component.h"
-#include "Threading/Mutex.h"
 #include "System/Types.h"
 #pragma warning (push)
 #pragma warning (disable:4201)	// disable nonstandard extension for glm (nameless struct/union)
@@ -26,13 +24,6 @@ public:
 	~SceneNode();
 	void SetParent(SceneNodePtr p_Parent);
 
-	template<class T, class... Args>
-	T& AddComponent(Args&&... p_Args)
-	{
-		m_Components.emplace_back(p_Args);
-		return &m_Components.back();
-	}
-
 	const std::string& GetName() const;
 
 	void AddChild(SceneNodePtr p_SceneNode);
@@ -44,9 +35,6 @@ public:
 	bool IsAncestorOf(SceneNodePtr p_SceneNode) const;
 	void AddToScene(SceneManager* p_pSceneManager);
 
-	void Initialize();
-	void RegisterEvents(EventManager& p_EventManager);
-	void Update(const Duration& p_Duration);
 	SceneNodeID GetID() const;
 
 	const glm::mat4x4& GetFrameWorldMatrix();
@@ -60,12 +48,8 @@ private:
 	void RemoveFromScene();
 
 	std::string m_Name;
-	bool m_bInitialized;
 
 	static SceneNodeID s_NextID;
-
-	using Components = std::vector<Component>;
-	Components m_Components;
 
 	SceneNodePtr m_Parent;
 

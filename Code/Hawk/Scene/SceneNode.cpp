@@ -13,7 +13,6 @@ SceneNode::SceneNode()
 
 SceneNode::SceneNode(const std::string& p_Name)
 : m_Name(p_Name)
-, m_bInitialized(false)
 , m_pSceneManager(nullptr)
 , m_ID(s_NextID)
 {
@@ -111,32 +110,6 @@ void SceneNode::AddToScene(SceneManager* p_pSceneManager)
 	{
 		m_pSceneManager = p_pSceneManager;
 		m_pSceneManager->AddToScene(shared_from_this());
-	}
-}
-
-void SceneNode::Initialize()
-{
-	ASSERT(!m_bInitialized, "Already initialized");
-	for (auto& l_Component : m_Components)
-	{
-		l_Component.Initialize();
-	}
-	m_bInitialized = true;
-}
-
-void SceneNode::RegisterEvents(EventManager& p_EventManager)
-{
-	for (auto& l_Component : m_Components)
-	{
-		l_Component.RegisterEvents(p_EventManager);
-	}
-}
-
-void SceneNode::Update(const Duration& p_Duration)
-{
-	for (auto& l_Component : m_Components)
-	{
-		l_Component.Update(p_Duration);
 	}
 }
 

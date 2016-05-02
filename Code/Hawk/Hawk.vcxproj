@@ -137,7 +137,6 @@
     <ClInclude Include="Gfx\DebugEvents.h" />
     <ClInclude Include="Gfx\FPSTrackerSubModule.h" />
     <ClInclude Include="Gfx\IRenderingAPI.h" />
-    <ClInclude Include="Gfx\RenderableComponent.h" />
     <ClInclude Include="Gfx\RenderingModule.h" />
     <ClInclude Include="Gfx\Vulkan\CmdImageMemoryBarrier.h" />
     <ClInclude Include="Gfx\Vulkan\CmdRenderPass.h" />
@@ -183,7 +182,6 @@
     <ClInclude Include="Input\KeyCodes.h" />
     <ClInclude Include="Math\Vec3.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Scene\Component.h" />
     <ClInclude Include="Scene\SceneManager.h" />
     <ClInclude Include="Scene\SceneNode.h" />
     <ClInclude Include="Shapes\Box.h" />
@@ -233,7 +231,6 @@
     <ClCompile Include="Gfx\DebugGeometrySubModule.cpp" />
     <ClCompile Include="Gfx\DebugTextSubModule.cpp" />
     <ClCompile Include="Gfx\FPSTrackerSubModule.cpp" />
-    <ClCompile Include="Gfx\RenderableComponent.cpp" />
     <ClCompile Include="Gfx\RenderingModule.cpp" />
     <ClCompile Include="Gfx\Vulkan\API.cpp" />
     <ClCompile Include="Gfx\Vulkan\CmdImageMemoryBarrier.cpp" />

@@ -23,9 +23,6 @@ public:
 	void CmdPopulate(int32 p_iDepth, int32 p_iLevelMax);
 #endif
 
-	void Initialize() override;
-	void RegisterEvents(EventManager& p_EventManager) override;
-	void Update(const Duration& p_Duration) override;
 	void AddToScene(SceneNode::SceneNodePtr p_SceneNode);
 	void RemoveFromScene(SceneNode::SceneNodePtr p_SceneNode);
 	void Clear();

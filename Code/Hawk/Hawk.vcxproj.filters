@@ -98,9 +98,6 @@
     <ClCompile Include="Util\Util_Console.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="Gfx\RenderableComponent.cpp">
-      <Filter>Gfx</Filter>
-    </ClCompile>
     <ClCompile Include="System\Version.cpp">
       <Filter>System</Filter>
     </ClCompile>
@@ -371,9 +368,6 @@
     <ClInclude Include="Scene\SceneManager.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\Component.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Threading\Mutex.h">
       <Filter>Threading</Filter>
     </ClInclude>
@@ -391,9 +385,6 @@
     </ClInclude>
     <ClInclude Include="Util\Util_Console.h">
       <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="Gfx\RenderableComponent.h">
-      <Filter>Gfx</Filter>
     </ClInclude>
     <ClInclude Include="System\Version.h">
       <Filter>System</Filter>

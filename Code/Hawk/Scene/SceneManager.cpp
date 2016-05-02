@@ -19,31 +19,6 @@ SceneNode* SceneManager::GetRoot()
 	return m_Root.get();
 }
 
-void SceneManager::Initialize()
-{
-	for (auto& l_SceneNode : m_Entities)
-	{
-		l_SceneNode->Initialize();
-	}
-}
-
-void SceneManager::RegisterEvents(EventManager& p_EventManager)
-{
-	for (auto& l_SceneNode : m_Entities)
-	{
-		l_SceneNode->RegisterEvents(p_EventManager);
-	}
-}
-
-void SceneManager::Update(const Duration& p_Duration)
-{
-	PROFILE();
-	for (auto& l_SceneNode : m_Entities)
-	{
-		l_SceneNode->Update(p_Duration);
-	}
-}
-
 void SceneManager::AddToScene(SceneNode::SceneNodePtr p_SceneNode)
 {
 	ASSERT(!hwk::contains(m_Entities, p_SceneNode), "Scene already contains SceneNode. SceneNodeName=" << p_SceneNode->GetName());
