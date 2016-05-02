@@ -18,11 +18,6 @@ ComponentManager::~ComponentManager()
 	}
 }
 
-std::size_t ComponentManager::GetNumComponents() const
-{
-	return m_Components.size();
-}
-
 #ifdef HAWK_DEBUG
 ComponentID ComponentManager::GetIDFromName(const std::string& p_Name) const
 {

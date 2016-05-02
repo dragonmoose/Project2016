@@ -37,12 +37,7 @@ bool ComponentMask::Get(ComponentID p_ID) const
 	return m_Bits.test(p_ID);
 }
 
-std::size_t ComponentMask::GetSize() const
-{
-	return m_Bits.size();
-}
-
-std::size_t ComponentMask::GetNumComponents() const
+std::size_t ComponentMask::Count() const
 {
 	return m_Bits.count();
 }

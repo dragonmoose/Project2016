@@ -42,8 +42,6 @@ public:
 		return reinterpret_cast<T&>(Get(p_EntityID, T::ID, sizeof(T)));
 	}
 	
-	std::size_t GetNumComponents() const;
-
 #ifdef HAWK_DEBUG
 	ComponentID GetIDFromName(const std::string& p_Name) const;
 	std::string GetNameFromID(ComponentID p_ID) const;

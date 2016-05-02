@@ -68,17 +68,17 @@ void EntityModule::CmdPrint(EntityID p_ID)
 	std::cout << "\n" << l_Entity << "\n";
 	std::cout << "Components: ";
 	std::size_t l_iComp = 0;
-	for (int i = 0; i < l_Entity.m_Mask.GetSize(); i++)
+	for (int i = 0; i < Constants::c_MaxComponents; i++)
 	{
 		if (l_Entity.m_Mask.Get(i))
 		{
 			std::cout << m_ComponentManager->GetNameFromID(i);
-			if (l_iComp < l_Entity.m_Mask.GetNumComponents() - 1)
+			if (l_iComp < l_Entity.m_Mask.Count() - 1)
 			{
 				std::cout << ", ";
 			}
 			l_iComp++;
-			if (l_iComp == l_Entity.m_Mask.GetNumComponents()) break;
+			if (l_iComp == l_Entity.m_Mask.Count()) break;
 		}
 	}
 	std::cout << "\n";

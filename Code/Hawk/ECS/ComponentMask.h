@@ -15,8 +15,7 @@ public:
 	void Clear();
 	void Set(ComponentID p_ID, bool p_bValue);
 	bool Get(ComponentID p_ID) const;
-	std::size_t GetSize() const;
-	std::size_t GetNumComponents() const;
+	std::size_t Count() const;
 
 private:
 	using Bits = std::bitset<Constants::c_MaxComponents>;
