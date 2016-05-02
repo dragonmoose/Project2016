@@ -7,28 +7,11 @@
 #include <map>
 #include <boost/lexical_cast.hpp>
 
-struct Comp1
+struct CtTest
 {
-	glm::vec3 m_Vec;
-	float m_fValue;
-
-	static const ComponentID ID = 0;
-};
-
-struct Comp2
-{
-	int32 m_Int;
-	float m_fValue;
-
-	static const ComponentID ID = 1;
-};
-
-struct Comp3
-{
+	static const ComponentID ID = 4;
 	int32 m_Int;
 	int32 m_SecInt;
-
-	static const ComponentID ID = 2;
 };
 
 int WINAPI WinMain(HINSTANCE p_hInstance, HINSTANCE /*p_hPrevInstance*/, LPSTR /*p_lpCmdLine*/, int /*p_nCmdShow*/)
@@ -42,6 +25,7 @@ int WINAPI WinMain(HINSTANCE p_hInstance, HINSTANCE /*p_hPrevInstance*/, LPSTR /
 	try
 	{
 		l_Core.Initialize();
+		l_Core.GetComponentManager()->Register<CtTest>();
 
 		Hawk::ThreadID l_Thread1 = l_Core.CreateModuleThread("Thread1");
 		Hawk::ThreadID l_Thread2 = l_Core.CreateModuleThread("Thread2");

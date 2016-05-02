@@ -16,6 +16,7 @@ void EntityModule::InitializeConsole(ScopedConsoleCommands* p_Console)
 	p_Console->Register("ecs.stats", this, &EntityModule::CmdStats, "Print stats", "[print entity states 0|1]", false);
 	p_Console->Register("ecs.list", this, &EntityModule::CmdList, "List alive entities", "");
 	p_Console->Register("ecs.print", this, &EntityModule::CmdPrint, "Prints the given entity", "[id]");
+	p_Console->Register("ecs.listComponents", m_ComponentManager.get(), &ComponentManager::CmdList, "Lists all registered components", "");
 }
 
 void EntityModule::CmdStats(bool p_bStates)

@@ -24,6 +24,10 @@ public:
 #if HAWK_DEBUG
 		std::string l_Name = boost::typeindex::type_id<T>().pretty_name();
 		std::size_t l_Pos = l_Name.find_last_of(':');
+		if (l_Pos == std::string::npos)
+		{
+			l_Pos = l_Name.find_last_of(' ');
+		}
 		if (l_Pos != std::string::npos)
 		{
 			l_Name = l_Name.substr(l_Pos + 1);
@@ -43,6 +47,7 @@ public:
 #ifdef HAWK_DEBUG
 	ComponentID GetIDFromName(const std::string& p_Name) const;
 	std::string GetNameFromID(ComponentID p_ID) const;
+	void CmdList();
 #endif
 
 private:

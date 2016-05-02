@@ -37,6 +37,18 @@ std::string ComponentManager::GetNameFromID(ComponentID p_ID) const
 	ASSERT(l_Itr != m_DebugNameMap.left.end(), "");
 	return l_Itr->second;
 }
+
+void ComponentManager::CmdList()
+{
+	CONSOLE_WRITE_SCOPE();
+	std::cout << "\n";
+	for (auto l_Itr = m_DebugNameMap.left.begin(); l_Itr != m_DebugNameMap.left.end(); l_Itr++)
+	{
+		std::cout << l_Itr->first << ":\t" << l_Itr->second << "\n";
+	}
+	std::cout << "\n";
+}
+
 #endif
 
 void ComponentManager::Register(ComponentID p_ID, std::size_t p_Size)
