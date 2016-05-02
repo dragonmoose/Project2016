@@ -15,6 +15,8 @@
 
 namespace Hawk {
 
+namespace ECS { class ComponentManager; }
+
 class HAWK_DLL_EXPORT Core final
 {
 public:
@@ -53,6 +55,8 @@ public:
 	void SetPaused(ModuleID p_ID, bool p_bPaused);
 	void Run();
 
+	ECS::ComponentManager* GetComponentManager() const;
+
 private:
 	using ModuleThreads = std::vector<std::unique_ptr<ModuleThread>>;
 	using CoreModules = std::vector<std::unique_ptr<Module>>;
@@ -82,6 +86,8 @@ private:
 	bool m_bInitialized;
 
 	Time m_PrevFrameStartTime;
+
+	std::shared_ptr<ECS::ComponentManager> m_ComponentManager;
 
 #ifdef HAWK_DEBUG
 	std::shared_ptr<ConsoleCommandManager> m_ConsoleCommandManager;

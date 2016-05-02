@@ -1,32 +1,29 @@
 #include "pch.h"
 #include "EntityModule.h"
-#include "ComponentManager.h"
 #include "Input/InputEvents.h"
 #include <utility>
 
 namespace Hawk {
 namespace ECS {
 
-#define COMPONENT_MASK(c) ComponentMask() | c
-
-const ComponentMask EntityModule::sc_FixedCameraMask = COMPONENT_MASK(PositionComponent::ID | CameraComponent::ID);
-const ComponentMask EntityModule::sc_InteractiveCameraMask = COMPONENT_MASK(PositionComponent::ID | CameraComponent::ID | KeyInputComponent::ID);
-const ComponentMask EntityModule::sc_SuicidalEnemyMask = COMPONENT_MASK(PositionComponent::ID | KillTimeComponent::ID);
+const ComponentMask EntityModule::sc_FixedCameraMask = CMASK(CtPosition::ID | CtCamera::ID);
+const ComponentMask EntityModule::sc_InteractiveCameraMask = CMASK(CtPosition::ID | CtCamera::ID | CtKeyInput::ID);
+const ComponentMask EntityModule::sc_SuicidalEnemyMask = CMASK(CtPosition::ID | CtKillTime::ID);
 
 EntityModule::EntityModule()
 : m_NextEntityIndex(0)
 {
 	const std::size_t l_MaxEntities = Config::Instance().Get("ecs.maxEntities", 1000);
 	m_ComponentManager = std::make_unique<ComponentManager>(l_MaxEntities);
-	m_ComponentManager->Register<PositionComponent>();
-	m_ComponentManager->Register<CameraComponent>();
-	m_ComponentManager->Register<KillTimeComponent>();
-	m_ComponentManager->Register<KeyInputComponent>();
+	m_ComponentManager->Register<CtPosition>();
+	m_ComponentManager->Register<CtCamera>();
+	m_ComponentManager->Register<CtKillTime>();
+	m_ComponentManager->Register<CtKeyInput>();
 
 	m_Entities.resize(l_MaxEntities);
-	for (int i = 0; i < m_Entities.size(); i++)
+	for (uint32 i = 0; i < m_Entities.size(); i++)
 	{
-		m_Entities[i].SetID(i);
+		m_Entities[i].m_ID = i;
 	}
 
 	LOGM("EntityModule created. MaxEntities=" << l_MaxEntities, Info);
@@ -35,6 +32,11 @@ EntityModule::EntityModule()
 std::string EntityModule::GetName() const
 {
 	return "EntityModule";
+}
+
+std::shared_ptr<ComponentManager> EntityModule::GetComponentManager() const
+{
+	return m_ComponentManager;
 }
 
 void EntityModule::Initialize()
@@ -59,16 +61,16 @@ void EntityModule::Update(const Duration& /*p_Duration*/)
 	for (int i = 0; i < m_NextEntityIndex; i++)
 	{
 		Entity& l_Entity = m_Entities[i];
-		if (l_Entity.HasMask(sc_InteractiveCameraMask))
+		if (l_Entity.m_Mask == sc_InteractiveCameraMask)
 		{
 			if (IsKeyDown(KeyCode::W))
 			{
 				LOGM("Camera moving forward...", Debug);
 			}
 		}
-		else if (l_Entity.HasMask(sc_SuicidalEnemyMask))
+		else if (l_Entity.m_Mask == sc_SuicidalEnemyMask)
 		{
-			if (Time::Now() >= m_ComponentManager->Get<KillTimeComponent>(l_Entity.GetID()).m_Time)
+			if (Time::Now() >= m_ComponentManager->Get<CtKillTime>(l_Entity.m_ID).m_Time)
 			{
 				l_Entity.MarkPendingKill();
 			}
@@ -91,23 +93,40 @@ void EntityModule::Update(const Duration& /*p_Duration*/)
 	}
 }
 
-bool EntityModule::IsKeyDown(KeyCode p_Key) const
+void EntityModule::AttachComponent(EntityID p_EntityID, ComponentID p_ComponentID)
 {
-	return m_Keys.test(static_cast<std::size_t>(p_Key));
+	ASSERT(p_EntityID < m_Entities.size(), "Entity ID out of bounds. ID=" << p_EntityID);
+	Entity& l_Entity = m_Entities[p_EntityID];
+	ASSERT(!l_Entity.m_Mask.Get(p_ComponentID), "Component already attached to entity");
+	l_Entity.m_Mask.Set(p_ComponentID, true);
 }
 
-Entity& EntityModule::CreateEntity(const ComponentMask& p_Mask)
+void EntityModule::DetachComponent(EntityID p_EntityID, ComponentID p_ComponentID)
 {
-	THROW_IF_NOT(m_NextEntityIndex < m_Entities.size(), "Failed to create entity, max size exceeded. Max=" << m_Entities.size());
+	ASSERT(p_EntityID < m_Entities.size(), "Entity ID out of bounds. ID=" << p_EntityID);
+	Entity& l_Entity = m_Entities[p_EntityID];
+	ASSERT(l_Entity.m_Mask.Get(p_ComponentID), "Component was not attached to entity");
+	l_Entity.m_Mask.Set(p_ComponentID, false);
+}
 
-	Entity& l_Entity = m_Entities[m_NextEntityIndex];
+std::size_t EntityModule::CreateEntity()
+{
+	std::size_t l_Index = m_NextEntityIndex;
+	THROW_IF_NOT(l_Index < m_Entities.size(), "Failed to create entity, max size exceeded. Max=" << m_Entities.size());
+
+	Entity& l_Entity = m_Entities[l_Index];
 	ASSERT(!l_Entity.IsAlive(), "Entity was alive");
 
-	l_Entity.Revive(p_Mask);
+	l_Entity.Revive();
 	m_NextEntityIndex++;
 	LOG_IF(m_NextEntityIndex == m_Entities.size(), "Entity count limit reached=" << m_Entities.size(), "ecs", Warning);
 
-	return l_Entity;
+	return l_Index;
+}
+
+bool EntityModule::IsKeyDown(KeyCode p_Key) const
+{
+	return m_Keys.test(static_cast<std::size_t>(p_Key));
 }
 
 void EntityModule::SortEntities()
@@ -142,18 +161,19 @@ void EntityModule::SortEntities()
 
 void EntityModule::CreateInteractiveCamera()
 {
-	CreateEntity(sc_InteractiveCameraMask);
+	m_Entities[CreateEntity()].m_Mask = sc_InteractiveCameraMask;
 }
 
 void EntityModule::CreateFixedCamera()
 {
-	CreateEntity(sc_FixedCameraMask);
+	m_Entities[CreateEntity()].m_Mask = sc_FixedCameraMask;
 }
 
 void EntityModule::CreateSuicidalEnemy(uint32 p_DurationSec)
 {
-	Entity& l_Entity = CreateEntity(sc_SuicidalEnemyMask);
-	m_ComponentManager->Get<KillTimeComponent>(l_Entity.GetID()).m_Time =
+	Entity& l_Entity = m_Entities[CreateEntity()];
+	l_Entity.m_Mask = sc_SuicidalEnemyMask;
+	m_ComponentManager->Get<CtKillTime>(l_Entity.m_ID).m_Time =
 		Time(Duration(p_DurationSec, Duration::Precision::Second));
 }
 
@@ -161,7 +181,7 @@ std::ostream& operator<<(std::ostream& os, const EntityModule::EntityList& p_Ent
 {
 	for (const Entity& l_Entity : p_Entities)
 	{
-		if (l_Entity.IsAlive())
+		if (l_Entity.m_Alive)
 		{
 			os << "A";
 		}
@@ -176,7 +196,6 @@ std::ostream& operator<<(std::ostream& os, const EntityModule::EntityList& p_Ent
 	}
 	return os;
 }
-
 
 }
 }

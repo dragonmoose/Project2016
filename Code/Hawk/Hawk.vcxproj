@@ -124,7 +124,7 @@
     <ClInclude Include="ECS\Constants.h" />
     <ClInclude Include="ECS\Entity.h" />
     <ClInclude Include="ECS\EntityModule.h" />
-    <ClInclude Include="ECS\IComponent.h" />
+    <ClInclude Include="ECS\Util.h" />
     <ClInclude Include="Events\EventQueue.h" />
     <ClInclude Include="Events\EventHandler.h" />
     <ClInclude Include="Events\EventManager.h" />

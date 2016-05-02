@@ -4,6 +4,7 @@
 #include "Debug/ProfilerManager.h"
 #include "Gfx/RenderingModule.h"
 #include "ECS/EntityModule.h"
+#include "ECS/ComponentManager.h"
 #include "Scene/SceneManager.h"
 #include "System/Time.h"
 #include "Threading/Thread.h"
@@ -186,6 +187,11 @@ void Core::Run()
 	StopModules();
 }
 
+ECS::ComponentManager* Core::GetComponentManager() const
+{
+	return m_ComponentManager.get();
+}
+
 void Core::ValidateSettings()
 {
 	THROW_IF(m_Settings.m_AppName.empty(), "No application name specified");
@@ -202,7 +208,12 @@ void Core::AddModules()
 
 	ThreadID l_EntityThread = CreateModuleThread("ecs");
 	AddModule<SceneManager>(l_EntityThread);
-	AddModule<ECS::EntityModule>(l_EntityThread);
+
+	ModuleID l_EntityModuleID = AddModule<ECS::EntityModule>(l_EntityThread);
+	
+	Module* l_EntityModule = nullptr;
+	THROW_IF_NOT(TryGetModule(l_EntityModuleID, &l_EntityModule), "Failed to get entity module");
+	m_ComponentManager = (reinterpret_cast<ECS::EntityModule*>(l_EntityModule))->GetComponentManager();
 }
 
 void Core::InitializeModules()

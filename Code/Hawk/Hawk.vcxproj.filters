@@ -560,10 +560,10 @@
     <ClInclude Include="ECS\ComponentManager.h">
       <Filter>ECS</Filter>
     </ClInclude>
-    <ClInclude Include="ECS\IComponent.h">
+    <ClInclude Include="ECS\Constants.h">
       <Filter>ECS</Filter>
     </ClInclude>
-    <ClInclude Include="ECS\Constants.h">
+    <ClInclude Include="ECS\Util.h">
       <Filter>ECS</Filter>
     </ClInclude>
   </ItemGroup>

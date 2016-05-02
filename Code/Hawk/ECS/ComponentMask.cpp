@@ -11,8 +11,7 @@ bool ComponentMask::operator==(const ComponentMask& p_Other) const
 
 ComponentMask& ComponentMask::operator|(ComponentID p_ID)
 {
-	ASSERT(p_ID < m_Bits.size(), "ComponentID out of bounds");
-	Set(p_ID);
+	Set(p_ID, true);
 	return *this;
 }
 
@@ -26,9 +25,26 @@ void ComponentMask::Clear()
 	m_Bits.reset();
 }
 
-void ComponentMask::Set(ComponentID p_ID)
+void ComponentMask::Set(ComponentID p_ID, bool p_bValue)
 {
-	m_Bits.set(p_ID);
+	ASSERT(p_ID < m_Bits.size(), "ComponentID out of bounds");
+	m_Bits.set(p_ID, p_bValue);
+}
+
+bool ComponentMask::Get(ComponentID p_ID) const
+{
+	ASSERT(p_ID < m_Bits.size(), "ComponentID out of bounds");
+	return m_Bits.test(p_ID);
+}
+
+std::size_t ComponentMask::GetSize() const
+{
+	return m_Bits.size();
+}
+
+std::size_t ComponentMask::GetNumComponents() const
+{
+	return m_Bits.count();
 }
 
 }

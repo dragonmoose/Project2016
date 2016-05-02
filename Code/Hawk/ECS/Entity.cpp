@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Entity.h"
+#include <iomanip>
 
 namespace Hawk {
 namespace ECS {
@@ -9,25 +10,17 @@ Entity::Entity()
 {
 }
 
-void Entity::SetID(EntityID p_ID)
+Entity::Entity(const std::string& p_DebugName)
+: Entity()
 {
-	m_ID = p_ID;
+#ifdef HAWK_DEBUG
+	m_DebugName = p_DebugName;
+#endif
 }
 
-EntityID Entity::GetID() const
-{
-	return m_ID;
-}
-
-bool Entity::HasMask(const ComponentMask& p_Mask) const
-{
-	return m_Mask == p_Mask;
-}
-
-void Entity::Revive(const ComponentMask& p_Mask)
+void Entity::Revive()
 {
 	ASSERT(!m_Alive, "Entity was not dead");
-	m_Mask = p_Mask;
 	m_Alive = true;
 }
 
@@ -53,6 +46,15 @@ bool Entity::IsAlive() const
 bool Entity::IsPendingKill() const
 {
 	return boost::indeterminate(m_Alive);
+}
+
+std::ostream& operator<<(std::ostream& os, const Entity& p_Entity)
+{
+	os << std::left;
+	os << std::setw(8) << "Name:" << (p_Entity.m_DebugName.empty() ? "N/A" : p_Entity.m_DebugName) << "\n";
+	os << std::setw(8) << "ID:" << p_Entity.m_ID << "\n";
+	os << std::setw(8) << "Alive: " << p_Entity.m_Alive << "\n";
+	return os;
 }
 
 }

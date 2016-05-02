@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Hawk/System/Config.h"
 #include "Hawk/Base/Core.h"
+#include "ECS/ComponentMask.h"
 #include "Hawk/Console/Logger.h"
 #include "Hawk/System/Time.h"
 #include "Hawk/System/Duration.h"
@@ -82,6 +83,25 @@ namespace HawkUnitTests
 		{
 			Assert::AreEqual(123.456f, Config::Instance().Get<float>("non.existing", 123.456f));
 			Assert::AreNotEqual(123.456f, Config::Instance().Get<float>("non.existing", 123.4567f));
+		}
+	};
+
+	TEST_CLASS(ComponentTests)
+	{
+	public:
+		TEST_METHOD(TestMask)
+		{
+			ECS::ComponentMask l_Mask = CMASK(1 | 23 | 66 | 98);
+			Assert::AreEqual(l_Mask.Get(0), false);
+			Assert::AreEqual(l_Mask.Get(1), true);
+			Assert::AreEqual(l_Mask.Get(2), false);
+			Assert::AreEqual(l_Mask.Get(23), true);
+			Assert::AreEqual(l_Mask.Get(66), true);
+			Assert::AreEqual(l_Mask.Get(98), true);
+			Assert::AreEqual(l_Mask.Get(99), false);
+			
+			l_Mask.Clear();
+			Assert::AreEqual(l_Mask.Get(98), false);
 		}
 	};
 }

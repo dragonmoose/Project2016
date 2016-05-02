@@ -2,6 +2,8 @@
 #include "Constants.h"
 #include "System/Types.h"
 #include "Debug/Assert.h"
+#include <boost/bimap.hpp>
+#include <boost/type_index.hpp>
 #include <vector>
 
 namespace Hawk {
@@ -18,36 +20,44 @@ public:
 	template<class T>
 	void Register()
 	{
-		ASSERT(T::ID == m_NextRegisterID, "Given ComponentID=" << T::ID << " Expected=" << m_NextRegisterID);
-		ASSERT(m_NextRegisterID < Constants::c_MaxComponents, "MaxComponents exceeded, constant needs to be adjusted");
-
-		if (T::ID == m_Components.size())
+		Register(T::ID, sizeof(T));
+#if HAWK_DEBUG
+		std::string l_Name = boost::typeindex::type_id<T>().pretty_name();
+		std::size_t l_Pos = l_Name.find_last_of(':');
+		if (l_Pos != std::string::npos)
 		{
-			m_Components.resize(m_Components.size() + 1);
+			l_Name = l_Name.substr(l_Pos + 1);
 		}
-		const std::size_t c_MemSize = sizeof(T) * c_MaxEntities;
-		m_Components[T::ID] = new uint8[c_MemSize];
-		std::memset(m_Components[T::ID], 0u, c_MemSize);
-
-		++m_NextRegisterID;
+		m_DebugNameMap.left.insert(DebugNameMap::left_value_type(T::ID, l_Name));
+#endif
 	}
 
 	template<class T>
 	T& Get(EntityID p_EntityID) const
 	{
-		ASSERT(p_EntityID < c_MaxEntities, "EntityID out of bounds=" << p_EntityID);
-		ASSERT(T::ID < m_Components.size(), "ComponentID out of bounds=" << T::ID);
-		return reinterpret_cast<T&>(m_Components[T::ID][p_EntityID * sizeof(T)]);
+		return reinterpret_cast<T&>(Get(p_EntityID, T::ID, sizeof(T)));
 	}
 	
 	std::size_t GetNumComponents() const;
 
+#ifdef HAWK_DEBUG
+	ComponentID GetIDFromName(const std::string& p_Name) const;
+	std::string GetNameFromID(ComponentID p_ID) const;
+#endif
+
 private:
+	void Register(ComponentID p_ID, std::size_t p_Size);
+	uint8& Get(EntityID p_EntityID, ComponentID p_ComponentID, std::size_t p_Size) const;
+
 	const std::size_t c_MaxEntities;
 
 	using Components = std::vector<uint8*>;
 	Components m_Components;
 	ComponentID m_NextRegisterID;
+#ifdef HAWK_DEBUG
+	using DebugNameMap = boost::bimap<ComponentID, std::string>;
+	DebugNameMap m_DebugNameMap;
+#endif
 };
 
 }
