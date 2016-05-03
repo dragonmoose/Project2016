@@ -34,5 +34,19 @@ struct CtKeyInput
 	DECL_CMP(3);
 };
 
+struct CtSceneChild
+{
+	DECL_CMP(4);
+	CtSceneChild() : m_Parent(EntityID_Invalid) {}
+	CtSceneChild(EntityID p_ID) : m_Parent(p_ID) {}
+	EntityID m_Parent;
+};
+
+struct CtSceneParent
+{
+	DECL_CMP(5);
+	std::vector<EntityID> m_Children;
+};
+
 }
 }

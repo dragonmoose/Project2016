@@ -13,12 +13,13 @@ using uintmax = uintmax_t;
 
 namespace Hawk {
 
-using ModuleID		= uint32;
-using ThreadID		= uint32;
-using SceneNodeID	= uint32;
-using EntityID		= uint32;
-using ComponentID	= uint32;
+using ModuleID					= uint32;
+using ThreadID					= uint32;
+using SceneNodeID				= uint32;
+using EntityID					= uint32;
+using ComponentID				= uint32;
 
+const EntityID EntityID_Invalid = 4294967295;
 
 __declspec(selectany) ThreadID ThreadID_Invalid = ThreadID();
 __declspec(selectany) ThreadID ModuleID_Invalid = ModuleID();
